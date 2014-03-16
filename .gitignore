@@ -1,8 +1,3 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-
 # Compiled Dynamic libraries
 *.so
 *.dylib
@@ -11,3 +6,38 @@
 *.lai
 *.la
 *.a
+
+# Mac OS X
+*.DS_Store
+ 
+# Xcode
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspective
+*.perspectivev3
+*.xcuserstate
+project.xcworkspace/
+xcuserdata/
+*.moved-aside
+ 
+# Generated files
+*.o
+*.pyc
+*.hi
+
+# Compiled Object files
+*.slo
+*.lo
+ 
+#Python modules
+MANIFEST
+dist/
+build/
+ 
+# Backup files
+*~.nib
+\#*#
+.#*
+*.swp
+*.un~
