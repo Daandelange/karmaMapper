@@ -12,5 +12,5 @@ This repertory might be useful for example purposes.
 
 - - - -
 
-By Daan de Lange and Alexandre Amiel
+By Daan de Lange and Alexandre Amiel  
 Preview video: http://vimeo.com/89234034
