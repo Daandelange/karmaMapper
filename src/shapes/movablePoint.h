@@ -1,5 +1,5 @@
 //
-//  illuminatiTriangle.h
+//  movablePoint.h
 //  illuminatiVisualiser
 //
 //  Created by Daan de Lange on 24/2/14.
@@ -8,9 +8,7 @@
 
 #pragma once
 
-//#include <iostream>
 #include "ofxMSAInteractiveObject.h"
-
 
 
 class movablePoint : public ofxMSAInteractiveObject {
@@ -29,7 +27,16 @@ public:
 	
 	void setEditable( bool status );
 	
+	void makeParent( vector<movablePoint>& _children );
+	void removeChildren();
+	
+	void makeActive();
+	void notActive();
+	
 	ofPoint getPos();
+	void setPosSize(ofPoint _pos, int _diameter);
+	void setPos(ofPoint _pos);
+	//void setPosRelative(ofPoint _pos);
 	//int x,y,width,height;
 
 	virtual void onRollOver(int x, int y);
@@ -43,10 +50,11 @@ public:
 	virtual void keyPressed(int key);
 	virtual void keyReleased(int key);
 	
-	bool isEditable;
-	
 private:
-	//bool hovered, selected;
+	vector<movablePoint>* children;
+	bool isEditable;
+	bool isActive;
+	bool isParentOfOthers;
 	ofColor color;
 	
 };

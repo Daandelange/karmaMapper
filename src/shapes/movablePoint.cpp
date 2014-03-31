@@ -1,29 +1,17 @@
 //
-//  illuminatiTriangle.cpp
+//  movablePoint.cpp
 //  illuminatiVisualiser
 //
 //  Created by Daan de Lange on 24/2/14.
-//
+//  Utility class for creating draggable points
 //
 
 #include "movablePoint.h"
+#define MP_POINT_SIZE 5
 
 movablePoint::movablePoint(){
 	//printf("movablePoint::movablePoint() - hello!\n");
-	
-	// enable ofxMSAInteractiveObject functions
-	enableInteraction();
-	
-	//set( _x, _y, 10, 10);
-	
-	//hovered = false;
-	//selected = false;
-	isEditable = false;
-	color = ofColor(255,255,255);
-	
-	// spawn at random location
-	// todo: spawn at saved position
-	
+
 }
 
 movablePoint::~movablePoint(){
@@ -33,6 +21,14 @@ movablePoint::~movablePoint(){
 void movablePoint::setup() {
 	//printf("movablePoint::setup() - hello!\n");
 	
+	//set( _x, _y, 10, 10);
+	isEditable = false;
+	isParentOfOthers = false;
+	color = ofColor(255,255,255);
+	isActive = false;
+	
+	// enable ofxMSAInteractiveObject functions
+	enableInteraction();
 }	
 	
 
@@ -52,12 +48,25 @@ void movablePoint::draw() {
 	//ofPushStyle();
 	
 	if(isEditable){
-		if(isMousePressed()) ofSetColor(color, 255);
-		else if(isMouseOver()) ofSetColor(color, 255);
-		else ofSetColor(color, 30);
-	
-		ofFill();
-		ofCircle(x+width/2, y+height/2, (width+height)/2/2);
+		
+		// draw dragging zone
+		if( isMouseOver() ){
+			ofSetColor(color, 100);
+			if( isMousePressed() ) ofSetColor(color, 200);
+			
+			ofCircle( getCenter(), (width+height)/2 );
+		}
+		
+		// draw point or cross
+		ofSetColor( color );
+		if( isActive ) ofSetColor(255, 50, 50);
+		
+		if(isParentOfOthers){
+			ofPoint c = getCenter();
+			ofLine( c.x-MP_POINT_SIZE, c.y, c.x+MP_POINT_SIZE, c.y );
+			ofLine( c.x, c.y-MP_POINT_SIZE, c.x, c.y+MP_POINT_SIZE );
+		}
+		else ofCircle( getCenter(), MP_POINT_SIZE);
 	}
 	
 	//ofPopStyle();
@@ -66,11 +75,11 @@ void movablePoint::draw() {
 void movablePoint::enableInteraction(){
 	disableAllEvents();
 	enableMouseEvents();
-	enableAppEvents();
+	//enableAppEvents();
 }
 
 void movablePoint::disableInteraction(){
-	disableMouseEvents();
+	disableAllEvents();
 }
 
 void movablePoint::setEditable(bool status){
@@ -81,11 +90,45 @@ void movablePoint::setEditable(bool status){
 	isEditable?enableInteraction():disableInteraction();
 }
 
+void movablePoint::makeParent(vector<movablePoint>& _children){
+	isParentOfOthers = true;
+	
+	// keep pointer reference to children
+	children = &_children;
+	
+	//cout << children->size() << endl;
+}
+
+void movablePoint::removeChildren(){
+	isParentOfOthers = false;
+	children->clear();
+	
+}
+
+void movablePoint::makeActive(){
+	isActive = true;
+}
+
+void movablePoint::notActive(){
+	isActive = false;
+}
+
 ofPoint movablePoint::getPos(){
-	return ofPoint(this->x+this->width/2,this->y+height/2);
+	return ofPoint(this->x+this->width/2,this->y+this->height/2);
 	//ofPoint p = ofPoint(x+width/2,y+height/2);
 	//cout << getPosition().x << " - ";
 	//return position;
+}
+
+void movablePoint::setPosSize(ofPoint _pos, int _diameter){
+	ofPoint _size(_diameter, _diameter);
+	ofRectangle::setPosition( _pos - _size/2 );
+	ofRectangle::setWidth( _size.x );
+	ofRectangle::setHeight( _size.y );
+}
+
+void movablePoint::setPos(ofPoint _pos){
+	ofRectangle::setPosition( _pos - ((width+height)/2)/2 );
 }
 	
 void movablePoint::onRollOver(int x, int y) {
@@ -104,21 +147,40 @@ void movablePoint::onMouseMove(int x, int y){
 void movablePoint::onDragOver(int x, int y, int button) {
 	//printf("movablePoint::onDragOver(x: %i, y: %i, button: %i)\n", x, y, button);
 	
+	// prevent editing ?
 	if(!isEditable) return;
 	
-	this->x = x - width/2;
-	this->y = y - height/2;
+	// get new pos
+	float tmpX = x - width/2;
+	float tmpY = y - height/2;
+	
+	if( isParentOfOthers && children->size()>1) {
+		//movablePoint<int>::iterator<int,movablePoint> = &children;
+		//std::set< movablePoint*>::iterator caca = children->begin();
+		ofPoint dif( tmpX  - this->x, tmpY - this->y);
+		
+		// update children positions
+		for ( vector<movablePoint>::iterator p = children->begin(); p != children->end()-1; ++p){
+			
+			p->translate( dif );
+		}
+		
+		// also save its own position
+		this->x = tmpX;
+		this->y = tmpY;
+	}
+	else {
+		this->x = tmpX;
+		this->y = tmpY;
+	}
+	
 }
 	
 void movablePoint::onDragOutside(int x, int y, int button) {
 	//printf("movablePoint::onDragOutside(x: %i, y: %i, button: %i)\n", x, y, button);
 	
-	if(!isEditable) return;
-	
-	this->x = x - width/2;
-	this->y = y - height/2;
-	
-	//updateParentTriangle();
+	// simply
+	onDragOver(x, y, button);
 }
 	
 void movablePoint::onPress(int x, int y, int button) {

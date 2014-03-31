@@ -1,16 +1,19 @@
-illuminatiVisualiser
-====================
-![Preview](https://secure-b.vimeocdn.com/ts/467/904/467904598_960.jpg)  
-[Click here to watch a demo video](https://vimeo.com/89234034)
+# karmaMapper
 
-Details
-=======
-This software lets you configure triangles to be mapped on physical 3D triangles then renders generative visualisations on them.
-Music analysis is not yet completely integrated and controls are limited.
+Being coded...
 
-This repertory might be useful for example purposes.
+# Details
+This is the beginning of a complete custom mapping software. I'll commit updates from time to time.  
+I'm planning to maintain and continue this piece of software; feel free to contribute.  
+
+#### Current features:  
+- _realWorldInterface_ :  
+__Lets you map virtual shapes to real world coordinates.__  
+__The virtual shapes are then shared with other app components such as effect generators.__  
+- _More to come..._ :  
 
 - - - -
 
-By Daan de Lange and Alexandre Amiel  
-Preview video: http://vimeo.com/89234034
+By Daan de Lange for Karma Kusala
+http://daandelange.com/
+http://karma-kusala.com/

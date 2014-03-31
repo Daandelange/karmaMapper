@@ -1,9 +1,13 @@
 //
 //  basicEffect.cpp
-//  illuminatiVisualiser
+//  karmaMapper
 //
 //  Created by Daan de Lange on 12/3/14.
 //
+//  - - - -
+//
+//  Parent class for all effects.
+//  Implements some standard methods for overall usage.
 //
 
 #include "basicEffect.h"
@@ -24,8 +28,12 @@ void basicEffect::spawn(){
 
 // update --> animation
 // overrule this function with your own.
-void basicEffect::animate(){
+void basicEffect::render(){
 	lifeSpan ++;
+}
+
+void basicEffect::update(){
+	
 }
 
 // resets all values
@@ -34,17 +42,9 @@ void basicEffect::reset(){
 	// todo: do this in _reset() which calls reset();
 }
 
-// called after points moved.
-// overrule this function with your own.
-void basicEffect::pointsUpdated(){
+// called just before removal
+void basicEffect::destroy(){
 	
 }
 
-void basicEffect::setPoints( ofPoint _pts[4] ){
-	for(int i=0; i<4; i++) points[i] = _pts[i];
-	
-	pointsUpdated();
-}
-
-// for extension: register points rather then always using 3 points
 

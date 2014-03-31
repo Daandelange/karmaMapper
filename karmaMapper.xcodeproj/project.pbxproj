@@ -20,13 +20,13 @@
 		8531441218D269EA00165AE1 /* ofxFft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853143A118D269EA00165AE1 /* ofxFft.cpp */; };
 		8531441318D269EA00165AE1 /* ofxFftBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853143A318D269EA00165AE1 /* ofxFftBasic.cpp */; };
 		8531441418D269EA00165AE1 /* ofxFftw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853143A518D269EA00165AE1 /* ofxFftw.cpp */; };
-		8531442918D2DAE400165AE1 /* edgeTransitions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8531442718D2DAE300165AE1 /* edgeTransitions.cpp */; };
-		8565DD2318D115EC00FCABB8 /* imageMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8565DD2118D115EC00FCABB8 /* imageMapper.cpp */; };
-		8565DD2718D1163300FCABB8 /* basicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8565DD2518D1163300FCABB8 /* basicEffect.cpp */; };
-		8567E7E018D36EED003960B6 /* particleEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8567E7DE18D36EED003960B6 /* particleEmitter.cpp */; };
+		855FF95D18E48EF80026367A /* realWorldInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855FF95B18E48EF80026367A /* realWorldInterface.cpp */; };
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
-		859E61B518BB4CE800909993 /* illuminatiTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859E61B318BB4CE800909993 /* illuminatiTriangle.cpp */; };
-		859E61B918BB8E3B00909993 /* movablePoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859E61B718BB8E3B00909993 /* movablePoint.cpp */; };
+		85EE9E7118DE26ED0055FE86 /* basicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E6F18DE26ED0055FE86 /* basicEffect.cpp */; };
+		85EE9E7B18DE2A0F0055FE86 /* karmaMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E7918DE2A0F0055FE86 /* karmaMapper.cpp */; };
+		85EE9E8018DE2BEC0055FE86 /* movablePoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E7C18DE2BEC0055FE86 /* movablePoint.cpp */; };
+		85EE9E8118DE2BEC0055FE86 /* vectorShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E7E18DE2BEC0055FE86 /* vectorShape.cpp */; };
+		85EE9E8418DE2D440055FE86 /* basicShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E8218DE2D440055FE86 /* basicShape.cpp */; };
 		933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B40EDA85BEB63E46785BC29 /* tinyxml.cpp */; };
 		9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 832BDC407620CDBA568B713D /* tinyxmlerror.cpp */; };
 		B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECF8674C7975F1063C5E30CA /* ofxGuiGroup.cpp */; };
@@ -44,7 +44,6 @@
 		E45BE9830E8CC7DD009D7055 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9790E8CC7DD009D7055 /* OpenGL.framework */; };
 		E45BE9840E8CC7DD009D7055 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
-		E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
 		E4C2424710CC5A17004149E2 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424410CC5A17004149E2 /* AppKit.framework */; };
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
@@ -115,18 +114,19 @@
 		853143A418D269EA00165AE1 /* ofxFftBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFftBasic.h; sourceTree = "<group>"; };
 		853143A518D269EA00165AE1 /* ofxFftw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFftw.cpp; sourceTree = "<group>"; };
 		853143A618D269EA00165AE1 /* ofxFftw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFftw.h; sourceTree = "<group>"; };
-		8531442718D2DAE300165AE1 /* edgeTransitions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = edgeTransitions.cpp; path = animations/edgeTransitions.cpp; sourceTree = "<group>"; };
-		8531442818D2DAE400165AE1 /* edgeTransitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = edgeTransitions.h; path = animations/edgeTransitions.h; sourceTree = "<group>"; };
-		8565DD2118D115EC00FCABB8 /* imageMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imageMapper.cpp; path = animations/imageMapper.cpp; sourceTree = "<group>"; };
-		8565DD2218D115EC00FCABB8 /* imageMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imageMapper.h; path = animations/imageMapper.h; sourceTree = "<group>"; };
-		8565DD2518D1163300FCABB8 /* basicEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basicEffect.cpp; sourceTree = "<group>"; };
-		8565DD2618D1163300FCABB8 /* basicEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basicEffect.h; sourceTree = "<group>"; };
-		8567E7DE18D36EED003960B6 /* particleEmitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = particleEmitter.cpp; path = animations/particleEmitter.cpp; sourceTree = "<group>"; };
-		8567E7DF18D36EED003960B6 /* particleEmitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = particleEmitter.h; path = animations/particleEmitter.h; sourceTree = "<group>"; };
-		859E61B318BB4CE800909993 /* illuminatiTriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = illuminatiTriangle.cpp; sourceTree = "<group>"; };
-		859E61B418BB4CE800909993 /* illuminatiTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = illuminatiTriangle.h; sourceTree = "<group>"; };
-		859E61B718BB8E3B00909993 /* movablePoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = movablePoint.cpp; sourceTree = "<group>"; };
-		859E61B818BB8E3B00909993 /* movablePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = movablePoint.h; sourceTree = "<group>"; };
+		855FF95B18E48EF80026367A /* realWorldInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = realWorldInterface.cpp; sourceTree = "<group>"; };
+		855FF95C18E48EF80026367A /* realWorldInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = realWorldInterface.h; sourceTree = "<group>"; };
+		85D2F92218E9AD0F009EBB7B /* shapes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapes.h; path = src/shapes/shapes.h; sourceTree = SOURCE_ROOT; };
+		85EE9E6F18DE26ED0055FE86 /* basicEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basicEffect.cpp; path = effects/basicEffect.cpp; sourceTree = "<group>"; };
+		85EE9E7018DE26ED0055FE86 /* basicEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = basicEffect.h; path = effects/basicEffect.h; sourceTree = "<group>"; };
+		85EE9E7918DE2A0F0055FE86 /* karmaMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = karmaMapper.cpp; sourceTree = "<group>"; };
+		85EE9E7A18DE2A0F0055FE86 /* karmaMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = karmaMapper.h; sourceTree = "<group>"; };
+		85EE9E7C18DE2BEC0055FE86 /* movablePoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = movablePoint.cpp; path = src/shapes/movablePoint.cpp; sourceTree = SOURCE_ROOT; };
+		85EE9E7D18DE2BEC0055FE86 /* movablePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = movablePoint.h; path = src/shapes/movablePoint.h; sourceTree = SOURCE_ROOT; };
+		85EE9E7E18DE2BEC0055FE86 /* vectorShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vectorShape.cpp; path = src/shapes/vectorShape.cpp; sourceTree = SOURCE_ROOT; };
+		85EE9E7F18DE2BEC0055FE86 /* vectorShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vectorShape.h; path = src/shapes/vectorShape.h; sourceTree = SOURCE_ROOT; };
+		85EE9E8218DE2D440055FE86 /* basicShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basicShape.cpp; path = src/shapes/basicShape.cpp; sourceTree = SOURCE_ROOT; };
+		85EE9E8318DE2D440055FE86 /* basicShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = basicShape.h; path = src/shapes/basicShape.h; sourceTree = SOURCE_ROOT; };
 		87F26B4B24CBD428AD9EEBAA /* ofxBaseGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBaseGui.h; path = ../../../addons/ofxGui/src/ofxBaseGui.h; sourceTree = SOURCE_ROOT; };
 		89449E3044D456F7DE7BEA14 /* ofxPanel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxPanel.h; path = ../../../addons/ofxGui/src/ofxPanel.h; sourceTree = SOURCE_ROOT; };
 		907C5B5E104864A2D3A25745 /* ofxToggle.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxToggle.cpp; path = ../../../addons/ofxGui/src/ofxToggle.cpp; sourceTree = SOURCE_ROOT; };
@@ -148,10 +148,8 @@
 		E45BE9770E8CC7DD009D7055 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		E45BE9790E8CC7DD009D7055 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E45BE97A0E8CC7DD009D7055 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
-		E4B69B5B0A3A1756003C02F2 /* illuminatiVisualiserDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = illuminatiVisualiserDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B69B5B0A3A1756003C02F2 /* karmaMapperDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = karmaMapperDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
-		E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofApp.cpp; path = src/ofApp.cpp; sourceTree = SOURCE_ROOT; };
-		E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ofApp.h; path = src/ofApp.h; sourceTree = SOURCE_ROOT; };
 		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = "<group>"; };
 		E4C2424410CC5A17004149E2 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		E4C2424510CC5A17004149E2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -328,17 +326,37 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		8565DD2418D1160400FCABB8 /* animations */ = {
+		855FF95A18E48EA60026367A /* other_objects */ = {
 			isa = PBXGroup;
 			children = (
-				8567E7DE18D36EED003960B6 /* particleEmitter.cpp */,
-				8567E7DF18D36EED003960B6 /* particleEmitter.h */,
-				8531442718D2DAE300165AE1 /* edgeTransitions.cpp */,
-				8531442818D2DAE400165AE1 /* edgeTransitions.h */,
-				8565DD2118D115EC00FCABB8 /* imageMapper.cpp */,
-				8565DD2218D115EC00FCABB8 /* imageMapper.h */,
+				855FF95B18E48EF80026367A /* realWorldInterface.cpp */,
+				855FF95C18E48EF80026367A /* realWorldInterface.h */,
 			);
-			name = animations;
+			name = other_objects;
+			sourceTree = "<group>";
+		};
+		8565DD2418D1160400FCABB8 /* effects */ = {
+			isa = PBXGroup;
+			children = (
+				85EE9E6F18DE26ED0055FE86 /* basicEffect.cpp */,
+				85EE9E7018DE26ED0055FE86 /* basicEffect.h */,
+			);
+			name = effects;
+			sourceTree = "<group>";
+		};
+		85EE9E7218DE29600055FE86 /* shapes */ = {
+			isa = PBXGroup;
+			children = (
+				85D2F92218E9AD0F009EBB7B /* shapes.h */,
+				85EE9E8218DE2D440055FE86 /* basicShape.cpp */,
+				85EE9E8318DE2D440055FE86 /* basicShape.h */,
+				85EE9E7C18DE2BEC0055FE86 /* movablePoint.cpp */,
+				85EE9E7D18DE2BEC0055FE86 /* movablePoint.h */,
+				85EE9E7E18DE2BEC0055FE86 /* vectorShape.cpp */,
+				85EE9E7F18DE2BEC0055FE86 /* vectorShape.h */,
+			);
+			name = shapes;
+			path = figures;
 			sourceTree = "<group>";
 		};
 		A763ED608B35AE3310251DEE /* src */ = {
@@ -432,23 +450,19 @@
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
-				E4B69B5B0A3A1756003C02F2 /* illuminatiVisualiserDebug.app */,
+				E4B69B5B0A3A1756003C02F2 /* karmaMapperDebug.app */,
 			);
 			sourceTree = "<group>";
 		};
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				8565DD2418D1160400FCABB8 /* animations */,
+				855FF95A18E48EA60026367A /* other_objects */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
-				859E61B318BB4CE800909993 /* illuminatiTriangle.cpp */,
-				859E61B418BB4CE800909993 /* illuminatiTriangle.h */,
-				859E61B718BB8E3B00909993 /* movablePoint.cpp */,
-				859E61B818BB8E3B00909993 /* movablePoint.h */,
-				8565DD2518D1163300FCABB8 /* basicEffect.cpp */,
-				8565DD2618D1163300FCABB8 /* basicEffect.h */,
-				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
-				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
+				8565DD2418D1160400FCABB8 /* effects */,
+				85EE9E7218DE29600055FE86 /* shapes */,
+				85EE9E7918DE2A0F0055FE86 /* karmaMapper.cpp */,
+				85EE9E7A18DE2A0F0055FE86 /* karmaMapper.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -465,9 +479,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E4B69B5A0A3A1756003C02F2 /* illuminatiVisualiser */ = {
+		E4B69B5A0A3A1756003C02F2 /* karmaMapper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "illuminatiVisualiser" */;
+			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "karmaMapper" */;
 			buildPhases = (
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
@@ -479,9 +493,9 @@
 			dependencies = (
 				E4EEB9AC138B136A00A80321 /* PBXTargetDependency */,
 			);
-			name = illuminatiVisualiser;
+			name = karmaMapper;
 			productName = myOFApp;
-			productReference = E4B69B5B0A3A1756003C02F2 /* illuminatiVisualiserDebug.app */;
+			productReference = E4B69B5B0A3A1756003C02F2 /* karmaMapperDebug.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -492,7 +506,7 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 			};
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "illuminatiVisualiser" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "karmaMapper" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -513,7 +527,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				E4B69B5A0A3A1756003C02F2 /* illuminatiVisualiser */,
+				E4B69B5A0A3A1756003C02F2 /* karmaMapper */,
 			);
 		};
 /* End PBXProject section */
@@ -550,31 +564,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
-				8531442918D2DAE400165AE1 /* edgeTransitions.cpp in Sources */,
-				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
-				859E61B518BB4CE800909993 /* illuminatiTriangle.cpp in Sources */,
-				859E61B918BB8E3B00909993 /* movablePoint.cpp in Sources */,
+				85EE9E8118DE2BEC0055FE86 /* vectorShape.cpp in Sources */,
 				8531441018D269EA00165AE1 /* kiss_fftr.c in Sources */,
 				D1395DD979998DCFFA40ACAC /* ofxMSAInteractiveObject.cpp in Sources */,
 				8531440F18D269EA00165AE1 /* kiss_fft.c in Sources */,
+				85EE9E8418DE2D440055FE86 /* basicShape.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
 				B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */,
 				8531441118D269EA00165AE1 /* ofxEasyFft.cpp in Sources */,
 				483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */,
 				F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */,
+				85EE9E7118DE26ED0055FE86 /* basicEffect.cpp in Sources */,
 				837220E80EB56CD44AD27F2A /* ofxSlider.cpp in Sources */,
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
 				8531441318D269EA00165AE1 /* ofxFftBasic.cpp in Sources */,
-				8565DD2318D115EC00FCABB8 /* imageMapper.cpp in Sources */,
 				8531441218D269EA00165AE1 /* ofxFft.cpp in Sources */,
 				1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */,
+				85EE9E8018DE2BEC0055FE86 /* movablePoint.cpp in Sources */,
 				63B57AC5BF4EF088491E0317 /* ofxXmlSettings.cpp in Sources */,
-				8567E7E018D36EED003960B6 /* particleEmitter.cpp in Sources */,
+				85EE9E7B18DE2A0F0055FE86 /* karmaMapper.cpp in Sources */,
 				933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */,
-				8565DD2718D1163300FCABB8 /* basicEffect.cpp in Sources */,
 				9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */,
 				5A4349E9754D6FA14C0F2A3A /* tinyxmlparser.cpp in Sources */,
+				855FF95D18E48EF80026367A /* realWorldInterface.cpp in Sources */,
 				8531441418D269EA00165AE1 /* ofxFftw.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -751,7 +764,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
 					/Developer/of_v0.8.0_osx_release/addons/ofxFft/libs/fftw/lib/osx,
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)Debug";
+				PRODUCT_NAME = karmaMapperDebug;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -837,7 +850,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					/Developer/of_v0.8.0_osx_release/addons/ofxFft/libs/fftw/lib/osx,
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = karmaMapper;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -845,7 +858,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "illuminatiVisualiser" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "karmaMapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,
@@ -854,7 +867,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "illuminatiVisualiser" */ = {
+		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "karmaMapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B600A3A1757003C02F2 /* Debug */,

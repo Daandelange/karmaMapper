@@ -1,16 +1,15 @@
 #pragma once
 
 #include "ofMain.h"
-#include "illuminatiTriangle.h"
-//#include "movablePoint.h"
-#include "ofxEasyFft.h"
+#include "realWorldInterface.h"
 
-class ofApp : public ofBaseApp{
+class karmaMapper : public ofBaseApp{
 
 public:
 	void setup();
 	void update();
 	void draw();
+	void exit();
 
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -23,17 +22,6 @@ public:
 	void gotMessage(ofMessage msg);
 	
 private:
-	void analyseMusic();
+	realWorldInterface rwi;
 	
-	vector<illuminatiTriangle*> triangles;
-	bool debug;
-	int numTriangles;
-	
-	bool shiftIsPressed;
-	
-	// OF FFT
-	int bufferSize, nbEqBands;
-	ofxEasyFft fft;
-	vector<float> equalizer;
-	void musicalLine(vector<float>& buffer, ofVec3f intensity, ofVec3f start, ofVec3f end);
 };
