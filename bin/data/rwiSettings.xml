@@ -1,42 +1,74 @@
 <RWI>
-    <ACTIVE_SHAPE>1</ACTIVE_SHAPE>
+    <ACTIVE_SHAPE>0</ACTIVE_SHAPE>
     <NUM_SHAPES>2</NUM_SHAPES>
     <SHAPE_0>
         <SHAPE_ID>0</SHAPE_ID>
-        <SHAPE_TYPE>vectorShape</SHAPE_TYPE>
-        <SHAPE_CENTER_X>486.000000000</SHAPE_CENTER_X>
-        <SHAPE_CENTER_Y>420.000000000</SHAPE_CENTER_Y>
-        <SHAPE_NUM_POINTS>4</SHAPE_NUM_POINTS>
+        <SHAPE_TYPE>vertexShape</SHAPE_TYPE>
+        <SHAPE_CENTER_X>404.000000000</SHAPE_CENTER_X>
+        <SHAPE_CENTER_Y>245.000000000</SHAPE_CENTER_Y>
+        <SHAPE_NUM_POINTS>12</SHAPE_NUM_POINTS>
         <POINTS_0>
-            <POS_X>166.000000000</POS_X>
-            <POS_Y>51.000000000</POS_Y>
+            <POS_X>42.000000000</POS_X>
+            <POS_Y>-179.000000000</POS_Y>
         </POINTS_0>
         <POINTS_1>
-            <POS_X>-7.000000000</POS_X>
-            <POS_Y>158.000000000</POS_Y>
+            <POS_X>141.000000000</POS_X>
+            <POS_Y>-163.000000000</POS_Y>
         </POINTS_1>
         <POINTS_2>
-            <POS_X>-270.000000000</POS_X>
-            <POS_Y>38.000000000</POS_Y>
+            <POS_X>149.000000000</POS_X>
+            <POS_Y>-78.000000000</POS_Y>
         </POINTS_2>
         <POINTS_3>
-            <POS_X>76.000000000</POS_X>
-            <POS_Y>-218.000000000</POS_Y>
+            <POS_X>198.000000000</POS_X>
+            <POS_Y>-54.000000000</POS_Y>
         </POINTS_3>
+        <POINTS_4>
+            <POS_X>202.000000000</POS_X>
+            <POS_Y>10.000000000</POS_Y>
+        </POINTS_4>
+        <POINTS_5>
+            <POS_X>139.000000000</POS_X>
+            <POS_Y>54.000000000</POS_Y>
+        </POINTS_5>
+        <POINTS_6>
+            <POS_X>80.000000000</POS_X>
+            <POS_Y>68.000000000</POS_Y>
+        </POINTS_6>
+        <POINTS_7>
+            <POS_X>0.000000000</POS_X>
+            <POS_Y>100.000000000</POS_Y>
+        </POINTS_7>
+        <POINTS_8>
+            <POS_X>-78.000000000</POS_X>
+            <POS_Y>73.000000000</POS_Y>
+        </POINTS_8>
+        <POINTS_9>
+            <POS_X>-102.000000000</POS_X>
+            <POS_Y>0.000000000</POS_Y>
+        </POINTS_9>
+        <POINTS_10>
+            <POS_X>-99.000000000</POS_X>
+            <POS_Y>-99.000000000</POS_Y>
+        </POINTS_10>
+        <POINTS_11>
+            <POS_X>-28.000000000</POS_X>
+            <POS_Y>-149.000000000</POS_Y>
+        </POINTS_11>
     </SHAPE_0>
     <SHAPE_1>
         <SHAPE_ID>0</SHAPE_ID>
-        <SHAPE_TYPE>vectorShape</SHAPE_TYPE>
-        <SHAPE_CENTER_X>522.000000000</SHAPE_CENTER_X>
-        <SHAPE_CENTER_Y>356.000000000</SHAPE_CENTER_Y>
+        <SHAPE_TYPE>vertexShape</SHAPE_TYPE>
+        <SHAPE_CENTER_X>688.000000000</SHAPE_CENTER_X>
+        <SHAPE_CENTER_Y>225.000000000</SHAPE_CENTER_Y>
         <SHAPE_NUM_POINTS>4</SHAPE_NUM_POINTS>
         <POINTS_0>
-            <POS_X>202.000000000</POS_X>
-            <POS_Y>-35.000000000</POS_Y>
+            <POS_X>91.000000000</POS_X>
+            <POS_Y>0.000000000</POS_Y>
         </POINTS_0>
         <POINTS_1>
             <POS_X>0.000000000</POS_X>
-            <POS_Y>95.000000000</POS_Y>
+            <POS_Y>100.000000000</POS_Y>
         </POINTS_1>
         <POINTS_2>
             <POS_X>-100.000000000</POS_X>

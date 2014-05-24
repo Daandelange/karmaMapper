@@ -22,10 +22,12 @@
 		8531441418D269EA00165AE1 /* ofxFftw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853143A518D269EA00165AE1 /* ofxFftw.cpp */; };
 		855FF95D18E48EF80026367A /* realWorldInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855FF95B18E48EF80026367A /* realWorldInterface.cpp */; };
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
+		856E1E64192F718000FB870F /* vertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 856E1E62192F718000FB870F /* vertexShape.cpp */; };
+		85E4A4EA1931235B00C1A046 /* ofxTrueTypeFontUC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E4A4E61931235B00C1A046 /* ofxTrueTypeFontUC.cpp */; };
 		85EE9E7118DE26ED0055FE86 /* basicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E6F18DE26ED0055FE86 /* basicEffect.cpp */; };
 		85EE9E7B18DE2A0F0055FE86 /* karmaMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E7918DE2A0F0055FE86 /* karmaMapper.cpp */; };
 		85EE9E8018DE2BEC0055FE86 /* movablePoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E7C18DE2BEC0055FE86 /* movablePoint.cpp */; };
-		85EE9E8118DE2BEC0055FE86 /* vectorShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E7E18DE2BEC0055FE86 /* vectorShape.cpp */; };
+		85EE9E8118DE2BEC0055FE86 /* bezierShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E7E18DE2BEC0055FE86 /* bezierShape.cpp */; };
 		85EE9E8418DE2D440055FE86 /* basicShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E8218DE2D440055FE86 /* basicShape.cpp */; };
 		933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2B40EDA85BEB63E46785BC29 /* tinyxml.cpp */; };
 		9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 832BDC407620CDBA568B713D /* tinyxmlerror.cpp */; };
@@ -116,15 +118,20 @@
 		853143A618D269EA00165AE1 /* ofxFftw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFftw.h; sourceTree = "<group>"; };
 		855FF95B18E48EF80026367A /* realWorldInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = realWorldInterface.cpp; sourceTree = "<group>"; };
 		855FF95C18E48EF80026367A /* realWorldInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = realWorldInterface.h; sourceTree = "<group>"; };
+		856E1E62192F718000FB870F /* vertexShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertexShape.cpp; sourceTree = SOURCE_ROOT; };
+		856E1E63192F718000FB870F /* vertexShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertexShape.h; sourceTree = SOURCE_ROOT; };
 		85D2F92218E9AD0F009EBB7B /* shapes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapes.h; path = src/shapes/shapes.h; sourceTree = SOURCE_ROOT; };
+		85E4A4D519311F2800C1A046 /* ofxTextBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTextBox.h; sourceTree = "<group>"; };
+		85E4A4E61931235B00C1A046 /* ofxTrueTypeFontUC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTrueTypeFontUC.cpp; sourceTree = "<group>"; };
+		85E4A4E71931235B00C1A046 /* ofxTrueTypeFontUC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTrueTypeFontUC.h; sourceTree = "<group>"; };
 		85EE9E6F18DE26ED0055FE86 /* basicEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basicEffect.cpp; path = effects/basicEffect.cpp; sourceTree = "<group>"; };
 		85EE9E7018DE26ED0055FE86 /* basicEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = basicEffect.h; path = effects/basicEffect.h; sourceTree = "<group>"; };
 		85EE9E7918DE2A0F0055FE86 /* karmaMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = karmaMapper.cpp; sourceTree = "<group>"; };
 		85EE9E7A18DE2A0F0055FE86 /* karmaMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = karmaMapper.h; sourceTree = "<group>"; };
 		85EE9E7C18DE2BEC0055FE86 /* movablePoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = movablePoint.cpp; path = src/shapes/movablePoint.cpp; sourceTree = SOURCE_ROOT; };
 		85EE9E7D18DE2BEC0055FE86 /* movablePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = movablePoint.h; path = src/shapes/movablePoint.h; sourceTree = SOURCE_ROOT; };
-		85EE9E7E18DE2BEC0055FE86 /* vectorShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vectorShape.cpp; path = src/shapes/vectorShape.cpp; sourceTree = SOURCE_ROOT; };
-		85EE9E7F18DE2BEC0055FE86 /* vectorShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vectorShape.h; path = src/shapes/vectorShape.h; sourceTree = SOURCE_ROOT; };
+		85EE9E7E18DE2BEC0055FE86 /* bezierShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bezierShape.cpp; path = src/shapes/bezierShape.cpp; sourceTree = SOURCE_ROOT; };
+		85EE9E7F18DE2BEC0055FE86 /* bezierShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bezierShape.h; path = src/shapes/bezierShape.h; sourceTree = SOURCE_ROOT; };
 		85EE9E8218DE2D440055FE86 /* basicShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basicShape.cpp; path = src/shapes/basicShape.cpp; sourceTree = SOURCE_ROOT; };
 		85EE9E8318DE2D440055FE86 /* basicShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = basicShape.h; path = src/shapes/basicShape.h; sourceTree = SOURCE_ROOT; };
 		87F26B4B24CBD428AD9EEBAA /* ofxBaseGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBaseGui.h; path = ../../../addons/ofxGui/src/ofxBaseGui.h; sourceTree = SOURCE_ROOT; };
@@ -344,6 +351,41 @@
 			name = effects;
 			sourceTree = "<group>";
 		};
+		85E4A4C419311F2700C1A046 /* ofxTextBox */ = {
+			isa = PBXGroup;
+			children = (
+				85E4A4D419311F2800C1A046 /* src */,
+			);
+			name = ofxTextBox;
+			path = ../../../addons/ofxTextBox;
+			sourceTree = "<group>";
+		};
+		85E4A4D419311F2800C1A046 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				85E4A4D519311F2800C1A046 /* ofxTextBox.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		85E4A4DB1931235B00C1A046 /* ofxTrueTypeFontUC */ = {
+			isa = PBXGroup;
+			children = (
+				85E4A4E51931235B00C1A046 /* src */,
+			);
+			name = ofxTrueTypeFontUC;
+			path = ../../../addons/ofxTrueTypeFontUC;
+			sourceTree = "<group>";
+		};
+		85E4A4E51931235B00C1A046 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				85E4A4E61931235B00C1A046 /* ofxTrueTypeFontUC.cpp */,
+				85E4A4E71931235B00C1A046 /* ofxTrueTypeFontUC.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		85EE9E7218DE29600055FE86 /* shapes */ = {
 			isa = PBXGroup;
 			children = (
@@ -352,8 +394,10 @@
 				85EE9E8318DE2D440055FE86 /* basicShape.h */,
 				85EE9E7C18DE2BEC0055FE86 /* movablePoint.cpp */,
 				85EE9E7D18DE2BEC0055FE86 /* movablePoint.h */,
-				85EE9E7E18DE2BEC0055FE86 /* vectorShape.cpp */,
-				85EE9E7F18DE2BEC0055FE86 /* vectorShape.h */,
+				85EE9E7E18DE2BEC0055FE86 /* bezierShape.cpp */,
+				85EE9E7F18DE2BEC0055FE86 /* bezierShape.h */,
+				856E1E62192F718000FB870F /* vertexShape.cpp */,
+				856E1E63192F718000FB870F /* vertexShape.h */,
 			);
 			name = shapes;
 			path = figures;
@@ -386,6 +430,8 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				85E4A4DB1931235B00C1A046 /* ofxTrueTypeFontUC */,
+				85E4A4C419311F2700C1A046 /* ofxTextBox */,
 				8531421018D269E500165AE1 /* ofxFft */,
 				480A780D8D0308AE4A368801 /* ofxGui */,
 				1F4FB5C423662B96ADFDCC0B /* ofxXmlSettings */,
@@ -564,7 +610,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
-				85EE9E8118DE2BEC0055FE86 /* vectorShape.cpp in Sources */,
+				85EE9E8118DE2BEC0055FE86 /* bezierShape.cpp in Sources */,
 				8531441018D269EA00165AE1 /* kiss_fftr.c in Sources */,
 				D1395DD979998DCFFA40ACAC /* ofxMSAInteractiveObject.cpp in Sources */,
 				8531440F18D269EA00165AE1 /* kiss_fft.c in Sources */,
@@ -580,6 +626,7 @@
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
 				8531441318D269EA00165AE1 /* ofxFftBasic.cpp in Sources */,
 				8531441218D269EA00165AE1 /* ofxFft.cpp in Sources */,
+				856E1E64192F718000FB870F /* vertexShape.cpp in Sources */,
 				1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */,
 				85EE9E8018DE2BEC0055FE86 /* movablePoint.cpp in Sources */,
 				63B57AC5BF4EF088491E0317 /* ofxXmlSettings.cpp in Sources */,
@@ -587,6 +634,7 @@
 				933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */,
 				9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */,
 				5A4349E9754D6FA14C0F2A3A /* tinyxmlparser.cpp in Sources */,
+				85E4A4EA1931235B00C1A046 /* ofxTrueTypeFontUC.cpp in Sources */,
 				855FF95D18E48EF80026367A /* realWorldInterface.cpp in Sources */,
 				8531441418D269EA00165AE1 /* ofxFftw.cpp in Sources */,
 			);

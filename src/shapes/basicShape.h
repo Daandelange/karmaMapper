@@ -16,11 +16,11 @@ class basicShape {
 
 public:
 	basicShape();
-	~basicShape();
+	virtual ~basicShape();
 	
 	virtual void spawn()=0; // called when the new shape is instantiated
 	virtual void destroy()=0; // called to destroy the shape
-	virtual void drawWireframe()=0; // can be overruled with your own function
+	virtual void drawWireframe()=0; // must be overruled with your own function
 	virtual void editModeChanged(bool editMode)=0;
 	virtual void pointsUpdated()=0;
 	//virtual void reset()=0;
@@ -63,5 +63,7 @@ public:
 	//bool isVisible;
 	string shapeType;
 	int shapeId; // utility for handling several basicShape() instances.
+	ofColor fgColor;
+	ofColor bgColor;
 	
 };

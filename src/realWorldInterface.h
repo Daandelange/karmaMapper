@@ -15,10 +15,13 @@
 #include "shapes.h"
 #include "ofxGui.h"
 #include "ofxXmlSettings.h"
+#include "ofxTextBox.h"
 
 class realWorldInterface {
 
 public:
+	realWorldInterface();
+	~realWorldInterface();
 
 	void setup();
 	void update();
@@ -33,10 +36,15 @@ public:
 	void editNextShape();
 	void resetShapes();
 	
+	void _keyPressed( ofKeyEventArgs& args );
+	
 	void selectNextShapeHandle();
 	
 	bool isInEditMode;
 	int numShapes;
+	
+	void _resized( ofResizeEventArgs& args );
+	
 	
 private:
 	vector<basicShape*> shapes;
@@ -59,5 +67,7 @@ private:
 	
 	// load & save stuff
 	int nextSaveId;
+	bool showHelp;
 	
+	ofxTextBox textBox;
 };

@@ -8,10 +8,18 @@
 
 #include "basicShape.h"
 
-#define FG_COLOR 255
-
 basicShape::basicShape() {
 	shapeType = "basicShape";
+	
+	// set position
+	position = ofPoint(0);
+	boundingBox = ofRectangle(0,0,0,0);
+	isInEditMode = false;
+	initialized = false;
+	activeHandle = -1;
+	
+	fgColor = ofColor(255);
+	bgColor = ofColor(0);
 }
 
 basicShape::~basicShape(){
@@ -60,33 +68,31 @@ void basicShape::basicDestroy(){
 
 void basicShape::basicDrawWireframe(){
 	ofPushStyle();
-	ofNoFill();
+	ofPushMatrix();
 	
 	// show container box
-	ofSetColor( FG_COLOR, 30 );
-	//ofRectangle(position.x-this->width/2, position.y-height/2, width, height );
+	ofSetColor( fgColor, 30 );
+	ofNoFill();
 	ofRect( boundingBox );
 	
-	// show position point
-	//ofSetColor( FG_COLOR );
-	//ofLine(position.x-5, position.y, position.x+5, position.y);
-	//ofLine(position.x, position.y-5, position.x, position.y+5);
-	
-	
-	// show points ?
-	ofSetColor( FG_COLOR );
+	// show points
+	ofSetColor( fgColor );
 	ofFill();
-	//for(int i=0; i<points.size(); i++){
-		// now done by movablePoint
-		//ofCircle(position + points[i], 30);
-	//}
 	for(int i=0; i<pointHandlers.size(); i++){
+		// draw center point
 		pointHandlers[i].draw();
+		
+		// connect with prev point
+		//if(i>0) ofLine( points[i-1], points[i] );
 	}
+	
+	// go to center
+	ofTranslate( position );
 	
 	// call this over-ruleable function so customShapes can do their thing
 	drawWireframe();
 	
+	ofPopMatrix();
 	ofPopStyle();
 }
 
@@ -254,6 +260,7 @@ bool basicShape::loadXMLValues(ofxXmlSettings *xml, int _nb){
 	// get more info
 	position.x = xml->getValue("RWI:SHAPE_"+nb+":SHAPE_CENTER_X", ofGetWidth()/2 );
 	position.y = xml->getValue("RWI:SHAPE_"+nb+":SHAPE_CENTER_Y", ofGetHeight()/2);
+
 	basicSpawn( position, shapeId);
 	int tmpNumPoints = xml->getValue("RWI:SHAPE_"+nb+":SHAPE_NUM_POINTS", (int) points.size());
 	

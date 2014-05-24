@@ -43,7 +43,7 @@ void karmaMapper::draw(){
 	//ofSetColor(250);
 	ofNoFill();
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate())+"fps", pos);
-	pos += ofPoint(0, 20); // line height
+	//pos += ofPoint(0, 20); // line height
 		
 	ofPopStyle();
 	

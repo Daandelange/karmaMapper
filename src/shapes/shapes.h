@@ -10,4 +10,5 @@
 
 // include all custom shapes here
 #include "basicShape.h"
-#include "vectorShape.h"
+#include "bezierShape.h"
+#include "vertexShape.h"

@@ -8,6 +8,20 @@
 
 #include "realWorldInterface.h"
 
+#define HELP_ZONE_WIDTH 600
+
+realWorldInterface::realWorldInterface(){
+	showHelp = true;
+}
+
+realWorldInterface::~realWorldInterface(){
+	// rm eventlisteners
+	ofRemoveListener( ofEvents().keyPressed, this, &realWorldInterface::_keyPressed);
+	ofRemoveListener( ofEvents().windowResized, this, &realWorldInterface::_resized);
+	
+	resetShapes(); // ensures the shapes are correctly removed from memory
+}
+
 
 void realWorldInterface::setup() {
 	activeShape = -1;
@@ -36,6 +50,14 @@ void realWorldInterface::setup() {
 	
 	// bind detailed item editing
 	//ofAddListener( ofEvents().keyPressed, this, &realWorldInterface::editShapeItem);
+	ofAddListener( ofEvents().keyPressed, this, &realWorldInterface::_keyPressed);
+	ofAddListener( ofEvents().windowResized, this, &realWorldInterface::_resized);
+	
+	// setup help box
+	textBox.loadFont("F25_Bank_Printer.ttf", 12); // get --> http://www.dafont.com/fr/f25-bank-printer.font?fpp=50&a=on&e=on&l[]=10&l[]=1
+	textBox.setText("HELP\n - - - -\nGlobal:\n\te = toggle edit mode\n\th = toggle this help box\n\nShape editing\n\tr+click [on a point] = remove point\n\tClick+drag [on a point] = drag\n\tRight click [on a vertexShape line] = add point\n\n");
+	textBox.showsFrame(false);
+    textBox.setRectangle( ofRectangle( ofGetWidth()-HELP_ZONE_WIDTH+20 ,40,HELP_ZONE_WIDTH,400) );
 	
 	// load previously saved settings
 	loadSettings();
@@ -52,26 +74,41 @@ void realWorldInterface::update() {
 void realWorldInterface::draw() {
 	
 	// no edit mode, no draw
-	if( !isInEditMode ) return;
+	if( isInEditMode ){
 	
-	// draw wireframe ?
-	if( numShapes>0 && isShapesIndex(activeShape) ){
-		shapes[activeShape]->basicDrawWireframe();
+		// draw wireframe ?
+		if( numShapes>0 && isShapesIndex(activeShape) ){
+			shapes[activeShape]->basicDrawWireframe();
+		}
+		
+		if(showHelp){
+			ofSetHexColor(0x000000);
+			ofFill();
+			ofRect( textBox.getRect() );
+			ofSetHexColor(0xFFFFFF);
+			ofNoFill();
+			textBox.draw();
+		}
+	
+		// show gui
+		gui.draw();
 	}
 	
-	
-	//for(int i=0; i<numShapes; i++){
-	//	shapes[i]->basicDrawWireframe();
-	//}
-	
-	// show gui
-	gui.draw();
-	
+	// render effects on shapes
+	else {
+		//effects.render();
+		for(int s=0; s<shapes.size(); s++){
+			ofPushMatrix();
+			ofTranslate( shapes[s]->position );
+			shapes[s]->drawWireframe();
+			ofPopMatrix();
+		}
+	}
 }
 
 void realWorldInterface::exit(){
 	
-	resetShapes(); // ensures the shapes are correctly removed from memory
+	
 }
 
 // used to return the right class from a string
@@ -79,23 +116,29 @@ void realWorldInterface::exit(){
 basicShape* realWorldInterface::stringToShapeClass(string _s){
 	
 	// add your custom shape in this list, if you made one
-	if(_s == "vectorShape") return new vectorShape();
+	if(_s == "vertexShape") return new vertexShape();
+	//else if(_s == "") return new yourShape();
+	//else if(_s == "yourShape") return new yourShape();
 	
-	//else if(type == "yourShape") s = new yourShape();
-	//else if(type == "yourShape") s = new yourShape();
-	//else if(type == "yourShape") s = new yourShape();
-	
-	//else return new basicShape();
+	else{
+		ofLogNotice("realWorldInterface::stringToShapeClass() --> Unknown shape loaded from XML file: "+_s);
+		return NULL; // default shape is vertex
+	}
 }
 
 void realWorldInterface::addShape(){
 	// todo: GUI element that lets you select the shape
-	string type="vectorShape";
+	string type="vertexShape";
 	
 	basicShape* s;
 	
 	// get shape instance
 	s = stringToShapeClass( type );
+	
+	if(s==NULL){
+		ofLogNotice("realWorldInterface::addShape() --> Could not create a shape of type "+type);
+		return;
+	}
 	
 	// add a line here if you made a custom shape
 	shapes.push_back(s);
@@ -194,9 +237,16 @@ void realWorldInterface::resetShapes(){
 	activeShape=-1;
 }
 
+void realWorldInterface::_keyPressed( ofKeyEventArgs& args ){
+	if( args.key == 'h' || args.key == 'H' ){
+		showHelp = !showHelp;
+	}
+}
+
 void realWorldInterface::selectNextShapeHandle(){
 	if(isShapesIndex(activeShape)) shapes[activeShape]->selectNextHandle();
 }
+
 
 bool realWorldInterface::isShapesIndex(int i){
 	return (i >= 0 && i < numShapes);
@@ -225,7 +275,10 @@ void realWorldInterface::saveSettings(){
 	
 	// delete pointer instance
 	xml->clear();
-	delete xml; // is this correct ? tocheck
+	delete xml;
+	
+	// reselect current shape
+	if(isShapesIndex(activeShape)) shapes[activeShape]->enableEditMode();
 }
 
 void realWorldInterface::loadSettings(){
@@ -253,9 +306,22 @@ void realWorldInterface::loadSettings(){
 	// let each shape write its settings.
 	shapes.resize(numShapes);
 	for(int i=0; i<numShapes; i++){
-		string tmpShapeType = xml->getValue("RWI:SHAPE_"+ofToString(i)+":SHAPE_TYPE", "basicShape");
+		// load shape into memory
+		string tmpShapeType = xml->getValue("RWI:SHAPE_"+ofToString(i)+":SHAPE_TYPE", "vertexShape");
 		shapes[i] = stringToShapeClass(tmpShapeType);
-		shapes[i]->loadXMLValues( xml, i);
+		
+		// verification
+		if( shapes[i] == NULL ){
+			// rm shape
+			shapes.erase(shapes.begin()+i);
+			numShapes--;
+			
+			// rm saved stuff ? (or not to keep the crap in the file)
+		}
+		
+		// put back data into shape
+		else shapes[i]->loadXMLValues( xml, i);
+		
 	}
 	
 	// enable edit mode if needed
@@ -264,4 +330,8 @@ void realWorldInterface::loadSettings(){
 	// delete pointer instance
 	xml->clear();
 	delete xml; // is this correct ? tocheck
+}
+
+void realWorldInterface::_resized( ofResizeEventArgs &args ){
+	textBox.setRectangle( ofRectangle( ofGetWidth()-HELP_ZONE_WIDTH+20 ,40,HELP_ZONE_WIDTH,400) );
 }
