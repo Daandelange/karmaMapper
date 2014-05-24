@@ -34,7 +34,7 @@ public:
 	void calculateVectorPoints(int smooth);
 	
 private:
-	//bool hovered, selected;
+	// bool hovered, selected;
 	unsigned int numPoints;
 	vector<ofPoint> leftVectors;
 	vector<ofPoint> rightVectors;

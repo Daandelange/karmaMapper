@@ -118,9 +118,6 @@ void bezierShape::calculateVectorPoints(int length){
 	leftVectors.resize( numPoints );
 	rightVectors.resize( numPoints );
 	
-	// generate polyline
-	//ofPolyline curveShape;
-	
 	// loop trough points
 	for(int i=0; i<numPoints; i++){
 		
