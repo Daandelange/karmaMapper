@@ -22,7 +22,10 @@
 		8531441418D269EA00165AE1 /* ofxFftw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853143A518D269EA00165AE1 /* ofxFftw.cpp */; };
 		855FF95D18E48EF80026367A /* realWorldInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855FF95B18E48EF80026367A /* realWorldInterface.cpp */; };
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
-		856E1E64192F718000FB870F /* vertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 856E1E62192F718000FB870F /* vertexShape.cpp */; };
+		85912507193226B300FB75FD /* karmaSoundAnalyser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85912505193226B300FB75FD /* karmaSoundAnalyser.cpp */; };
+		8591250A193226F600FB75FD /* vertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85912508193226F600FB75FD /* vertexShape.cpp */; };
+		859125171932569200FB75FD /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859125131932569200FB75FD /* fft.cpp */; };
+		859125181932569200FB75FD /* fftOctaveAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859125151932569200FB75FD /* fftOctaveAnalyzer.cpp */; };
 		85E4A4EA1931235B00C1A046 /* ofxTrueTypeFontUC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E4A4E61931235B00C1A046 /* ofxTrueTypeFontUC.cpp */; };
 		85EE9E7118DE26ED0055FE86 /* basicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E6F18DE26ED0055FE86 /* basicEffect.cpp */; };
 		85EE9E7B18DE2A0F0055FE86 /* karmaMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E7918DE2A0F0055FE86 /* karmaMapper.cpp */; };
@@ -118,8 +121,14 @@
 		853143A618D269EA00165AE1 /* ofxFftw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFftw.h; sourceTree = "<group>"; };
 		855FF95B18E48EF80026367A /* realWorldInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = realWorldInterface.cpp; sourceTree = "<group>"; };
 		855FF95C18E48EF80026367A /* realWorldInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = realWorldInterface.h; sourceTree = "<group>"; };
-		856E1E62192F718000FB870F /* vertexShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertexShape.cpp; sourceTree = SOURCE_ROOT; };
-		856E1E63192F718000FB870F /* vertexShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertexShape.h; sourceTree = SOURCE_ROOT; };
+		85912505193226B300FB75FD /* karmaSoundAnalyser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = karmaSoundAnalyser.cpp; path = soundAnalysis/karmaSoundAnalyser.cpp; sourceTree = "<group>"; };
+		85912506193226B300FB75FD /* karmaSoundAnalyser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaSoundAnalyser.h; path = soundAnalysis/karmaSoundAnalyser.h; sourceTree = "<group>"; };
+		85912508193226F600FB75FD /* vertexShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vertexShape.cpp; path = src/shapes/vertexShape.cpp; sourceTree = SOURCE_ROOT; };
+		85912509193226F600FB75FD /* vertexShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vertexShape.h; path = src/shapes/vertexShape.h; sourceTree = SOURCE_ROOT; };
+		859125131932569200FB75FD /* fft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fft.cpp; path = soundAnalysis/fft.cpp; sourceTree = "<group>"; };
+		859125141932569200FB75FD /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fft.h; path = soundAnalysis/fft.h; sourceTree = "<group>"; };
+		859125151932569200FB75FD /* fftOctaveAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fftOctaveAnalyzer.cpp; path = soundAnalysis/fftOctaveAnalyzer.cpp; sourceTree = "<group>"; };
+		859125161932569200FB75FD /* fftOctaveAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fftOctaveAnalyzer.h; path = soundAnalysis/fftOctaveAnalyzer.h; sourceTree = "<group>"; };
 		85D2F92218E9AD0F009EBB7B /* shapes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapes.h; path = src/shapes/shapes.h; sourceTree = SOURCE_ROOT; };
 		85E4A4D519311F2800C1A046 /* ofxTextBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTextBox.h; sourceTree = "<group>"; };
 		85E4A4E61931235B00C1A046 /* ofxTrueTypeFontUC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTrueTypeFontUC.cpp; sourceTree = "<group>"; };
@@ -351,6 +360,19 @@
 			name = effects;
 			sourceTree = "<group>";
 		};
+		859125041932267A00FB75FD /* soundAnalysis */ = {
+			isa = PBXGroup;
+			children = (
+				85912505193226B300FB75FD /* karmaSoundAnalyser.cpp */,
+				85912506193226B300FB75FD /* karmaSoundAnalyser.h */,
+				859125131932569200FB75FD /* fft.cpp */,
+				859125141932569200FB75FD /* fft.h */,
+				859125151932569200FB75FD /* fftOctaveAnalyzer.cpp */,
+				859125161932569200FB75FD /* fftOctaveAnalyzer.h */,
+			);
+			name = soundAnalysis;
+			sourceTree = "<group>";
+		};
 		85E4A4C419311F2700C1A046 /* ofxTextBox */ = {
 			isa = PBXGroup;
 			children = (
@@ -396,8 +418,8 @@
 				85EE9E7D18DE2BEC0055FE86 /* movablePoint.h */,
 				85EE9E7E18DE2BEC0055FE86 /* bezierShape.cpp */,
 				85EE9E7F18DE2BEC0055FE86 /* bezierShape.h */,
-				856E1E62192F718000FB870F /* vertexShape.cpp */,
-				856E1E63192F718000FB870F /* vertexShape.h */,
+				85912508193226F600FB75FD /* vertexShape.cpp */,
+				85912509193226F600FB75FD /* vertexShape.h */,
 			);
 			name = shapes;
 			path = figures;
@@ -503,6 +525,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				859125041932267A00FB75FD /* soundAnalysis */,
 				855FF95A18E48EA60026367A /* other_objects */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				8565DD2418D1160400FCABB8 /* effects */,
@@ -620,17 +643,20 @@
 				B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */,
 				8531441118D269EA00165AE1 /* ofxEasyFft.cpp in Sources */,
 				483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */,
+				85912507193226B300FB75FD /* karmaSoundAnalyser.cpp in Sources */,
+				859125171932569200FB75FD /* fft.cpp in Sources */,
 				F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */,
+				859125181932569200FB75FD /* fftOctaveAnalyzer.cpp in Sources */,
 				85EE9E7118DE26ED0055FE86 /* basicEffect.cpp in Sources */,
 				837220E80EB56CD44AD27F2A /* ofxSlider.cpp in Sources */,
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
 				8531441318D269EA00165AE1 /* ofxFftBasic.cpp in Sources */,
 				8531441218D269EA00165AE1 /* ofxFft.cpp in Sources */,
-				856E1E64192F718000FB870F /* vertexShape.cpp in Sources */,
 				1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */,
 				85EE9E8018DE2BEC0055FE86 /* movablePoint.cpp in Sources */,
 				63B57AC5BF4EF088491E0317 /* ofxXmlSettings.cpp in Sources */,
 				85EE9E7B18DE2A0F0055FE86 /* karmaMapper.cpp in Sources */,
+				8591250A193226F600FB75FD /* vertexShape.cpp in Sources */,
 				933A2227713C720CEFF80FD9 /* tinyxml.cpp in Sources */,
 				9D44DC88EF9E7991B4A09951 /* tinyxmlerror.cpp in Sources */,
 				5A4349E9754D6FA14C0F2A3A /* tinyxmlparser.cpp in Sources */,

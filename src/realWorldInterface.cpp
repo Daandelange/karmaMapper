@@ -52,10 +52,19 @@ void realWorldInterface::setup() {
 	//ofAddListener( ofEvents().keyPressed, this, &realWorldInterface::editShapeItem);
 	ofAddListener( ofEvents().keyPressed, this, &realWorldInterface::_keyPressed);
 	ofAddListener( ofEvents().windowResized, this, &realWorldInterface::_resized);
-	
+
 	// setup help box
 	textBox.loadFont("F25_Bank_Printer.ttf", 12); // get --> http://www.dafont.com/fr/f25-bank-printer.font?fpp=50&a=on&e=on&l[]=10&l[]=1
-	textBox.setText("HELP\n - - - -\nGlobal:\n\te = toggle edit mode\n\th = toggle this help box\n\nShape editing\n\tr+click [on a point] = remove point\n\tClick+drag [on a point] = drag\n\tRight click [on a vertexShape line] = add point\n\n");
+	textBox.setText("HELP\n\
+- - - -\n\
+Global:\n\
+\te = toggle edit mode\n\
+\th = toggle this help box\n\
+\n\
+Shape editing\n\
+\tr+click [on a point] = remove point\n\
+\tClick+drag [on a point] = drag\n\
+\tRight click [on a vertexShape line] = add point\n\n");
 	textBox.showsFrame(false);
     textBox.setRectangle( ofRectangle( ofGetWidth()-HELP_ZONE_WIDTH+20 ,40,HELP_ZONE_WIDTH,400) );
 	

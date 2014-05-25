@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "realWorldInterface.h"
+#include "karmaSoundAnalyser.h"
 
 class karmaMapper : public ofBaseApp{
 
@@ -21,7 +22,9 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 	
+	void audioReceived (float * input, int bufferSize, int nChannels);
+	
 private:
 	realWorldInterface rwi;
-	
+	karmaSoundAnalyser soundAnalyser;
 };

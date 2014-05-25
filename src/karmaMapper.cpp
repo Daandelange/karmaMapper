@@ -14,13 +14,25 @@ void karmaMapper::setup(){
 	
 	rwi.setup();
 	
+	soundAnalyser.setup();
+	
 	// complete black background = nice start
 	ofBackground(0);
+	
+	// SOUND STREAM FOR karmaSoundAnalyser
+	//
+	// 0 output channels,
+	// 2 input channels
+	// 44100 samples per second
+	// BUFFER_SIZE samples per buffer
+	// 4 num buffers (latency)
+	//ofSoundStreamSetup(0,2,this, 44100, BUFFER_SIZE, 4);
 }
 
 //--------------------------------------------------------------
 void karmaMapper::update(){
 	rwi.update();
+	soundAnalyser.update();
 }
 
 //--------------------------------------------------------------
@@ -48,6 +60,8 @@ void karmaMapper::draw(){
 	ofPopStyle();
 	
 	#endif // endif KARMA_DEBUG
+	
+	soundAnalyser.drawExample();
 }
 
 void karmaMapper::exit(){
@@ -63,10 +77,6 @@ void karmaMapper::keyPressed(int key){
 		case '[': // imageMapper animation mode
 		case ']':
 			// bla
-			break;
-			
-		case 'a':
-			rwi.addShape();//"vectorShape");
 			break;
 			
 		case 'e':
@@ -122,4 +132,9 @@ void karmaMapper::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void karmaMapper::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+void karmaMapper::audioReceived (float * input, int bufferSize, int nChannels){
+	// temp until ofEvents().audioReceived is bindable
+	soundAnalyser._audioReceived( input, bufferSize, nChannels);
 }
