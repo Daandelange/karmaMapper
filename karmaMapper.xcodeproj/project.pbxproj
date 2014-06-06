@@ -29,6 +29,10 @@
 		859125171932569200FB75FD /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859125131932569200FB75FD /* fft.cpp */; };
 		859125181932569200FB75FD /* fftOctaveAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859125151932569200FB75FD /* fftOctaveAnalyzer.cpp */; };
 		85A0B39F193E5BC80089EDAF /* videoEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85A0B39D193E5BC80089EDAF /* videoEffect.cpp */; };
+		85AC89011941F50A0019DA65 /* gifEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AC88FF1941F50A0019DA65 /* gifEffect.cpp */; };
+		85AC89211941FCE00019DA65 /* ofxGifDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AC89181941FCE00019DA65 /* ofxGifDecoder.cpp */; };
+		85AC89221941FCE00019DA65 /* ofxGifFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AC891A1941FCE00019DA65 /* ofxGifFile.cpp */; };
+		85AC89231941FCE00019DA65 /* ofxGifFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AC891C1941FCE00019DA65 /* ofxGifFrame.cpp */; };
 		85E4A4EA1931235B00C1A046 /* ofxTrueTypeFontUC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E4A4E61931235B00C1A046 /* ofxTrueTypeFontUC.cpp */; };
 		85EE9E7118DE26ED0055FE86 /* basicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E6F18DE26ED0055FE86 /* basicEffect.cpp */; };
 		85EE9E7B18DE2A0F0055FE86 /* karmaMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EE9E7918DE2A0F0055FE86 /* karmaMapper.cpp */; };
@@ -136,6 +140,14 @@
 		859125161932569200FB75FD /* fftOctaveAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fftOctaveAnalyzer.h; path = soundAnalysis/fftOctaveAnalyzer.h; sourceTree = "<group>"; };
 		85A0B39D193E5BC80089EDAF /* videoEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = videoEffect.cpp; path = effects/videoEffect.cpp; sourceTree = "<group>"; };
 		85A0B39E193E5BC80089EDAF /* videoEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = videoEffect.h; path = effects/videoEffect.h; sourceTree = "<group>"; };
+		85AC88FF1941F50A0019DA65 /* gifEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gifEffect.cpp; path = effects/gifEffect.cpp; sourceTree = "<group>"; };
+		85AC89001941F50A0019DA65 /* gifEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gifEffect.h; path = effects/gifEffect.h; sourceTree = "<group>"; };
+		85AC89181941FCE00019DA65 /* ofxGifDecoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGifDecoder.cpp; sourceTree = "<group>"; };
+		85AC89191941FCE00019DA65 /* ofxGifDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGifDecoder.h; sourceTree = "<group>"; };
+		85AC891A1941FCE00019DA65 /* ofxGifFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGifFile.cpp; sourceTree = "<group>"; };
+		85AC891B1941FCE00019DA65 /* ofxGifFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGifFile.h; sourceTree = "<group>"; };
+		85AC891C1941FCE00019DA65 /* ofxGifFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGifFrame.cpp; sourceTree = "<group>"; };
+		85AC891D1941FCE00019DA65 /* ofxGifFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGifFrame.h; sourceTree = "<group>"; };
 		85D2F92218E9AD0F009EBB7B /* shapes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapes.h; path = src/shapes/shapes.h; sourceTree = SOURCE_ROOT; };
 		85E4A4D519311F2800C1A046 /* ofxTextBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTextBox.h; sourceTree = "<group>"; };
 		85E4A4E61931235B00C1A046 /* ofxTrueTypeFontUC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTrueTypeFontUC.cpp; sourceTree = "<group>"; };
@@ -361,6 +373,8 @@
 				852D0CF3193920150090E770 /* effects.h */,
 				85EE9E6F18DE26ED0055FE86 /* basicEffect.cpp */,
 				85EE9E7018DE26ED0055FE86 /* basicEffect.h */,
+				85AC88FF1941F50A0019DA65 /* gifEffect.cpp */,
+				85AC89001941F50A0019DA65 /* gifEffect.h */,
 				852D0CF41939C7BF0090E770 /* shaderEffect.cpp */,
 				852D0CF51939C7BF0090E770 /* shaderEffect.h */,
 				85A0B39D193E5BC80089EDAF /* videoEffect.cpp */,
@@ -380,6 +394,28 @@
 				859125161932569200FB75FD /* fftOctaveAnalyzer.h */,
 			);
 			name = soundAnalysis;
+			sourceTree = "<group>";
+		};
+		85AC89021941FCE00019DA65 /* ofxGifDecoder */ = {
+			isa = PBXGroup;
+			children = (
+				85AC89171941FCE00019DA65 /* src */,
+			);
+			name = ofxGifDecoder;
+			path = ../../../addons/ofxGifDecoder;
+			sourceTree = "<group>";
+		};
+		85AC89171941FCE00019DA65 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				85AC89181941FCE00019DA65 /* ofxGifDecoder.cpp */,
+				85AC89191941FCE00019DA65 /* ofxGifDecoder.h */,
+				85AC891A1941FCE00019DA65 /* ofxGifFile.cpp */,
+				85AC891B1941FCE00019DA65 /* ofxGifFile.h */,
+				85AC891C1941FCE00019DA65 /* ofxGifFrame.cpp */,
+				85AC891D1941FCE00019DA65 /* ofxGifFrame.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		85E4A4C419311F2700C1A046 /* ofxTextBox */ = {
@@ -466,6 +502,7 @@
 				8531421018D269E500165AE1 /* ofxFft */,
 				480A780D8D0308AE4A368801 /* ofxGui */,
 				1F4FB5C423662B96ADFDCC0B /* ofxXmlSettings */,
+				85AC89021941FCE00019DA65 /* ofxGifDecoder */,
 				734AC65571ADBB395C126C1A /* ofxMSAInteractiveObject */,
 			);
 			name = addons;
@@ -641,7 +678,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
+				85AC89011941F50A0019DA65 /* gifEffect.cpp in Sources */,
 				85EE9E8118DE2BEC0055FE86 /* bezierShape.cpp in Sources */,
+				85AC89211941FCE00019DA65 /* ofxGifDecoder.cpp in Sources */,
 				8531441018D269EA00165AE1 /* kiss_fftr.c in Sources */,
 				D1395DD979998DCFFA40ACAC /* ofxMSAInteractiveObject.cpp in Sources */,
 				8531440F18D269EA00165AE1 /* kiss_fft.c in Sources */,
@@ -649,6 +688,7 @@
 				85EE9E8418DE2D440055FE86 /* basicShape.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
+				85AC89231941FCE00019DA65 /* ofxGifFrame.cpp in Sources */,
 				B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */,
 				8531441118D269EA00165AE1 /* ofxEasyFft.cpp in Sources */,
 				483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */,
@@ -661,6 +701,7 @@
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
 				8531441318D269EA00165AE1 /* ofxFftBasic.cpp in Sources */,
 				8531441218D269EA00165AE1 /* ofxFft.cpp in Sources */,
+				85AC89221941FCE00019DA65 /* ofxGifFile.cpp in Sources */,
 				85A0B39F193E5BC80089EDAF /* videoEffect.cpp in Sources */,
 				1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */,
 				85EE9E8018DE2BEC0055FE86 /* movablePoint.cpp in Sources */,

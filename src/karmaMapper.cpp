@@ -1,6 +1,6 @@
 #include "karmaMapper.h"
 
-#define KARMA_DEBUG true;
+//#define KARMA_DEBUG true;
 
 // todo : pop effects handling out of this class and let an effectsControllerClass handle their renderings, transitions and so on.
 
@@ -34,18 +34,25 @@ void karmaMapper::setup(){
 	//ofSoundStreamSetup(0,2,this, 44100, BUFFER_SIZE, 4);
 	
 	// populate effects with current setup
-	if( false && rwi.shapeExists(0) ){
+	if( rwi.shapeExists(0) ){
 		shaderEffect* tmpEffect = new shaderEffect();
 		tmpEffect->spawn();
 		tmpEffect->bindWithShape( rwi.getShape(0) );
 		tmpEffect->loadShader( "", "./shaders/menger_journey_ok.frag" );
 		effects.push_back( tmpEffect );
 	}
-	if( rwi.shapeExists(1) ){
+	if( false && rwi.shapeExists(0) ){
 		videoEffect* tmpEffect = new videoEffect();
 		tmpEffect->spawn();
-		tmpEffect->bindWithShape( rwi.getShape(1) );
+		tmpEffect->bindWithShape( rwi.getShape(0) );
 		tmpEffect->setDirectory("./videoEffect/videos");
+		effects.push_back( tmpEffect );
+	}
+	if( false && rwi.shapeExists(1) ){
+		gifEffect* tmpEffect = new gifEffect();
+		tmpEffect->spawn();
+		tmpEffect->bindWithShape( rwi.getShape(1) );
+		tmpEffect->setDirectory("./gifEffect/gifs");
 		effects.push_back( tmpEffect );
 	}
 	
