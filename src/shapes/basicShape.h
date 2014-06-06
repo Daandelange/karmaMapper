@@ -20,10 +20,12 @@ public:
 	
 	virtual void spawn()=0; // called when the new shape is instantiated
 	virtual void destroy()=0; // called to destroy the shape
+	virtual void render();
 	virtual void drawWireframe()=0; // must be overruled with your own function
 	virtual void editModeChanged(bool editMode)=0;
 	virtual void pointsUpdated()=0;
 	//virtual void reset()=0;
+	//virtual void prepareForDraw(); // does matrix transforms & style-setting
 
 	void basicSpawn();
 	void basicSpawn(ofPoint _pos, unsigned int _shapeId);
@@ -53,6 +55,8 @@ public:
 	//void setPoints(ofPoint _pts[4]);
 	//void getAbsolutePoints();
 	
+	ofPoint getCenterOffsetFromBoundingBox();
+	
 	ofPoint position; // absolute (inside points will be relative)
 	ofRectangle boundingBox;
 	vector<ofPoint> points;
@@ -65,5 +69,8 @@ public:
 	int shapeId; // utility for handling several basicShape() instances.
 	ofColor fgColor;
 	ofColor bgColor;
+	bool hasError = true; // changes visual aspect to notfy error
 	
+protected:
+	// to: put variables in here
 };

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "basicShape.h"
 
 class basicEffect {
 	
@@ -24,15 +25,19 @@ public:
 	//virtual void transitionIn();
 	//virtual void transitionOut();
 	
-	void updateTransitionState();
+	//void updateTransitionState();
+	void setShader(ofShader& _shader);
+	void bindWithShape(basicShape* _shape);
 	
 	bool isVisible;
 	unsigned int lifeSpan;
+	unsigned long long startTime; // compare against ofGetSystemTime();
 	
-private:
+	
+protected:
 	int transitionState; // [0=faded Out, 1=faded In]
-	ofPoint* points[];
-	//bool hovered, selected;
 	
+	basicShape* pShape;
+	bool hasShape;
 	
 };

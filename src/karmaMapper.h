@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "realWorldInterface.h"
 #include "karmaSoundAnalyser.h"
+#include "effects.h"
 
 class karmaMapper : public ofBaseApp{
 
@@ -27,4 +28,7 @@ public:
 private:
 	realWorldInterface rwi;
 	karmaSoundAnalyser soundAnalyser;
+	vector<basicEffect*> effects;
+	
+	
 };

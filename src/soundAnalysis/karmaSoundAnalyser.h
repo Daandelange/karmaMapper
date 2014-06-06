@@ -27,6 +27,7 @@ public:
 	void setup();
 	void update();
 	void drawExample();
+	ofTexture generateDataImage();
 	
 	void audioReceived( ofAudioEventArgs& Args );
 	void _audioReceived( float * input, int bufferSize, int nChannels );
@@ -36,7 +37,7 @@ private:
     fft myfft;
     
     float left[BUFFER_SIZE];
-    float right[BUFFER_SIZE];
+    //float right[BUFFER_SIZE];
     float magnitude[BUFFER_SIZE];
     float phase[BUFFER_SIZE];
     float power[BUFFER_SIZE];

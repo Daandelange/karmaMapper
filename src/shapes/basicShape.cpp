@@ -16,6 +16,7 @@ basicShape::basicShape() {
 	boundingBox = ofRectangle(0,0,0,0);
 	isInEditMode = false;
 	initialized = false;
+	hasError = false;
 	activeHandle = -1;
 	
 	fgColor = ofColor(255);
@@ -24,6 +25,40 @@ basicShape::basicShape() {
 
 basicShape::~basicShape(){
 	basicDestroy();
+}
+
+// temp (?) (should not be handled by shape)
+// only draw the shape, dont do shader nor other graphic stuff
+void basicShape::render(){
+	
+	// prepare for drawing
+	ofPushMatrix();
+	ofPushStyle();
+	ofBeginShape();
+	
+	ofTranslate(position);
+	ofFill();
+	
+	hasError?ofSetHexColor(0xFF0000):ofSetHexColor(0xFFFFFF);
+	
+	// draw elements
+	for(int i=0; i<points.size(); i++){
+		// draw center point
+		ofVertex( points[i] );
+		
+		// connect with prev point
+		//if(i>0) ofLine( points[i-1], points[i] );
+	}
+	ofEndShape(OF_CLOSE);
+	
+	if(hasError){
+		ofSetHexColor(0xFFFFFF);
+		ofDrawBitmapString("error", -20, -5);
+	}
+	
+	// reset
+	ofPopStyle();
+	ofPopMatrix();
 }
 
 // called when the new shape is instantiated
@@ -284,4 +319,8 @@ bool basicShape::loadXMLValues(ofxXmlSettings *xml, int _nb){
 	// call thsi over-ruleable "event" function
 	pointsUpdated();
 } // */
+
+ofPoint basicShape::getCenterOffsetFromBoundingBox(){
+	return boundingBox.getPosition()-position;
+}
 

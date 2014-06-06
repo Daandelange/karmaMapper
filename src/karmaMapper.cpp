@@ -2,15 +2,20 @@
 
 #define KARMA_DEBUG true;
 
+// todo : pop effects handling out of this class and let an effectsControllerClass handle their renderings, transitions and so on.
+
 //--------------------------------------------------------------
 void karmaMapper::setup(){
 	// customize parameters
 	
 	
 	// environment setup
+	ofBackground(34, 34, 34);
 	ofSetFrameRate(60);
-	ofSetVerticalSync(true);
-	//ofEnableAlphaBlending();
+	ofSetVerticalSync(false);
+	ofEnableAlphaBlending();
+
+	//cout << "Shader loaded = " << shader.linkProgram() << endl;
 	
 	rwi.setup();
 	
@@ -27,12 +32,37 @@ void karmaMapper::setup(){
 	// BUFFER_SIZE samples per buffer
 	// 4 num buffers (latency)
 	//ofSoundStreamSetup(0,2,this, 44100, BUFFER_SIZE, 4);
+	
+	// populate effects with current setup
+	if( false && rwi.shapeExists(0) ){
+		shaderEffect* tmpEffect = new shaderEffect();
+		tmpEffect->spawn();
+		tmpEffect->bindWithShape( rwi.getShape(0) );
+		tmpEffect->loadShader( "", "./shaders/menger_journey_ok.frag" );
+		effects.push_back( tmpEffect );
+	}
+	if( rwi.shapeExists(1) ){
+		videoEffect* tmpEffect = new videoEffect();
+		tmpEffect->spawn();
+		tmpEffect->bindWithShape( rwi.getShape(1) );
+		tmpEffect->setDirectory("./videoEffect/videos");
+		effects.push_back( tmpEffect );
+	}
+	
+	//shader.linkProgram();
+	//cout << "Link status:" << shader.linkProgram() << endl;
+	
 }
 
 //--------------------------------------------------------------
 void karmaMapper::update(){
 	rwi.update();
 	soundAnalyser.update();
+	
+	if(!rwi.isInEditMode) for(int e=0; e<effects.size(); e++){
+		// &soundAnalyser.generateDataImage().draw(0,0)
+		effects[e]->update(  );
+	}
 }
 
 //--------------------------------------------------------------
@@ -61,10 +91,26 @@ void karmaMapper::draw(){
 	
 	#endif // endif KARMA_DEBUG
 	
-	soundAnalyser.drawExample();
+	//soundAnalyser.drawExample();
+	//soundAnalyser.generateDataImage().draw(0,0);
+	
+	// cache sound texture to pass it to the effects
+	ofTexture soundTexture( soundAnalyser.generateDataImage() );
+	
+	// render effects	
+	if(!rwi.isInEditMode) for(int e=0; e<effects.size(); e++){
+		// &soundAnalyser.generateDataImage().draw(0,0)
+		effects[e]->render(  );
+	}
 }
 
 void karmaMapper::exit(){
+	
+	// todo: delete each effect (which are pointers)
+	//for(){
+		
+	//}
+	
 	rwi.exit();
 }
 
@@ -80,8 +126,8 @@ void karmaMapper::keyPressed(int key){
 			break;
 			
 		case 'e':
-			rwi.isInEditMode = !rwi.isInEditMode;
-			//rwi.editNextShape();
+			rwi.toggleEditMode();
+			
 			break;
 			
 		case 'f':

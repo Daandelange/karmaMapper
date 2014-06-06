@@ -47,14 +47,29 @@ void vertexShape::destroy(){
 }
 
 void vertexShape::drawWireframe(){
-	// style and matrix are already pre-set.
+	// style and matrix are already pre-set by basicShape.
 	// translation is set to shape origin
-	
-	// colors are already set by basicShape
+
 	for(int i=0; i<points.size(); i++){
 		//ofCircle( points[i], 5);
 		ofLine(points[i], points[(i+1)%points.size()]);
 	}
+}
+
+void vertexShape::draw(){
+	// style and matrix are already pre-set by basicShape (but over-rulable)
+	// translation is set to shape origin
+	ofBeginShape();
+	ofSetHexColor(0xFFFFFF);
+	ofFill();
+	ofSetLineWidth(20);
+	cout << "ok";
+	
+	for(int i=0; i<points.size(); i++){
+		//ofCircle( points[i], 5);
+		ofLine(points[i], points[(i+1)%points.size()]);
+	}
+	ofEndShape(OF_CLOSE);
 }
 
 void vertexShape::editModeChanged(bool editMode){

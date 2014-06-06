@@ -22,6 +22,7 @@ public:
 	//void reset();
 	void destroy();
 	void drawWireframe();
+	void draw();
 	void editModeChanged(bool editMode);
 	void pointsUpdated();
 	

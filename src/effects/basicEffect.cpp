@@ -13,7 +13,7 @@
 #include "basicEffect.h"
 
 basicEffect::basicEffect(){
-	
+	basicEffect::reset();
 }
 
 basicEffect::~basicEffect(){
@@ -23,28 +23,36 @@ basicEffect::~basicEffect(){
 // spawns the effect @ the scene so it starts rendering (setup)
 // overrule this function with your own.
 void basicEffect::spawn(){
-	
+	reset();
 }
 
 // update --> animation
 // overrule this function with your own.
 void basicEffect::render(){
-	lifeSpan ++;
+	pShape->render();
 }
 
 void basicEffect::update(){
-	
+	lifeSpan ++;
 }
 
 // resets all values
 // overrule this function with your own.
 void basicEffect::reset(){
 	// todo: do this in _reset() which calls reset();
+	lifeSpan=0;
+	startTime=ofGetSystemTime();
+	pShape = NULL;
 }
 
 // called just before removal
 void basicEffect::destroy(){
 	
+}
+
+void basicEffect::bindWithShape(basicShape* _shape){
+	pShape = _shape;
+	hasShape = true;
 }
 
 

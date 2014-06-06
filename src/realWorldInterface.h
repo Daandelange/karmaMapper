@@ -15,7 +15,8 @@
 #include "shapes.h"
 #include "ofxGui.h"
 #include "ofxXmlSettings.h"
-#include "ofxTextBox.h"
+//tmp #include "ofxTextBox.h"
+#include "karmaSoundAnalyser.h"
 
 class realWorldInterface {
 
@@ -35,6 +36,7 @@ public:
 	void editShape(int shapeId);
 	void editNextShape();
 	void resetShapes();
+	void toggleEditMode();
 	
 	void _keyPressed( ofKeyEventArgs& args );
 	
@@ -45,6 +47,8 @@ public:
 	
 	void _resized( ofResizeEventArgs& args );
 	
+	bool shapeExists( int _num );
+	basicShape* getShape( int _num );
 	
 private:
 	vector<basicShape*> shapes;
@@ -69,5 +73,7 @@ private:
 	int nextSaveId;
 	bool showHelp;
 	
-	ofxTextBox textBox;
+	//tmp ofxTextBox textBox;
+	
+	//karmaSoundAnalyser soundAnalyser;
 };

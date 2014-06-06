@@ -54,8 +54,8 @@ void realWorldInterface::setup() {
 	ofAddListener( ofEvents().windowResized, this, &realWorldInterface::_resized);
 
 	// setup help box
-	textBox.loadFont("F25_Bank_Printer.ttf", 12); // get --> http://www.dafont.com/fr/f25-bank-printer.font?fpp=50&a=on&e=on&l[]=10&l[]=1
-	textBox.setText("HELP\n\
+	//tmp textBox.loadFont("F25_Bank_Printer.ttf", 12); // get --> http://www.dafont.com/fr/f25-bank-printer.font?fpp=50&a=on&e=on&l[]=10&l[]=1
+	//tmp textBox.setText("HELP\n\
 - - - -\n\
 Global:\n\
 \te = toggle edit mode\n\
@@ -65,12 +65,13 @@ Shape editing\n\
 \tr+click [on a point] = remove point\n\
 \tClick+drag [on a point] = drag\n\
 \tRight click [on a vertexShape line] = add point\n\n");
-	textBox.showsFrame(false);
-    textBox.setRectangle( ofRectangle( ofGetWidth()-HELP_ZONE_WIDTH+20 ,40,HELP_ZONE_WIDTH,400) );
+	//tmp textBox.showsFrame(false);
+    //tmp textBox.setRectangle( ofRectangle( ofGetWidth()-HELP_ZONE_WIDTH+20 ,40,HELP_ZONE_WIDTH,400) );
 	
 	// load previously saved settings
 	loadSettings();
 	
+	//soundAnalyser.setup();
 }
 
 
@@ -93,10 +94,10 @@ void realWorldInterface::draw() {
 		if(showHelp){
 			ofSetHexColor(0x000000);
 			ofFill();
-			ofRect( textBox.getRect() );
+			//tmp ofRect( textBox.getRect() );
 			ofSetHexColor(0xFFFFFF);
 			ofNoFill();
-			textBox.draw();
+			//tmp textBox.draw();
 		}
 	
 		// show gui
@@ -105,13 +106,18 @@ void realWorldInterface::draw() {
 	
 	// render effects on shapes
 	else {
+		
+		// cache sound texture
+		//ofTexture soundTexture;
+		//soundTexture = soundAnalyser.generateDataImage();
+		
 		//effects.render();
-		for(int s=0; s<shapes.size(); s++){
-			ofPushMatrix();
-			ofTranslate( shapes[s]->position );
-			shapes[s]->drawWireframe();
-			ofPopMatrix();
-		}
+		//for(int s=0; s<effects.size(); s++){
+		//	ofPushMatrix();
+		//	ofTranslate( shapes[s]->position );
+		//	shapes[s]->render();
+		//	ofPopMatrix();
+		//}
 	}
 }
 
@@ -246,6 +252,13 @@ void realWorldInterface::resetShapes(){
 	activeShape=-1;
 }
 
+void realWorldInterface::toggleEditMode(){
+	// register changes to current shape
+	if(isShapesIndex(activeShape) ) shapes[activeShape]->disableEditMode();
+	
+	isInEditMode = !isInEditMode;
+}
+
 void realWorldInterface::_keyPressed( ofKeyEventArgs& args ){
 	if( args.key == 'h' || args.key == 'H' ){
 		showHelp = !showHelp;
@@ -342,5 +355,14 @@ void realWorldInterface::loadSettings(){
 }
 
 void realWorldInterface::_resized( ofResizeEventArgs &args ){
-	textBox.setRectangle( ofRectangle( ofGetWidth()-HELP_ZONE_WIDTH+20 ,40,HELP_ZONE_WIDTH,400) );
+	//tmp textBox.setRectangle( ofRectangle( ofGetWidth()-HELP_ZONE_WIDTH+20 ,40,HELP_ZONE_WIDTH,400) );
+}
+
+bool realWorldInterface::shapeExists( int _num ){
+	return ( _num >= 0 && shapes.size() > _num );
+}
+
+basicShape* realWorldInterface::getShape( int _num ){
+	if(shapeExists(_num) && shapes[_num]->initialized ) return shapes[_num];
+	else return NULL;
 }
