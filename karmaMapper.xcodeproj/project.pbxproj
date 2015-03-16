@@ -12,8 +12,6 @@
 		6474CBF819BCE019003C94E2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6474CBF219BCE00B003C94E2 /* QuartzCore.framework */; };
 		851423911A3DE739009074A5 /* lineEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8514238F1A3DE739009074A5 /* lineEffect.cpp */; };
 		851423941A3DF5FE009074A5 /* lineEffectLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851423921A3DF5FE009074A5 /* lineEffectLine.cpp */; };
-		851423971A3F14C8009074A5 /* imageBeatEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851423951A3F14C8009074A5 /* imageBeatEffect.cpp */; };
-		8514239A1A3F1834009074A5 /* imageBeatEffectItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851423981A3F1834009074A5 /* imageBeatEffectItem.cpp */; };
 		852137F81A13D1FF0097EF2D /* ofxTrueTypeFontUC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 852137F31A13D1FF0097EF2D /* ofxTrueTypeFontUC.cpp */; };
 		8556B85A1A2341B6007CB69E /* ofxUI2DGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8556B7C61A2341B5007CB69E /* ofxUI2DGraph.cpp */; };
 		8556B85B1A2341B6007CB69E /* ofxUI2DPad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8556B7C81A2341B5007CB69E /* ofxUI2DPad.cpp */; };
@@ -59,7 +57,6 @@
 		8556B8831A2341B6007CB69E /* ofxUIWaveform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8556B81B1A2341B6007CB69E /* ofxUIWaveform.cpp */; };
 		8556B8841A2341B6007CB69E /* ofxUIWidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8556B81D1A2341B6007CB69E /* ofxUIWidget.cpp */; };
 		8556B8851A2341B6007CB69E /* ofxUIWidgetWithLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8556B8201A2341B6007CB69E /* ofxUIWidgetWithLabel.cpp */; };
-		857A178B1A88B94B000201C8 /* meshRenderer3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 857A17891A88B94B000201C8 /* meshRenderer3D.cpp */; };
 		8581457C1AB21A91003724A2 /* shapesEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 858145781AB21A91003724A2 /* shapesEditor.cpp */; };
 		8581457D1AB21A91003724A2 /* shapesServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8581457A1AB21A91003724A2 /* shapesServer.cpp */; };
 		858145801AB21AC3003724A2 /* animationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8581457E1AB21AC3003724A2 /* animationController.cpp */; };
@@ -68,15 +65,12 @@
 		859072DE1A66C3530013994A /* Model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859072CE1A66C3530013994A /* Model.cpp */; };
 		859072DF1A66C3530013994A /* Parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859072D01A66C3530013994A /* Parser.cpp */; };
 		859072E01A66C3530013994A /* Tempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859072D21A66C3530013994A /* Tempo.cpp */; };
-		859179731A8A3CE40084B545 /* subdivisionEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859179711A8A3CE40084B545 /* subdivisionEffect.cpp */; };
 		859769D91A8502680062C0E1 /* ofxAssimpAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859769961A8502680062C0E1 /* ofxAssimpAnimation.cpp */; };
 		859769DA1A8502680062C0E1 /* ofxAssimpMeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859769981A8502680062C0E1 /* ofxAssimpMeshHelper.cpp */; };
 		859769DB1A8502680062C0E1 /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8597699A1A8502680062C0E1 /* ofxAssimpModelLoader.cpp */; };
 		859769DC1A8502680062C0E1 /* ofxAssimpTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8597699C1A8502680062C0E1 /* ofxAssimpTexture.cpp */; };
 		859769DD1A8502680062C0E1 /* assimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 859769D41A8502680062C0E1 /* assimp.a */; };
 		85A69B091A0EAF9B00DCBAA8 /* basicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85A69B061A0EAF9B00DCBAA8 /* basicEffect.cpp */; };
-		85D25C981A124FB900F007A7 /* videoEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85D25C961A124FB900F007A7 /* videoEffect.cpp */; };
-		85E6DB401A9346D400311790 /* videoStreamEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E6DB3E1A9346D400311790 /* videoStreamEffect.cpp */; };
 		85E80D1F1A091106006F2103 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E80D181A091106006F2103 /* tinyxml.cpp */; };
 		85E80D201A091106006F2103 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E80D1A1A091106006F2103 /* tinyxmlerror.cpp */; };
 		85E80D211A091106006F2103 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E80D1B1A091106006F2103 /* tinyxmlparser.cpp */; };
@@ -85,7 +79,6 @@
 		85E80D301A091A2A006F2103 /* movablePoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E80D291A091A2A006F2103 /* movablePoint.cpp */; };
 		85E80D311A091A2A006F2103 /* vertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E80D2C1A091A2A006F2103 /* vertexShape.cpp */; };
 		85E80D591A091C37006F2103 /* ofxMSAInteractiveObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E80D501A091C37006F2103 /* ofxMSAInteractiveObject.cpp */; };
-		85F7CA6D1A1BDFA7008BA3F5 /* imageEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85F7CA6B1A1BDFA7008BA3F5 /* imageEffect.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -145,10 +138,6 @@
 		851423901A3DE739009074A5 /* lineEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineEffect.h; sourceTree = "<group>"; };
 		851423921A3DF5FE009074A5 /* lineEffectLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineEffectLine.cpp; sourceTree = "<group>"; };
 		851423931A3DF5FE009074A5 /* lineEffectLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineEffectLine.h; sourceTree = "<group>"; };
-		851423951A3F14C8009074A5 /* imageBeatEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imageBeatEffect.cpp; sourceTree = "<group>"; };
-		851423961A3F14C8009074A5 /* imageBeatEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imageBeatEffect.h; sourceTree = "<group>"; };
-		851423981A3F1834009074A5 /* imageBeatEffectItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imageBeatEffectItem.cpp; sourceTree = "<group>"; };
-		851423991A3F1834009074A5 /* imageBeatEffectItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imageBeatEffectItem.h; sourceTree = "<group>"; };
 		852137E11A13CF150097EF2D /* ofxTextBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTextBox.h; sourceTree = "<group>"; };
 		852137F31A13D1FF0097EF2D /* ofxTrueTypeFontUC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTrueTypeFontUC.cpp; sourceTree = "<group>"; };
 		852137F41A13D1FF0097EF2D /* ofxTrueTypeFontUC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTrueTypeFontUC.h; sourceTree = "<group>"; };
@@ -246,8 +235,6 @@
 		8556B8201A2341B6007CB69E /* ofxUIWidgetWithLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUIWidgetWithLabel.cpp; sourceTree = "<group>"; };
 		8556B8211A2341B6007CB69E /* ofxUIWidgetWithLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIWidgetWithLabel.h; sourceTree = "<group>"; };
 		8556B8221A2341B6007CB69E /* ofxUIWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIWrapper.h; sourceTree = "<group>"; };
-		857A17891A88B94B000201C8 /* meshRenderer3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = meshRenderer3D.cpp; sourceTree = "<group>"; };
-		857A178A1A88B94B000201C8 /* meshRenderer3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = meshRenderer3D.h; sourceTree = "<group>"; };
 		858145781AB21A91003724A2 /* shapesEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shapesEditor.cpp; sourceTree = "<group>"; };
 		858145791AB21A91003724A2 /* shapesEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shapesEditor.h; sourceTree = "<group>"; };
 		8581457A1AB21A91003724A2 /* shapesServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shapesServer.cpp; sourceTree = "<group>"; };
@@ -267,8 +254,6 @@
 		859072D21A66C3530013994A /* Tempo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tempo.cpp; sourceTree = "<group>"; };
 		859072D31A66C3530013994A /* Tempo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tempo.h; sourceTree = "<group>"; };
 		859072D41A66C3530013994A /* ofxAbletonLiveSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAbletonLiveSet.h; sourceTree = "<group>"; };
-		859179711A8A3CE40084B545 /* subdivisionEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = subdivisionEffect.cpp; sourceTree = "<group>"; };
-		859179721A8A3CE40084B545 /* subdivisionEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = subdivisionEffect.h; sourceTree = "<group>"; };
 		859769961A8502680062C0E1 /* ofxAssimpAnimation.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAssimpAnimation.cpp; sourceTree = "<group>"; };
 		859769971A8502680062C0E1 /* ofxAssimpAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxAssimpAnimation.h; sourceTree = "<group>"; };
 		859769981A8502680062C0E1 /* ofxAssimpMeshHelper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAssimpMeshHelper.cpp; sourceTree = "<group>"; };
@@ -319,10 +304,6 @@
 		85A69B071A0EAF9B00DCBAA8 /* basicEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basicEffect.h; sourceTree = "<group>"; };
 		85A69B081A0EAF9B00DCBAA8 /* effects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = effects.h; sourceTree = "<group>"; };
 		85BAF8281A1635CF000C0DF7 /* shapes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shapes.h; sourceTree = "<group>"; };
-		85D25C961A124FB900F007A7 /* videoEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = videoEffect.cpp; sourceTree = "<group>"; };
-		85D25C971A124FB900F007A7 /* videoEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = videoEffect.h; sourceTree = "<group>"; };
-		85E6DB3E1A9346D400311790 /* videoStreamEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = videoStreamEffect.cpp; sourceTree = "<group>"; };
-		85E6DB3F1A9346D400311790 /* videoStreamEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = videoStreamEffect.h; sourceTree = "<group>"; };
 		85E80D181A091106006F2103 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
 		85E80D191A091106006F2103 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
 		85E80D1A1A091106006F2103 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
@@ -337,8 +318,6 @@
 		85E80D2D1A091A2A006F2103 /* vertexShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertexShape.h; sourceTree = "<group>"; };
 		85E80D501A091C37006F2103 /* ofxMSAInteractiveObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMSAInteractiveObject.cpp; sourceTree = "<group>"; };
 		85E80D511A091C37006F2103 /* ofxMSAInteractiveObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMSAInteractiveObject.h; sourceTree = "<group>"; };
-		85F7CA6B1A1BDFA7008BA3F5 /* imageEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imageEffect.cpp; sourceTree = "<group>"; };
-		85F7CA6C1A1BDFA7008BA3F5 /* imageEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imageEffect.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -718,24 +697,10 @@
 				85A69B081A0EAF9B00DCBAA8 /* effects.h */,
 				85A69B061A0EAF9B00DCBAA8 /* basicEffect.cpp */,
 				85A69B071A0EAF9B00DCBAA8 /* basicEffect.h */,
-				85F7CA6B1A1BDFA7008BA3F5 /* imageEffect.cpp */,
-				85F7CA6C1A1BDFA7008BA3F5 /* imageEffect.h */,
-				851423951A3F14C8009074A5 /* imageBeatEffect.cpp */,
-				851423961A3F14C8009074A5 /* imageBeatEffect.h */,
-				851423981A3F1834009074A5 /* imageBeatEffectItem.cpp */,
-				851423991A3F1834009074A5 /* imageBeatEffectItem.h */,
 				8514238F1A3DE739009074A5 /* lineEffect.cpp */,
 				851423901A3DE739009074A5 /* lineEffect.h */,
 				851423921A3DF5FE009074A5 /* lineEffectLine.cpp */,
 				851423931A3DF5FE009074A5 /* lineEffectLine.h */,
-				857A17891A88B94B000201C8 /* meshRenderer3D.cpp */,
-				857A178A1A88B94B000201C8 /* meshRenderer3D.h */,
-				859179711A8A3CE40084B545 /* subdivisionEffect.cpp */,
-				859179721A8A3CE40084B545 /* subdivisionEffect.h */,
-				85D25C961A124FB900F007A7 /* videoEffect.cpp */,
-				85D25C971A124FB900F007A7 /* videoEffect.h */,
-				85E6DB3E1A9346D400311790 /* videoStreamEffect.cpp */,
-				85E6DB3F1A9346D400311790 /* videoStreamEffect.h */,
 			);
 			path = effects;
 			sourceTree = "<group>";
@@ -935,7 +900,7 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 			};
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "workshopMappingCyril" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "karmaMapper" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -1007,7 +972,6 @@
 				8556B8851A2341B6007CB69E /* ofxUIWidgetWithLabel.cpp in Sources */,
 				859769D91A8502680062C0E1 /* ofxAssimpAnimation.cpp in Sources */,
 				859769DA1A8502680062C0E1 /* ofxAssimpMeshHelper.cpp in Sources */,
-				851423971A3F14C8009074A5 /* imageBeatEffect.cpp in Sources */,
 				8556B8811A2341B6007CB69E /* ofxUIToggleMatrix.cpp in Sources */,
 				8556B8821A2341B6007CB69E /* ofxUIValuePlotter.cpp in Sources */,
 				85E80D1F1A091106006F2103 /* tinyxml.cpp in Sources */,
@@ -1016,7 +980,6 @@
 				8556B87D1A2341B6007CB69E /* ofxUITabBar.cpp in Sources */,
 				8556B8761A2341B6007CB69E /* ofxUIRotarySlider.cpp in Sources */,
 				8556B85E1A2341B6007CB69E /* ofxUIButton.cpp in Sources */,
-				85F7CA6D1A1BDFA7008BA3F5 /* imageEffect.cpp in Sources */,
 				8556B87F1A2341B6007CB69E /* ofxUITextInput.cpp in Sources */,
 				8556B8841A2341B6007CB69E /* ofxUIWidget.cpp in Sources */,
 				8556B86E1A2341B6007CB69E /* ofxUIMinimalSlider.cpp in Sources */,
@@ -1026,7 +989,6 @@
 				8556B8631A2341B6007CB69E /* ofxUIEventArgs.cpp in Sources */,
 				8556B8691A2341B6007CB69E /* ofxUIImageSlider.cpp in Sources */,
 				8556B8781A2341B6007CB69E /* ofxUISlider.cpp in Sources */,
-				857A178B1A88B94B000201C8 /* meshRenderer3D.cpp in Sources */,
 				8556B8601A2341B6007CB69E /* ofxUICircleSlider.cpp in Sources */,
 				8556B8771A2341B6007CB69E /* ofxUIScrollableCanvas.cpp in Sources */,
 				8556B8801A2341B6007CB69E /* ofxUIToggle.cpp in Sources */,
@@ -1034,12 +996,10 @@
 				8556B86C1A2341B6007CB69E /* ofxUILabelButton.cpp in Sources */,
 				859072E01A66C3530013994A /* Tempo.cpp in Sources */,
 				8556B85A1A2341B6007CB69E /* ofxUI2DGraph.cpp in Sources */,
-				8514239A1A3F1834009074A5 /* imageBeatEffectItem.cpp in Sources */,
 				8556B86A1A2341B6007CB69E /* ofxUIImageToggle.cpp in Sources */,
 				859072DE1A66C3530013994A /* Model.cpp in Sources */,
 				8556B87B1A2341B6007CB69E /* ofxUISpectrum.cpp in Sources */,
 				8556B8791A2341B6007CB69E /* ofxUISortableList.cpp in Sources */,
-				859179731A8A3CE40084B545 /* subdivisionEffect.cpp in Sources */,
 				8556B8611A2341B6007CB69E /* ofxUIDragableLabelButton.cpp in Sources */,
 				85E80D211A091106006F2103 /* tinyxmlparser.cpp in Sources */,
 				8556B87E1A2341B6007CB69E /* ofxUITextArea.cpp in Sources */,
@@ -1060,11 +1020,9 @@
 				8556B8711A2341B6007CB69E /* ofxUIMultiImageToggle.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
 				851423941A3DF5FE009074A5 /* lineEffectLine.cpp in Sources */,
-				85D25C981A124FB900F007A7 /* videoEffect.cpp in Sources */,
 				85A69B091A0EAF9B00DCBAA8 /* basicEffect.cpp in Sources */,
 				852137F81A13D1FF0097EF2D /* ofxTrueTypeFontUC.cpp in Sources */,
 				8556B86D1A2341B6007CB69E /* ofxUILabelToggle.cpp in Sources */,
-				85E6DB401A9346D400311790 /* videoStreamEffect.cpp in Sources */,
 				8556B8681A2341B6007CB69E /* ofxUIImageSampler.cpp in Sources */,
 				8556B85F1A2341B6007CB69E /* ofxUICanvas.cpp in Sources */,
 				85E80D2E1A091A2A006F2103 /* basicShape.cpp in Sources */,
@@ -1200,7 +1158,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "workshopMappingCyril" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "karmaMapper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,
