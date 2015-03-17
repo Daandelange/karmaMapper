@@ -59,6 +59,9 @@ void ofApp::setup(){
 	mouseHidden = false;
 	
 	server.loadShapes("Vendome_Full.xml");
+	
+	// sound analysis setup
+	
 }
 
 //--------------------------------------------------------------

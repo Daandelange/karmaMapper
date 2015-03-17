@@ -1,6 +1,6 @@
 //
 //  animationController.cpp
-//  workshopMappingCyril
+//  karmaMapper
 //
 //  Created by Daan de Lange on 12/03/2015.
 //  Copyright (c) 2014 __MyCompanyName__. All rights reserved.
@@ -59,7 +59,7 @@ bool animationController::start(){
 	 e->bindWithShape( server.getRandomShape() );
 	 effects.push_back(e);*/
 	
-	return isEnabled()==false;
+	return isEnabled()==true;
 }
 
 bool animationController::stop(){

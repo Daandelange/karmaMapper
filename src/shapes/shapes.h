@@ -1,6 +1,6 @@
 //
 //  shapes.h
-//  workshopMappingCyril
+//  karmaMapper
 //
 //  Created by Daan de Lange on 14/11/2014.
 //  Copyright (c) 2014 __MyCompanyName__. All rights reserved.
