@@ -9,11 +9,9 @@
 /* Begin PBXBuildFile section */
 		087C79A4D8B1642D7F9676D4 /* lineEffectLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7ED21C2D7A0039C25D650078 /* lineEffectLine.cpp */; };
 		20A789B9414F7D09F4A497DE /* shapesServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 474F5C0B2D65582B7B6AF59F /* shapesServer.cpp */; };
-		3B53811B59C4BDFDAFBD3767 /* videoStreamEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC3F49AAE657430D989C6E90 /* videoStreamEffect.cpp */; };
 		40B7466515686602BE33EBD4 /* vertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A926F24D06782E7BDB31FBA /* vertexShape.cpp */; };
 		4DC317F76A962C12815D6D2F /* karmaSoundAnalyser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95FC55B54A37A11F5459C828 /* karmaSoundAnalyser.cpp */; };
 		50F666D143E446BDF89A7744 /* basicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6183E7E925AEF111E8587 /* basicEffect.cpp */; };
-		52F899DE121245CF89354175 /* imageEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C5524596FB43D9C2CBD8CAE6 /* imageEffect.cpp */; };
 		636C153A8236D32CF4313857 /* basicShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B955C26665CFEE341F15A54 /* basicShape.cpp */; };
 		85F1E8521AB8308300A27B0E /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85F1E84B1AB8308300A27B0E /* ofxXmlSettings.cpp */; };
 		85F1E8531AB8308300A27B0E /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85F1E84E1AB8308300A27B0E /* tinyxml.cpp */; };
@@ -74,15 +72,10 @@
 		85F1E94A1AB8310200A27B0E /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85F1E9091AB8310200A27B0E /* ofxAssimpModelLoader.cpp */; };
 		85F1E94B1AB8310200A27B0E /* ofxAssimpTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85F1E90B1AB8310200A27B0E /* ofxAssimpTexture.cpp */; };
 		85F1E94C1AB8310200A27B0E /* assimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 85F1E9431AB8310200A27B0E /* assimp.a */; };
-		91B786DBF263FF2DC35BA7BC /* meshRenderer3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B5E900A5BF34EEA1B8AFD9DE /* meshRenderer3D.cpp */; };
-		AE8331B3FC7EF9B4BE7BAAED /* videoEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E12AB9768D8FEEDD1E1ED5AC /* videoEffect.cpp */; };
-		C1E6424E9E189A0AFD2647A5 /* imageBeatEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C65B7B954F1114350B5C93D8 /* imageBeatEffect.cpp */; };
 		DD6D172FAEA0FDD88D2847E5 /* shapesEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C00AC4FF0DFA48DA04990B1D /* shapesEditor.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
-		E7AD7270AA9936A1EC66611A /* imageBeatEffectItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33E325B8BB2614EC615EC29A /* imageBeatEffectItem.cpp */; };
-		EB30C32F99FC148A7B457276 /* subdivisionEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25DEA0849163991ACC84A300 /* subdivisionEffect.cpp */; };
 		F44C901AFB6802AB90E26871 /* lineEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BBE8529836C359CD91AF645 /* lineEffect.cpp */; };
 		F994128226E6BC64D49D22A8 /* animationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 457EE040F1A22E81908D1342 /* animationController.cpp */; };
 		FA11B6EBAB0ED4BA917879F4 /* movablePoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CDBA2D326396E0E887DA059 /* movablePoint.cpp */; };
@@ -118,14 +111,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		100E6D00CC9EA24B1BC4F6B2 /* videoEffect.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = videoEffect.h; path = src/effects/videoEffect.h; sourceTree = SOURCE_ROOT; };
 		1D3A4DA49063121833C4C0CC /* lineEffect.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = lineEffect.h; path = src/effects/lineEffect.h; sourceTree = SOURCE_ROOT; };
-		25DEA0849163991ACC84A300 /* subdivisionEffect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = subdivisionEffect.cpp; path = src/effects/subdivisionEffect.cpp; sourceTree = SOURCE_ROOT; };
-		33E325B8BB2614EC615EC29A /* imageBeatEffectItem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = imageBeatEffectItem.cpp; path = src/effects/imageBeatEffectItem.cpp; sourceTree = SOURCE_ROOT; };
 		3EA6183E7E925AEF111E8587 /* basicEffect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = basicEffect.cpp; path = src/effects/basicEffect.cpp; sourceTree = SOURCE_ROOT; };
-		4285B74EA4ED761126F8B6F0 /* meshRenderer3D.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = meshRenderer3D.h; path = src/effects/meshRenderer3D.h; sourceTree = SOURCE_ROOT; };
 		4327029352921205F445F068 /* karmaSoundAnalyser.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = karmaSoundAnalyser.h; path = src/karmaSoundAnalyser.h; sourceTree = SOURCE_ROOT; };
-		44A65A2336D3AC3FE180C8E1 /* subdivisionEffect.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = subdivisionEffect.h; path = src/effects/subdivisionEffect.h; sourceTree = SOURCE_ROOT; };
 		457EE040F1A22E81908D1342 /* animationController.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = animationController.cpp; path = src/animationController.cpp; sourceTree = SOURCE_ROOT; };
 		474F5C0B2D65582B7B6AF59F /* shapesServer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = shapesServer.cpp; path = src/shapesServer.cpp; sourceTree = SOURCE_ROOT; };
 		4A926F24D06782E7BDB31FBA /* vertexShape.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = vertexShape.cpp; path = src/shapes/vertexShape.cpp; sourceTree = SOURCE_ROOT; };
@@ -303,19 +291,10 @@
 		94B8103697EC1817FC6B8244 /* shapes.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = shapes.h; path = src/shapes/shapes.h; sourceTree = SOURCE_ROOT; };
 		95FC55B54A37A11F5459C828 /* karmaSoundAnalyser.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = karmaSoundAnalyser.cpp; path = src/karmaSoundAnalyser.cpp; sourceTree = SOURCE_ROOT; };
 		AF4BC6731DBFB77396127F7E /* shapesServer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = shapesServer.h; path = src/shapesServer.h; sourceTree = SOURCE_ROOT; };
-		B17A5047EBAB8ECACDB467B6 /* imageEffect.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = imageEffect.h; path = src/effects/imageEffect.h; sourceTree = SOURCE_ROOT; };
-		B32266F3CAD49BBC02295075 /* imageBeatEffectItem.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = imageBeatEffectItem.h; path = src/effects/imageBeatEffectItem.h; sourceTree = SOURCE_ROOT; };
-		B5E900A5BF34EEA1B8AFD9DE /* meshRenderer3D.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = meshRenderer3D.cpp; path = src/effects/meshRenderer3D.cpp; sourceTree = SOURCE_ROOT; };
 		B88823888A700E73A49596DC /* animationController.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = animationController.h; path = src/animationController.h; sourceTree = SOURCE_ROOT; };
 		C00AC4FF0DFA48DA04990B1D /* shapesEditor.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = shapesEditor.cpp; path = src/shapesEditor.cpp; sourceTree = SOURCE_ROOT; };
-		C5524596FB43D9C2CBD8CAE6 /* imageEffect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = imageEffect.cpp; path = src/effects/imageEffect.cpp; sourceTree = SOURCE_ROOT; };
 		C5E5A0A691372A4C8D360993 /* vertexShape.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = vertexShape.h; path = src/shapes/vertexShape.h; sourceTree = SOURCE_ROOT; };
-		C65B7B954F1114350B5C93D8 /* imageBeatEffect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = imageBeatEffect.cpp; path = src/effects/imageBeatEffect.cpp; sourceTree = SOURCE_ROOT; };
-		D61AAE9DCC151B28BF24EDB8 /* imageBeatEffect.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = imageBeatEffect.h; path = src/effects/imageBeatEffect.h; sourceTree = SOURCE_ROOT; };
-		DBE4146222912458663C6C3E /* videoStreamEffect.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = videoStreamEffect.h; path = src/effects/videoStreamEffect.h; sourceTree = SOURCE_ROOT; };
-		DC3F49AAE657430D989C6E90 /* videoStreamEffect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = videoStreamEffect.cpp; path = src/effects/videoStreamEffect.cpp; sourceTree = SOURCE_ROOT; };
 		DF66665DC50D29BB9DBC3E8F /* basicShape.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = basicShape.h; path = src/shapes/basicShape.h; sourceTree = SOURCE_ROOT; };
-		E12AB9768D8FEEDD1E1ED5AC /* videoEffect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = videoEffect.cpp; path = src/effects/videoEffect.cpp; sourceTree = SOURCE_ROOT; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E4B69B5B0A3A1756003C02F2 /* karmaMapperDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = karmaMapperDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4B69E1D0A3A1BDC003C02F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = SOURCE_ROOT; };
@@ -723,24 +702,10 @@
 				3EA6183E7E925AEF111E8587 /* basicEffect.cpp */,
 				F19E4F7003214B080BB274A0 /* basicEffect.h */,
 				5902A8EFA3895514E29B493F /* effects.h */,
-				C65B7B954F1114350B5C93D8 /* imageBeatEffect.cpp */,
-				D61AAE9DCC151B28BF24EDB8 /* imageBeatEffect.h */,
-				33E325B8BB2614EC615EC29A /* imageBeatEffectItem.cpp */,
-				B32266F3CAD49BBC02295075 /* imageBeatEffectItem.h */,
-				C5524596FB43D9C2CBD8CAE6 /* imageEffect.cpp */,
-				B17A5047EBAB8ECACDB467B6 /* imageEffect.h */,
 				8BBE8529836C359CD91AF645 /* lineEffect.cpp */,
 				1D3A4DA49063121833C4C0CC /* lineEffect.h */,
 				7ED21C2D7A0039C25D650078 /* lineEffectLine.cpp */,
 				7E0B368BEB7C21AF9128E4A2 /* lineEffectLine.h */,
-				B5E900A5BF34EEA1B8AFD9DE /* meshRenderer3D.cpp */,
-				4285B74EA4ED761126F8B6F0 /* meshRenderer3D.h */,
-				25DEA0849163991ACC84A300 /* subdivisionEffect.cpp */,
-				44A65A2336D3AC3FE180C8E1 /* subdivisionEffect.h */,
-				E12AB9768D8FEEDD1E1ED5AC /* videoEffect.cpp */,
-				100E6D00CC9EA24B1BC4F6B2 /* videoEffect.h */,
-				DC3F49AAE657430D989C6E90 /* videoStreamEffect.cpp */,
-				DBE4146222912458663C6C3E /* videoStreamEffect.h */,
 			);
 			name = effects;
 			sourceTree = "<group>";
@@ -901,12 +866,9 @@
 				85F1E8D41AB830A100A27B0E /* ofxUISlider.cpp in Sources */,
 				85F1E8531AB8308300A27B0E /* tinyxml.cpp in Sources */,
 				85F1E8D31AB830A100A27B0E /* ofxUIScrollableCanvas.cpp in Sources */,
-				C1E6424E9E189A0AFD2647A5 /* imageBeatEffect.cpp in Sources */,
-				E7AD7270AA9936A1EC66611A /* imageBeatEffectItem.cpp in Sources */,
 				85F1E8C61AB830A100A27B0E /* ofxUIImageToggle.cpp in Sources */,
 				85F1E8CB1AB830A100A27B0E /* ofxUIMovingGraph.cpp in Sources */,
 				85F1E8C11AB830A100A27B0E /* ofxUIFPSSlider.cpp in Sources */,
-				52F899DE121245CF89354175 /* imageEffect.cpp in Sources */,
 				85F1E8CC1AB830A100A27B0E /* ofxUIMultiImageButton.cpp in Sources */,
 				85F1E8DE1AB830A100A27B0E /* ofxUIValuePlotter.cpp in Sources */,
 				85F1E8DB1AB830A100A27B0E /* ofxUITextInput.cpp in Sources */,
@@ -922,10 +884,6 @@
 				85F1E8541AB8308300A27B0E /* tinyxmlerror.cpp in Sources */,
 				85F1E8B61AB830A100A27B0E /* ofxUI2DGraph.cpp in Sources */,
 				85F1E8CA1AB830A100A27B0E /* ofxUIMinimalSlider.cpp in Sources */,
-				91B786DBF263FF2DC35BA7BC /* meshRenderer3D.cpp in Sources */,
-				EB30C32F99FC148A7B457276 /* subdivisionEffect.cpp in Sources */,
-				AE8331B3FC7EF9B4BE7BAAED /* videoEffect.cpp in Sources */,
-				3B53811B59C4BDFDAFBD3767 /* videoStreamEffect.cpp in Sources */,
 				85F1E94B1AB8310200A27B0E /* ofxAssimpTexture.cpp in Sources */,
 				4DC317F76A962C12815D6D2F /* karmaSoundAnalyser.cpp in Sources */,
 				85F1E8BC1AB830A100A27B0E /* ofxUICircleSlider.cpp in Sources */,
