@@ -8,6 +8,7 @@
 #include "animationController.h"
 #include "effects.h"
 #include "ofxAbletonLiveSet.h"
+#include "karmaSoundAnalyser.h"
 
 // note:
 // first we load shapes which are attached to effects. Destroy basicEffect instances before destroying basicShape instances; unless coding the complicated way.
@@ -16,11 +17,14 @@ class ofApp : public ofBaseApp{
 
 	public:
 		ofApp();
+		~ofApp();
 	
 		void setup();
 		void update();
 		void draw();
-
+		void exit();
+	
+		void audioIn(float *input, int bufferSize, int nChannels);
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -36,10 +40,12 @@ class ofApp : public ofBaseApp{
 	
 private:
 	ofx::AbletonLiveSet::EventHandler liveSetEvents;
-	ofSoundPlayer sound;
+	ofSoundPlayer music;
 	shapesServer server;
 	shapesEditor* editor;
 	animationController controller;
+	karmaSoundAnalyser analyser;
+	ofSoundStream soundStream;
 	
 	bool mouseHidden = true;
 	

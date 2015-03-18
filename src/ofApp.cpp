@@ -5,6 +5,10 @@ ofApp::ofApp() : controller(server){
 	controller = animationController(server);
 }
 
+ofApp::~ofApp(){
+	
+}
+
 void ofApp::setup(){
 	//fboHack.resize(1500,1200);
 	// drawing environment
@@ -43,25 +47,34 @@ void ofApp::setup(){
 	//  EFFECTS INITIALISATION
 	// - - - - - - - - -
 	
-	sound.loadSound("TEST MIX V0.1.wav");
+	//sound.loadSound("TEST MIX V0.1.wav");
 	
 	// start liveset decoder
 	ofx::AbletonLiveSet::LiveSet LS;
 	ofx::AbletonLiveSet::Parser parser(LS);
 	
-	if(!parser.open("mappingvendome.xml")) ofLogNotice("ofApp::setup()", "Could not parse ALS file.");
+	//if(!parser.open("mappingvendome.xml")) ofLogNotice("ofApp::setup()", "Could not parse ALS file.");
 	
-	liveSetEvents.enableMetronomEvents(LS);
-	liveSetEvents.enableNoteEvents(LS);
-	//sound.play();
+	//liveSetEvents.enableMetronomEvents(LS);
+	//liveSetEvents.enableNoteEvents(LS);
 	
+	// tmp
 	ofShowCursor();
 	mouseHidden = false;
 	
 	server.loadShapes("Vendome_Full.xml");
 	
 	// sound analysis setup
+	// streams to default system sound stream
+	// then map it to a virtual mic ( soundflower , etc )
+	soundStream.setDeviceID(7); // 7 = soundflower 2 ch
+	soundStream.setup(this, 0, 2, 44100, 256, 4);
+	analyser.start();
 	
+	// play music
+	//music.load("music.wav");
+	//music.setLoop(true);
+	//music.play();
 }
 
 //--------------------------------------------------------------
@@ -116,7 +129,16 @@ void ofApp::draw(){
 	}
 }
 
+void ofApp::exit(){
+	ofSoundStreamStop();
+}
+
 //--------------------------------------------------------------
+// this one is tmp bacause OF doesn't handle audio right yet. Soon... :D
+void ofApp::audioIn(float *input, int bufferSize, int nChannels){
+	analyser.audioIn( input, bufferSize, nChannels);
+}
+
 void ofApp::keyPressed(int key){
 	
 	// toggle edit mode ?
