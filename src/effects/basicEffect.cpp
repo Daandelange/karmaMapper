@@ -24,7 +24,7 @@ basicEffect::basicEffect(){
 	
 	reset();
 	
-	// effect type mutch match with class
+	// effect type must match with class
 	effectType = "basicEffect";
 }
 

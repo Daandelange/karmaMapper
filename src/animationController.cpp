@@ -48,7 +48,14 @@ bool animationController::start(){
 	 e->bindWithShape( server.getRandomShape() );
 	 effects.push_back(e);*/
 	
-	e = new lineEffect();
+	/*e = new lineEffect();
+	e->bindWithShape( scene.getRandomShape() );
+	e->bindWithShape( scene.getRandomShape() );
+	e->bindWithShape( scene.getRandomShape() );
+	e->bindWithShape( scene.getRandomShape() );
+	effects.push_back(e); // */
+	
+	e = new musicEffect();
 	e->bindWithShape( scene.getRandomShape() );
 	e->bindWithShape( scene.getRandomShape() );
 	e->bindWithShape( scene.getRandomShape() );

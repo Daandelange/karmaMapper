@@ -26,17 +26,13 @@ enum shapesEditMode {
 	EDIT_MODE_BATCH_FLIPY
 };
 
-// this is a singleton class handling shape modification and serving shapes.
-
 // todo: make the shape edit tools (un)instanciable for a performance gain. Make it dependent on a shapesServer//karmaScene database class which stays loaded for serving raw (+rw) shape data and maybe some utilities.
 // effects can also be instanciatated with it's (db) instance for self changing of shapes which it's applied to.
 // animator class holds and handles effects.
 // animator has several modules which can be loaded and unloaded. They also associate effects (holding preferences) with shapes.
 // an effect can be associated with one or more shapes.
 // tag effects with #visual #modificator #
-//
-//
-// Maybe this will allow it not to be a singleton anymore.
+
 
 // forward declaration
 class shapesServer;

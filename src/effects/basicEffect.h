@@ -62,9 +62,9 @@ public:
 	void disable();
 	
 	// effect properties
-	virtual bool isReady() const;
-	virtual bool isType(const string _type) const;
-	virtual string getTypes() const;
+	bool isReady() const;
+	bool isType(const string _type) const;
+	string getTypes() const;
 	
 	// controller functions
 	virtual bool randomizePresets();

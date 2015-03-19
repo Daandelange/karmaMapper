@@ -75,6 +75,7 @@
 		859A5C711AB855C500266BF6 /* Parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859A5C631AB855C500266BF6 /* Parser.cpp */; };
 		859A5C721AB855C500266BF6 /* Tempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859A5C651AB855C500266BF6 /* Tempo.cpp */; };
 		859A5C731AB855C500266BF6 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859A5C6D1AB855C500266BF6 /* pugixml.cpp */; };
+		859A5CDC1AB9AAEC00266BF6 /* musicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859A5CDA1AB9AAEC00266BF6 /* musicEffect.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DD6D172FAEA0FDD88D2847E5 /* shapesEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C00AC4FF0DFA48DA04990B1D /* shapesEditor.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
@@ -310,6 +311,8 @@
 		859A5C6C1AB855C500266BF6 /* pugiconfig.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pugiconfig.hpp; sourceTree = "<group>"; };
 		859A5C6D1AB855C500266BF6 /* pugixml.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pugixml.cpp; sourceTree = "<group>"; };
 		859A5C6E1AB855C500266BF6 /* pugixml.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pugixml.hpp; sourceTree = "<group>"; };
+		859A5CDA1AB9AAEC00266BF6 /* musicEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = musicEffect.cpp; path = effects/musicEffect.cpp; sourceTree = "<group>"; };
+		859A5CDB1AB9AAEC00266BF6 /* musicEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = musicEffect.h; path = effects/musicEffect.h; sourceTree = "<group>"; };
 		8BBE8529836C359CD91AF645 /* lineEffect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = lineEffect.cpp; path = src/effects/lineEffect.cpp; sourceTree = SOURCE_ROOT; };
 		94B8103697EC1817FC6B8244 /* shapes.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = shapes.h; path = src/shapes/shapes.h; sourceTree = SOURCE_ROOT; };
 		95FC55B54A37A11F5459C828 /* karmaSoundAnalyser.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = karmaSoundAnalyser.cpp; path = src/karmaSoundAnalyser.cpp; sourceTree = SOURCE_ROOT; };
@@ -787,9 +790,11 @@
 		D7DD78391029ADC196786413 /* effects */ = {
 			isa = PBXGroup;
 			children = (
+				5902A8EFA3895514E29B493F /* effects.h */,
 				3EA6183E7E925AEF111E8587 /* basicEffect.cpp */,
 				F19E4F7003214B080BB274A0 /* basicEffect.h */,
-				5902A8EFA3895514E29B493F /* effects.h */,
+				859A5CDA1AB9AAEC00266BF6 /* musicEffect.cpp */,
+				859A5CDB1AB9AAEC00266BF6 /* musicEffect.h */,
 				8BBE8529836C359CD91AF645 /* lineEffect.cpp */,
 				1D3A4DA49063121833C4C0CC /* lineEffect.h */,
 				7ED21C2D7A0039C25D650078 /* lineEffectLine.cpp */,
@@ -836,14 +841,14 @@
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				457EE040F1A22E81908D1342 /* animationController.cpp */,
 				B88823888A700E73A49596DC /* animationController.h */,
-				D7DD78391029ADC196786413 /* effects */,
 				95FC55B54A37A11F5459C828 /* karmaSoundAnalyser.cpp */,
 				4327029352921205F445F068 /* karmaSoundAnalyser.h */,
-				7A8E7E4B84ADE2E666AB732B /* shapes */,
 				C00AC4FF0DFA48DA04990B1D /* shapesEditor.cpp */,
 				5C839256E1C741C59DB8E0EA /* shapesEditor.h */,
 				474F5C0B2D65582B7B6AF59F /* shapesServer.cpp */,
 				AF4BC6731DBFB77396127F7E /* shapesServer.h */,
+				D7DD78391029ADC196786413 /* effects */,
+				7A8E7E4B84ADE2E666AB732B /* shapes */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -987,6 +992,7 @@
 				859A5C711AB855C500266BF6 /* Parser.cpp in Sources */,
 				859A5C4B1AB855A500266BF6 /* ofxUITextArea.cpp in Sources */,
 				859A5C4C1AB855A500266BF6 /* ofxUITextInput.cpp in Sources */,
+				859A5CDC1AB9AAEC00266BF6 /* musicEffect.cpp in Sources */,
 				636C153A8236D32CF4313857 /* basicShape.cpp in Sources */,
 				859A5C461AB855A500266BF6 /* ofxUISortableList.cpp in Sources */,
 				FA11B6EBAB0ED4BA917879F4 /* movablePoint.cpp in Sources */,

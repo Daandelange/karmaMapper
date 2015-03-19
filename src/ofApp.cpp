@@ -62,12 +62,13 @@ void ofApp::setup(){
 	ofShowCursor();
 	mouseHidden = false;
 	
-	server.loadShapes("Vendome_Full.xml");
+	server.loadShapes("Vendome_Full_Small.xml");
 	
 	// sound analysis setup
 	// streams to default system sound stream
 	// then map it to a virtual mic ( soundflower , etc )
-	soundStream.setDeviceID(7); // 7 = soundflower 2 ch
+	//ofSoundStreamListDevices();
+	soundStream.setDeviceID(3); // 7 = soundflower 2 ch
 	soundStream.setup(this, 0, 2, 44100, 256, 4);
 	analyser.start();
 	
@@ -134,9 +135,10 @@ void ofApp::exit(){
 }
 
 //--------------------------------------------------------------
-// this one is tmp bacause OF doesn't handle audio right yet. Soon... :D
+// Soon OF will extend audio possibilities and we'll be able to listen to audio events.
+// for the moment we have to do it the dirty way (ofApp shouldn't handle this, karmaSoundAnalyser should)
 void ofApp::audioIn(float *input, int bufferSize, int nChannels){
-	analyser.audioIn( input, bufferSize, nChannels);
+	analyser.getInstance().audioIn( input, bufferSize, nChannels);
 }
 
 void ofApp::keyPressed(int key){
