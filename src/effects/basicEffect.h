@@ -46,6 +46,9 @@
 // the animator calls an effect and handles it's animation state
 // the animator can also provide a color palette for a more uniform result.
 
+
+// todo: isLoading should be isLoaded (or maybe another name) (also for hasError, initialised, etc.. they are unclear.
+
 class basicEffect {
 	
 public:

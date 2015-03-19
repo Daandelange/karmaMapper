@@ -34,13 +34,9 @@ vertexShape::vertexShape(){
 	
 	// spread 4 points trough space
 	int i=0;
-	list<ofVec2f>::iterator ap = absolutePoints.begin();
 	for(list<ofVec2f>::iterator p = points.begin(); p!=points.end(); p++, i++){
 		(*p) = ofPoint( cos( PI-(TWO_PI/points.size())*i ), sin( PI-(TWO_PI/points.size())*i ))*100;
-		(*ap) = (*p)+position;
 		//cout << "["<< points[i].x << ","<< points[i].y << "]" << endl;//
-		
-		ap++;
 	}
 	
 	// recalculate bounding box & stuff
@@ -244,7 +240,7 @@ bool vertexShape::saveToXML(ofxXmlSettings &xml){
 	}
 	xml.popTag(); // pop vectors
 	
-	return false;
+	return true;
 }
 
 // load shape settings from xml
@@ -443,7 +439,8 @@ bool vertexShape::synchronisePointHandlers(){
 		guiToggle.setPosition( boundingBox.getTopRight()+5 );
 		
 		// update displayed information with real-time data
-		if( gui!=NULL ) ((ofxUITextArea*) gui->getWidget("info_Vertexes"))->setTextString("Number of Vertexes:  " + ofToString(points.size()));
+		// todo
+		//if( gui!=NULL ) ((ofxUITextArea*) gui->getWidget("info_Vertexes"))->setTextString("Number of Vertexes:  " + ofToString(points.size()));
 	}
 	
 	return true;

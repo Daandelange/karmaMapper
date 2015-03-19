@@ -275,6 +275,7 @@ void shapesEditor::guiEvent(ofxUIEventArgs &e){
 	}
 	else if(name==GUImultiShapesSelection){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
+			selectShape(NULL);
 			setEditMode(EDIT_MODE_BATCH_NONE);
 		}
 	}
@@ -483,9 +484,6 @@ bool shapesEditor::addShape(string _shapeType){
 	basicShape* result = scene.insertShape(s);
 	if( result == NULL ) return false;
 	
-	// setup the shape
-	//shapes.back()->spawn();
-	
 	// enable edit mode
 	selectShape(result);
 	
@@ -522,7 +520,8 @@ void shapesEditor::selectShape(basicShape* _i){
 		activeShape = _i;
 		
 		// enter edit mode
-		activeShape->enableEditMode();
+		// todo: even if its a vertexShape, this seems to only call basicShape::enableEditmode();
+		_i->enableEditMode();
 	}
 	else activeShape = NULL;
 }
@@ -653,11 +652,20 @@ void shapesEditor::buildMenus(){
 	//gui->setPosition(pos.x, pos.y);
 	
 	gui->addSpacer();
-	string textString = "Here you can edit, control and handle different shapes to map them on physical objects.";
+	string textString = "Edit, control and handle different shapes to map them on physical objects.";
 	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+	gui->addSpacer();
+	textString = "Keyboard shortcuts:";
+	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+	textString = "  H Show/Hide Pointer";
+	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+	textString = "  E Toggle edit mode";
+	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+	textString = "  F Toggle full screen";
+	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+	gui->addSpacer();
 	gui->addToggle(GUIToggleFullScreen, false);
 	gui->addToggle(GUIToggleMouseCursor, false);
-	gui->addLabel("Press E to toggle edit mode...", OFX_UI_FONT_SMALL);
 	gui->addFPSSlider("FPS");
 	
 	gui->addSpacer();

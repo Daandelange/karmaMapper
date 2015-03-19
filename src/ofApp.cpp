@@ -25,7 +25,8 @@ void ofApp::setup(){
 	
 	// load image
 	//background.load("vendome_de_face.jpg");
-	background.load("vendome_full.jpg");
+	//background.load("vendome_full.jpg");
+	background.load("effects/imageDistorsionEffect/black_mamba.jpg");
 	
 	// prepare to record
     recordOutput = false;
@@ -40,7 +41,7 @@ void ofApp::setup(){
 		//saver.setup(ofGetWidth(), ofGetHeight(), "recording-" + ofToString(ofGetUnixTime()) + ".mov");
 	}
 	else {
-		background.resize(background.width*((float)ofGetHeight()/background.height), ofGetHeight());
+		//background.resize(background.width*((float)ofGetHeight()/background.height), ofGetHeight());
 	}
 	
 	// - - - - - - - - -
@@ -62,13 +63,15 @@ void ofApp::setup(){
 	ofShowCursor();
 	mouseHidden = false;
 	
-	server.loadShapes("Vendome_Full_Small.xml");
+	// tmp
+	//server.loadShapes("Vendome_Full_Small.xml");
+	server.loadShapes("black_mamba.xml");
 	
 	// sound analysis setup
 	// streams to default system sound stream
 	// then map it to a virtual mic ( soundflower , etc )
 	//ofSoundStreamListDevices();
-	soundStream.setDeviceID(3); // 7 = soundflower 2 ch
+	soundStream.setDeviceID(7); // 7 = soundflower 2 ch
 	soundStream.setup(this, 0, 2, 44100, 256, 4);
 	analyser.start();
 	
@@ -97,7 +100,7 @@ void ofApp::draw(){
 		recorder.begin();
 	}
 	
-	ofClear(0);
+	//ofClear(0);
 	
 	ofSetColor(255);
 	//background.draw(0,0);
@@ -107,6 +110,8 @@ void ofApp::draw(){
 		background.draw(0,0);
 		editor->draw();
 	}
+	// tmp
+	else background.draw(0,0);
 	
 	if(recordOutput){
 	

@@ -76,6 +76,9 @@
 		859A5C721AB855C500266BF6 /* Tempo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859A5C651AB855C500266BF6 /* Tempo.cpp */; };
 		859A5C731AB855C500266BF6 /* pugixml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859A5C6D1AB855C500266BF6 /* pugixml.cpp */; };
 		859A5CDC1AB9AAEC00266BF6 /* musicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859A5CDA1AB9AAEC00266BF6 /* musicEffect.cpp */; };
+		85C3671C1ABB163100D24968 /* imageGrainEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85C3671A1ABB163100D24968 /* imageGrainEffect.cpp */; };
+		85C3671F1ABB78C900D24968 /* emptyEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85C3671D1ABB78C900D24968 /* emptyEffect.cpp */; };
+		85C367221ABB816300D24968 /* imageMeltingEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85C367201ABB816300D24968 /* imageMeltingEffect.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DD6D172FAEA0FDD88D2847E5 /* shapesEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C00AC4FF0DFA48DA04990B1D /* shapesEditor.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
@@ -313,6 +316,12 @@
 		859A5C6E1AB855C500266BF6 /* pugixml.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pugixml.hpp; sourceTree = "<group>"; };
 		859A5CDA1AB9AAEC00266BF6 /* musicEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = musicEffect.cpp; path = effects/musicEffect.cpp; sourceTree = "<group>"; };
 		859A5CDB1AB9AAEC00266BF6 /* musicEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = musicEffect.h; path = effects/musicEffect.h; sourceTree = "<group>"; };
+		85C3671A1ABB163100D24968 /* imageGrainEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imageGrainEffect.cpp; path = effects/imageGrainEffect.cpp; sourceTree = "<group>"; };
+		85C3671B1ABB163100D24968 /* imageGrainEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imageGrainEffect.h; path = effects/imageGrainEffect.h; sourceTree = "<group>"; };
+		85C3671D1ABB78C900D24968 /* emptyEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = emptyEffect.cpp; path = effects/emptyEffect.cpp; sourceTree = "<group>"; };
+		85C3671E1ABB78C900D24968 /* emptyEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = emptyEffect.h; path = effects/emptyEffect.h; sourceTree = "<group>"; };
+		85C367201ABB816300D24968 /* imageMeltingEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imageMeltingEffect.cpp; path = effects/imageMeltingEffect.cpp; sourceTree = "<group>"; };
+		85C367211ABB816300D24968 /* imageMeltingEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imageMeltingEffect.h; path = effects/imageMeltingEffect.h; sourceTree = "<group>"; };
 		8BBE8529836C359CD91AF645 /* lineEffect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = lineEffect.cpp; path = src/effects/lineEffect.cpp; sourceTree = SOURCE_ROOT; };
 		94B8103697EC1817FC6B8244 /* shapes.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = shapes.h; path = src/shapes/shapes.h; sourceTree = SOURCE_ROOT; };
 		95FC55B54A37A11F5459C828 /* karmaSoundAnalyser.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = karmaSoundAnalyser.cpp; path = src/karmaSoundAnalyser.cpp; sourceTree = SOURCE_ROOT; };
@@ -791,8 +800,14 @@
 			isa = PBXGroup;
 			children = (
 				5902A8EFA3895514E29B493F /* effects.h */,
+				85C3671D1ABB78C900D24968 /* emptyEffect.cpp */,
+				85C3671E1ABB78C900D24968 /* emptyEffect.h */,
 				3EA6183E7E925AEF111E8587 /* basicEffect.cpp */,
 				F19E4F7003214B080BB274A0 /* basicEffect.h */,
+				85C3671A1ABB163100D24968 /* imageGrainEffect.cpp */,
+				85C3671B1ABB163100D24968 /* imageGrainEffect.h */,
+				85C367201ABB816300D24968 /* imageMeltingEffect.cpp */,
+				85C367211ABB816300D24968 /* imageMeltingEffect.h */,
 				859A5CDA1AB9AAEC00266BF6 /* musicEffect.cpp */,
 				859A5CDB1AB9AAEC00266BF6 /* musicEffect.h */,
 				8BBE8529836C359CD91AF645 /* lineEffect.cpp */,
@@ -975,6 +990,7 @@
 				859A5BC41AB8559800266BF6 /* ofxAssimpModelLoader.cpp in Sources */,
 				859A5C2E1AB855A500266BF6 /* ofxUIDragableLabelButton.cpp in Sources */,
 				50F666D143E446BDF89A7744 /* basicEffect.cpp in Sources */,
+				85C3671F1ABB78C900D24968 /* emptyEffect.cpp in Sources */,
 				859A5C571AB855B300266BF6 /* ofxTrueTypeFontUC.cpp in Sources */,
 				859A5C421AB855A500266BF6 /* ofxUIRectangle.cpp in Sources */,
 				859A5C701AB855C500266BF6 /* Model.cpp in Sources */,
@@ -985,6 +1001,7 @@
 				859A5C371AB855A500266BF6 /* ofxUIImageToggle.cpp in Sources */,
 				F44C901AFB6802AB90E26871 /* lineEffect.cpp in Sources */,
 				859A5C471AB855A500266BF6 /* ofxUISpacer.cpp in Sources */,
+				85C367221ABB816300D24968 /* imageMeltingEffect.cpp in Sources */,
 				859A5C381AB855A500266BF6 /* ofxUILabel.cpp in Sources */,
 				087C79A4D8B1642D7F9676D4 /* lineEffectLine.cpp in Sources */,
 				859A5C301AB855A500266BF6 /* ofxUIEventArgs.cpp in Sources */,
@@ -1005,6 +1022,7 @@
 				859A5B7A1AB8558900266BF6 /* tinyxml.cpp in Sources */,
 				859A5C331AB855A500266BF6 /* ofxUIImage.cpp in Sources */,
 				859A5C3C1AB855A500266BF6 /* ofxUIMovingGraph.cpp in Sources */,
+				85C3671C1ABB163100D24968 /* imageGrainEffect.cpp in Sources */,
 				859A5C6F1AB855C500266BF6 /* EventHandler.cpp in Sources */,
 				859A5C4E1AB855A500266BF6 /* ofxUIToggleMatrix.cpp in Sources */,
 				859A5C721AB855C500266BF6 /* Tempo.cpp in Sources */,

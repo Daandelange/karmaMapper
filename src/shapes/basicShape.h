@@ -18,6 +18,7 @@
 // todo: remove destroy() and spawn() and isReady()
 // todo: move vertexShape stuff to it's own class and keep the bare minimum (points, etc)
 // todo: rename colors (fgColor,bgColor) and give names like groupColor, primaryColor, secondaryColor, etc.
+// todo: add name so we can getShapeByName()
 
 // When a shape exits edit mode, all coordinates are made absolute so they are easy to use for effects. Relative coordinates are easier for manipulation and storage.
 // Shape quarying and altering happens trough absolute coordinates.
@@ -65,10 +66,10 @@ public:
 	// #########
 	// EDIT STUFF
 	bool isInEditMode() const;
-	bool enableEditMode();
-	bool disableEditMode();
+	virtual bool enableEditMode();
+	virtual bool disableEditMode();
 	bool switchEditMode();
-	bool synchronisePointHandlers();
+	virtual bool synchronisePointHandlers();
 	
 	// detailed edit stuff
 	virtual void selectPrevHandle();

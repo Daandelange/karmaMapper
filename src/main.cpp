@@ -4,7 +4,7 @@
 
 //========================================================================
 int main( ){
-	ofSetupOpenGL(1024, 790, OF_WINDOW);			// <-------- setup the GL context
+	ofSetupOpenGL(700, 700, OF_WINDOW);			// <-------- setup the GL context
 	//ofAppGlutWindow window;
 	//window.setGlutDisplayString("rgba double depth alpha samples>=4");
 	//ofSetupOpenGL(&window, 1500,1200,OF_WINDOW);			// <-------- setup the GL context

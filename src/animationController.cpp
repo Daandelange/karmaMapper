@@ -53,13 +53,19 @@ bool animationController::start(){
 	e->bindWithShape( scene.getRandomShape() );
 	e->bindWithShape( scene.getRandomShape() );
 	e->bindWithShape( scene.getRandomShape() );
+	e->initialise();
+	e->enable();
 	effects.push_back(e); // */
 	
-	e = new musicEffect();
+
+	
+	e = new imageGrainEffect();
 	e->bindWithShape( scene.getRandomShape() );
 	e->bindWithShape( scene.getRandomShape() );
 	e->bindWithShape( scene.getRandomShape() );
 	e->bindWithShape( scene.getRandomShape() );
+	e->initialise();
+	e->enable(); // should in fact be called once basicShape::isReady();
 	effects.push_back(e);
 	
 	/*e = new MeshRenderer3D();

@@ -4,7 +4,8 @@
 //
 //  Created by Daan de Lange on 12/03/2015.
 //
-//
+//	This class handles the animation.
+//	It links the shapes with effects, controls animation and basically links everything together.
 //
 
 #pragma once
@@ -13,6 +14,8 @@
 #include "basicShape.h"
 #include "effects.h"
 #include "shapesServer.h"
+
+// todo: an overall mask that hides any unwanted projection zones
 
 class animationController {
 	

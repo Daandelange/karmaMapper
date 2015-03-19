@@ -31,9 +31,9 @@ public:
 	
 	
 protected:
-	
+	void renderVariables();
 	
 private:
-	void renderVariables();
+	
 	
 };

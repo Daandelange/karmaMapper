@@ -47,7 +47,7 @@ void musicEffect::reset(){
 }
 
 void musicEffect::renderVariables(){
-	ofClear( ofColor(0, 128) );
+	if( isType("musicEffect") ) ofClear( ofColor(0, 128) );
 	
 	int height = 20;
 	int posY = 0;
@@ -61,8 +61,6 @@ void musicEffect::renderVariables(){
 	ofDrawRectangle(0, posY, karmaSoundAnalyser::getInstance().getVolumeMono(false)*ofGetWidth(), height);
 	ofDrawBitmapStringHighlight("volumeMono", 0, posY+15);
 	
-	
-	
 	// draw left volume
 	posY += height;
 	ofSetColor(255);
@@ -71,9 +69,7 @@ void musicEffect::renderVariables(){
 	ofDrawBitmapStringHighlight("volumeLeft", 0, posY+15);
 	ofDrawRectangle(0, posY, karmaSoundAnalyser::getInstance().getVolumeLeft(false)*ofGetWidth(), height);
 	
-	
-	
-	// draw right
+	// draw right volume
 	posY += height;
 	ofSetColor(255);
 	ofDrawRectangle(0, posY, karmaSoundAnalyser::getInstance().getVolumeRight(true)*ofGetWidth(), height);
@@ -90,8 +86,26 @@ void musicEffect::renderVariables(){
 	ofDrawBitmapStringHighlight("balance", 0, posY+15);
 	ofDrawRectangle( ofGetWidth()/2, posY, (karmaSoundAnalyser::getInstance().getBalance(true)*ofGetWidth()-1)/2, height);
 
+	// draw buffers
+	posY += height;
+	int bufferSize = karmaSoundAnalyser::getInstance().getBufferSize();
+	float bufferWidth = (float) ofGetWidth() / bufferSize;
+	for(int i=0; i<bufferSize; i++ ){
+		
+		ofDrawRectangle( bufferWidth*i, posY+height, bufferWidth, karmaSoundAnalyser::getInstance().getBufferLeft()[i]*height*10);
+	}
+	ofDrawLine( 0, posY+height, ofGetWidth(), posY+height);
+	posY += height;
 	
+	// show zeroCrossings
+	posY += height;
+	ofSetColor(255);
+	ofDrawRectangle( 0, posY, karmaSoundAnalyser::getInstance().getZeroCrossings()/100.f, height);
 	
+	// show spectrum variation
+	posY += height;
+	ofSetColor(255);
+	ofDrawRectangle( 0, posY, karmaSoundAnalyser::getInstance().getSpectrumVariation()/100.f, height);
 	
 }
 

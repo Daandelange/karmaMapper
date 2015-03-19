@@ -15,7 +15,9 @@ int basicShape::maxGroupID = 5;
 // CONSTRUCTORS
 // - - - - - -
 basicShape::basicShape() {
-
+	
+	gui = NULL;
+	
 	reset();
 	shapeType = "basicShape";
 	
@@ -50,6 +52,9 @@ void basicShape::reset(){
 	bgColor = ofColor(0);
 	
 	pointHandlers.clear();
+	
+	if(gui!=NULL) delete gui;
+	gui = NULL;
 }
 
 // This function simply uploads data to GPU. basicEffect will set styling
@@ -265,6 +270,8 @@ bool basicShape::isInEditMode() const{
 // - - - - - -
 
 bool basicShape::enableEditMode(){
+	if(isInEditMode()) return true;
+	
 	// remember
 	bEditMode = true;
 	activeHandle = NULL;

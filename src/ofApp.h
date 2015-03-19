@@ -13,6 +13,8 @@
 // note:
 // first we load shapes which are attached to effects. Destroy basicEffect instances before destroying basicShape instances; unless coding the complicated way.
 
+// todo: esc key ask for confirm on exit
+
 class ofApp : public ofBaseApp{
 
 	public:

@@ -12,11 +12,16 @@
 // CONSTRUCTORS
 // - - - - - - - -
 karmaSoundAnalyser::karmaSoundAnalyser( ){
+	// settings:
+	smoothingReactivity = .93f; // from 0 to 1
+	
+	//
 	bEnabled = false;
 	balance = 0.f;
 	balanceSmoothed = 0.f;
-	smoothingReactivity = .93f; // from 0 to 1
-	
+	zeroCrossingDirection = 1.f;
+	zeroCrossings.resize( round( 44100/SOUND_BUFFER_SIZE ) );
+	spectrumVariation.resize( round( 44100/SOUND_BUFFER_SIZE ) );
 	balanceScale=1.0f;
 	
 	// this sets up streaming for ofApp::audioIn();
@@ -55,27 +60,57 @@ bool karmaSoundAnalyser::stop(){
 // - - - - - - - -
 void karmaSoundAnalyser::audioIn(float *input, int bufferSize, int nChannels){
 	
+	ofScopedLock myLock(soundMutex);
+	
 	// samples are "interleaved"
 	int numCounted = 0;
 	
+	int tmpZeroCrossings = 0;
+	float tmpSpectrumVariation = 0;
 	
 	volumeLeft = 0;
 	volumeRight = 0;
 	volumeMono = 0;
 	//lets go through each sample and calculate the root mean square which is a rough way to calculate volume
+
 	for (int i = 0; i < SOUND_BUFFER_SIZE && i<bufferSize; i++){
-		leftBuffer[i]		= input[i*2]*0.5;
+		leftBuffer[i]		= input[i*2];
 		rightBuffer[i]	= input[i*2+1]*0.5;
 		
 		volumeLeft += leftBuffer[i] * leftBuffer[i];
 		volumeRight += rightBuffer[i] * rightBuffer[i];
-		volumeMono += volumeLeft + volumeRight;
+		volumeMono += (volumeLeft + volumeRight)/2.0f;
 		
 		numCounted+=1;
+		
+		// calc zero crossings (yet have to make this a rate)
+		float direction = ( (leftBuffer[i]+rightBuffer[i])/2.f > 0 )?1.f:-1.f;
+		if( zeroCrossingDirection != direction ){
+			tmpZeroCrossings += 1;
+			direction *= -1.f;
+		}
+		
+		// calc  spectrum variation
+		if(i!=0){
+			tmpSpectrumVariation += abs( leftBuffer[i-1] + leftBuffer[i]);
+			tmpSpectrumVariation += abs( rightBuffer[i-1] + rightBuffer[i]);
+		}
+	}
+	
+	// zero crossing stuff
+	for(int i=zeroCrossings.size(); i>=0; i--){
+		if(i==0) zeroCrossings[0]=tmpZeroCrossings;
+		else zeroCrossings[i] = zeroCrossings[i-1];
+	}
+	
+	// spectrum variation stuff
+	for(int i=spectrumVariation.size(); i>=0; i--){
+		if(i==0) spectrumVariation[0]=tmpSpectrumVariation/2.0f;
+		else spectrumVariation[i] = spectrumVariation[i-1];
 	}
 	
 	//this is how we get the mean of rms :)
-	volumeMono /= (float)(numCounted*2);
+	volumeMono /= (float)(numCounted);
 	volumeLeft /= (float)(numCounted);
 	volumeRight /= (float)(numCounted);
 	
@@ -83,6 +118,7 @@ void karmaSoundAnalyser::audioIn(float *input, int bufferSize, int nChannels){
 	volumeMono = sqrt( volumeMono );
 	volumeLeft = sqrt( volumeLeft );
 	volumeRight = sqrt( volumeRight );
+	//volumeMono = (volumeLeft + volumeRight )/2.f;
 	
 	// keep smoothed volume
 	volumeLeftSmoothed *= smoothingReactivity;
@@ -103,9 +139,9 @@ void karmaSoundAnalyser::audioIn(float *input, int bufferSize, int nChannels){
 	if( abs(balance) > abs(balanceScale) ) balanceScale += balance*.2f; // adapt mac scale to current scale
 	//if( (balanceScale < 0 && balanceSmoothed > 0) || (balanceScale > 0 && balanceSmoothed < 0) ) balanceScale*=-1;
 	balanceScaled = balanceSmoothed/balanceScale;
-	cout << balanceSmoothed << " - " << balanceScale << endl;
-	// calc zero crossings
-	
+	bool smoothedisLeft=balanceSmoothed<0;
+	bool scaledisLeft=balanceScaled<0;
+	if(smoothedisLeft!=scaledisLeft) balanceScaled*=-1.f;
 }
 
 // SETTERS
@@ -117,6 +153,15 @@ void karmaSoundAnalyser::setSmoothingReactivity(float _smoothingReactivity){
 // GETTERS
 bool karmaSoundAnalyser::isEnabled() const {
 	return bEnabled;
+}
+
+//
+int karmaSoundAnalyser::getBufferSize() const {
+	return SOUND_BUFFER_SIZE;
+}
+
+const float* karmaSoundAnalyser::getBufferLeft() const {
+	return leftBuffer;
 }
 
 // scaled --> returns a more "useable" value
@@ -136,6 +181,21 @@ float karmaSoundAnalyser::getVolumeMono(bool _getSmoothed) const {
 	return _getSmoothed?volumeMonoSmoothed:volumeMono;
 }
 
+int karmaSoundAnalyser::getZeroCrossings() const {
+	int sum(0);
+	for(int i=0; i<zeroCrossings.size(); i++){
+		sum += zeroCrossings[i];
+	}
+	return sum;
+}
 
+float karmaSoundAnalyser::getSpectrumVariation() {
+	ofScopedLock myLock(soundMutex);
+	int sum(0);
+	for(int i=0; i<spectrumVariation.size(); i++){
+		sum += spectrumVariation[i];
+	}
+	return sum;
+}
 
 
