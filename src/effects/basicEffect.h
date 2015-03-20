@@ -45,6 +45,8 @@
 // how do the effect and the animator interact with each other ?
 // the animator calls an effect and handles it's animation state
 // the animator can also provide a color palette for a more uniform result.
+// how could an effect ask another effects not to erase the bg every frame?
+// idea: if an effect has not yet been bound with a shape on initialise(), let it request shapes. Otherwise use given ones.
 
 
 // todo: isLoading should be isLoaded (or maybe another name) (also for hasError, initialised, etc.. they are unclear.
@@ -80,6 +82,7 @@ public:
 	
 	// shape binding tools
 	bool bindWithShape(basicShape* _shape);
+	bool bindWithShapes(vector<basicShape*> _shapes);
 	/*virtual void bindWithShapes(vector<basicShape*>& _shapesRef);*/
 	bool detachFromAllShapes();
 	bool detachFromShape(basicShape* _shape);

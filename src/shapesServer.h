@@ -42,8 +42,8 @@ public:
 	basicShape* getRandomShape();
 	vector<basicShape*> getShapesByType(string _type);
 	basicShape* getRandomShapeByType(string _type);
-	//vector<basicShape*> getShapesByGroup(int _group);
-	//basicShape* getShapeByGroup(int _group);
+	vector<basicShape*> getShapesByGroup(int _group);
+	basicShape* getRandomShapeByGroup(int _group);
 	
 	// utilities
 	const unsigned int getNumShapes() const;

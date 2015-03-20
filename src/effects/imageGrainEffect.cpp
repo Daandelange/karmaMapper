@@ -74,14 +74,16 @@ bool imageGrainEffect::render(){
 void imageGrainEffect::update(){
 	basicEffect::update();
 	
-	if( items.size() < 20 && ofRandom(0,5)>3 ) items.push_back(imageGrainItem(*shapes[round(ofRandom(0, shapes.size()))]->getPositionPtr()));
+	//if( shapes.size()==0 ) return;
+	
+	if( items.size() < 20 && ofRandom(0,5)>3 ) items.push_back(imageGrainItem(*shapes[round(ofRandom(0, shapes.size()-.51f))]->getPositionPtr()));
 	
 	for(int i=items.size()-1; i>=0; i--){
 		if(items[i].isDead){
 			items.erase(items.begin() + 1);
 		}
 		
-		items[i].update();
+		else items[i].update();
 	}
 }
 

@@ -74,6 +74,8 @@ bool basicEffect::render(){
 }
 
 // like ofApp::update()
+// todo: update should receive parameters like update rate, time variables, etc.
+// todo: this should always be called in fact. imageGrainEffect::update() should be called by it.
 void basicEffect::update(){
 	aliveSince = ofGetSystemTime() - startTime;
 }
@@ -173,6 +175,33 @@ bool basicEffect::bindWithShape(basicShape* _shape){
 	updateBoundingBox();
 	
 	return true;
+}
+
+// returns true if all given shapes are bound
+bool basicEffect::bindWithShapes(vector<basicShape*> _shapes){
+	if(_shapes.size()==0) return false;
+	
+	bool success = true;
+	for(vector<basicShape*>::iterator _shape=_shapes.begin(); _shape!=_shapes.end();	++_shape){
+		
+		if( *_shape == NULL ){
+			success = false;
+			continue;
+		}
+		
+		// prevent adding the same shape several times
+		for(vector<basicShape*>::iterator it=shapes.begin(); it!=shapes.end();	++it){
+			if( *_shape == *it ) continue;  // already exists
+		}
+	
+		//shapes.push_back( *_shape );
+		shapes.insert(shapes.end(), *_shape);
+		
+	}
+
+	updateBoundingBox();
+	
+	return success;
 }
 
 bool basicEffect::detachFromAllShapes(){

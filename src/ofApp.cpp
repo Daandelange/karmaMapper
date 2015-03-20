@@ -26,7 +26,7 @@ void ofApp::setup(){
 	// load image
 	//background.load("vendome_de_face.jpg");
 	//background.load("vendome_full.jpg");
-	background.load("effects/imageDistorsionEffect/black_mamba.jpg");
+	background.load("effects/imageGrainEffect/black_mamba.jpg");
 	
 	// prepare to record
     recordOutput = false;
@@ -87,6 +87,9 @@ void ofApp::update(){
 	if( editor->isInEditMode() ){
 		editor->update();
 	}
+	
+	// display FPS in window title
+	ofSetWindowTitle(ofToString(ofGetFrameRate(), 2)+" FPS");
 }
 
 //--------------------------------------------------------------

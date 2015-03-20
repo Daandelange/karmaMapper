@@ -32,8 +32,6 @@ animationController::~animationController(){
 bool animationController::start(){
 	bEnabled = true;
 	
-	basicEffect* e;
-	
 	// get shape instance
 	//string type="basicEffect";
 	//e = stringToShapeClass( type );
@@ -57,16 +55,24 @@ bool animationController::start(){
 	e->enable();
 	effects.push_back(e); // */
 	
-
-	
-	e = new imageGrainEffect();
-	e->bindWithShape( scene.getRandomShape() );
-	e->bindWithShape( scene.getRandomShape() );
-	e->bindWithShape( scene.getRandomShape() );
-	e->bindWithShape( scene.getRandomShape() );
-	e->initialise();
+	{
+	basicEffect* e;
+	e = new imageMeltingEffect();
+		e->initialise();
+	e->bindWithShapes( scene.getShapesByGroup(3) );
+	e->bindWithShapes( scene.getShapesByGroup(1) );
 	e->enable(); // should in fact be called once basicShape::isReady();
 	effects.push_back(e);
+	}
+	
+	{
+	basicEffect* e;
+	e = new imageGrainEffect();
+	e->initialise();
+	e->bindWithShapes( scene.getShapesByGroup(1) );
+	e->enable(); // should in fact be called once basicShape::isReady();
+	effects.push_back(e);
+	}
 	
 	/*e = new MeshRenderer3D();
 	 e->bindWithShape( server.getRandomShape() );

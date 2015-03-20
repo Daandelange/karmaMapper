@@ -213,6 +213,7 @@ basicShape* shapesServer::getRandomShape(){
 	
 }
 
+// todo: add int _limit restriction param (and randomize)
 vector<basicShape*> shapesServer::getShapesByType(string _type){
 	vector<basicShape*> ret;
 	ret.clear();
@@ -230,34 +231,28 @@ basicShape* shapesServer::getRandomShapeByType(string _type){
 	vector<basicShape*> ret = getShapesByType(_type);
 	if(ret.size()<=0) return NULL;
 	
-	return ret[-.49f+ofRandomf()*(ret.size()-.02f)];
+	return ret[-.49f+ofRandomf()*(ret.size()-0.51f)];
 }
 
-/*vector<basicShape*> shapesServer::getShapesByGroup(int _group){
+// todo: add int _limit restriction param (and randomize)
+vector<basicShape*> shapesServer::getShapesByGroup(int _group){
 	vector<basicShape*> ret;
 	ret.clear();
 	ret.resize(0);
 	
 	// loop trough shapes and return the wanted ones
-	for(int i=0; i<shapes.size(); i++){
-		if(shapes[i]->shapeType == _group ) ret.push_back(shapes[i]);
+	for(list<basicShape*>::iterator it = shapes.begin(); it != shapes.end(); it++){
+		if((*it)->getGroupID() == _group ) ret.push_back((*it));
 	}
 	
 	return ret;
-}*/
+}
 
-/*basicShape* shapesServer::getShapeByGroup(int _group){
-	vector<basicShape*> ret;
-	ret.clear();
-	ret.resize(0);
-	
-	// loop trough shapes and return the wanted ones
-	for(int i=0; i<shapes.size(); i++){
-		if(shapes[i]->shapeType == _type ) ret.push_back(shapes[i]);
-	}
-	
-	return ret;
-}*/
+basicShape* shapesServer::getRandomShapeByGroup(int _group){
+	vector<basicShape*> ret = getShapesByGroup(_group);
+	if(ret.size()<=0) return NULL;
+	return ret[-.49f+ofRandomf()*(ret.size()-.51f)];
+}
 
 // - - - - - - -
 // UTILITIES
