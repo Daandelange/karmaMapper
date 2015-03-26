@@ -47,6 +47,7 @@ It's made for extensibility and there are several components:
  - Ricardo Garcia
  - Douglas Edric Stanley ([Abstractmachine](http://www.abstractmachine.net/))
  - Gregory Pignot ([Servovalve](http://www.servovalve.org/))
+ - [Guillaume Stagnaro](http://stagnaro.net/)
  - Julien Rancoeur / [Fx23](https://soundcloud.com/fx23) ([ADN](http://artdistorsionsnumeriques.com/))
  - [Tetalab](http://tetalab.org/)
  - [Esaaix](http://ecole-art-aix.fr/)
