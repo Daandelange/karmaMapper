@@ -10,10 +10,6 @@
 //  Implements some standard methods for overall usage.
 //
 
-// todo:
-// implement some shape-serving functions such as getShapesbyVertexNumber(), getShapesByType, getRandomShapes(int _nb), getShapesByGroup(int _group_id), etc.
-// this will probably be problematic: http://stackoverflow.com/questions/3488571/does-insertion-of-elements-in-a-vector-damages-a-pointer-to-the-vector
-
 #include "basicEffect.h"
 
 // - - - - - - -
@@ -232,4 +228,7 @@ bool basicEffect::detachFromShape(basicShape* _shape){
 	return true;
 }
 
+int basicEffect::getNumShapes() const{
+	return shapes.size();
+}
 

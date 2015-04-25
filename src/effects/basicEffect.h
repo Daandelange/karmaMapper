@@ -86,6 +86,7 @@ public:
 	/*virtual void bindWithShapes(vector<basicShape*>& _shapesRef);*/
 	bool detachFromAllShapes();
 	bool detachFromShape(basicShape* _shape);
+	int getNumShapes() const;
 	
 	// todo: make this read-only
 	unsigned int aliveSince;

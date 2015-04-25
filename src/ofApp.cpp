@@ -25,8 +25,7 @@ void ofApp::setup(){
 	
 	// load image
 	//background.load("vendome_de_face.jpg");
-	//background.load("vendome_full.jpg");
-	background.load("effects/imageGrainEffect/black_mamba.jpg");
+	background.load("vendome_full.jpg");
 	
 	// prepare to record
     recordOutput = false;
@@ -64,8 +63,7 @@ void ofApp::setup(){
 	mouseHidden = false;
 	
 	// tmp
-	//server.loadShapes("Vendome_Full_Small.xml");
-	server.loadShapes("black_mamba.xml");
+	server.loadShapes("Vendome_Full_Small.xml");
 	
 	// sound analysis setup
 	// streams to default system sound stream
@@ -83,13 +81,14 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	
 	// update shapes ?
 	if( editor->isInEditMode() ){
 		editor->update();
 	}
 	
 	// display FPS in window title
-	ofSetWindowTitle(ofToString(ofGetFrameRate(), 2)+" FPS");
+	ofSetWindowTitle( ofToString(ofGetFrameRate(), 2)+" FPS");
 }
 
 //--------------------------------------------------------------
@@ -103,18 +102,17 @@ void ofApp::draw(){
 		recorder.begin();
 	}
 	
-	//ofClear(0);
-	
-	ofSetColor(255);
-	//background.draw(0,0);
-	
 	// render shape editor ?
 	if( editor->isInEditMode() ){
+		ofSetColor(255);
 		background.draw(0,0);
 		editor->draw();
 	}
-	// tmp
-	else background.draw(0,0);
+	// tmp, should become backgroundEffect
+	else{
+		ofSetColor(255);
+		background.draw(0,0);
+	}
 	
 	if(recordOutput){
 	

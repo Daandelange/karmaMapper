@@ -8,14 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		087C79A4D8B1642D7F9676D4 /* lineEffectLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7ED21C2D7A0039C25D650078 /* lineEffectLine.cpp */; };
-		20A789B9414F7D09F4A497DE /* shapesServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 474F5C0B2D65582B7B6AF59F /* shapesServer.cpp */; };
 		40B7466515686602BE33EBD4 /* vertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A926F24D06782E7BDB31FBA /* vertexShape.cpp */; };
-		4DC317F76A962C12815D6D2F /* karmaSoundAnalyser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95FC55B54A37A11F5459C828 /* karmaSoundAnalyser.cpp */; };
 		50F666D143E446BDF89A7744 /* basicEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6183E7E925AEF111E8587 /* basicEffect.cpp */; };
 		636C153A8236D32CF4313857 /* basicShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B955C26665CFEE341F15A54 /* basicShape.cpp */; };
 		6474CBF619BCE019003C94E2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6474CBF019BCE00B003C94E2 /* AVFoundation.framework */; };
 		6474CBF719BCE019003C94E2 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6474CBF119BCE00B003C94E2 /* CoreMedia.framework */; };
 		6474CBF819BCE019003C94E2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6474CBF219BCE00B003C94E2 /* QuartzCore.framework */; };
+		854B39921AEBB4F000E7FE78 /* animationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 854B398A1AEBB4F000E7FE78 /* animationController.cpp */; };
+		854B39931AEBB4F000E7FE78 /* karmaSoundAnalyser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 854B398C1AEBB4F000E7FE78 /* karmaSoundAnalyser.cpp */; };
+		854B39941AEBB4F000E7FE78 /* shapesEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 854B398E1AEBB4F000E7FE78 /* shapesEditor.cpp */; };
+		854B39951AEBB4F000E7FE78 /* shapesServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 854B39901AEBB4F000E7FE78 /* shapesServer.cpp */; };
 		859A5B791AB8558900266BF6 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859A5B721AB8558900266BF6 /* ofxXmlSettings.cpp */; };
 		859A5B7A1AB8558900266BF6 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859A5B751AB8558900266BF6 /* tinyxml.cpp */; };
 		859A5B7B1AB8558900266BF6 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859A5B771AB8558900266BF6 /* tinyxmlerror.cpp */; };
@@ -80,7 +82,6 @@
 		85C3671F1ABB78C900D24968 /* emptyEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85C3671D1ABB78C900D24968 /* emptyEffect.cpp */; };
 		85C367221ABB816300D24968 /* imageMeltingEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85C367201ABB816300D24968 /* imageMeltingEffect.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		DD6D172FAEA0FDD88D2847E5 /* shapesEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C00AC4FF0DFA48DA04990B1D /* shapesEditor.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
@@ -100,7 +101,6 @@
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
 		F44C901AFB6802AB90E26871 /* lineEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8BBE8529836C359CD91AF645 /* lineEffect.cpp */; };
-		F994128226E6BC64D49D22A8 /* animationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 457EE040F1A22E81908D1342 /* animationController.cpp */; };
 		FA11B6EBAB0ED4BA917879F4 /* movablePoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CDBA2D326396E0E887DA059 /* movablePoint.cpp */; };
 /* End PBXBuildFile section */
 
@@ -137,13 +137,9 @@
 /* Begin PBXFileReference section */
 		1D3A4DA49063121833C4C0CC /* lineEffect.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = lineEffect.h; path = src/effects/lineEffect.h; sourceTree = SOURCE_ROOT; };
 		3EA6183E7E925AEF111E8587 /* basicEffect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = basicEffect.cpp; path = src/effects/basicEffect.cpp; sourceTree = SOURCE_ROOT; };
-		4327029352921205F445F068 /* karmaSoundAnalyser.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = karmaSoundAnalyser.h; path = src/karmaSoundAnalyser.h; sourceTree = SOURCE_ROOT; };
-		457EE040F1A22E81908D1342 /* animationController.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = animationController.cpp; path = src/animationController.cpp; sourceTree = SOURCE_ROOT; };
-		474F5C0B2D65582B7B6AF59F /* shapesServer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = shapesServer.cpp; path = src/shapesServer.cpp; sourceTree = SOURCE_ROOT; };
 		4A926F24D06782E7BDB31FBA /* vertexShape.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = vertexShape.cpp; path = src/shapes/vertexShape.cpp; sourceTree = SOURCE_ROOT; };
 		4CDBA2D326396E0E887DA059 /* movablePoint.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = movablePoint.cpp; path = src/shapes/movablePoint.cpp; sourceTree = SOURCE_ROOT; };
 		5902A8EFA3895514E29B493F /* effects.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = effects.h; path = src/effects/effects.h; sourceTree = SOURCE_ROOT; };
-		5C839256E1C741C59DB8E0EA /* shapesEditor.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = shapesEditor.h; path = src/shapesEditor.h; sourceTree = SOURCE_ROOT; };
 		6474CBF019BCE00B003C94E2 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		6474CBF119BCE00B003C94E2 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		6474CBF219BCE00B003C94E2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -151,6 +147,14 @@
 		7B955C26665CFEE341F15A54 /* basicShape.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = basicShape.cpp; path = src/shapes/basicShape.cpp; sourceTree = SOURCE_ROOT; };
 		7E0B368BEB7C21AF9128E4A2 /* lineEffectLine.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = lineEffectLine.h; path = src/effects/lineEffectLine.h; sourceTree = SOURCE_ROOT; };
 		7ED21C2D7A0039C25D650078 /* lineEffectLine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = lineEffectLine.cpp; path = src/effects/lineEffectLine.cpp; sourceTree = SOURCE_ROOT; };
+		854B398A1AEBB4F000E7FE78 /* animationController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = animationController.cpp; sourceTree = "<group>"; };
+		854B398B1AEBB4F000E7FE78 /* animationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = animationController.h; sourceTree = "<group>"; };
+		854B398C1AEBB4F000E7FE78 /* karmaSoundAnalyser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = karmaSoundAnalyser.cpp; sourceTree = "<group>"; };
+		854B398D1AEBB4F000E7FE78 /* karmaSoundAnalyser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = karmaSoundAnalyser.h; sourceTree = "<group>"; };
+		854B398E1AEBB4F000E7FE78 /* shapesEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shapesEditor.cpp; sourceTree = "<group>"; };
+		854B398F1AEBB4F000E7FE78 /* shapesEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shapesEditor.h; sourceTree = "<group>"; };
+		854B39901AEBB4F000E7FE78 /* shapesServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shapesServer.cpp; sourceTree = "<group>"; };
+		854B39911AEBB4F000E7FE78 /* shapesServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shapesServer.h; sourceTree = "<group>"; };
 		859A5B721AB8558900266BF6 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		859A5B731AB8558900266BF6 /* ofxXmlSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		859A5B751AB8558900266BF6 /* tinyxml.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
@@ -324,11 +328,7 @@
 		85C367211ABB816300D24968 /* imageMeltingEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imageMeltingEffect.h; path = effects/imageMeltingEffect.h; sourceTree = "<group>"; };
 		8BBE8529836C359CD91AF645 /* lineEffect.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = lineEffect.cpp; path = src/effects/lineEffect.cpp; sourceTree = SOURCE_ROOT; };
 		94B8103697EC1817FC6B8244 /* shapes.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = shapes.h; path = src/shapes/shapes.h; sourceTree = SOURCE_ROOT; };
-		95FC55B54A37A11F5459C828 /* karmaSoundAnalyser.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = karmaSoundAnalyser.cpp; path = src/karmaSoundAnalyser.cpp; sourceTree = SOURCE_ROOT; };
-		AF4BC6731DBFB77396127F7E /* shapesServer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = shapesServer.h; path = src/shapesServer.h; sourceTree = SOURCE_ROOT; };
-		B88823888A700E73A49596DC /* animationController.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = animationController.h; path = src/animationController.h; sourceTree = SOURCE_ROOT; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
-		C00AC4FF0DFA48DA04990B1D /* shapesEditor.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = shapesEditor.cpp; path = src/shapesEditor.cpp; sourceTree = SOURCE_ROOT; };
 		C5E5A0A691372A4C8D360993 /* vertexShape.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = vertexShape.h; path = src/shapes/vertexShape.h; sourceTree = SOURCE_ROOT; };
 		DF66665DC50D29BB9DBC3E8F /* basicShape.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = basicShape.h; path = src/shapes/basicShape.h; sourceTree = SOURCE_ROOT; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
@@ -399,6 +399,21 @@
 				C5E5A0A691372A4C8D360993 /* vertexShape.h */,
 			);
 			name = shapes;
+			sourceTree = "<group>";
+		};
+		854B39891AEBB4F000E7FE78 /* core */ = {
+			isa = PBXGroup;
+			children = (
+				854B398A1AEBB4F000E7FE78 /* animationController.cpp */,
+				854B398B1AEBB4F000E7FE78 /* animationController.h */,
+				854B398C1AEBB4F000E7FE78 /* karmaSoundAnalyser.cpp */,
+				854B398D1AEBB4F000E7FE78 /* karmaSoundAnalyser.h */,
+				854B398E1AEBB4F000E7FE78 /* shapesEditor.cpp */,
+				854B398F1AEBB4F000E7FE78 /* shapesEditor.h */,
+				854B39901AEBB4F000E7FE78 /* shapesServer.cpp */,
+				854B39911AEBB4F000E7FE78 /* shapesServer.h */,
+			);
+			path = core;
 			sourceTree = "<group>";
 		};
 		859A5B701AB8558900266BF6 /* ofxXmlSettings */ = {
@@ -854,14 +869,7 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
-				457EE040F1A22E81908D1342 /* animationController.cpp */,
-				B88823888A700E73A49596DC /* animationController.h */,
-				95FC55B54A37A11F5459C828 /* karmaSoundAnalyser.cpp */,
-				4327029352921205F445F068 /* karmaSoundAnalyser.h */,
-				C00AC4FF0DFA48DA04990B1D /* shapesEditor.cpp */,
-				5C839256E1C741C59DB8E0EA /* shapesEditor.h */,
-				474F5C0B2D65582B7B6AF59F /* shapesServer.cpp */,
-				AF4BC6731DBFB77396127F7E /* shapesServer.h */,
+				854B39891AEBB4F000E7FE78 /* core */,
 				D7DD78391029ADC196786413 /* effects */,
 				7A8E7E4B84ADE2E666AB732B /* shapes */,
 			);
@@ -976,7 +984,6 @@
 				859A5C441AB855A500266BF6 /* ofxUIScrollableCanvas.cpp in Sources */,
 				859A5C281AB855A500266BF6 /* ofxUI2DPad.cpp in Sources */,
 				859A5C3E1AB855A500266BF6 /* ofxUIMultiImageToggle.cpp in Sources */,
-				F994128226E6BC64D49D22A8 /* animationController.cpp in Sources */,
 				859A5BC51AB8559800266BF6 /* ofxAssimpTexture.cpp in Sources */,
 				859A5C2F1AB855A500266BF6 /* ofxUIDropDownList.cpp in Sources */,
 				859A5B7B1AB8558900266BF6 /* tinyxmlerror.cpp in Sources */,
@@ -998,14 +1005,15 @@
 				859A5C511AB855A500266BF6 /* ofxUIWidget.cpp in Sources */,
 				859A5C271AB855A500266BF6 /* ofxUI2DGraph.cpp in Sources */,
 				859A5C341AB855A500266BF6 /* ofxUIImageButton.cpp in Sources */,
+				854B39921AEBB4F000E7FE78 /* animationController.cpp in Sources */,
 				859A5C371AB855A500266BF6 /* ofxUIImageToggle.cpp in Sources */,
 				F44C901AFB6802AB90E26871 /* lineEffect.cpp in Sources */,
 				859A5C471AB855A500266BF6 /* ofxUISpacer.cpp in Sources */,
 				85C367221ABB816300D24968 /* imageMeltingEffect.cpp in Sources */,
 				859A5C381AB855A500266BF6 /* ofxUILabel.cpp in Sources */,
 				087C79A4D8B1642D7F9676D4 /* lineEffectLine.cpp in Sources */,
+				854B39951AEBB4F000E7FE78 /* shapesServer.cpp in Sources */,
 				859A5C301AB855A500266BF6 /* ofxUIEventArgs.cpp in Sources */,
-				4DC317F76A962C12815D6D2F /* karmaSoundAnalyser.cpp in Sources */,
 				859A5C711AB855C500266BF6 /* Parser.cpp in Sources */,
 				859A5C4B1AB855A500266BF6 /* ofxUITextArea.cpp in Sources */,
 				859A5C4C1AB855A500266BF6 /* ofxUITextInput.cpp in Sources */,
@@ -1014,9 +1022,9 @@
 				859A5C461AB855A500266BF6 /* ofxUISortableList.cpp in Sources */,
 				FA11B6EBAB0ED4BA917879F4 /* movablePoint.cpp in Sources */,
 				40B7466515686602BE33EBD4 /* vertexShape.cpp in Sources */,
-				DD6D172FAEA0FDD88D2847E5 /* shapesEditor.cpp in Sources */,
 				859A5C4A1AB855A500266BF6 /* ofxUITabBar.cpp in Sources */,
 				859A5C481AB855A500266BF6 /* ofxUISpectrum.cpp in Sources */,
+				854B39931AEBB4F000E7FE78 /* karmaSoundAnalyser.cpp in Sources */,
 				859A5BC21AB8559800266BF6 /* ofxAssimpAnimation.cpp in Sources */,
 				859A5C501AB855A500266BF6 /* ofxUIWaveform.cpp in Sources */,
 				859A5B7A1AB8558900266BF6 /* tinyxml.cpp in Sources */,
@@ -1029,13 +1037,13 @@
 				859A5C3D1AB855A500266BF6 /* ofxUIMultiImageButton.cpp in Sources */,
 				859A5C411AB855A500266BF6 /* ofxUIRangeSlider.cpp in Sources */,
 				859A5C731AB855C500266BF6 /* pugixml.cpp in Sources */,
-				20A789B9414F7D09F4A497DE /* shapesServer.cpp in Sources */,
 				859A5C321AB855A500266BF6 /* ofxUIFPSSlider.cpp in Sources */,
 				859A5C3B1AB855A500266BF6 /* ofxUIMinimalSlider.cpp in Sources */,
 				859A5C3A1AB855A500266BF6 /* ofxUILabelToggle.cpp in Sources */,
 				859A5B791AB8558900266BF6 /* ofxXmlSettings.cpp in Sources */,
 				859A5C311AB855A500266BF6 /* ofxUIFPS.cpp in Sources */,
 				859A5C291AB855A500266BF6 /* ofxUIBaseDraws.cpp in Sources */,
+				854B39941AEBB4F000E7FE78 /* shapesEditor.cpp in Sources */,
 				859A5C2D1AB855A500266BF6 /* ofxUICircleSlider.cpp in Sources */,
 				859A5C2B1AB855A500266BF6 /* ofxUIButton.cpp in Sources */,
 			);

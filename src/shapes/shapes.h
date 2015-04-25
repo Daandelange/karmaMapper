@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "ofMain.h"
+//#include "ofMain.h"
 
 // required by ALL shape classes
 //#include "shapesHandler.h"

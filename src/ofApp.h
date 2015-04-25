@@ -14,6 +14,7 @@
 // first we load shapes which are attached to effects. Destroy basicEffect instances before destroying basicShape instances; unless coding the complicated way.
 
 // todo: esc key ask for confirm on exit
+// todo: make the recorder a separate tool/class
 
 class ofApp : public ofBaseApp{
 

@@ -10,6 +10,7 @@
 
 // static
 int basicShape::maxGroupID = 5;
+ofVec2f basicShape::zeroPoint = ofVec2f(0,0);
 
 // - - - - - -
 // CONSTRUCTORS

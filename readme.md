@@ -1,7 +1,7 @@
 # karmaMapper
 ________
 
-karmaMapper is an OpenSource mapping software made for real-time interactions and image generation. Built upon the amazing [OpenFrameworks](http://www.openframeworks.cc/) framework, it runs on Mac and should run on PC and Linux.
+karmaMapper is an OpenSource mapping software made for real-time interactions and image generation. Built upon the amazing [OpenFrameworks](http://www.openframeworks.cc/) framework, it runs on Mac and should run on Windows and Linux.
 
 __karmaMapper is a work in progress.__
 
@@ -11,7 +11,8 @@ __karmaMapper is a work in progress.__
 #### Required:  
 - [OpenFrameworks](http://www.openframeworks.cc/) with the following addons:
 	- [ofxUI](https://github.com/rezaali/ofxUI)
-	- OSC	
+	- OSC
+	- [ofxAbletonLiveSet](https://github.com/satoruhiga/ofxAbletonLiveSet)	
 	- etc.
 - _Some effects may have other dependencies._
 
@@ -51,6 +52,7 @@ It's made for extensibility and there are several components:
  - Julien Rancoeur / [Fx23](https://soundcloud.com/fx23) ([ADN](http://artdistorsionsnumeriques.com/))
  - [Tetalab](http://tetalab.org/)
  - [Esaaix](http://ecole-art-aix.fr/)
+ - [François Parra](http://www.autotune.eu/)
 
 ##  
 Feel free to comment, contibute, fork, pull, etc. :)

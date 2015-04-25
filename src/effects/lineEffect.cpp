@@ -48,7 +48,7 @@ void lineEffect::update(){
 	basicEffect::update();
 	
 	// add lines ?
-	if(lines.size() < shapes.size()*50) lines.push_back( getRandomLine() );
+	if(lines.size() < shapes.size()*30) lines.push_back( getRandomLine() );
 	
 	// check for dead lines
 	for(std::list<lineEffectLine>::reverse_iterator it=lines.rbegin(); it!= lines.rend(); it--){
@@ -110,7 +110,11 @@ lineEffectLine lineEffect::getRandomLine( const bool onSameShape){
 	
 	ofVec2f* from;
 	ofVec2f* to;
-	if( fromShape->isType("vertexShape") ){
+	if( !fromShape->isReady() || !toShape->isReady() ){
+		from = &basicShape::zeroPoint;
+		to = &basicShape::zeroPoint;
+	}
+	else if( fromShape->isType("vertexShape") ){
 		from = ((vertexShape*) fromShape)->getRandomVertexPtr();
 		to = ((vertexShape*) toShape)->getRandomVertexPtr();
 	}

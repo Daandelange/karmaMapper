@@ -42,20 +42,27 @@ bool animationController::start(){
 	 return;
 	 }*/
 	
-	/*e = new imageBeatEffect();
+	/*{
+	 basicEffect* e;
+	 e = new imageBeatEffect();
 	 e->bindWithShape( server.getRandomShape() );
-	 effects.push_back(e);*/
-	
-	/*e = new lineEffect();
-	e->bindWithShape( scene.getRandomShape() );
-	e->bindWithShape( scene.getRandomShape() );
-	e->bindWithShape( scene.getRandomShape() );
-	e->bindWithShape( scene.getRandomShape() );
-	e->initialise();
-	e->enable();
-	effects.push_back(e); // */
+	 effects.push_back(e);
+	}*/
 	
 	{
+	basicShape* sh = scene.getRandomShape();
+	basicEffect* e;
+	e = new lineEffect();
+	e->initialise();
+	e->bindWithShape( scene.getRandomShape() );
+	e->bindWithShape( scene.getRandomShape() );
+	e->bindWithShape( scene.getRandomShape() );
+	e->bindWithShape( scene.getRandomShape() );
+	e->enable();
+	effects.push_back(e);
+	} // */
+	
+	/*{
 	basicEffect* e;
 	e = new imageMeltingEffect();
 		e->initialise();
@@ -63,16 +70,16 @@ bool animationController::start(){
 	e->bindWithShapes( scene.getShapesByGroup(1) );
 	e->enable(); // should in fact be called once basicShape::isReady();
 	effects.push_back(e);
-	}
+	}// */
 	
-	{
+	/*{
 	basicEffect* e;
 	e = new imageGrainEffect();
 	e->initialise();
 	e->bindWithShapes( scene.getShapesByGroup(1) );
 	e->enable(); // should in fact be called once basicShape::isReady();
 	effects.push_back(e);
-	}
+	} // */
 	
 	/*e = new MeshRenderer3D();
 	 e->bindWithShape( server.getRandomShape() );
@@ -103,7 +110,7 @@ bool animationController::isEnabled() const {
 void animationController::update(ofEventArgs &event){
 	if(!isEnabled()) return;
 	
-	// create animation state
+	// create animation state (bunch of variables)
 	
 	
 	// update effects (run mode)

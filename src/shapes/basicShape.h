@@ -88,6 +88,9 @@ public:
 
 	bool hasError = true; // changes visual aspect to notify error
 	
+	// global variables
+	static ofVec2f zeroPoint;
+	
 protected:
 	
 	// basicShape properties

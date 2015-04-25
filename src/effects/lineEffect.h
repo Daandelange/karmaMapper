@@ -27,7 +27,6 @@ public:
 	
 	void noteEventListener(ofx::AbletonLiveSet::LSNoteEvent & noteEvent);
 	
-	
 protected:
 	lineEffectLine getRandomLine(const bool onSameShape=false);
 	map<int, vector<int> > shapeGroups; // <groupID, vector<shapeIndexes> >
