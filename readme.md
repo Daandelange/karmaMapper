@@ -38,6 +38,10 @@ It's made for extensibility and there are several components:
 - An animator lets you control most settings manually or automatically.
 - Effects are applyed to shapes by the animator component which can be controlled manually or automatically.
 
+For more details, please refer to the software diagram below:  
+![Software Diagram](https://raw.githubusercontent.com/Karma-Kusala/karmaMapper/master/software-diagram.png)
+
+
 
 ## People
 #### Contributors

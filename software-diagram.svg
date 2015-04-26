@@ -1,0 +1,854 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="800"
+   height="1200"
+   id="svg2985"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="software-architecture.svg">
+  <defs
+     id="defs2987" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.77472527"
+     inkscape:cx="422.4459"
+     inkscape:cy="299.11608"
+     inkscape:current-layer="g5683-7"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:window-width="1360"
+     inkscape:window-height="678"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata2990">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="ofApp"
+     inkscape:groupmode="layer"
+     transform="translate(0,720)"
+     style="display:inline">
+    <rect
+       style="fill:#000000;fill-opacity:0.07843137;fill-rule:evenodd;stroke:#000000;stroke-width:1.81337368;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2993"
+       width="768.8916"
+       height="567.52991"
+       x="16.277609"
+       y="138.74568"
+       transform="scale(1,-1)"
+       inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+       inkscape:export-xdpi="70.07"
+       inkscape:export-ydpi="70.07" />
+    <rect
+       style="fill:#333333;fill-opacity:0.78260869"
+       id="rect3763"
+       width="768.01416"
+       height="28.397175"
+       x="16.070923"
+       y="-707.77307"
+       inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+       inkscape:export-xdpi="70.07"
+       inkscape:export-ydpi="70.07" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="19.943256"
+       y="-685.82977"
+       id="text3767"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+       inkscape:export-xdpi="70.07"
+       inkscape:export-ydpi="70.07"><tspan
+         sodipodi:role="line"
+         id="tspan3769"
+         x="19.943256"
+         y="-685.82977"
+         style="font-size:22px;fill:#ffffff;fill-opacity:1">ofApp // karmaMapper</tspan></text>
+    <g
+       style="display:inline"
+       id="g5683-2"
+       transform="translate(409.77478,-346.78386)"
+       inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+       inkscape:export-xdpi="70.07"
+       inkscape:export-ydpi="70.07">
+      <rect
+         style="fill:#000000;fill-opacity:0.07843137;fill-rule:evenodd;stroke:#000000;stroke-width:0.51054955;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect3824-41"
+         width="297.75806"
+         height="116.16935"
+         x="42.834484"
+         y="-51.594734" />
+      <rect
+         style="fill:#333333;fill-opacity:0.78260869"
+         id="rect3826-0"
+         width="298.26605"
+         height="28.397175"
+         x="42.595745"
+         y="-53.092209" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="47.758858"
+         y="-31.148939"
+         id="text3828-3"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3830-2"
+           x="47.758858"
+           y="-31.148939"
+           style="font-size:22px;fill:#ffffff;fill-opacity:1">MIR Receiver</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+         x="55.795959"
+         y="2.1842444"
+         id="text5775-4-1"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           x="55.795959"
+           y="2.1842444"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+           id="tspan6264">Receives Music Information</tspan><tspan
+           sodipodi:role="line"
+           x="55.795959"
+           y="22.184244"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+           id="tspan6266">Retrieval data (OSC) and sends</tspan><tspan
+           sodipodi:role="line"
+           x="55.795959"
+           y="42.184246"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+           id="tspan6270">out ofEvents.</tspan></text>
+    </g>
+    <g
+       style="display:inline"
+       id="g5683-4"
+       transform="translate(409.19322,390.50691)"
+       inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+       inkscape:export-xdpi="70.07"
+       inkscape:export-ydpi="70.07">
+      <rect
+         style="fill:#000000;fill-opacity:0.07843137;fill-rule:evenodd;stroke:#000000;stroke-width:0.42593107;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect3824-4"
+         width="207.23654"
+         height="116.16935"
+         x="43.416042"
+         y="-657.22595" />
+      <rect
+         style="fill:#333333;fill-opacity:0.78260869"
+         id="rect3826-1"
+         width="207.91144"
+         height="28.397175"
+         x="43.177303"
+         y="-658.72339" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="50.921978"
+         y="-638.07092"
+         id="text3828-8"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3830-3"
+           x="50.921978"
+           y="-638.07092"
+           style="font-size:22px;fill:#ffffff;fill-opacity:1">OSC Router</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+         x="54.249859"
+         y="-604.15619"
+         id="text5775-4-5"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5777-2-1"
+           x="54.249859"
+           y="-604.15619"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic">Redirects incomming</tspan><tspan
+           sodipodi:role="line"
+           x="54.249859"
+           y="-584.15619"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+           id="tspan6668">OSC messages to their</tspan><tspan
+           sodipodi:role="line"
+           x="54.249859"
+           y="-564.15619"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+           id="tspan6670">respective components. </tspan></text>
+    </g>
+    <g
+       style="display:inline"
+       id="g5689"
+       transform="translate(-11.57706,-708.03219)"
+       inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+       inkscape:export-xdpi="70.07"
+       inkscape:export-ydpi="70.07">
+      <rect
+         y="78.774063"
+         x="44.093212"
+         height="427.84885"
+         width="391.90387"
+         id="rect3853"
+         style="fill:#000000;fill-opacity:0.07843137;fill-rule:evenodd;stroke:#000000;stroke-width:1.12407494;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <rect
+         y="77.276588"
+         x="43.886524"
+         height="28.397175"
+         width="391.10635"
+         id="rect3855"
+         style="fill:#333333;fill-opacity:0.78260869" />
+      <text
+         transform="scale(0.97928026,1.0211581)"
+         sodipodi:linespacing="125%"
+         id="text3857"
+         y="97.164047"
+         x="51.412727"
+         style="font-size:39.17121124px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           id="tspan3871"
+           style="font-size:21.54416466px;fill:#ffffff;fill-opacity:1"
+           y="97.164047"
+           x="51.412727"
+           sodipodi:role="line">animationController</tspan></text>
+      <g
+         id="g5598"
+         transform="translate(-407.88653,171.67375)"
+         style="display:inline">
+        <rect
+           style="fill:#ffb400;fill-opacity:0.50196078;fill-rule:nonzero;stroke-width:1.39999998;stroke-miterlimit:4;stroke-dasharray:none"
+           id="rect5600"
+           width="367.87234"
+           height="149.7305"
+           x="462.0993"
+           y="-4.0425601" />
+        <text
+           sodipodi:linespacing="125%"
+           id="text5602"
+           y="19.191488"
+           x="468.55319"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           xml:space="preserve"><tspan
+             style="font-size:22px"
+             y="19.191488"
+             x="468.55319"
+             id="tspan5604"
+             sodipodi:role="line">effects</tspan></text>
+        <text
+           sodipodi:linespacing="125%"
+           id="text5659"
+           y="42.425518"
+           x="472.42554"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#252525;fill-opacity:1;stroke:none;font-family:Sans"
+           xml:space="preserve"><tspan
+             style="font-size:16px;fill:#252525;fill-opacity:1"
+             y="42.425518"
+             x="472.42554"
+             id="tspan5661"
+             sodipodi:role="line">•basicEffect</tspan><tspan
+             style="font-size:16px;fill:#252525;fill-opacity:1"
+             y="62.425518"
+             x="472.42554"
+             sodipodi:role="line"
+             id="tspan5779">•basicEffect</tspan><tspan
+             style="font-size:16px;fill:#252525;fill-opacity:1"
+             y="82.425522"
+             x="472.42554"
+             sodipodi:role="line"
+             id="tspan5781">•basicEffect</tspan><tspan
+             style="font-size:16px;fill:#252525;fill-opacity:1"
+             y="102.42552"
+             x="472.42554"
+             sodipodi:role="line"
+             id="tspan5783">•basicEffect</tspan></text>
+        <g
+           style="display:inline"
+           id="g5868"
+           transform="translate(426.60285,4.5177375)">
+          <rect
+             y="-1.4609985"
+             x="157.47519"
+             height="134.24113"
+             width="238.7943"
+             id="rect5799"
+             style="fill:#000000;fill-opacity:0.19607843;fill-rule:nonzero;stroke-width:1.39999998;stroke-miterlimit:4;stroke-dasharray:none;display:inline" />
+          <text
+             sodipodi:linespacing="125%"
+             id="text5785"
+             y="23.063829"
+             x="165.21986"
+             style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+             xml:space="preserve"><tspan
+               style="font-size:22px"
+               y="23.063829"
+               x="165.21986"
+               id="tspan5787"
+               sodipodi:role="line">basicEffect</tspan></text>
+          <text
+             sodipodi:linespacing="125%"
+             id="text5789"
+             y="39.84396"
+             x="163.92908"
+             style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#252525;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+             xml:space="preserve"><tspan
+               style="font-size:14px;fill:#252525;fill-opacity:1"
+               y="39.84396"
+               x="163.92908"
+               sodipodi:role="line"
+               id="tspan6288">Generates visual output using</tspan><tspan
+               style="font-size:14px;fill:#252525;fill-opacity:1"
+               y="57.34396"
+               x="163.92908"
+               sodipodi:role="line"
+               id="tspan6290">shapes and other types of data.</tspan></text>
+          <g
+             id="g3923-0"
+             transform="translate(-198.13476,64.53901)"
+             style="display:inline">
+            <rect
+               style="fill:#009600;fill-opacity:0.50196078;fill-rule:nonzero;stroke-width:1.39999998;stroke-miterlimit:4;stroke-dasharray:none"
+               id="rect4097-1"
+               width="122.62411"
+               height="56.794334"
+               x="462.0993"
+               y="1.1205605" />
+            <text
+               sodipodi:linespacing="125%"
+               id="text3919-0"
+               y="19.191488"
+               x="468.55319"
+               style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+               xml:space="preserve"><tspan
+                 style="font-size:16px"
+                 y="19.191488"
+                 x="468.55319"
+                 id="tspan3921-2"
+                 sodipodi:role="line">boundShapes</tspan></text>
+            <text
+               xml:space="preserve"
+               style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#252525;fill-opacity:1;stroke:none;font-family:Sans"
+               x="476.29788"
+               y="35.971619"
+               id="text3928-0"
+               sodipodi:linespacing="125%"><tspan
+                 sodipodi:role="line"
+                 id="tspan3930-4"
+                 x="476.29788"
+                 y="35.971619"
+                 style="font-size:12px;fill:#252525;fill-opacity:1">•basicShape*</tspan><tspan
+                 id="tspan5814-2"
+                 sodipodi:role="line"
+                 x="476.29788"
+                 y="50.971619"
+                 style="font-size:12px;fill:#252525;fill-opacity:1">•basicShape*</tspan></text>
+          </g>
+        </g>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+         x="54.959084"
+         y="130.55304"
+         id="text5775-1"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           x="54.959084"
+           y="130.55304"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+           id="tspan6034">Instantiates Animation Bots and binds effects</tspan><tspan
+           sodipodi:role="line"
+           x="54.959084"
+           y="150.55304"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+           id="tspan6278">with shapes.</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+         x="271.39014"
+         y="97.754463"
+         id="text5775-1-9"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5777-1-8"
+           x="271.39014"
+           y="97.754463"
+           style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans Italic">(instantiated on demand)</tspan></text>
+      <g
+         style="display:inline"
+         id="g5733"
+         transform="translate(-406.53193,333.92199)">
+        <rect
+           style="fill:#009600;fill-opacity:0.50196078;fill-rule:nonzero;stroke-width:1.39999998;stroke-miterlimit:4;stroke-dasharray:none"
+           id="rect5735"
+           width="135.53192"
+           height="32.269505"
+           x="462.0993"
+           y="-4.0425601" />
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#252525;fill-opacity:1;stroke:none;font-family:Sans"
+           x="468.55319"
+           y="16.609917"
+           id="text5741"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan5743"
+             x="468.55319"
+             y="16.609917"
+             style="font-size:16px;fill:#252525;fill-opacity:1">&amp;shapesServer</tspan></text>
+      </g>
+      <g
+         style="display:inline"
+         id="g5683-5"
+         transform="translate(11.903493,427.41486)">
+        <rect
+           style="fill:#000000;fill-opacity:0.07843137;fill-rule:evenodd;stroke:#000000;stroke-width:0.46989855;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3824-8"
+           width="357.71033"
+           height="81.913605"
+           x="42.834484"
+           y="-51.594734" />
+        <rect
+           style="fill:#333333;fill-opacity:0.78260869"
+           id="rect3826-5"
+           width="357.64194"
+           height="28.397175"
+           x="42.595745"
+           y="-53.092209" />
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           x="47.758858"
+           y="-31.148939"
+           id="text3828-42"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan3830-4"
+             x="47.758858"
+             y="-31.148939"
+             style="font-size:22px;fill:#ffffff;fill-opacity:1">GUI Receiver</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+           x="49.795959"
+           y="-3.688096"
+           id="text5775-4-57"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="49.795959"
+             y="-3.688096"
+             style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+             id="tspan6672-7">Runs on RaspberryPi and sends</tspan><tspan
+             sodipodi:role="line"
+             x="49.795959"
+             y="16.311905"
+             style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+             id="tspan6756-2">MIR data over network using OSC.</tspan></text>
+      </g>
+    </g>
+    <g
+       style="display:inline"
+       id="g5707"
+       transform="translate(-3.6932934,-581.3953)"
+       inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+       inkscape:export-xdpi="70.07"
+       inkscape:export-ydpi="70.07">
+      <rect
+         transform="scale(1,-1)"
+         style="fill:#009600;fill-opacity:0.50196078;fill-rule:evenodd;stroke:#000000;stroke-width:0.69023979;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect3863"
+         width="296.10797"
+         height="213.51538"
+         x="455.85208"
+         y="-167.08377" />
+      <rect
+         style="fill:#333333;fill-opacity:0.78260869"
+         id="rect3865"
+         width="295.58862"
+         height="28.397175"
+         x="455.64539"
+         y="-47.929089" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="459.51773"
+         y="-25.985819"
+         id="text3867"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3869"
+           x="459.51773"
+           y="-25.985819"
+           style="font-size:22px;fill:#ffffff;fill-opacity:1">shapesServer</tspan></text>
+      <g
+         transform="translate(1.2907801,42.595744)"
+         id="g3923">
+        <rect
+           y="-4.0425601"
+           x="462.0993"
+           height="118.75178"
+           width="114.87943"
+           id="rect4097"
+           style="fill:#000000;fill-opacity:0.19607843;fill-rule:nonzero;stroke-width:1.39999998;stroke-miterlimit:4;stroke-dasharray:none" />
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           x="468.55319"
+           y="19.191488"
+           id="text3919"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan3921"
+             x="468.55319"
+             y="19.191488"
+             style="font-size:22px">shapes</tspan></text>
+        <text
+           sodipodi:linespacing="125%"
+           id="text3928"
+           y="43.716301"
+           x="473.71631"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#252525;fill-opacity:1;stroke:none;font-family:Sans"
+           xml:space="preserve"><tspan
+             style="font-size:14px;fill:#252525;fill-opacity:1"
+             y="43.716301"
+             x="473.71631"
+             id="tspan3930"
+             sodipodi:role="line">•basicShape</tspan><tspan
+             style="font-size:14px;fill:#252525;fill-opacity:1"
+             y="61.216301"
+             x="473.71631"
+             sodipodi:role="line"
+             id="tspan5810">•basicShape</tspan><tspan
+             style="font-size:14px;fill:#252525;fill-opacity:1"
+             y="78.716301"
+             x="473.71631"
+             sodipodi:role="line"
+             id="tspan5812">•basicShape</tspan><tspan
+             style="font-size:14px;fill:#252525;fill-opacity:1"
+             y="96.216301"
+             x="473.71631"
+             sodipodi:role="line"
+             id="tspan5814">•basicShape</tspan></text>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="462.0993"
+         y="123.70212"
+         id="text5775"
+         sodipodi:linespacing="125%"
+         transform="translate(2.5815603,-120)"><tspan
+           sodipodi:role="line"
+           x="462.0993"
+           y="123.70212"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:STKaiti;-inkscape-font-specification:STKaiti Italic"
+           id="tspan6057" /></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+         x="616.44843"
+         y="-28.212921"
+         id="text5775-5"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5777-8"
+           x="616.44843"
+           y="-28.212921"
+           style="font-size:12px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans Italic">(always instantiated)</tspan></text>
+      <g
+         style="display:inline"
+         id="g5769"
+         transform="translate(4.1317694,49.498807)">
+        <rect
+           y="-8.9989786"
+           x="582.34851"
+           height="116.16935"
+           width="159.14459"
+           id="rect3877"
+           style="fill:#000000;fill-opacity:0.07843137;fill-rule:evenodd;stroke:#000000;stroke-width:0.37325194;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+        <rect
+           y="-10.496461"
+           x="582.14185"
+           height="28.397175"
+           width="158.76593"
+           id="rect3879"
+           style="fill:#333333;fill-opacity:0.78260869" />
+        <text
+           sodipodi:linespacing="125%"
+           id="text3881"
+           y="11.446807"
+           x="586.01416"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           xml:space="preserve"><tspan
+             style="font-size:22px;fill:#ffffff;fill-opacity:1"
+             y="11.446807"
+             x="586.01416"
+             id="tspan3883"
+             sodipodi:role="line">shapesEditor</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+           x="586.7605"
+           y="37.616867"
+           id="text5775-2"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="586.7605"
+             y="37.616867"
+             style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+             id="tspan5921">Lets you configure</tspan><tspan
+             sodipodi:role="line"
+             x="586.7605"
+             y="57.616867"
+             style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+             id="tspan6528">a scene.</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:14px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+           x="585.91345"
+           y="79.501495"
+           id="text5775-2-1"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="585.91345"
+             y="79.501495"
+             style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+             id="tspan6528-9">Note: Could also be a</tspan><tspan
+             sodipodi:role="line"
+             x="585.91345"
+             y="97.001495"
+             style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+             id="tspan6558">standalone App.</tspan></text>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+         x="466.30975"
+         y="3.5346298"
+         id="text5775-1-0"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           x="466.30975"
+           y="3.5346298"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+           id="tspan6278-9">Instantiates and serves shapes.</tspan></text>
+    </g>
+  </g>
+  <g
+     style="display:inline"
+     transform="translate(0,720)"
+     inkscape:groupmode="layer"
+     inkscape:label="musicAnalyser"
+     id="g3822">
+    <g
+       style="display:inline"
+       id="g5683-7"
+       transform="translate(-25.282807,-69.464296)">
+      <rect
+         style="fill:#000000;fill-opacity:0.07843137;fill-rule:evenodd;stroke:#000000;stroke-width:1.27794909;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect3824-6"
+         width="764.37109"
+         height="283.53207"
+         x="43.243507"
+         y="-51.185711"
+         inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+         inkscape:export-xdpi="70.07"
+         inkscape:export-ydpi="70.07" />
+      <rect
+         style="fill:#333333;fill-opacity:0.78260869"
+         id="rect3826-7"
+         width="765.52844"
+         height="28.397175"
+         x="42.595745"
+         y="-53.092209"
+         inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+         inkscape:export-xdpi="70.07"
+         inkscape:export-ydpi="70.07" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="47.758858"
+         y="-31.148939"
+         id="text3828-1"
+         sodipodi:linespacing="125%"
+         inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+         inkscape:export-xdpi="70.07"
+         inkscape:export-ydpi="70.07"><tspan
+           sodipodi:role="line"
+           id="tspan3830-7"
+           x="47.758858"
+           y="-31.148939"
+           style="font-size:22px;fill:#ffffff;fill-opacity:1">Standalone Apps</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+         x="58.831421"
+         y="4.7658043"
+         id="text5775-4-2"
+         sodipodi:linespacing="125%"
+         inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+         inkscape:export-xdpi="70.07"
+         inkscape:export-ydpi="70.07"><tspan
+           sodipodi:role="line"
+           x="58.831421"
+           y="4.7658043"
+           style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+           id="tspan6672-1">These apps work together with the main app.</tspan></text>
+      <g
+         style="display:inline"
+         id="g5683"
+         transform="translate(15.489357,77.446809)"
+         inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+         inkscape:export-xdpi="70.07"
+         inkscape:export-ydpi="70.07">
+        <rect
+           style="fill:#000000;fill-opacity:0.07843137;fill-rule:evenodd;stroke:#000000;stroke-width:0.46989855;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3824"
+           width="357.71033"
+           height="81.913605"
+           x="42.834484"
+           y="-51.594734" />
+        <rect
+           style="fill:#333333;fill-opacity:0.78260869"
+           id="rect3826"
+           width="357.64194"
+           height="28.397175"
+           x="42.595745"
+           y="-53.092209" />
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           x="47.758858"
+           y="-31.148939"
+           id="text3828"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan3830"
+             x="47.758858"
+             y="-31.148939"
+             style="font-size:22px;fill:#ffffff;fill-opacity:1">musicAnalyser</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+           x="49.795959"
+           y="-3.688096"
+           id="text5775-4"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="49.795959"
+             y="-3.688096"
+             style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+             id="tspan6672">Runs on RaspberryPi and sends</tspan><tspan
+             sodipodi:role="line"
+             x="49.795959"
+             y="16.311905"
+             style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+             id="tspan6756">MIR data over network using OSC.</tspan></text>
+      </g>
+      <g
+         style="display:inline"
+         id="g5683-8"
+         transform="translate(389.60925,76.690934)"
+         inkscape:export-filename="/Developer/openFrameworks/apps/karmaApps/karmaMapper/software-architecture.png"
+         inkscape:export-xdpi="70.07"
+         inkscape:export-ydpi="70.07">
+        <rect
+           style="fill:#000000;fill-opacity:0.07843137;fill-rule:evenodd;stroke:#000000;stroke-width:0.46989855;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3824-61"
+           width="357.71033"
+           height="81.913605"
+           x="42.834484"
+           y="-51.594734" />
+        <rect
+           style="fill:#333333;fill-opacity:0.78260869"
+           id="rect3826-8"
+           width="357.64194"
+           height="28.397175"
+           x="42.595745"
+           y="-53.092209" />
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           x="47.758858"
+           y="-31.148939"
+           id="text3828-4"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan3830-26"
+             x="47.758858"
+             y="-31.148939"
+             style="font-size:22px;fill:#ffffff;fill-opacity:1">controllerGUI</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans"
+           x="49.795959"
+           y="-3.688096"
+           id="text5775-4-0"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             x="49.795959"
+             y="-3.688096"
+             style="font-size:16px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans Italic"
+             id="tspan6756-8">Runs on WIN/LINUX/ANDROID/MAC/iOS ?</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g
+     sodipodi:insensitive="true"
+     style="display:none"
+     transform="translate(0,720)"
+     inkscape:groupmode="layer"
+     inkscape:label="ofApp copy copy copy copy copy"
+     id="g3885">
+    <rect
+       y="-51.594734"
+       x="42.802433"
+       height="116.16935"
+       width="159.14459"
+       id="rect3887"
+       style="fill:#000000;fill-opacity:0.07843137;fill-rule:evenodd;stroke:#000000;stroke-width:0.37325194;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <rect
+       y="-53.092209"
+       x="42.595745"
+       height="28.397175"
+       width="158.76593"
+       id="rect3889"
+       style="fill:#333333;fill-opacity:0.78260869" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3891"
+       y="-31.148939"
+       x="46.468079"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:22px;fill:#ffffff;fill-opacity:1"
+         y="-31.148939"
+         x="46.468079"
+         id="tspan3893"
+         sodipodi:role="line">ofApp</tspan></text>
+  </g>
+</svg>
