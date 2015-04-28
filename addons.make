@@ -1,1 +1,6 @@
-addons
+ofxXmlSettings
+ofxGui
+ofxUI
+ofxTextBox
+ofxTrueTypeFontUC
+ofxAbletonLiveSet
