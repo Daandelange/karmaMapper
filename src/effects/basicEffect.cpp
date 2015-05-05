@@ -73,6 +73,7 @@ bool basicEffect::render(){
 // todo: update should receive parameters like update rate, time variables, etc.
 // todo: this should always be called in fact. imageGrainEffect::update() should be called by it.
 void basicEffect::update(){
+	if( !isReady() ) return;
 	aliveSince = ofGetSystemTime() - startTime;
 }
 

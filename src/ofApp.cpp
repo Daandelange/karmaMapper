@@ -144,7 +144,7 @@ void ofApp::exit(){
 // Soon OF will extend audio possibilities and we'll be able to listen to audio events.
 // for the moment we have to do it the dirty way (ofApp shouldn't handle this, karmaSoundAnalyser should)
 void ofApp::audioIn(float *input, int bufferSize, int nChannels){
-	analyser.getInstance().audioIn( input, bufferSize, nChannels);
+	if(analyser.isEnabled()) analyser.getInstance().audioIn( input, bufferSize, nChannels);
 }
 
 void ofApp::keyPressed(int key){

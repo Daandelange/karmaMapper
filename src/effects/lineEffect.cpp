@@ -44,6 +44,8 @@ bool lineEffect::render(){
 }
 
 void lineEffect::update(){
+	if(!isReady()) return;
+	
 	// you can chose to do the default behaviour too or not by commenting this out
 	basicEffect::update();
 	

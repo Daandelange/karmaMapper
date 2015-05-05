@@ -95,7 +95,7 @@ public:
 protected:
 	
 	// basicShape properties
-	bool initialized;
+	bool initialized = false;
 	ofRectangle boundingBox; // contains all shapes
 	int groupID; // [-1=none, other = groupID]
 	static int maxGroupID; // used for color calculation

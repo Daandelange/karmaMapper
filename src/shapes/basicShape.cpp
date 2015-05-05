@@ -16,7 +16,7 @@ ofVec2f basicShape::zeroPoint = ofVec2f(0,0);
 // CONSTRUCTORS
 // - - - - - -
 basicShape::basicShape() {
-	
+	initialized=false;
 	reset();
 	shapeType = "basicShape";
 	
@@ -24,11 +24,10 @@ basicShape::basicShape() {
 }
 
 basicShape::~basicShape(){
+	initialized = false;
 	ofRemoveListener(ofEvents().keyPressed, this, &basicShape::keyPressed );
 	
 	disableEditMode();
-	initialized = false;
-	
 }
 
 // - - - - - - -
