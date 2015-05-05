@@ -20,6 +20,7 @@
 // CONSTRUCTORS
 // - - - - - - -
 vertexShape::vertexShape(){
+	initialized = false; // during 2nd constructor, disable shape
 	shapeType = "vertexShape";
 	
 	ofAddListener( ofEvents().mousePressed, this, &vertexShape::mousePressed );
@@ -41,6 +42,8 @@ vertexShape::vertexShape(){
 	
 	// recalculate bounding box & stuff
 	onShapeChanged();
+	
+	initialized = true;
 }
 
 vertexShape::~vertexShape(){
@@ -338,7 +341,7 @@ list<ofVec2f> & vertexShape::getPoints(){
 
 // gets alterable vertex pointer holding relative point coordinates
 ofVec2f* vertexShape::getRandomVertexPtr(){
-	if( points.size()==0 ) return NULL;
+	if( points.size()==0 ) return &zeroPoint;
 	
 	list<ofVec2f>::iterator it = absolutePoints.begin();
 	std::advance(it, round(ofRandom(absolutePoints.size()-1)) );
@@ -348,7 +351,7 @@ ofVec2f* vertexShape::getRandomVertexPtr(){
 
 ofVec2f* vertexShape::getCenterPtr(){
 	// todo
-	return NULL;
+	return &zeroPoint;
 }
 
 // - - - - - - -

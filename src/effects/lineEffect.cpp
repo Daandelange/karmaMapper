@@ -103,10 +103,10 @@ void lineEffect::reset(){
 // returns a line from 1 shape vertex to another
 lineEffectLine lineEffect::getRandomLine( const bool onSameShape){
 	
-	basicShape* fromShape = shapes[ round( ofRandom(shapes.size()-1) )];
+	basicShape* fromShape = shapes[ round( ofRandom(-0.49f, shapes.size()-0.51f) )];
 	basicShape* toShape;
 	if( onSameShape ) toShape = fromShape;
-	else toShape = shapes[ round( ofRandom(shapes.size()-1) )];
+	else toShape = shapes[ round( ofRandom(-0.49f, shapes.size()-0.51f) )];
 	
 	ofVec2f* from;
 	ofVec2f* to;

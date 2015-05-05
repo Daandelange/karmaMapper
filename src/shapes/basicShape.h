@@ -19,6 +19,7 @@
 // todo: move vertexShape stuff to it's own class and keep the bare minimum (points, etc)
 // todo: rename colors (fgColor,bgColor) and give names like groupColor, primaryColor, secondaryColor, etc.
 // todo: add name so we can getShapeByName()
+// todo: shapeType should be a vector so it contains all subclasses
 
 // When a shape exits edit mode, all coordinates are made absolute so they are easy to use for effects. Relative coordinates are easier for manipulation and storage.
 // Shape quarying and altering happens trough absolute coordinates.
@@ -115,7 +116,7 @@ protected:
 	
 	// custom HUD GUI elements
 	ofRectangle guiToggle;
-	ofxUICanvas* gui;
+	ofxUICanvas* gui = NULL;
 	
 	void setColorFromGroupID();
 	

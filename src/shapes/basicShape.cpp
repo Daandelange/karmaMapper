@@ -17,8 +17,6 @@ ofVec2f basicShape::zeroPoint = ofVec2f(0,0);
 // - - - - - -
 basicShape::basicShape() {
 	
-	gui = NULL;
-	
 	reset();
 	shapeType = "basicShape";
 	
@@ -41,7 +39,6 @@ void basicShape::reset(){
 	position = ofVec2f( ofGetWidth()/2, ofGetHeight()/2 );
 	boundingBox = ofRectangle(0,0,0,0);
 	bEditMode = false;
-	initialized = true;
 	activeHandle = NULL;
 	groupID = -1;
 	hasError = false;
@@ -56,6 +53,8 @@ void basicShape::reset(){
 	
 	if(gui!=NULL) delete gui;
 	gui = NULL;
+	
+	initialized = true;
 }
 
 // This function simply uploads data to GPU. basicEffect will set styling
@@ -216,7 +215,8 @@ vector<string> basicShape::getTypes() const{
 }
 
 bool basicShape::isType(const string _type) const {
-	// todo
+	//bool result = shapeType.compare(_type);
+	return shapeType.compare(_type)==0;
 }
 
 bool basicShape::isInside( const ofVec2f _pos, const bool _isPositionAbsolute) const{
@@ -600,7 +600,7 @@ bool basicShape::loadXMLValues(ofxXmlSettings *xml, int _nb){
 	
 	// check if everything went OK
 	if(tmpShapeType != shapeType){
-#ifdef KARMA_DEBUG
+#ifdef KARMAMAPPER__DEBUG
 		cout << "basicShape::loadXMLValues() -> ["+shapeType+"] can not load settings of shapeType ["+tmpShapeType+"]." << endl;
 #endif
 		return false;

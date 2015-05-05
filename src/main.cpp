@@ -1,6 +1,7 @@
 #include "ofMain.h"
 #include "ofApp.h"
 //#include "ofAppGlutWindow.h"
+#define KARMAMAPPER_DEBUG true
 
 //========================================================================
 int main( ){

@@ -50,6 +50,7 @@
 
 
 // todo: isLoading should be isLoaded (or maybe another name) (also for hasError, initialised, etc.. they are unclear.
+// todo: shapeType should be a vector so it can contain all shape types it is
 
 class basicEffect {
 	
