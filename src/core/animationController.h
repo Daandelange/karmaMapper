@@ -14,13 +14,16 @@
 #include "basicShape.h"
 #include "effects.h"
 #include "shapesServer.h"
+#include "ofxUI.h"
+#include "oscRouter.h"
+#include "mirReceiver.h"
 
 // todo: an overall mask that hides any unwanted projection zones
 
 class animationController {
 	
 public:
-	animationController( shapesServer& _scene );
+	animationController( shapesServer& _scene, OSCRouter& _oscRouter  );
 	~animationController();
 	// fix for no default constructor
 	animationController& operator=(const animationController& crap) { return *this; }
@@ -33,8 +36,13 @@ public:
 	// listeners
 	void update(ofEventArgs& event);
 	void draw(ofEventArgs& event);
+	void guiEvent( ofxUIEventArgs &e);
 	
 protected:
+	// gui
+	ofxUISuperCanvas* gui;
+	ofxUILabel* guiNumEffects;
+	ofxUILabel* guiNumShapes;
 	
 	// effects stuff
 	bool isEffectsIndex(int i);
@@ -42,7 +50,19 @@ protected:
 	
 	shapesServer& scene;
 	
+	// OSC
+	OSCRouter& oscRouter;
+	mirReceiver mirOSCReceiver;
+	
 private:
 	bool bEnabled;
 	
 };
+
+
+// GUI translations
+#define GUIToggleFullScreen		("Full Screen")
+#define GUIToggleMouseCursor	("Hide Mouse")
+
+#define GUIEffectsNumEffects	("# Effects:\t")
+#define GUIShapesNumShapes		("# Shapes:\t")

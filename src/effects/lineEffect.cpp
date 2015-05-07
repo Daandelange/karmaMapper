@@ -23,20 +23,30 @@ lineEffect::lineEffect(){
 		
 		lines.push_back( getRandomLine() );
 	 }*/
-	
-	ofAddListener(ofx::AbletonLiveSet::EventHandler::noteEvent, this, &lineEffect::noteEventListener);
 
 }
 
 lineEffect::~lineEffect(){
 	
 	ofRemoveListener(ofx::AbletonLiveSet::EventHandler::noteEvent, this, &lineEffect::noteEventListener);
+	ofRemoveListener(mirReceiver::mirTempoEvent, this, &lineEffect::tempoEventListener);
+}
+
+bool lineEffect::initialise(){
+	
+	basicEffect::initialise();
+	
+	ofAddListener(mirReceiver::mirTempoEvent, this, &lineEffect::tempoEventListener);
+	
+	ofAddListener(ofx::AbletonLiveSet::EventHandler::noteEvent, this, &lineEffect::noteEventListener);
+	
+	return true;
 }
 
 // update --> animation
 // overrule this function with your own
 bool lineEffect::render(){
-	if( shapes.size()==0 ) return;
+	if( shapes.size()==0 ) return false;
 	
 	for(std::list<lineEffectLine>::iterator it=lines.begin(); it!= lines.end(); ++it){
 		(*it).render();
@@ -50,7 +60,7 @@ void lineEffect::update(){
 	basicEffect::update();
 	
 	// add lines ?
-	if(lines.size() < shapes.size()*30) lines.push_back( getRandomLine() );
+	//if(lines.size() < shapes.size()*30) lines.push_back( getRandomLine() );
 	
 	// check for dead lines
 	for(std::list<lineEffectLine>::reverse_iterator it=lines.rbegin(); it!= lines.rend(); it--){
@@ -129,6 +139,12 @@ lineEffectLine lineEffect::getRandomLine( const bool onSameShape){
 }
 
 void lineEffect::noteEventListener(ofx::AbletonLiveSet::LSNoteEvent &noteEvent){
+	ofScopedLock lock(lineEffectMutex);
 	//lines.push_back();
+}
+
+void lineEffect::tempoEventListener(mirTempoEventArgs &_args){
+	ofScopedLock lock(lineEffectMutex);
+	for(int i=0; i<round(mirReceiver::mirCache.zcr*50); i++) lines.push_back( getRandomLine() );
 }
 

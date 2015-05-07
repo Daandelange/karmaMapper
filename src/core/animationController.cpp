@@ -12,18 +12,59 @@
 // - - - - - - - -
 // CONSTRUCTORS
 // - - - - - - - -
-animationController::animationController( shapesServer& _scene ): scene(_scene){
+animationController::animationController( shapesServer& _scene, OSCRouter& _oscRouter ): scene(_scene), oscRouter(_oscRouter){
 	bEnabled = false;
 	effects.clear();
 	effects.resize(0);
 	
 	ofAddListener( ofEvents().draw , this, &animationController::draw );
 	ofAddListener( ofEvents().update , this, &animationController::update );
+	
+	// build GUI
+	gui = new ofxUISuperCanvas("ANIMATION CONTROLLER");
+	gui->setColorBack(ofColor(41,123,117,180));
+	gui->setColorFill(ofColor(255,160));
+	gui->setColorFillHighlight(ofColor(255,220));
+	//gui->setColorPadded(ofColor(255,150));
+	
+	//gui->setPosition(pos.x, pos.y);
+	
+	gui->addSpacer();
+	string textString = "Control'em'all! ^_^";
+	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+	gui->addSpacer();
+	textString = "Keyboard shortcuts:";
+	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+	textString = "  H Show/Hide Pointer";
+	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+	textString = "  F Toggle full screen";
+	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+	
+	/*gui->addSpacer();
+	gui->addToggle(GUIToggleFullScreen, false);
+	gui->addToggle(GUIToggleMouseCursor, false);
+	gui->addFPSSlider("FPS"); */
+	
+	gui->addSpacer();
+	gui->addLabel("Scene", OFX_UI_FONT_LARGE);
+	guiNumEffects = gui->addLabel(GUIEffectsNumEffects, OFX_UI_FONT_SMALL);
+	guiNumShapes = gui->addLabel(GUIShapesNumShapes, OFX_UI_FONT_SMALL);
+	
+	gui->autoSizeToFitWidgets();
+	gui->disable();
+	ofAddListener(gui->newGUIEvent, this, &animationController::guiEvent);
 }
 
 animationController::~animationController(){
 	ofRemoveListener( ofEvents().draw , this, &animationController::draw );
 	ofRemoveListener( ofEvents().update , this, &animationController::update );
+	
+	// rm GUI stuff correctly
+	ofRemoveListener( gui->newGUIEvent, this, &animationController::guiEvent );
+	gui->disable();
+	guiNumEffects = NULL;
+	guiNumShapes = NULL;
+	delete gui;
 }
 
 // - - - - - - - -
@@ -31,6 +72,11 @@ animationController::~animationController(){
 // - - - - - - - -
 bool animationController::start(){
 	bEnabled = true;
+	gui->enable();
+	
+	// enable mirOSCReceiver
+	mirOSCReceiver.start();
+	oscRouter.addNode( &mirOSCReceiver );
 	
 	// get shape instance
 	//string type="basicEffect";
@@ -90,6 +136,12 @@ bool animationController::start(){
 
 bool animationController::stop(){
 	
+	// disable mirOSCReceiver
+	mirOSCReceiver.stop();
+	oscRouter.removeNode( &mirOSCReceiver );
+	
+	gui->disable();
+	
 	// delete effect pointers
 	for(int i=0; i<effects.size();++i) delete effects[i];
 	
@@ -110,6 +162,10 @@ bool animationController::isEnabled() const {
 void animationController::update(ofEventArgs &event){
 	if(!isEnabled()) return;
 	
+	// update GUI data
+	if(guiNumEffects!=NULL) guiNumEffects->setLabel(GUIEffectsNumEffects + ofToString(effects.size()) );
+	if(guiNumShapes!=NULL) guiNumShapes->setLabel(GUIShapesNumShapes + ofToString( scene.getNumShapes() ) );
+	
 	// create animation state (bunch of variables)
 	
 	
@@ -128,3 +184,30 @@ void animationController::draw(ofEventArgs& event){
 	}
 }
 
+void animationController::guiEvent(ofxUIEventArgs &e){
+	string name = e.getName();
+	
+	// scan for open dropdowns
+	// (dirty) bypass for issue https://github.com/rezaali/ofxUI/issues/68
+	//ofxUIDropDownList* addShapeDDL = (ofxUIDropDownList*) gui->getWidget("Add Shape");
+	//bool dropdownOpen = addShapeDDL->isOpen();
+	//if( selectConfigFileOpen && name != "Configuration File") return;
+	
+	
+	// interface options
+	// - - - - - - - - -
+	if(name==GUIToggleFullScreen){
+		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
+		ofSetFullscreen(toggle->getValue());
+	}
+	else if(name==GUIToggleMouseCursor){
+		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
+		toggle->getValue()?ofHideCursor():ofShowCursor();
+	}
+	
+	#ifdef KARMAMAPPER__DEBUG
+	else {
+		ofLogNotice("animationController::guiEvent") << "Unknown GUI event: " << name << endl;
+	}
+	#endif
+}

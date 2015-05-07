@@ -206,7 +206,7 @@ basicShape* shapesServer::getRandomShape(){
 		return NULL;
 	}
 	
-	int offset( (int) (ofRandomf()*(shapes.size()-1)) );
+	int offset( round( ofRandom(-.49f, shapes.size()-.51f ) ) );
 	list<basicShape*>::iterator it = shapes.begin();
 	std::advance(it,offset);
 	return *it;

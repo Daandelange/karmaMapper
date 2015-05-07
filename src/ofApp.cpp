@@ -1,8 +1,8 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-ofApp::ofApp() : controller(server){
-	controller = animationController(server);
+ofApp::ofApp() : controller(server,osc) {
+	//controller = animationController(server, osc);
 }
 
 ofApp::~ofApp(){
@@ -77,6 +77,9 @@ void ofApp::setup(){
 	//music.load("music.wav");
 	//music.setLoop(true);
 	//music.play();
+	
+	// setup the OSC Router
+	osc.start();
 }
 
 //--------------------------------------------------------------
@@ -138,6 +141,8 @@ void ofApp::draw(){
 
 void ofApp::exit(){
 	ofSoundStreamStop();
+	
+	osc.stop();
 }
 
 //--------------------------------------------------------------

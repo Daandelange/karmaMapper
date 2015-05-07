@@ -43,14 +43,10 @@ karmaSoundAnalyser::~karmaSoundAnalyser(){
 // - - - - - - - -
 bool karmaSoundAnalyser::start(){
 	bEnabled = true;
-	
 	return isEnabled()==true;
 }
 
 bool karmaSoundAnalyser::stop(){
-	
-	
-	
 	bEnabled = false;
 	return isEnabled()==false;
 }

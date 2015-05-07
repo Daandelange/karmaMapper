@@ -9,6 +9,7 @@
 #include "effects.h"
 #include "ofxAbletonLiveSet.h"
 #include "karmaSoundAnalyser.h"
+#include "OSCRouter.h"
 
 // note:
 // first we load shapes which are attached to effects. Destroy basicEffect instances before destroying basicShape instances; unless coding the complicated way.
@@ -45,10 +46,11 @@ private:
 	ofx::AbletonLiveSet::EventHandler liveSetEvents;
 	ofSoundPlayer music;
 	shapesServer server;
-	shapesEditor* editor;
+	shapesEditor* editor;// todo: move this to shapesServer ?
 	animationController controller;
 	karmaSoundAnalyser analyser;
 	ofSoundStream soundStream;
+	OSCRouter osc;
 	
 	bool mouseHidden = true;
 	
