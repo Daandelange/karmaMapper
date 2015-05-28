@@ -18,7 +18,7 @@
 
 basicEffect::basicEffect(){
 	
-	reset();
+	basicEffect::reset();
 	
 	// effect type must match with class
 	effectType = "basicEffect";
@@ -38,7 +38,7 @@ basicEffect::~basicEffect(){
 // isReady() should return true after this is done. (can take a long time)
 bool basicEffect::initialise(){
 	// init values
-	reset();
+	basicEffect::reset();
 	
 	isLoading = true;
 	
@@ -49,6 +49,8 @@ bool basicEffect::initialise(){
 	// set this when done
 	isInitialised = true;
 	isLoading = false;
+	
+	return isInitialised;
 }
 
 // todo: update -(handled by)-> animation
@@ -73,12 +75,16 @@ bool basicEffect::render(){
 // todo: update should receive parameters like update rate, time variables, etc.
 // todo: this should always be called in fact. imageGrainEffect::update() should be called by it.
 void basicEffect::update(){
+	ofScopedLock lock(effectMutex);
+	
 	if( !isReady() ) return;
 	aliveSince = ofGetSystemTime() - startTime;
 }
 
 // resets all values
 void basicEffect::reset(){
+	effectMutex.lock();
+	
 	// todo: do this in _reset() which then calls reset();
 	aliveSince=0;
 	startTime=ofGetSystemTime();
@@ -92,6 +98,8 @@ void basicEffect::reset(){
 	isLoading = false;
 	
 	overallBoundingBox = ofRectangle(0,0,0,0);
+	
+	effectMutex.unlock();
 }
 
 void basicEffect::enable(){
@@ -105,9 +113,9 @@ void basicEffect::disable(){
 // - - - - - - -
 // EFFECT PROPERTIES
 // - - - - - - -
-
+	
 bool basicEffect::isReady() const{
-	return isInitialised && !hasError;
+	return isInitialised && !hasError && !isLoading;
 }
 
 bool basicEffect::isType(const string _type) const {
@@ -129,6 +137,7 @@ bool basicEffect::randomizePresets(){
 void basicEffect::updateBoundingBox(){
 	// no shapes ?
 	if(shapes.size()==0){
+		// todo correctly
 		// return center if no shapes are selected
 		overallBoundingBox = ofRectangle( ofGetWidth()/2, ofGetHeight()/2, 0, 0);
 		return;
@@ -140,6 +149,7 @@ void basicEffect::updateBoundingBox(){
 	
 	// analyse all contained boundingBoxes
 	for(int i=shapes.size()-1; i>=0; i--){
+		if( !shapes[i]->isReady() ) continue;
 		
 		// cache needed vars
 		ofVec2f tmpLTCorner( shapes[i]->getBoundingBox().x, shapes[i]->getBoundingBox().y);

@@ -197,7 +197,6 @@ bool shapesServer::unloadShapes(){
 // - - - - - - - - -
 // SHAPE SERVING FUNCTIONS
 // - - - - - - - - -
-
 basicShape* shapesServer::getRandomShape(){
 	if(shapes.size()<1){
 		ofLogError("shapesServer::getRandomShape()", "There are not yet any shapes to serve!");
@@ -206,11 +205,43 @@ basicShape* shapesServer::getRandomShape(){
 		return NULL;
 	}
 	
-	int offset( round( ofRandom(-.49f, shapes.size()-.51f ) ) );
+	int offset( round( ofRandomuf()-.49f*(shapes.size()-.011f) ) );
 	list<basicShape*>::iterator it = shapes.begin();
 	std::advance(it,offset);
 	return *it;
 	
+}
+
+vector<basicShape*> shapesServer::getRandomShapes(int _amount, bool _returnExactAmount ) {
+	
+	// select unique shapes when possible
+	// todo: add a vector<int> remainingIndexes for optimisation
+	vector<int> selected;
+	vector<basicShape*> retShapes;
+	selected.resize(_amount);
+	int numAdded = 0;
+	while(numAdded < _amount && numAdded < getNumShapes() ){
+		int newSh = ofRandom( 0.49f+getNumShapes()-1 );
+		if( std::find( selected.begin(), selected.end(), newSh)==selected.end() ){
+			// found a new one
+			list<basicShape*>::iterator it = shapes.begin();
+			std::advance(it,newSh);
+			retShapes.push_back(*it);
+			selected[numAdded]=newSh;
+			numAdded++;
+			//cout << "Rand=" << newSh << "[/"<< getNumShapes() << "]" << endl;
+		}
+	}
+	
+	// if there are les shapes then the asked amount, fill them with random duplicates
+	if(_returnExactAmount && numAdded<_amount){
+		while( numAdded!=_amount){
+			retShapes.push_back( getRandomShape() );
+			numAdded++;
+		}
+	}
+	
+	return retShapes;
 }
 
 // todo: add int _limit restriction param (and randomize)
@@ -231,7 +262,7 @@ basicShape* shapesServer::getRandomShapeByType(string _type){
 	vector<basicShape*> ret = getShapesByType(_type);
 	if(ret.size()<=0) return NULL;
 	
-	return ret[-.49f+ofRandomf()*(ret.size()-0.51f)];
+	return ret[round(-.49f+ofRandomuf()*(ret.size()-0.011f))];
 }
 
 // todo: add int _limit restriction param (and randomize)
@@ -251,7 +282,20 @@ vector<basicShape*> shapesServer::getShapesByGroup(int _group){
 basicShape* shapesServer::getRandomShapeByGroup(int _group){
 	vector<basicShape*> ret = getShapesByGroup(_group);
 	if(ret.size()<=0) return NULL;
-	return ret[-.49f+ofRandomf()*(ret.size()-.51f)];
+	return ret[round(-.49f+(ofRandomuf()*(ret.size()-.011f)))];
+}
+
+vector<basicShape*> shapesServer::getAllShapes(){
+	vector<basicShape*> ret;
+	ret.clear();
+	ret.resize(shapes.size());
+	
+	// loop trough shapes and return the wanted ones
+	for(list<basicShape*>::iterator it = shapes.begin(); it != shapes.end(); it++){
+		ret.push_back((*it));
+	}
+	
+	return ret;
 }
 
 // - - - - - - -

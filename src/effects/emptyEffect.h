@@ -29,6 +29,9 @@ public:
 	// controller functions
 	virtual bool randomizePresets();
 	
+	// Event listeners
+	// If you use some, make sure to use an ofMutex (http://openframeworks.cc/ofBook/chapters/threads.html)
+	
 protected:
 	
 	

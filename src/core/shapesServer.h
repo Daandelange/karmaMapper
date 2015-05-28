@@ -44,10 +44,12 @@ public:
 	// shape serving functions
 	list<basicShape*>& getShapesRef(){ return shapes; }
 	basicShape* getRandomShape();
+	vector<basicShape*> getRandomShapes(int _amount=1, bool _returnExactAmount = true );
 	vector<basicShape*> getShapesByType(string _type);
 	basicShape* getRandomShapeByType(string _type);
 	vector<basicShape*> getShapesByGroup(int _group);
 	basicShape* getRandomShapeByGroup(int _group);
+	vector<basicShape*> getAllShapes();
 	
 	// utilities
 	const unsigned int getNumShapes() const;

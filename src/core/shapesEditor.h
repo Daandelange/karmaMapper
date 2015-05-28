@@ -86,7 +86,7 @@ private:
 	ofRectangle multiShapesBoundingBox;
 	vector<movablePoint> multiPointHandlers;
 
-	
+	ofImage background;
 	
 	
 };

@@ -39,8 +39,8 @@ bool mirReceiver::canHandle(const ofxOscMessage &_msg) const {
 bool mirReceiver::handle(const ofxOscMessage &_msg) {
 	if( !isEnabled() ) return false;
 	
-	// lock mutex
-	//ofScopedLock myLock(oscMutex);
+	// lock mutex (threaded execution)
+	ofScopedLock myLock(oscMutex);
 	
 	string addr = _msg.getAddress();
 	if( addr.compare("/aubioTempo") == 0 ){
@@ -85,7 +85,7 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 		return true;
 	}
 	else if( addr.compare("/aubioBpm") == 0 ){
-		if(_msg.getNumArgs()>0) mirCache.bpm = _msg.getArgAsFloat(0);
+		if(_msg.getNumArgs()>0) mirCache.bpm = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
 		return true;
 	}
 	else if( addr.compare("/aubioPitch") == 0 ){
@@ -96,8 +96,27 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 		if(_msg.getNumArgs()>0) mirCache.silence = (_msg.getArgAsInt32(0)==0)?true:false;
 		return true;
 	}
+	else if( addr.compare("/aubioIsPlaying") == 0 ){
+		if(_msg.getNumArgs()>0) mirCache.isPlaying = (_msg.getArgAsInt32(0)==0)?true:false;
+		return true;
+	}
 	else if( addr.compare("/aubioZcr") == 0 ){
 		if(_msg.getNumArgs()>0) mirCache.zcr = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
+		return true;
+	}
+	else if( addr.compare("/balance") == 0 ){
+		if(_msg.getNumArgs()>0) mirCache.balance = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
+		return true;
+	}
+	// Fiddle FFT Equaliser
+	else if( addr.compare(0, 16, "/fiddle_fft/band") == 0 ){ // 16 first chars
+		int band = ofToInt(addr.substr(16));
+		
+		if(addr.compare(17, 20, "rms")==0) // rms (volume)
+			mirCache.fiddleFFT[band][0]=_msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
+		else // pitch
+			mirCache.fiddleFFT[band][1]=_msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
+		
 		return true;
 	}
 	else if( addr.compare("") == 0 ){
@@ -112,9 +131,9 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 	return false;
 }
 
-// informs that
-void mirReceiver::youHaveToDie() {
-	
+// informs that the nose id gonna be unbound with the node server
+void mirReceiver::detachNode() {
+	stop();
 	// detach events ?
 }
 

@@ -4,7 +4,7 @@
 //
 //  Created by Daan on 07/05/15.
 //
-//
+//	Include this file in classes communicating with the mirReceiver
 
 #pragma once
 
@@ -29,10 +29,16 @@ public:
 		
 	}
 	
+	float volumeMono=0;
+	float volumeRigh=0;
+	float volumeLeft=0;
 	float bpm = 0;
-	float pitch = 0;
-	float zcr = 0;
+	float pitch = 0; // in hertz (0-1024[?])
+	float balance; //  -1+ -> 1+, not limited
+	float zcr = 0; // 0 -> 1+
 	bool silence = false;
+	bool isPlaying = false;
+	float fiddleFFT[7][2] = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
 };
 
 // forward declaration

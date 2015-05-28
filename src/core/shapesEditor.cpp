@@ -28,6 +28,10 @@ shapesEditor::shapesEditor( shapesServer& _scene ): scene(_scene) {
 	//gui->disable();
 	buildMenus();
 	
+	// load image
+	background.load("vendome_full.jpg");
+	//background.load("vendome_daan_v1.0/spores.png");
+	
 	ofAddListener(ofEvents().mousePressed, this, &shapesEditor::_mousePressed);
 }
 
@@ -172,6 +176,10 @@ void shapesEditor::draw() {
 	// only use computing power if in edit mode.
 	if( !isInEditMode() ) return;
 	
+	ofSetColor(255);
+	background.draw(0,0);
+	
+	// tmp ofScale(0.5, 0.5);
 	// draw shapes (edit mode)
 	list<basicShape*>& shapes = scene.getShapesRef();
 	for(shapesServer::shapesIterator it = shapes.begin(); it != shapes.end(); it++){
@@ -193,7 +201,7 @@ void shapesEditor::draw() {
 		
 		// show bounding box
 		ofPushStyle();
-		ofSetColor(255,60);
+		ofSetColor(255,50);
 		ofDrawRectangle(multiShapesBoundingBox);
 		ofSetColor(0);
 		ofNoFill();
@@ -573,6 +581,7 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 	
 	// show normal GUI ?
 	else if(editMode!=EDIT_MODE_NORMAL && _mode==EDIT_MODE_NORMAL){
+		ofSetBackgroundAuto(true);
 		gui->enable();
 		batchGui->disable();
 	}

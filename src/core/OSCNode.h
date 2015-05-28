@@ -29,7 +29,7 @@ public:
 	
 	virtual bool canHandle( const ofxOscMessage &_msg ) const = 0;
 	virtual bool handle( const ofxOscMessage &_msg ) = 0;
-	virtual void youHaveToDie() = 0;
+	virtual void detachNode() = 0;
 	
 protected:
 	//ofMutex ooscMutex;

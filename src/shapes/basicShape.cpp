@@ -9,7 +9,7 @@
 #include "basicShape.h"
 
 // static
-int basicShape::maxGroupID = 5;
+int basicShape::maxGroupID = 6;
 ofVec2f basicShape::zeroPoint = ofVec2f(0,0);
 
 // - - - - - -
@@ -59,6 +59,7 @@ void basicShape::reset(){
 // This function simply uploads data to GPU. basicEffect will set styling
 // todo: provide another way for this to allow more complex rendering modes ?
 // Maybe effects should be able to render from shapeType.getSpecificShapeData();
+// todo: should also have color & translation arguments
 void basicShape::render(){
 	
 	// synch color if maxGroupID changed
@@ -190,6 +191,7 @@ bool basicShape::loadFromXML(ofxXmlSettings& xml){
 // - - - - - - -
 // ### GETTERS
 bool basicShape::isReady() const{
+	//ofScopedLock()
 	return initialized && !hasError;
 }
 
@@ -199,7 +201,7 @@ const string& basicShape::getShapeType() const {
 
 ofRectangle basicShape::getBoundingBox() const{
 	if(!initialized){
-		ofLogError("basicShape not yet ready");
+		ofLogError("basicShape not yet ready. This message can lead to memory leaks.");
 		return ofRectangle();
 	}
 	return boundingBox.getStandardized();

@@ -36,7 +36,7 @@ public:
 	// Parent functions
 	bool canHandle( const ofxOscMessage &_msg ) const;
 	bool handle( const ofxOscMessage &_msg );
-	void youHaveToDie();
+	void detachNode();
 	
 	// basic functions
 	bool start();

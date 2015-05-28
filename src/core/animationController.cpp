@@ -7,7 +7,8 @@
 //
 
 #include "animationController.h"
-
+#include "ofxVLCRemote.h"
+#include "durationRC.h"
 
 // - - - - - - - -
 // CONSTRUCTORS
@@ -74,9 +75,48 @@ bool animationController::start(){
 	bEnabled = true;
 	gui->enable();
 	
+	// all black! xD
+	ofSetBackgroundAuto(false);
+	ofClear(0,0,0,255);
+	
+	// play music
+	//sound.loadSound("TEST MIX V0.1.wav");
+	//music.load("music.wav");
+	//music.setLoop(true);
+	//music.play();
+	
+	// Setup video recording
+	recorder.startRecording("", 1500, 1200);
+	
+	{
+		// play music with VLC
+		ofxVLCRemote vlc;
+		vlc.setup("/Users/daan/vlc.sock"); // client-specific... :(
+		vlc.run("repeat on");
+		vlc.run("normal"); // playback speed
+		vlc.run("volume 256"); // 0-1024 (256=normal)
+		
+		//vlc.run("adev 7"); // tell VLC to use device 7 (soundflower 2ch)
+		vlc.run("play");
+		vlc.run("prev");
+		//vlc.run("got0 0");
+		
+	}
+	
+	{	// SYNC DURATION
+		durationRC rc;
+		rc.setupOSC();
+		rc.rewindAndPlay();
+	}
+	
+	
 	// enable mirOSCReceiver
 	mirOSCReceiver.start();
 	oscRouter.addNode( &mirOSCReceiver );
+	
+	// enable durationOSCReceiver
+	durationOSCReceiver.start();
+	oscRouter.addNode( &durationOSCReceiver );
 	
 	// get shape instance
 	//string type="basicEffect";
@@ -88,33 +128,61 @@ bool animationController::start(){
 	 return;
 	 }*/
 	
-	/*{
-	 basicEffect* e;
-	 e = new imageBeatEffect();
-	 e->bindWithShape( server.getRandomShape() );
-	 effects.push_back(e);
-	}*/
+	if(false){	// VIDEO EFFECT
+		basicEffect* e;
+		e = new videoEffect();
+		e->initialise();
+		e->bindWithShape( scene.getRandomShapeByGroup(5) ); // 3 = bg
+		effects.push_back(e);
+	}
 	
-	{
-	basicShape* sh = scene.getRandomShape();
-	basicEffect* e;
-	e = new lineEffect();
-	e->initialise();
-	e->bindWithShape( scene.getRandomShape() );
-	e->bindWithShape( scene.getRandomShape() );
-	e->bindWithShape( scene.getRandomShape() );
-	e->bindWithShape( scene.getRandomShape() );
-	e->enable();
-	effects.push_back(e);
-	} // */
+	//
+	if(true){	// IMAGE EFFECT
+		basicEffect* e;
+		e = new imageEffect();
+		e->initialise();
+		((imageEffect*) e)->loadImageFromFile("vendome_full_ok.jpg");
+		((imageEffect*) e)->listenToOscIntensity("bgVendomeOpacity");
+		e->bindWithShape( scene.getRandomShapeByGroup(5) ); // 3 = blue windows
+		
+		effects.push_back(e);
+	}
+	
+	// no mutexes --> unstable
+	if(true){	// IMAGE BEAT EFFECT
+		basicEffect* e;
+		e = new imageBeatEffect();
+		e->initialise();
+		e->bindWithShapes( scene.getShapesByGroup(3) ); // windows
+		e->enable();
+		effects.push_back(e);
+	}
+	
+	if(false){	// BASIC EFFECT
+		basicEffect* e;
+		e = new basicEffect();
+		e->initialise();
+		e->bindWithShapes( scene.getAllShapes() );
+		e->enable();
+		effects.push_back(e);
+	}
+	
+	if(false){	// LINE EFFECT
+		basicEffect* e;
+		e = new lineEffect();
+		e->initialise();
+		e->bindWithShapes( scene.getShapesByGroup(3) ); // windows
+		e->bindWithShapes( scene.getShapesByGroup(0) ); // columns
+		e->enable();
+		effects.push_back(e);
+	}
 	
 	/*{
 	basicEffect* e;
 	e = new imageMeltingEffect();
-		e->initialise();
+	e->initialise();
 	e->bindWithShapes( scene.getShapesByGroup(3) );
 	e->bindWithShapes( scene.getShapesByGroup(1) );
-	e->enable(); // should in fact be called once basicShape::isReady();
 	effects.push_back(e);
 	}// */
 	
@@ -123,13 +191,24 @@ bool animationController::start(){
 	e = new imageGrainEffect();
 	e->initialise();
 	e->bindWithShapes( scene.getShapesByGroup(1) );
-	e->enable(); // should in fact be called once basicShape::isReady();
 	effects.push_back(e);
 	} // */
 	
-	/*e = new MeshRenderer3D();
-	 e->bindWithShape( server.getRandomShape() );
-	 effects.push_back(e);*/
+	/*{ // MESH 3D
+		basicEffect* e;
+		e = new meshRenderer();
+		e->initialise();
+		e->bindWithShapes( scene.getShapesByGroup(1) );
+		effects.push_back(e);
+	} // */
+	
+	/*{ // GIF effect
+		basicEffect* e;
+		e = new gifEffect();
+		e->initialise();
+		e->bindWithShapes( scene.getShapesByGroup(1) );
+		effects.push_back(e);
+	}// */
 	
 	return isEnabled()==true;
 }
@@ -140,13 +219,36 @@ bool animationController::stop(){
 	mirOSCReceiver.stop();
 	oscRouter.removeNode( &mirOSCReceiver );
 	
+	// disable durationOSCReceiver
+	durationOSCReceiver.stop();
+	oscRouter.removeNode( &durationOSCReceiver );
+	
 	gui->disable();
 	
+	{
+		// play music with VLC
+		ofxVLCRemote vlc;
+		vlc.setup("/Users/daan/vlc.sock"); // client-specific... :(
+		vlc.run("stop");
+	}
+	
+	{	// SYNC DURATION
+		durationRC rc;
+		rc.setupOSC();
+		rc.stop();
+	}
+	
 	// delete effect pointers
-	for(int i=0; i<effects.size();++i) delete effects[i];
+	// todo: this can make it crash...
+	for(int i=effects.size()-1;i>=0;i--){
+		delete effects[i];
+	}
 	
 	effects.clear();
 	effects.resize(0);
+	
+	// save recorded file ?
+	recorder.stopRecording();
 	
 	bEnabled = false;
 	return isEnabled()==false;
@@ -178,10 +280,19 @@ void animationController::update(ofEventArgs &event){
 void animationController::draw(ofEventArgs& event){
 	if(!isEnabled()) return;
 	
+	//ofScale(0.5, 0.5); // tmp
+	
+	recorder.beginFrame();
+	
+	// tmp
+	ofClear(0,1);
+	
 	// draw effects
 	for(int i=0; i<effects.size(); i++){
 		effects[i]->render();
 	}
+	
+	recorder.endFrame(true);
 }
 
 void animationController::guiEvent(ofxUIEventArgs &e){

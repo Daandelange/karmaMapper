@@ -52,7 +52,7 @@ OSCRouter::~OSCRouter(){
 	
 	// inform nodes to detach listeners
 	for( list<OSCNode*>::iterator it=nodes.begin(); it!=nodes.end(); it++){
-		(*it)->youHaveToDie();
+		(*it)->detachNode();
 		nodes.erase(it);
 	}
 }
@@ -62,6 +62,8 @@ OSCRouter::~OSCRouter(){
 void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const IpEndpointName &remoteEndpoint){
 	// first part is the same as parent class
 	// convert the message to an ofxOscMessage
+	
+	// todo: we need a mutex here....
 	
 	// set the address
 	ofxOscMessage ofMsg;
@@ -98,7 +100,7 @@ void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const IpEndpointNa
 	for(list<OSCNode*>::iterator it=nodes.begin(); it!=nodes.end(); it++){
 		if((*it)->canHandle(ofMsg)){
 			handled = (*it)->handle(ofMsg);
-			if(handled==true) return;
+			//if(handled==true) return;
 		}
 	}
 	
@@ -148,6 +150,7 @@ bool OSCRouter::start(int _port){
 
 bool OSCRouter::stop(){
 	bEnabled = false;
+	ofRemoveListener( ofEvents().update , this, &OSCRouter::update );
 	ofRemoveListener(gui->newGUIEvent, this, &OSCRouter::guiEvent);
 	gui->disable();
 	
@@ -156,6 +159,7 @@ bool OSCRouter::stop(){
 }
 
 bool OSCRouter::reset(){
+	// how dirty is this ? :p
 	this->~OSCRouter();
 	OSCRouter();
 }
@@ -171,6 +175,7 @@ bool OSCRouter::removeNode(OSCNode* _node){
 	
 	for(list<OSCNode* >::iterator it=nodes.begin(); it!=nodes.end(); it++){
 		if( _node == *it ){
+			(*it)->detachNode();
 			nodes.erase( it );
 			return true;
 		}

@@ -17,6 +17,8 @@
 #include "ofxUI.h"
 #include "oscRouter.h"
 #include "mirReceiver.h"
+#include "durationReceiver.h"
+#include "fboRecorder.h"
 
 // todo: an overall mask that hides any unwanted projection zones
 
@@ -50,9 +52,17 @@ protected:
 	
 	shapesServer& scene;
 	
+	// music
+	ofSoundPlayer music;
+	
+	
 	// OSC
 	OSCRouter& oscRouter;
 	mirReceiver mirOSCReceiver;
+	durationReceiver durationOSCReceiver;
+	
+	// Video recording
+	fboRecorder recorder;
 	
 private:
 	bool bEnabled;

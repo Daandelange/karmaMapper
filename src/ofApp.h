@@ -40,27 +40,17 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 	
 	protected:
-		ofImage background;
+		
 	
 private:
 	ofx::AbletonLiveSet::EventHandler liveSetEvents;
-	ofSoundPlayer music;
 	shapesServer server;
 	shapesEditor* editor;// todo: move this to shapesServer ?
 	animationController controller;
-	karmaSoundAnalyser analyser;
-	ofSoundStream soundStream;
+	//karmaSoundAnalyser analyser;
+	//ofSoundStream soundStream;
 	OSCRouter osc;
 	
 	bool mouseHidden = true;
 	
-	// recording
-	//ofImage fboHack;
-	bool recordOutput = false;
-	ofFbo recorder;
-	GLuint fbo;
-	
-	bool recordOutputBis = false;
-	//ofImage recordingImage;
-	//ofxQtVideoSaver saver;
 };

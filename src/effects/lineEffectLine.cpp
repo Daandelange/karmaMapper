@@ -43,6 +43,7 @@ void lineEffectLine::render(){
 	
 	if(aliveSince>LEL_LIFE_SPAN) bAlive = false;
 	
+	// tmp
 	else render( aliveSince/LEL_LIFE_SPAN );
 }
 

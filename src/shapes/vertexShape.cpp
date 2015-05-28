@@ -78,7 +78,8 @@ void vertexShape::render(){
 	ofTranslate(position);
 	
 	// if shape has error, draw it in red
-	hasError?ofSetHexColor(0xFF0000):ofSetColor(fgColor);
+	// tmp hasError?ofSetHexColor(0xFF0000):ofSetColor(fgColor);
+	ofSetColor(255,255,255,255);
 	
 	ofBeginShape();
 	// draw elements
@@ -296,6 +297,10 @@ list<ofVec2f> & vertexShape::getPoints(){
 	return points;
 }
 
+int vertexShape::getNumPoints(){
+	return points.size();
+}
+
 /*/ ### SETTERS
  bool basicShape::putPoints( list<ofVec2f>& _points ){ // DEPRECIATED
 	// restrict this to edit mode
@@ -350,6 +355,8 @@ ofVec2f* vertexShape::getRandomVertexPtr(){
 }
 
 ofVec2f* vertexShape::getCenterPtr(){
+	return &position;
+	
 	// todo
 	return &zeroPoint;
 }

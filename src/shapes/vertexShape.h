@@ -41,6 +41,7 @@ public:
 	// Utilities
 	//ofVec2f& getRandomVertex();
 	list<ofVec2f> & getPoints();
+	int getNumPoints();
 	ofVec2f* getRandomVertexPtr();
 	ofVec2f* getCenterPtr();
 	// idea: add gravity alterable values: point, averagePosition, etc.

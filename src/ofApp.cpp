@@ -23,63 +23,42 @@ void ofApp::setup(){
 	editor=new shapesEditor(server);
 	editor->enableEditMode();
 	
-	// load image
-	//background.load("vendome_de_face.jpg");
-	background.load("vendome_full.jpg");
-	
-	// prepare to record
-    recordOutput = false;
-	if(recordOutput){
-		recorder.allocate((float)background.width, (float)background.height, GL_RGBA);
-	}
-	else if(recordOutputBis){
-		recorder.allocate((float)background.width, (float)background.height, GL_RGBA);
-		
-		//saver.setCodecType(0); // Animation Codec
-		//saver.setCodecQualityLevel(OF_QT_SAVER_CODEC_QUALITY_NORMAL);
-		//saver.setup(ofGetWidth(), ofGetHeight(), "recording-" + ofToString(ofGetUnixTime()) + ".mov");
-	}
-	else {
-		//background.resize(background.width*((float)ofGetHeight()/background.height), ofGetHeight());
-	}
-	
 	// - - - - - - - - -
 	//  EFFECTS INITIALISATION
 	// - - - - - - - - -
 	
-	//sound.loadSound("TEST MIX V0.1.wav");
 	
-	// start liveset decoder
+	
+	// start Ableton Liveset Decoder
 	ofx::AbletonLiveSet::LiveSet LS;
 	ofx::AbletonLiveSet::Parser parser(LS);
 	
-	//if(!parser.open("mappingvendome.xml")) ofLogNotice("ofApp::setup()", "Could not parse ALS file.");
+	if(!parser.open("vendome_daan_v1.0/mappingvendome.als")) ofLogNotice("ofApp::setup()", "Could not parse ALS file.");
 	
 	//liveSetEvents.enableMetronomEvents(LS);
-	//liveSetEvents.enableNoteEvents(LS);
+	liveSetEvents.enableNoteEvents(LS);
 	
 	// tmp
 	ofShowCursor();
 	mouseHidden = false;
 	
 	// tmp
-	server.loadShapes("Vendome_Full_Small.xml");
+	//server.loadShapes("Vendome_Full_Small.xml");
+	server.loadShapes("Vendome_1500_1200.xml");
 	
 	// sound analysis setup
 	// streams to default system sound stream
 	// then map it to a virtual mic ( soundflower , etc )
 	//ofSoundStreamListDevices();
-	soundStream.setDeviceID(7); // 7 = soundflower 2 ch
-	soundStream.setup(this, 0, 2, 44100, 256, 4);
-	analyser.start();
-	
-	// play music
-	//music.load("music.wav");
-	//music.setLoop(true);
-	//music.play();
+	//soundStream.setDeviceID(7); // 7 = soundflower 2 ch
+	//soundStream.setup(this, 0, 2, 44100, 256, 4);
+	//analyser.start();
+	ofSoundStreamStop();
 	
 	// setup the OSC Router
 	osc.start();
+	
+	// tmp
 }
 
 //--------------------------------------------------------------
@@ -96,60 +75,35 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	if(recordOutput){
-		recorder.begin();
-		//glGenFramebuffersEXT(1, &recorder.getFbo());
-		//glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, recorder.getFbo() );
-	}
-	else if(recordOutputBis){
-		recorder.begin();
-	}
 	
 	// render shape editor ?
 	if( editor->isInEditMode() ){
-		ofSetColor(255);
-		background.draw(0,0);
+		//ofSetColor(255);
 		editor->draw();
 	}
-	// tmp, should become backgroundEffect
+	
 	else{
 		ofSetColor(255);
-		background.draw(0,0);
 	}
-	
-	if(recordOutput){
-	
-		ofPixels pix;
-		pix.allocate(1500,1200, GL_RGBA);
-		recorder.readToPixels(pix);
-        ofSaveImage(pix, "blabla.png", OF_IMAGE_QUALITY_BEST);
-		
-        //glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-        recorder.end();
-        
-        recorder.draw(0,0);
-	}
-	
-	if(recordOutputBis){
-		//recordingImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-		ofPixels pix;
-		pix.allocate(1500,1200, GL_RGBA);
-		recorder.readToPixels(pix);
-		//saver.addFrame(pix);
-	}
+
 }
 
 void ofApp::exit(){
+	if( !editor->isInEditMode() ){
+		controller.stop();
+	}
+	
 	ofSoundStreamStop();
 	
 	osc.stop();
+	//analyser.stop();
 }
 
 //--------------------------------------------------------------
 // Soon OF will extend audio possibilities and we'll be able to listen to audio events.
 // for the moment we have to do it the dirty way (ofApp shouldn't handle this, karmaSoundAnalyser should)
 void ofApp::audioIn(float *input, int bufferSize, int nChannels){
-	if(analyser.isEnabled()) analyser.getInstance().audioIn( input, bufferSize, nChannels);
+	//if(analyser.isEnabled()) analyser.getInstance().audioIn( input, bufferSize, nChannels);
 }
 
 void ofApp::keyPressed(int key){

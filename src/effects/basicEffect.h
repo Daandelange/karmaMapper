@@ -37,7 +37,7 @@
 //			Should an effect also be able to query available shapes? To ask to be moved to another shape? (This shouldn't be forced by the animator) Can an effect ask to be replaced (progressively?) and die? (ex: create organic lifeforms, create interactive games...), Ask for more effects of a certain type and set their initial params? can they ask not to be destroyed yet? etc? Temporarily forbid the use of certain effects on certain shape types ? Etc.
 //			Effects preferences ?
 //			transitions? make a transition system with custom parenting ? Effects handle their own transitions ?
-//				Make effects "connect" protocal to them to each other. They can chose to let other appear/die and notify events to eachother. Two connected effects make a transition
+//				Make effects "connect" protocol to them to each other. They can chose to let other appear/die and notify events to eachother. Two connected effects make a transition
 //			How does everything remain connected with eachother ? Maybe 1 main animation class can control the main things and effects can freely move on shapes.
 // maybe try { cast class }catch(){ignore}
 // maybe compiler can handle this ?
@@ -51,6 +51,8 @@
 
 // todo: isLoading should be isLoaded (or maybe another name) (also for hasError, initialised, etc.. they are unclear.
 // todo: shapeType should be a vector so it can contain all shape types it is
+
+//#define KM_NULL_SHAPE(NULL)
 
 class basicEffect {
 	
@@ -89,6 +91,9 @@ public:
 	bool detachFromShape(basicShape* _shape);
 	int getNumShapes() const;
 	
+	// todo
+	// overallBoundingBox getter
+	
 	// todo: make this read-only
 	unsigned int aliveSince;
 	unsigned long long startTime; // to compare against ofGetSystemTime();
@@ -109,7 +114,8 @@ protected:
 	vector<basicShape*> shapes;
 	
 	ofRectangle overallBoundingBox; // computes boundingbox containing all shapes
-	
+	//ofPlanePrimitive
+	ofMutex effectMutex;
 	
 private:
 	

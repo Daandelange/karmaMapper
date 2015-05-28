@@ -48,7 +48,6 @@ protected:
 	
 	list<OSCNode* > nodes;
 	
-	
 private:
 	bool bEnabled;
 	
