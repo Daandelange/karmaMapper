@@ -86,7 +86,7 @@ bool animationController::start(){
 	//music.play();
 	
 	// Setup video recording
-	recorder.startRecording("", 1500, 1200);
+	//recorder.startRecording("", 1500, 1200);
 	
 	{
 		// play music with VLC

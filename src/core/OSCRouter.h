@@ -26,7 +26,7 @@ public:
 	OSCRouter& operator=( const OSCRouter& crap ) { return *this; }
 	
 	// virtual (over-rided) functions
-	void ProcessMessage( const osc::ReceivedMessage &m, const IpEndpointName& remoteEndpoint );
+	void ProcessMessage( const osc::ReceivedMessage &m, const osc::IpEndpointName& remoteEndpoint );
 	
 	// basic functions
 	bool start( int _port = KM_OSC_PORT );

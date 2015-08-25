@@ -47,7 +47,7 @@ bool videoStreamEffect::render(){
 		bool coverMode = true;
 		ofRectangle s = (*it)->getBoundingBox();
 		float scaleH = s.height/grabber.getHeight();
-		float scaleW = s.width/grabber.width;
+		float scaleW = s.width/grabber.getWidth();
 		float scale = 1.f;
 		
 		ofVec2f offset(0);
@@ -58,11 +58,11 @@ bool videoStreamEffect::render(){
 		else{
 			if(scaleW > scaleH){
 				scale = scaleW;
-				offset.y = (s.height-grabber.height)/2;
+				offset.y = (s.height-grabber.getHeight())/2;
 			}
 			else{
 				scale = scaleH;
-				offset.y = (s.width-grabber.width)/2;
+				offset.y = (s.width-grabber.getWidth())/2;
 			}
 		}
 		

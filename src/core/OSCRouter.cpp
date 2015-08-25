@@ -59,7 +59,7 @@ OSCRouter::~OSCRouter(){
 // - - - - - - - -
 // PARENT FUNCTION (ofxOscReceiver)
 // - - - - - - - -
-void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const IpEndpointName &remoteEndpoint){
+void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const osc::IpEndpointName &remoteEndpoint){
 	// first part is the same as parent class
 	// convert the message to an ofxOscMessage
 	
@@ -70,7 +70,7 @@ void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const IpEndpointNa
 	ofMsg.setAddress( m.AddressPattern() );
 	
 	// set the sender ip/host
-	char endpoint_host[ IpEndpointName::ADDRESS_STRING_LENGTH ];
+	char endpoint_host[ osc::IpEndpointName::ADDRESS_STRING_LENGTH ];
 	remoteEndpoint.AddressAsString( endpoint_host );
 	ofMsg.setRemoteEndpoint( endpoint_host, remoteEndpoint.port );
 	
@@ -142,7 +142,7 @@ bool OSCRouter::start(int _port){
 	ofAddListener(gui->newGUIEvent, this, &OSCRouter::guiEvent);
 	
 	// OSC
-	setup( _port, false );
+	setup( _port );
 	
 	bEnabled = true;
 	return isEnabled()==true;
