@@ -11,8 +11,9 @@
 #include "ofMain.h"
 
 #include "shapes.h"
-#include "shapesServer.h"
+#include "shapesScene.h"
 #include "ofxUI.h"
+#include "ofxGui.h"
 
 #define shapesEditor_SAVE_FILE "saveFiles/appSettings.xml"
 
@@ -33,15 +34,11 @@ enum shapesEditMode {
 // an effect can be associated with one or more shapes.
 // tag effects with #visual #modificator #
 
-
-// forward declaration
-class shapesServer;
-
-class shapesEditor {
+class shapesEditor : public shapesScene {
 
 public:
 	
-	shapesEditor( shapesServer& _scene );
+	shapesEditor( );
 	~shapesEditor();
 	
 	// application functions
@@ -68,18 +65,15 @@ public:
 	void _mousePressed( ofMouseEventArgs &e);
 	
 private:
-	//shapesEditor();
-	shapesServer& scene;
-	string loadedConfiguration;
 	basicShape* activeShape; // only used for comparison, never access it. Not guaranteed to point to an instance.
 	shapesEditMode editMode;
 	
 	// GUI (new)
-	ofxUISuperCanvas* gui;
+	//ofxPanel gui;
 	void buildMenus();
 	
 	// multi shapes edit stuff
-	ofxUISuperCanvas* batchGui;
+	//ofxUISuperCanvas* batchGui;
 	list<basicShape*> multiShapesSelection;
 	void updateMultiShapesSelection();
 	void syncMultiSelectionHandlers();

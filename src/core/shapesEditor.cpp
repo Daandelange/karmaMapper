@@ -16,7 +16,7 @@
 	
 //}
 
-shapesEditor::shapesEditor( shapesServer& _scene ): scene(_scene) {
+shapesEditor::shapesEditor( ) {
 	// init variables
 	activeShape = NULL;
 	editMode = EDIT_MODE_OFF;
@@ -37,14 +37,14 @@ shapesEditor::shapesEditor( shapesServer& _scene ): scene(_scene) {
 
 shapesEditor::~shapesEditor(){
 	
-	ofRemoveListener( batchGui->newGUIEvent, this, &shapesEditor::batchGuiEvent );
-	ofRemoveListener( gui->newGUIEvent, this, &shapesEditor::guiEvent );
+	//ofRemoveListener( batchGui->newGUIEvent, this, &shapesEditor::batchGuiEvent );
+	//ofRemoveListener( gui->newGUIEvent, this, &shapesEditor::guiEvent );
 	ofRemoveListener( ofEvents().mousePressed, this, &shapesEditor::_mousePressed );
 	
 	disableEditMode();
 	
-	delete gui;
-	delete batchGui;
+	//delete gui;
+	//delete batchGui;
 	
 	// todo: save app settings on quit
 }
@@ -181,8 +181,7 @@ void shapesEditor::draw() {
 	
 	// tmp ofScale(0.5, 0.5);
 	// draw shapes (edit mode)
-	list<basicShape*>& shapes = scene.getShapesRef();
-	for(shapesServer::shapesIterator it = shapes.begin(); it != shapes.end(); it++){
+	for(auto it = shapes.begin(); it != shapes.end(); it++){
 		if( (*it)->isReady() ){
 			if( (*it)->isInEditMode() ) (*it)->drawForEditor();
 			else (*it)->render();
@@ -273,8 +272,8 @@ void shapesEditor::guiEvent(ofxUIEventArgs &e){
 	else if(name==GUIDeleteShape){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
 			// is a shape selected & does it still exist ?
-			if(activeShape!=NULL && scene.shapeExists(activeShape) ){
-				scene.removeShape(activeShape);
+			if(activeShape!=NULL && shapeExists(activeShape) ){
+				removeShape(activeShape);
 				
 				// deselect
 				selectShape(NULL);
@@ -314,7 +313,7 @@ void shapesEditor::guiEvent(ofxUIEventArgs &e){
 	}
 	else if(name==GUILoadConfig){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
-			if(!scene.loadShapes(loadedConfiguration)) ofSystemAlertDialog("Failed to load from file: "+loadedConfiguration);
+			if(!loadShapes(loadedConfiguration)) ofSystemAlertDialog("Failed to load from file: "+loadedConfiguration);
 		}
 	}
 	else if(name==GUISaveConfig){
@@ -323,7 +322,7 @@ void shapesEditor::guiEvent(ofxUIEventArgs &e){
 			if(loadedConfiguration.empty()){
 				ofSystemAlertDialog("In order to save, you must first select a configuration file.");
 			}
-			else scene.saveShapes(loadedConfiguration);
+			else saveShapes(loadedConfiguration);
 		}
 	}
 	else if(name==GUIAddShape){
@@ -354,8 +353,7 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 	if(name==batchGUISelectAll){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
 			multiShapesSelection.clear();
-			list<basicShape*> &shapes = scene.getShapesRef();
-			for(shapesServer::shapesIteratorC it=shapes.begin(); it!=shapes.end(); it++){
+			for(auto it=shapes.begin(); it!=shapes.end(); it++){
 				multiShapesSelection.push_back( *it );
 			}
 			updateMultiShapesSelection();
@@ -374,8 +372,6 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 			multiPointHandlers.clear();
 			multiShapesSelection.clear();
 			updateMultiShapesSelection();
-			batchGui->disable();
-			gui->enable();
 		}
 	}
 	else if (name==batchGUIRescaleMode){
@@ -489,7 +485,7 @@ bool shapesEditor::addShape(string _shapeType){
 	// todo: make this shape-specific (check if shape type exists)
 	vertexShape* s = new vertexShape();
 	
-	basicShape* result = scene.insertShape(s);
+	basicShape* result = insertShape(s);
 	if( result == NULL ) return false;
 	
 	// enable edit mode
@@ -501,7 +497,7 @@ bool shapesEditor::addShape(string _shapeType){
 // returns true if shape is unexistent after deletion (even if it didn't exist)
 bool shapesEditor::removeShape(basicShape *_s){
 	
-	if( !scene.removeShape(_s) ) return false;
+	if( !removeShape(_s) ) return false;
 	
 	// deselect ?
 	if(activeShape==_s) selectShape(NULL);
@@ -512,17 +508,17 @@ bool shapesEditor::removeShape(basicShape *_s){
 void shapesEditor::selectShape(basicShape* _i){
 	
 	// toggle selection ?
-	if( activeShape==_i && scene.shapeExists(_i) ){
+	if( activeShape==_i && shapeExists(_i) ){
 		_i->disableEditMode();
 		activeShape = NULL;
 		return;
 	}
 	
 	// disable edit mode on current one
-	if( scene.shapeExists(activeShape) ) activeShape->disableEditMode();
+	if( shapeExists(activeShape) ) activeShape->disableEditMode();
 	
 	// select it
-	if( scene.shapeExists(_i) ){
+	if( shapeExists(_i) ){
 		
 		// remember
 		activeShape = _i;
@@ -535,13 +531,12 @@ void shapesEditor::selectShape(basicShape* _i){
 }
 
 void shapesEditor::selectNextShape(){
-	if( scene.getNumShapes()==1 && activeShape!=NULL) selectShape(NULL);
-	else if(activeShape==NULL) selectShape( scene.getShapesRef().front() );
+	if( getNumShapes()==1 && activeShape!=NULL) selectShape(NULL);
+	else if(activeShape==NULL) selectShape( shapes.front() );
 	
 	else{
 		basicShape* next = NULL;
-		list<basicShape*> &shapes = scene.getShapesRef();
-		for(shapesServer::shapesIteratorC it = shapes.begin(); it != shapes.end(); it++){
+		for(auto it = shapes.begin(); it != shapes.end(); it++){
 			if(activeShape == (*it)){
 				it++;
 				next=(*it);
@@ -553,13 +548,12 @@ void shapesEditor::selectNextShape(){
 }
 
 void shapesEditor::selectPrevShape(){
-	if( scene.getNumShapes()==1 && activeShape!=NULL) selectShape(NULL);
-	else if(activeShape==NULL) selectShape( scene.getShapesRef().back() );
+	if( getNumShapes()==1 && activeShape!=NULL) selectShape(NULL);
+	else if(activeShape==NULL) selectShape( shapes.back() );
 	
 	else{
 		basicShape* prev = NULL;
-		list<basicShape*> &shapes = scene.getShapesRef();
-		for(list<basicShape*>::reverse_iterator it = shapes.rbegin(); it != shapes.rend(); it++){
+		for(auto it = shapes.rbegin(); it != shapes.rend(); it++){
 			if(activeShape == (*it)){
 				it++;
 				prev=(*it);
@@ -575,22 +569,22 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 	if(editMode!=EDIT_MODE_OFF && _mode==EDIT_MODE_OFF){
 		selectShape(NULL);
 		//ofRemoveListener(ofEvents().mousePressed, this, &shapesEditor::_mousePressed);
-		gui->disable();
-		batchGui->disable();
+		//gui->disable();
+		//batchGui->disable();
 	}
 	
 	// show normal GUI ?
 	else if(editMode!=EDIT_MODE_NORMAL && _mode==EDIT_MODE_NORMAL){
 		ofSetBackgroundAuto(true);
-		gui->enable();
-		batchGui->disable();
+		//gui->enable();
+		//batchGui->disable();
 	}
 	
 	// sho batch edit GUI ?
-	else if(_mode==EDIT_MODE_BATCH_NONE && !batchGui->isEnabled() ){
+	/*else if(_mode==EDIT_MODE_BATCH_NONE && !batchGui->isEnabled() ){
 		gui->disable();
 		batchGui->enable();
-	}
+	}*/
 	
 	// remember
 	editMode = _mode;
@@ -605,12 +599,12 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 	}
 	
 	// desselect batchGui elements
-	if( batchGui!=NULL ){
+	/*if( batchGui!=NULL ){
 		if( _mode!=EDIT_MODE_BATCH_MOVE ) ((ofxUILabelToggle*)batchGui->getWidget(batchGUIMoveMode))->setValue(false);
 		if( _mode!=EDIT_MODE_BATCH_SCALE ) ((ofxUILabelToggle*)batchGui->getWidget(batchGUIRescaleMode))->setValue(false);
 		if( _mode!=EDIT_MODE_BATCH_FLIPX ) ((ofxUILabelToggle*)batchGui->getWidget(batchGUIFlipXMode))->setValue(false);
 		if( _mode!=EDIT_MODE_BATCH_FLIPY ) ((ofxUILabelToggle*)batchGui->getWidget(batchGUIFlipYMode))->setValue(false);
-	}
+	}*/
 	
 	return (editMode == _mode);
 }
@@ -624,8 +618,7 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 	
 	// let user select shapes by clicking on them
 	if( editMode==EDIT_MODE_BATCH_NONE && e.button==0){
-		list<basicShape*> &shapes = scene.getShapesRef();
-		for(shapesServer::shapesIterator it=shapes.begin(); it!=shapes.end(); it++){
+		for(auto it=shapes.begin(); it!=shapes.end(); it++){
 			if( (*it)->isInside( e )){
 				
 				// check if already inside ?
@@ -652,15 +645,10 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 
 void shapesEditor::buildMenus(){
 	// New GUI setup
-	gui = new ofxUISuperCanvas("SHAPES EDITOR");
-	gui->setColorBack(ofColor(41,123,117,180));
-	gui->setColorFill(ofColor(255,160));
-	gui->setColorFillHighlight(ofColor(255,220));
-	//gui->setColorPadded(ofColor(255,150));
+	//gui.setup("SHAPES EDITOR");
+	//gui.add
 	
-	//gui->setPosition(pos.x, pos.y);
-	
-	gui->addSpacer();
+	/*gui->addSpacer();
 	string textString = "Edit, control and handle different shapes to map them on physical objects.";
 	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
 	gui->addSpacer();
@@ -741,12 +729,12 @@ void shapesEditor::buildMenus(){
 	batchGui->addLabelButton(batchGUISelectAll, false);
 	batchGui->addLabelButton(batchGUISelectNone, false);
 	
-	/*/ generate list of all shapes
+	/* / generate list of all shapes
 	 int i = 0;
 	 for(list<basicShape*>::iterator it=shapes.begin(); it!=shapes.end(); it++){
 	 batchGui->addToggle((*it)->shapeType+"[" + ofToString(i)+"]" + ofToString(shapes.size()), false);
 	 i++;
-	 }*/
+	 }* /
 	
 	batchGui->addSpacer();
 	batchGui->addLabel("Actions to permorm:", OFX_UI_FONT_MEDIUM);
@@ -761,5 +749,5 @@ void shapesEditor::buildMenus(){
 	batchGui->autoSizeToFitWidgets();
 	batchGui->disable();
 	
-	ofAddListener(batchGui->newGUIEvent, this, &shapesEditor::batchGuiEvent);
+	ofAddListener(batchGui->newGUIEvent, this, &shapesEditor::batchGuiEvent);*/
 }

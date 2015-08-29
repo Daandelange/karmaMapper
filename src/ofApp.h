@@ -3,8 +3,7 @@
 #include "ofMain.h"
 
 #include "shapes.h"
-#include "shapesServer.h"
-#include "shapesEditor.h"
+#include "shapesDB.h"
 #include "animationController.h"
 #include "effects.h"
 #include "ofxAbletonLiveSet.h"
@@ -44,12 +43,11 @@ class ofApp : public ofBaseApp{
 	
 private:
 	ofx::AbletonLiveSet::EventHandler liveSetEvents;
-	shapesServer server;
-	shapesEditor* editor;// todo: move this to shapesServer ?
-	animationController controller;
+	shapesDB scene;
+	//animationController controller;
 	//karmaSoundAnalyser analyser;
 	//ofSoundStream soundStream;
-	OSCRouter osc;
+	//OSCRouter osc;
 	
 	bool mouseHidden = true;
 	

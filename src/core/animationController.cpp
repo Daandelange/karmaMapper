@@ -13,7 +13,7 @@
 // - - - - - - - -
 // CONSTRUCTORS
 // - - - - - - - -
-animationController::animationController( shapesServer& _scene, OSCRouter& _oscRouter ): scene(_scene), oscRouter(_oscRouter){
+animationController::animationController( shapesDB& _scene ): scene(_scene){
 	bEnabled = false;
 	effects.clear();
 	effects.resize(0);
@@ -111,12 +111,12 @@ bool animationController::start(){
 	
 	
 	// enable mirOSCReceiver
-	mirOSCReceiver.start();
-	oscRouter.addNode( &mirOSCReceiver );
+	//mirOSCReceiver.start();
+	//oscRouter.addNode( &mirOSCReceiver );
 	
 	// enable durationOSCReceiver
-	durationOSCReceiver.start();
-	oscRouter.addNode( &durationOSCReceiver );
+	//durationOSCReceiver.start();
+	//oscRouter.addNode( &durationOSCReceiver );
 	
 	// get shape instance
 	//string type="basicEffect";
@@ -128,6 +128,7 @@ bool animationController::start(){
 	 return;
 	 }*/
 	
+	/*
 	if(false){	// VIDEO EFFECT
 		basicEffect* e;
 		e = new videoEffect();
@@ -216,12 +217,12 @@ bool animationController::start(){
 bool animationController::stop(){
 	
 	// disable mirOSCReceiver
-	mirOSCReceiver.stop();
-	oscRouter.removeNode( &mirOSCReceiver );
+	//mirOSCReceiver.stop();
+	//oscRouter.removeNode( &mirOSCReceiver );
 	
 	// disable durationOSCReceiver
-	durationOSCReceiver.stop();
-	oscRouter.removeNode( &durationOSCReceiver );
+	//durationOSCReceiver.stop();
+	//oscRouter.removeNode( &durationOSCReceiver );
 	
 	gui->disable();
 	

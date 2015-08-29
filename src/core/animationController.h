@@ -13,7 +13,7 @@
 #include "ofMain.h"
 #include "basicShape.h"
 #include "effects.h"
-#include "shapesServer.h"
+#include "shapesDB.h"
 #include "ofxUI.h"
 #include "oscRouter.h"
 #include "mirReceiver.h"
@@ -25,7 +25,7 @@
 class animationController {
 	
 public:
-	animationController( shapesServer& _scene, OSCRouter& _oscRouter  );
+	animationController( shapesDB& _scene );
 	~animationController();
 	// fix for no default constructor
 	animationController& operator=(const animationController& crap) { return *this; }
@@ -50,14 +50,14 @@ protected:
 	bool isEffectsIndex(int i);
 	vector<basicEffect*> effects;
 	
-	shapesServer& scene;
+	shapesDB& scene;
 	
 	// music
 	ofSoundPlayer music;
 	
 	
 	// OSC
-	OSCRouter& oscRouter;
+	//OSCRouter& oscRouter;
 	mirReceiver mirOSCReceiver;
 	durationReceiver durationOSCReceiver;
 	

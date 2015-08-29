@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0600"
+   LastUpgradeVersion = "0630"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-               BuildableName = "karmaMapper.app"
-               BlueprintName = "karmaMapper"
+               BlueprintIdentifier = "855451BC1B91FB4C00A36079"
+               BuildableName = "karmaMapper copy.app"
+               BlueprintName = "karmaMapperEditor"
                ReferencedContainer = "container:karmaMapper.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -26,15 +26,15 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      buildConfiguration = "Release">
+      buildConfiguration = "Debug">
       <Testables>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "karmaMapper.app"
-            BlueprintName = "karmaMapper"
+            BlueprintIdentifier = "855451BC1B91FB4C00A36079"
+            BuildableName = "karmaMapper copy.app"
+            BlueprintName = "karmaMapperEditor"
             ReferencedContainer = "container:karmaMapper.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -44,7 +44,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
@@ -52,9 +52,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "karmaMapper.app"
-            BlueprintName = "karmaMapper"
+            BlueprintIdentifier = "855451BC1B91FB4C00A36079"
+            BuildableName = "karmaMapper copy.app"
+            BlueprintName = "karmaMapperEditor"
             ReferencedContainer = "container:karmaMapper.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -71,15 +71,15 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E4B69B5A0A3A1756003C02F2"
-            BuildableName = "karmaMapper.app"
-            BlueprintName = "karmaMapper"
+            BlueprintIdentifier = "855451BC1B91FB4C00A36079"
+            BuildableName = "karmaMapper copy.app"
+            BlueprintName = "karmaMapperEditor"
             ReferencedContainer = "container:karmaMapper.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Release">
+      buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"

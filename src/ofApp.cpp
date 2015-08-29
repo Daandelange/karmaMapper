@@ -1,7 +1,7 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-ofApp::ofApp() : controller(server,osc) {
+ofApp::ofApp() {
 	//controller = animationController(server, osc);
 }
 
@@ -15,19 +15,11 @@ void ofApp::setup(){
 	ofEnableAlphaBlending();
 	ofEnableAntiAliasing();
 	ofEnableSmoothing();
+	ofSetEscapeQuitsApp(false);
 	
 	// setup shapes
 	//server = shapesServer();
-	server.setup();
-	
-	editor=new shapesEditor(server);
-	editor->enableEditMode();
-	
-	// - - - - - - - - -
-	//  EFFECTS INITIALISATION
-	// - - - - - - - - -
-	
-	
+	scene.setup();
 	
 	// start Ableton Liveset Decoder
 	ofx::AbletonLiveSet::LiveSet LS;
@@ -44,7 +36,7 @@ void ofApp::setup(){
 	
 	// tmp
 	//server.loadShapes("Vendome_Full_Small.xml");
-	server.loadShapes("Vendome_1500_1200.xml");
+	scene.loadShapes("Vendome_1500_1200.xml");
 	
 	// sound analysis setup
 	// streams to default system sound stream
@@ -56,19 +48,13 @@ void ofApp::setup(){
 	ofSoundStreamStop();
 	
 	// setup the OSC Router
-	osc.start();
+	//osc.start();
 	
 	// tmp
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	
-	// update shapes ?
-	if( editor->isInEditMode() ){
-		editor->update();
-	}
-	
 	// display FPS in window title
 	ofSetWindowTitle( ofToString(ofGetFrameRate(), 2)+" FPS");
 }
@@ -76,26 +62,14 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 	
-	// render shape editor ?
-	if( editor->isInEditMode() ){
-		//ofSetColor(255);
-		editor->draw();
-	}
-	
-	else{
-		ofSetColor(255);
-	}
-
 }
 
 void ofApp::exit(){
-	if( !editor->isInEditMode() ){
-		controller.stop();
-	}
+	
 	
 	ofSoundStreamStop();
 	
-	osc.stop();
+	//osc.stop();
 	//analyser.stop();
 }
 
@@ -107,22 +81,7 @@ void ofApp::audioIn(float *input, int bufferSize, int nChannels){
 }
 
 void ofApp::keyPressed(int key){
-	
-	// toggle edit mode ?
-	if(key=='e' || key=='E'){
-		editor->switchEditMode();
-		
-		// spawn effects ?
-		if( !editor->isInEditMode() ){
-			controller.start();
-		}
-		// clear effects
-		else {
-			controller.stop();
-		}
-	}
-	
-	else if(key=='h' || key=='H'){
+	if(key=='h' || key=='H'){
 		mouseHidden ? ofShowCursor() : ofHideCursor();
 		mouseHidden = !mouseHidden;
 		
