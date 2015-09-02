@@ -90,6 +90,7 @@ public:
 	// #########
 	// EDITING ESSENTIALS
 	virtual void render();
+	virtual void buildMenu();
 	
 	// #########
 	// EDITING CONTROL

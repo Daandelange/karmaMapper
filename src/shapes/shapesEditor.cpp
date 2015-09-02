@@ -648,7 +648,7 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 	
 	// ignore editorGui clicks
 	if( editorGui.getShape().inside( e.x, e.y) ){
-		cout << "ignored" << endl;
+		
 	}
 	
 	else if( editMode==EDIT_MODE_SHAPE ){
@@ -658,8 +658,13 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 			if( activeShape != NULL && activeShape->interceptMouseClick( e ) ){
 				
 			}
+			// check if we can select a shape ?
 			else {
-				
+				for(auto it=shapes.begin(); it!=shapes.end(); it++){
+					if( (*it)->isInside( e )){
+						selectShape(*it);
+					}
+				}
 			}
 		}
 	}

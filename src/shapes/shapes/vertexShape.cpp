@@ -347,6 +347,25 @@ void vertexShape::render(){
 	ofPopStyle();
 }
 
+void vertexShape::buildMenu(){
+	basicShape::buildMenu();
+	
+	vertexMenu.clear();
+	vertexMenu.add( (new ofxLabelExtended())
+				   ->setup("vertexShape", "extended Label")
+				   ->setShowLabelName(false)
+				   );
+	/*
+	 gui->addTextArea("info_Vertexes", "Loading..." + ofToString(points.size()), OFX_UI_FONT_SMALL);
+	 
+	 //gui->addSpacer();
+	 gui->addLabel("Keyboard Shortcuts", OFX_UI_FONT_MEDIUM);
+	 gui->addTextArea("addPoint", "Right click on an edge to insert an additional point", OFX_UI_FONT_SMALL );
+	 gui->addTextArea("addPoint", "R + click on point to remove", OFX_UI_FONT_SMALL );*/
+	
+	shapeGui->add( &vertexMenu );
+}
+
 bool vertexShape::enableEditMode(){
 	// first of all, init vertex shape
 	basicShape::enableEditMode();
@@ -361,21 +380,6 @@ bool vertexShape::enableEditMode(){
 		pointHandlers.back().setEditable( true );
 	}
 	positionPointHandler.makeParent( pointHandlers );
-	
-	vertexMenu.clear();
-	vertexMenu.add( (new ofxLabelExtended())
-			 ->setup("vertexShape", "extended Label")
-			 ->setShowLabelName(false)
-	);
-	/*
-	gui->addTextArea("info_Vertexes", "Loading..." + ofToString(points.size()), OFX_UI_FONT_SMALL);
-	
-	//gui->addSpacer();
-	gui->addLabel("Keyboard Shortcuts", OFX_UI_FONT_MEDIUM);
-	gui->addTextArea("addPoint", "Right click on an edge to insert an additional point", OFX_UI_FONT_SMALL );
-	gui->addTextArea("addPoint", "R + click on point to remove", OFX_UI_FONT_SMALL );*/
-	
-	shapeGui->add( &vertexMenu );
 	
 	return (bEditMode==true);
 }
@@ -521,7 +525,7 @@ void vertexShape::keyPressed(ofKeyEventArgs &e){
 // custom functions
 bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 	// dont treat useless clicks
-	if(!isInEditMode() || !boundingBox.inside(args.x, args.y) ) return;
+	if(!isInEditMode() || !boundingBox.inside(args.x, args.y) ) return false;
 	
 	ofVec2f mousePos = ofVec2f( args.x, args.y ) - position;
 	
@@ -604,8 +608,10 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 				break;
 			}
 			prevPoint = &*p;
+			return true;
 		}
 	}
+	return false;
 }
 
 // endif KM_EDITOR_APP

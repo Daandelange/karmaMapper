@@ -18,6 +18,10 @@ basicShape::basicShape() {
 	
 	initialiseVariables();
 	
+#ifdef KM_EDITOR_APP
+	buildMenu();
+#endif
+	
 #ifdef KM_LOG_INSTANCIATIONS
 	ofLogNotice("basicShape::basicShape") << (string)typeid(this).name();
 #endif
@@ -28,6 +32,8 @@ basicShape::~basicShape(){
 
 #ifdef KM_EDITOR_APP
 	disableEditMode();
+	
+	delete shapeGui;
 #endif
 
 #ifdef KM_LOG_INSTANCIATIONS
@@ -302,26 +308,7 @@ void basicShape::render(){
 	ofPopStyle();
 }
 
-// - - - - - -
-// EDITING CONTROL
-// - - - - - -
-bool basicShape::enableEditMode(){
-	if(isInEditMode()) return true;
-	
-	// remember
-	bEditMode = true;
-	activeHandle = NULL;
-	
-	positionPointHandler = movablePoint();
-	positionPointHandler.setup();
-	positionPointHandler.setPos( position );
-	positionPointHandler.setEditable( true );
-	
-	// enable GUI
-	guiToggle = ofRectangle( boundingBox.getTopRight()+5, 10, 10 );
-	//guiToggle
-	//guiTabBar->addLabel("+", OFX_UI_FONT_SMALL);
-	
+void basicShape::buildMenu(){
 	// build custom UI
 	
 	menuParams.clear();
@@ -344,6 +331,28 @@ bool basicShape::enableEditMode(){
 	shapeGui = new ofxPanelExtended();
 	shapeGui->add( &menuParams );
 	//shapeGui->setShowHeader(false);
+}
+
+// - - - - - -
+// EDITING CONTROL
+// - - - - - -
+bool basicShape::enableEditMode(){
+	if(isInEditMode()) return true;
+	
+	// remember
+	bEditMode = true;
+	activeHandle = NULL;
+	
+	positionPointHandler = movablePoint();
+	positionPointHandler.setup();
+	positionPointHandler.setPos( position );
+	positionPointHandler.setEditable( true );
+	
+	// enable GUI
+	guiToggle = ofRectangle( boundingBox.getTopRight()+5, 10, 10 );
+	//guiToggle
+	//guiTabBar->addLabel("+", OFX_UI_FONT_SMALL);
+	
 	
 	// set GUI color
 	setColorFromGroupID();
@@ -377,7 +386,6 @@ bool basicShape::disableEditMode(){
 		//guiPos = ofVec2f(gui->getRect()->x, gui->getRect()->y);
 		
 		// clear memory
-		delete shapeGui;
 		selectHandle(NULL);
 		
 		// recalc some variables

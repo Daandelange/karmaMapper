@@ -61,6 +61,7 @@ public:
 	// #########
 	// EDITING ESSENTIALS
 	virtual void render();
+	virtual void buildMenu();
 	bool enableEditMode();
 	bool disableEditMode();
 	
