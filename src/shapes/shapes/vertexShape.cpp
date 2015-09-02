@@ -21,9 +21,7 @@
 // - - - - - - -
 vertexShape::vertexShape(){
 	initialized = false; // during 2nd constructor, disable shape
-	shapeType = "vertexShape";
-	
-	ofAddListener( ofEvents().mousePressed, this, &vertexShape::mousePressed );
+	shapeTypes.push_back("vertexShape");
 	
 	/*instructions.loadFont("fonts/UbuntuMono.ttf", 12);
 	instructions.setRectangle( ofRectangle(ofGetWidth()-220,20,200,300) );
@@ -49,28 +47,26 @@ vertexShape::vertexShape(){
 vertexShape::~vertexShape(){
 	//basicShape::~basicShape();
 	
-	ofRemoveListener( ofEvents().mousePressed, this, &vertexShape::mousePressed );
 }
 
 // - - - - - - -
 // OVER-RULED BASICSHAPE FUNCTIONS
 // - - - - - - -
-void vertexShape::reset(){
+void vertexShape::initialiseVariables(){
 	// act like basic shape
-	basicShape::reset();
+	basicShape::initialiseVariables();
 	
 	// do some other stuff
 	points.clear();
 	absolutePoints.clear();
+	pointHandlers.clear();
 	
 	showInstructions = true;
 	//instructions.setText("VERTEX SHAPE\nh		Toggle help.\n[]	Shape vertex selection.\nlr	Shape selection.\nHold r while clicking on a point to remove it.\nRight click on an edge to insert a point.");
 	
 }
 
-void vertexShape::render(){
-	// if in edit mode, update points from pointhandlers
-	if(bEditMode) synchronisePointHandlers();
+void vertexShape::sendToGPU(){
 	
 	// prepare for drawing
 	ofPushMatrix();
@@ -78,7 +74,6 @@ void vertexShape::render(){
 	ofTranslate(position);
 	
 	// if shape has error, draw it in red
-	// tmp hasError?ofSetHexColor(0xFF0000):ofSetColor(fgColor);
 	ofSetColor(255,255,255,255);
 	
 	ofBeginShape();
@@ -89,34 +84,14 @@ void vertexShape::render(){
 	}
 	ofEndShape(OF_CLOSE);
 	
-	// draw it a 2nd time to smooth the edges
-	//ofSetColor(bgColor);
-	
-	/*ofBeginShape();
-	ofNoFill(); // this makes the difference
-	// draw elements
-	for(int i=0; i<points.size(); i++){
-		// draw center point
-		ofVertex( points[i].x, points[i].y );
-	}
-	ofEndShape(OF_CLOSE)//*/
-	
 	// reset
 	ofPopStyle();
 	ofPopMatrix();
-	
-	basicShape::render();
 }
 
-void vertexShape::drawForEditor(){
-	
-	//basicShape::drawForEditor();
-	
-	// update points from pointhandlers
-	if(bEditMode) synchronisePointHandlers();
+void vertexShape::render(){
 	
 	ofPushStyle();
-	
 	
 	// show container box
 	ofSetColor( 255, 150 );
@@ -124,6 +99,7 @@ void vertexShape::drawForEditor(){
 	ofDrawRectangle( boundingBox );
 	
 	// new colors!
+	//hasError?ofSetHexColor(0xFF0000):ofSetColor(fgColor);
 	ofSetColor( fgColor, 200 );
 	ofFill();
 	
@@ -133,7 +109,7 @@ void vertexShape::drawForEditor(){
 	
 	// draw line of the shape
 	ofBeginShape();
-	for(list<ofVec2f>::iterator it = points.begin(); it != points.end(); it++){
+	for(auto it = points.begin(); it != points.end(); it++){
 		// draw center point
 		ofVertex( (*it).x, (*it).y );
 	}
@@ -226,7 +202,7 @@ bool vertexShape::saveToXML(ofxXmlSettings &xml){
 	shapeSettings.popTag();
 	 */
 	
-	xml.addValue("shapeType", shapeType );
+	xml.addValue("shapeType", getShapeType() );
 	xml.addValue("groupID", getGroupID());
 	
 	xml.addTag("vectors");
@@ -380,17 +356,20 @@ bool vertexShape::enableEditMode(){
 	}
 	positionPointHandler.makeParent( pointHandlers );
 	
-	gui->addSpacer();
-	gui->addLabel("vertexShape", OFX_UI_FONT_MEDIUM);
+	vertexMenu.clear();
+	vertexMenu.add( (new ofxLabelExtended())
+			 ->setup("vertexShape", "extended Label")
+			 ->setShowLabelName(false)
+	);
+	/*
 	gui->addTextArea("info_Vertexes", "Loading..." + ofToString(points.size()), OFX_UI_FONT_SMALL);
 	
 	//gui->addSpacer();
 	gui->addLabel("Keyboard Shortcuts", OFX_UI_FONT_MEDIUM);
 	gui->addTextArea("addPoint", "Right click on an edge to insert an additional point", OFX_UI_FONT_SMALL );
-	gui->addTextArea("addPoint", "R + click on point to remove", OFX_UI_FONT_SMALL );
+	gui->addTextArea("addPoint", "R + click on point to remove", OFX_UI_FONT_SMALL );*/
 	
-	// calculate dimensions
-	gui->autoSizeToFitWidgets();
+	shapeGui->add( &vertexMenu );
 	
 	return (bEditMode==true);
 }
@@ -516,7 +495,7 @@ void vertexShape::keyPressed(ofKeyEventArgs &e){
 	basicShape::keyPressed(e);
 	
 	// delete active point ?
-	if( (e.key == 'r' || e.key == 'R' ) && isSelectableHandle( activeHandle ) ){
+	if( (e.key == 'r' || e.key == 'R' ) && handleExists( activeHandle ) ){
 		removeHandle(activeHandle);
 	}
 }
@@ -618,3 +597,8 @@ void vertexShape::mousePressed( ofMouseEventArgs& args ){
 void vertexShape::mouseReleased( ofMouseEventArgs& args ){
 	
 }*/
+#ifdef KM_EDITOR_APP
+
+
+// endif KM_EDITOR_APP
+#endif

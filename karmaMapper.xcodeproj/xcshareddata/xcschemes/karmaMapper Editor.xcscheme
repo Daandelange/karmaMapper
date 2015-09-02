@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "855451BC1B91FB4C00A36079"
-               BuildableName = "karmaMapper copy.app"
+               BuildableName = "karmaMapperEditor.app"
                BlueprintName = "karmaMapperEditor"
                ReferencedContainer = "container:karmaMapper.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "855451BC1B91FB4C00A36079"
-            BuildableName = "karmaMapper copy.app"
+            BuildableName = "karmaMapperEditor.app"
             BlueprintName = "karmaMapperEditor"
             ReferencedContainer = "container:karmaMapper.xcodeproj">
          </BuildableReference>
@@ -53,7 +53,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "855451BC1B91FB4C00A36079"
-            BuildableName = "karmaMapper copy.app"
+            BuildableName = "karmaMapperEditor.app"
             BlueprintName = "karmaMapperEditor"
             ReferencedContainer = "container:karmaMapper.xcodeproj">
          </BuildableReference>
@@ -72,7 +72,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "855451BC1B91FB4C00A36079"
-            BuildableName = "karmaMapper copy.app"
+            BuildableName = "karmaMapperEditor.app"
             BlueprintName = "karmaMapperEditor"
             ReferencedContainer = "container:karmaMapper.xcodeproj">
          </BuildableReference>

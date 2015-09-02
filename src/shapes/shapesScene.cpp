@@ -13,35 +13,45 @@
 // CONSTRUCTORS
 // - - - - - - - -
 shapesScene::shapesScene(){
-	//editor = new shapesEditor( this );
+	loadedConfiguration = "";
+	
+	shapes.resize(0);
+	
+#ifdef KM_LOG_INSTANCIATIONS
+	ofLogNotice("shapesScene::shapesScene");
+#endif
 }
 
 shapesScene::~shapesScene(){
-	//delete editor;
+	
 }
 
 // - - - - - - - -
 // BASIC FUNCTIONS
 // - - - - - - - -
-void shapesScene::setup() {
+bool shapesScene::isEditorClass(){
+	return false;
+}
+
+void shapesScene::loadLastUsedScene() {
 	
-	// load interface settings
-	loadedConfiguration = shapesScene_SAVE_FILE;
-	shapeSettings = ofxXmlSettings(loadedConfiguration);
-	//shapeSettings.clear();
+	ofxXmlSettings sceneSettings;
 	ofVec2f pos(0,0);
 	
-	if(shapeSettings.loadFile(shapesScene_SAVE_FILE)){
-		shapeSettings.pushTag("shapesScene");
-		pos = ofVec2f( shapeSettings.getValue("posX", 0), shapeSettings.getValue("posY", 0));
-		loadedConfiguration = shapeSettings.getValue("loadedConfiguration", "");
-		shapeSettings.popTag(); // pop position
+	// what are we doing here?!?!
+	if( sceneSettings.loadFile(KM_SCENE_SAVE_FILE) ){
+		sceneSettings.pushTag("shapesScene");
+		pos = ofVec2f(
+			sceneSettings.getValue("posX", 0),
+			sceneSettings.getValue("posY", 0)
+		);
+		
+		// load created shapes
+		loadScene( sceneSettings.getValue("lastLoadedScene", KM_DEFAULT_SCENE) );
+		
+		sceneSettings.popTag(); // pop position
 	}
-	else ofSystemAlertDialog("Failed loading app settings...");
-	shapeSettings.clear();
-	
-	// load created shapes
-	loadShapes( loadedConfiguration );
+	sceneSettings.clear();
 	
 }
 
@@ -93,47 +103,40 @@ bool shapesScene::shapeExists(const basicShape* i) const{
 
 
 // todo: move save functionalities to shape object
-bool shapesScene::saveShapes(const string _fileName){
+bool shapesScene::saveScene(const string _fileName){
+	string fullPath;
 	// no save file ?
 	if( _fileName.empty() ){
-		ofSystemAlertDialog("Please provide a name for the save file!");
-		return false;
+		if( loadedConfiguration.empty() ){
+			ofSystemAlertDialog("Please provide a name for the save file!");
+			return false;
+		}
+		else fullPath = "saveFiles/"+loadedConfiguration;
+		
 	}
+	else fullPath = "saveFiles/"+_fileName;
 	
-	// save interface settings
-	shapeSettings.clear();
-	shapeSettings.addTag("shapesScene");
-	shapeSettings.pushTag("shapesScene");
-	
-	//shapeSettings.addValue( "loadedConfiguration", _fileName );
-	//shapeSettings.addValue("posX", gui->getRect()->x);
-	//shapeSettings.addValue("posY", gui->getRect()->y);
-	
-	shapeSettings.popTag();
-	if(!shapeSettings.saveFile(shapesScene_SAVE_FILE)) ofSystemAlertDialog("Failed saving global settings...");
-	
-	string fullPath = "saveFiles/"+_fileName;
-	
-	// clear settings
-	shapeSettings.clear();
+	ofxXmlSettings sceneXML;
+	sceneXML.addTag("shapes");
+	sceneXML.pushTag("shapes");
 	
 	// save all shapes data
 	int s=0;
 	vector<int> failed;
 	failed.clear();
-	for(list<basicShape*>::iterator it = shapes.begin(); it != shapes.end(); it++, s++){
+	for(auto it = shapes.begin(); it != shapes.end(); it++, s++){
 		
-		shapeSettings.addTag("shape");
-		shapeSettings.pushTag("shape", s);
+		sceneXML.addTag("shape");
+		sceneXML.pushTag("shape", s);
 		
-		if(!(*it)->saveToXML(shapeSettings)) failed.push_back(1);
+		if(!(*it)->saveToXML(sceneXML)) failed.push_back(s);
 		
-		shapeSettings.popTag(); //pop shape
+		sceneXML.popTag(); //pop shape
 	}
 	
 	// write down settings to disk
-	if(shapeSettings.saveFile(fullPath)){
-		if(failed.size() == 0 ) ofLogNotice("shapesScene::saveShapes()", "Saved current configuration to `"+fullPath+"`");
+	if( sceneXML.saveFile(fullPath) ){
+		if(failed.size() == 0 ) ofLogNotice("shapesScene::saveScene()", "Saved current configuration to `"+fullPath+"`");
 		else ofSystemAlertDialog("The scene has been saved but "+ ofToString(failed.size()) +" out of "+ ofToString(shapes.size()) +" shapes failed to save.");
 	}
 	else ofSystemAlertDialog("Could not save the current configuration... :(\nSave File: "+fullPath);
@@ -142,7 +145,7 @@ bool shapesScene::saveShapes(const string _fileName){
 }
 
 // (re)loads a scene from file
-bool shapesScene::loadShapes( const string _fileName ){
+bool shapesScene::loadScene( const string _fileName ){
 	
 	string fullPath;
 	
@@ -153,27 +156,41 @@ bool shapesScene::loadShapes( const string _fileName ){
 	}
 	else fullPath = "saveFiles/"+_fileName;
 	
+	ofxXmlSettings sceneXML;
+	
 	// can we read the file ?
-	if(shapeSettings.loadFile(fullPath)){
+	if( sceneXML.loadFile(fullPath) ){
 		
 		// unload scene
 		unloadShapes();
 		
+		sceneXML.pushTag("shapes");
+		
 		// loop for each shape
-		int numShapes = shapeSettings.getNumTags("shape");
+		int numShapes = sceneXML.getNumTags("shape");
 		shapes.clear();
-		shapes.resize(numShapes);
-		int s=0;
-		for(list<basicShape*>::iterator it = shapes.begin(); it != shapes.end(); it++, s++){
-			shapeSettings.pushTag("shape", s);
+		//shapes.resize(numShapes);
+		
+		for(int s=0; s<numShapes; s++){
+			sceneXML.pushTag("shape", s);
 			
 			// todo: make this shape specific
 			// --> http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
-			(*it) = new vertexShape();
-			(*it)->loadFromXML(shapeSettings);
+			shapes.push_back( new vertexShape() );
+			shapes.back()->loadFromXML( sceneXML );
 			
-			shapeSettings.popTag(); // pop shape
+			sceneXML.popTag(); // pop shape
 		}
+		
+		ofLogNotice("shapesScene::loadScene") << "Loaded scene from " << fullPath << " [" << numShapes << " shapes]";
+		
+		// remember this scene
+		loadedConfiguration = _fileName;
+		ofxXmlSettings sceneSettings;
+		sceneSettings.load( KM_SCENE_SAVE_FILE );
+		sceneSettings.setValue("sceneSettings:lastLoadedScene", _fileName);
+		
+		if(!sceneSettings.saveFile(KM_SCENE_SAVE_FILE)) ofLogError("shapesScene::saveScene") << "Failed saving global settings...";
 		
 		return true;
 	}

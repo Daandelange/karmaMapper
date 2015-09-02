@@ -8,12 +8,15 @@
 
 #pragma once
 
+#include "KMSettings.h"
+
 #include "ofMain.h"
 
 #include "shapes.h"
 #include "ofxXmlSettings.h"
 
-#define shapesScene_SAVE_FILE "saveFiles/appSettings.xml"
+#define KM_SCENE_SAVE_FILE "saveFiles/karmaMapperSceneSettings.xml"
+#define KM_DEFAULT_SCENE "defaultScene.xml"
 
 // this class references and serves shapes
 
@@ -30,14 +33,15 @@ public:
 	~shapesScene();
 	
 	// basic functions
-	void setup();
+	virtual bool isEditorClass();
+	void loadLastUsedScene();
 	
 	// custom functions
 	basicShape* insertShape(basicShape* _shape);
 	bool removeShape(basicShape* _shape);
 	bool shapeExists(const basicShape* i) const;
-	bool saveShapes( const string _fileName );
-	bool loadShapes( string _fileName = "" );
+	bool saveScene( const string _fileName = "" );
+	bool loadScene( const string _fileName = "" );
 	bool unloadShapes();
 	
 	// utilities
@@ -46,12 +50,10 @@ public:
 	typedef list<basicShape*>::const_iterator shapesIteratorC;
 	
 protected:
-	
-	list<basicShape*> shapes; // vectors are uncompatible as they invalidate pointers
-	
-	// save file stuff
-	ofxXmlSettings shapeSettings;
+	// Note: vectors are uncompatible as they invalidate pointers
+	list<basicShape*> shapes;
 
 private:
+	
 	string loadedConfiguration;
 };

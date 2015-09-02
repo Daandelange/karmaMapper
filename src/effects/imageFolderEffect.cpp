@@ -94,7 +94,7 @@ bool imageFolderEffect::render(){
 			cachedImages[currentImage].getTexture().setTextureWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 			//cachedImages[currentImage].getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);
 			cachedImages[currentImage].getTexture().bind();
-			(*it)->render();
+			(*it)->sendToGPU();
 			cachedImages[currentImage].getTexture().unbind();
 			
 			imageShader.end();

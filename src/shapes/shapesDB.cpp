@@ -15,6 +15,9 @@
 // - - - - - - - -
 shapesDB::shapesDB(){
 
+#ifdef KM_LOG_INSTANCIATIONS
+	cout << "shapesScene::shapesScene()" << endl;
+#endif
 }
 
 shapesDB::~shapesDB(){
@@ -78,7 +81,7 @@ vector<basicShape*> shapesDB::getShapesByType(string _type){
 	ret.resize(0);
 	
 	// loop trough shapes and return the wanted ones
-	for(list<basicShape*>::iterator it = shapes.begin(); it != shapes.end(); it++){
+	for(auto it = shapes.begin(); it != shapes.end(); it++){
 		if((*it)->getShapeType() == _type ) ret.push_back((*it));
 	}
 	
@@ -99,7 +102,7 @@ vector<basicShape*> shapesDB::getShapesByGroup(int _group){
 	ret.resize(0);
 	
 	// loop trough shapes and return the wanted ones
-	for(list<basicShape*>::iterator it = shapes.begin(); it != shapes.end(); it++){
+	for(auto it = shapes.begin(); it != shapes.end(); it++){
 		if((*it)->getGroupID() == _group ) ret.push_back((*it));
 	}
 	
@@ -118,7 +121,7 @@ vector<basicShape*> shapesDB::getAllShapes(){
 	ret.resize(shapes.size());
 	
 	// loop trough shapes and return the wanted ones
-	for(list<basicShape*>::iterator it = shapes.begin(); it != shapes.end(); it++){
+	for(auto it = shapes.begin(); it != shapes.end(); it++){
 		ret.push_back((*it));
 	}
 	

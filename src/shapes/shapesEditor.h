@@ -15,24 +15,19 @@
 #include "ofxUI.h"
 #include "ofxGui.h"
 
-#define shapesEditor_SAVE_FILE "saveFiles/appSettings.xml"
-
 enum shapesEditMode {
-	EDIT_MODE_OFF,
-	EDIT_MODE_NORMAL,
-	EDIT_MODE_BATCH_NONE,
-	EDIT_MODE_BATCH_SCALE,
-	EDIT_MODE_BATCH_MOVE,
-	EDIT_MODE_BATCH_FLIPX,
-	EDIT_MODE_BATCH_FLIPY
+	EDIT_MODE_OFF,			// Everything disabled
+	EDIT_MODE_RENDER,		// Render the scene
+	EDIT_MODE_SHAPE,		// Edit (single) shapes
+	EDIT_MODE_BATCH_SELECT,	// Batch - (multi)select shapes
+	EDIT_MODE_BATCH_SCALE,	// Batch - scale shapes
+	EDIT_MODE_BATCH_MOVE,	// Batch - move shapes
+	EDIT_MODE_BATCH_FLIPX,	// Batch - Flip horizontal
+	EDIT_MODE_BATCH_FLIPY	// Batch - Flip vertical
 };
 
 // todo: make the shape edit tools (un)instanciable for a performance gain. Make it dependent on a shapesServer//karmaScene database class which stays loaded for serving raw (+rw) shape data and maybe some utilities.
-// effects can also be instanciatated with it's (db) instance for self changing of shapes which it's applied to.
-// animator class holds and handles effects.
-// animator has several modules which can be loaded and unloaded. They also associate effects (holding preferences) with shapes.
-// an effect can be associated with one or more shapes.
-// tag effects with #visual #modificator #
+// todo: add a layer re-ordering panel
 
 class shapesEditor : public shapesScene {
 
@@ -42,13 +37,14 @@ public:
 	~shapesEditor();
 	
 	// application functions
+	bool isEditorClass();
 	void update();
 	void draw();
 	
-	// gui tools
-	void enableEditMode();
-	void disableEditMode();
-	void switchEditMode();
+	// edit mode toggling
+	void enableEditing();
+	void disableEditing();
+	void switchEditing();
 	bool isInEditMode() const;
 	
 	// custom functions
@@ -60,16 +56,31 @@ public:
 	bool setEditMode(shapesEditMode _mode);
 
 	// event listeners
+	void _draw( ofEventArgs &e );
+	void _update( ofEventArgs &e );
 	void guiEvent( ofxUIEventArgs &e);
 	void batchGuiEvent( ofxUIEventArgs &e);
 	void _mousePressed( ofMouseEventArgs &e);
+	void _keyPressed( ofKeyEventArgs &e );
+	
+	// menu listeners
+	void showLoadMenu( );
+	void showSaveDialog( );
+	void setFullScreen( bool & _fullScreen );
+	void enableShapeEditing( bool & _on );
+
+private:
 	
 private:
 	basicShape* activeShape; // only used for comparison, never access it. Not guaranteed to point to an instance.
 	shapesEditMode editMode;
 	
 	// GUI (new)
-	//ofxPanel gui;
+	ofxPanelExtended editorGui;
+	ofxGuiGroupExtended editorMenu, shapesMenu;
+	ofxMinimalButton loadButton, saveButton;
+	ofxToggle fullScreenToggle, enableEditingToggle;
+	ofxGuiMatrix batchModeSelect, simpleMode;
 	void buildMenus();
 	
 	// multi shapes edit stuff
@@ -82,24 +93,26 @@ private:
 
 	ofImage background;
 	
+	bool mouseHidden = false;
 	
 };
 
 // GUI translations
-#define GUIToggleFullScreen		("Full Screen")
-#define GUIToggleMouseCursor	("Hide Mouse")
+#define GUIToggleFullScreen		(" Full Screen")
+//#define GUIToggleMouseCursor	("Hide Mouse")
+#define GUIEnableEditing		("Enable Editing")
+#define GUINbSelectedShapes		("Selected shapes")
 #define GUISelectNextShape		("Select Next Shape")
 #define GUISelectPrevShape		("Select Prev Shape")
 #define GUIDeleteShape			("Delete current shape")
 #define GUImultiShapesSelection	("Batch Edit...")
 #define GUIConfigFile			("Configuration File")
-#define GUILoadConfig			("Load")
-#define GUISaveConfig			("Save")
+#define GUILoadConfig			("Load...")
+#define GUISaveConfig			("Save...")
 #define GUIAddShape				("Add Shape...")
 
 #define batchGUISelectAll		("Select All")
 #define batchGUISelectNone		("Select None")
-#define batchGUINbSelected		("Selected shapes: ")
 #define batchGUICancel			("Close")
 #define batchGUIRescaleMode		("Rescale")
 #define batchGUIMoveMode		("Move")

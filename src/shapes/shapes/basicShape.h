@@ -13,16 +13,16 @@
 #include "ofMain.h"
 #include "movablePoint.h"
 #include "ofxXmlSettings.h"
-#include "ofxUI.h"
+#include "ofxGui.h"
+#include "ofxGuiExtended.h"
 
 // todo: remove destroy() and spawn() and isReady()
 // todo: move vertexShape stuff to it's own class and keep the bare minimum (points, etc)
 // todo: rename colors (fgColor,bgColor) and give names like groupColor, primaryColor, secondaryColor, etc.
 // todo: add name so we can getShapeByName()
-// todo: shapeType should be a vector so it contains all subclasses
 
 // When a shape exits edit mode, all coordinates are made absolute so they are easy to use for effects. Relative coordinates are easier for manipulation and storage.
-// Shape quarying and altering happens trough absolute coordinates.
+// Shape querying and altering happens trough absolute coordinates.
 
 typedef list<ofVec2f>& vec2fListRef; // without the typedef returning this causes compiler errors.
 
@@ -30,28 +30,30 @@ class basicShape {
 
 public:
 	basicShape();
-	virtual ~basicShape(); // rm virtual ?
+	virtual ~basicShape();
 	
 	// #########
 	// MAIN FUNCTIONS
-	virtual void reset();
-	virtual void render();
-	virtual void drawForEditor();
-	virtual void calculateBoundingBox();
-	virtual void onShapeChanged();
-	virtual void resetChangedValues();
+	virtual void initialiseVariables();
+	virtual void sendToGPU();
 	
+	// #########
+	// LOAD & SAVE FUNCTIONS
 	virtual bool saveToXML(ofxXmlSettings& xml );
 	virtual bool loadFromXML(ofxXmlSettings& xml);
 	
 	// #########
-	// BASIC SHAPE PROPERTIES
+	// UTILITIES
+	virtual void calculateBoundingBox();
+	virtual void onShapeChanged();
+	virtual void resetToScene();
 	
-	// Getters
-	bool isReady() const;
-	const string& getShapeType() const;
-	ofRectangle getBoundingBox() const;
+	// #########
+	// BASIC SHAPE GETTERS
 	int getGroupID() const;
+	bool isReady() const;
+	const string getShapeType() const;
+	ofRectangle getBoundingBox() const;
 	vector<string> getTypes() const;
 	bool isType(const string _type) const;
 	virtual bool isInside( const ofVec2f _pos, const bool _isPositionAbsolute = true) const;
@@ -59,36 +61,6 @@ public:
 	ofVec2f getPositionUnaltered() const;
 
 	// #########
-	// SETTERS
-	bool setPosition(const ofVec2f _pos);
-	//bool putPoints(list<ofVec2f>& _points);
-	bool setGroupID(const int _id);
-	
-	// #########
-	// EDIT STUFF
-	bool isInEditMode() const;
-	virtual bool enableEditMode();
-	virtual bool disableEditMode();
-	bool switchEditMode();
-	virtual bool synchronisePointHandlers();
-	
-	// detailed edit stuff
-	virtual void selectPrevHandle();
-	virtual void selectNextHandle();
-	virtual bool isSelectableHandle(movablePoint* _i);
-	virtual void selectHandle(movablePoint* _i);
-	virtual void translateActiveHandle(ofVec2f _offset);
-	virtual void applyScale(ofVec2f scale);
-	
-	// GUI
-	virtual void keyPressed(ofKeyEventArgs& e);
-	virtual void guiEvent(ofxUIEventArgs &e);
-	virtual void mouseClicked(ofMouseEventArgs &e);
-	
-	//ofPoint getCenterOffsetFromBoundingBox();
-
-	bool hasError = true; // changes visual aspect to notify error
-	
 	// global variables
 	static ofVec2f zeroPoint;
 	
@@ -96,32 +68,78 @@ protected:
 	
 	// basicShape properties
 	bool initialized = false;
+	bool hasError = false;
 	ofRectangle boundingBox; // contains all shapes
 	int groupID; // [-1=none, other = groupID]
-	static int maxGroupID; // used for color calculation
-	int prevMaxGroupID; // used for color calculation
-	string shapeType;
-	int shapeId; // utility for handling several basicShape instances. (give uuid at creation) // todo
+	string shapeName;
+	vector<string> shapeTypes;
 	
-	// editor properties
-	bool bEditMode;
-	ofColor fgColor;
-	ofColor bgColor;
-	movablePoint* activeHandle; // [-1=none, other=activeID]
-	
-	ofVec2f position; // absolute (inside points will be relative)
-	
-	movablePoint positionPointHandler;
-	list<movablePoint> pointHandlers;
-	
-	// custom HUD GUI elements
-	ofRectangle guiToggle;
-	ofxUICanvas* gui = NULL;
-	
-	void setColorFromGroupID();
+	ofVec2f position; // absolute (other shape data will be relative to this)
 	
 	
 private:
 	// todo: put variables in here
 	//ofVec2f guiPos;
+
+	
+	// * * * * * * * * * * * * * * * * * * *
+#ifdef KM_EDITOR_APP
+
+
+public:
+	// #########
+	// EDITING ESSENTIALS
+	virtual void render();
+	
+	// #########
+	// EDITING CONTROL
+	bool isInEditMode() const;
+	bool switchEditMode();
+	virtual bool enableEditMode();
+	virtual bool disableEditMode();
+	
+	// #########
+	// EDITING UI CONTROL
+	virtual void selectPrevHandle();
+	virtual void selectNextHandle();
+	virtual bool handleExists(movablePoint* _i);
+	virtual void selectHandle(movablePoint* _i);
+	virtual void translateActiveHandle(ofVec2f _offset);
+	
+	// #########
+	// EDITING UTILITIES
+	virtual bool synchronisePointHandlers();
+	virtual void applyScale(ofVec2f scale);
+	
+	// #########
+	// SETTERS
+	bool setPosition(const ofVec2f _pos);
+	bool setGroupID(const int _id);
+	
+	// #########
+	// GUI LISTENERS
+	virtual void keyPressed(ofKeyEventArgs& e);
+	virtual bool interceptMouseClick(ofMouseEventArgs &e);
+	
+protected:
+	bool bEditMode;
+	
+	ofColor fgColor;
+	ofColor bgColor;
+	static int maxGroupID; // used for color calculation
+	int prevMaxGroupID; // used for color calculation
+	
+	movablePoint* activeHandle = NULL;
+	movablePoint positionPointHandler;
+	
+	// custom HUD GUI elements
+	ofRectangle guiToggle;
+	ofxPanelExtended* shapeGui = NULL;
+	ofxGuiGroupExtended menuParams;
+	
+	void setColorFromGroupID();
+	
+// endif KM_EDITOR_APP
+#endif
+
 };

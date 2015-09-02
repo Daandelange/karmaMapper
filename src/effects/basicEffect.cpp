@@ -65,7 +65,7 @@ bool basicEffect::render(){
 	
 	// by default, basicEffect uses the shape's default rendering mode
 	for(int i=0; i<shapes.size(); i++){
-		shapes[i]->render();
+		shapes[i]->sendToGPU();
 	}
 	
 	return true;

@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "KMSettings.h"
+
 #include "ofMain.h"
 #include "shapesScene.h"
 #include "shapes.h"

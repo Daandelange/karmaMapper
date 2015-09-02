@@ -17,31 +17,29 @@
 //}
 
 shapesEditor::shapesEditor( ) {
+#ifdef KM_LOG_INSTANCIATIONS
+	ofLogNotice("shapesEditor::shapesEditor()");
+#endif
+	
 	// init variables
 	activeShape = NULL;
 	editMode = EDIT_MODE_OFF;
-	loadedConfiguration = "";
 	
-	//batchGui = new ofxUISuperCanvas("Batch Edit Tools");
-	//batchGui->disable();
-	//gui = new ofxUISuperCanvas("Hello World :)");
-	//gui->disable();
 	buildMenus();
 	
 	// load image
 	background.load("vendome_full.jpg");
-	//background.load("vendome_daan_v1.0/spores.png");
-	
-	ofAddListener(ofEvents().mousePressed, this, &shapesEditor::_mousePressed);
 }
 
 shapesEditor::~shapesEditor(){
 	
-	//ofRemoveListener( batchGui->newGUIEvent, this, &shapesEditor::batchGuiEvent );
-	//ofRemoveListener( gui->newGUIEvent, this, &shapesEditor::guiEvent );
-	ofRemoveListener( ofEvents().mousePressed, this, &shapesEditor::_mousePressed );
+	// menu event listeners
+	saveButton.removeListener(this, &shapesEditor::showSaveDialog);
+	loadButton.removeListener(this, &shapesEditor::showLoadMenu);
+	fullScreenToggle.removeListener(this, &shapesEditor::setFullScreen);
+	enableEditingToggle.removeListener(this, &shapesEditor::enableShapeEditing );
 	
-	disableEditMode();
+	disableEditing();
 	
 	//delete gui;
 	//delete batchGui;
@@ -49,12 +47,25 @@ shapesEditor::~shapesEditor(){
 	// todo: save app settings on quit
 }
 
+bool shapesEditor::isEditorClass(){
+	return true;
+}
+
 void shapesEditor::update() {
 	// only use computing power if in edit mode.
-	if( !isInEditMode() ) return;
+	if( !isInEditMode() || editMode==EDIT_MODE_RENDER ) return;
 	
-	// prevent pointhandlers from moving
-	if( editMode==EDIT_MODE_BATCH_NONE ){
+	// single edit mode
+	if( editMode==EDIT_MODE_SHAPE ){
+		
+		if( activeShape != NULL ){
+			//activeShape->update();
+		}
+		
+	}
+	
+	/*/ prevent pointhandlers from moving
+	if( editMode==EDIT_MODE_BATCH_SELECT ){
 		syncMultiSelectionHandlers();
 	}
 	// update multiPointHandlers
@@ -160,7 +171,7 @@ void shapesEditor::update() {
 		}
 	}
 	
-	/*/ update GUI ?
+	/ * / update GUI ?
 	if(isInEditMode()){
 		guiToggle.setPosition( boundingBox.getTopRight()+5 );
 		
@@ -183,18 +194,18 @@ void shapesEditor::draw() {
 	// draw shapes (edit mode)
 	for(auto it = shapes.begin(); it != shapes.end(); it++){
 		if( (*it)->isReady() ){
-			if( (*it)->isInEditMode() ) (*it)->drawForEditor();
-			else (*it)->render();
+			if( (*it)->isInEditMode() ) (*it)->render();
+			else (*it)->sendToGPU();
 		}
 	}
 
 	// draw rescale tool
-	if(editMode!=EDIT_MODE_NORMAL && multiShapesSelection.size()>0){
+	if(editMode!=EDIT_MODE_RENDER && multiShapesSelection.size()>0){
 		// highlight selection
-		for(list<basicShape*>::iterator it = multiShapesSelection.begin(); it != multiShapesSelection.end(); it++){
+		for(auto it = multiShapesSelection.begin(); it != multiShapesSelection.end(); it++){
 			if( (*it)->isReady() ){
 				ofSetColor(0);
-				(*it)->drawForEditor();
+				(*it)->render();
 			}
 		}
 		
@@ -212,51 +223,51 @@ void shapesEditor::draw() {
 			multiPointHandlers[i].draw();
 		}
 	}
+	
+	editorGui.draw();
 }
 
 // - - - - - - - -
-// GUI FUNCTIONS
+// EDIT MODE TOGGLING
 // - - - - - - - -
 
-void shapesEditor::enableEditMode(){
-	if( !isInEditMode() ) setEditMode(EDIT_MODE_NORMAL);
+void shapesEditor::enableEditing(){
+	if( !isInEditMode() ) setEditMode(EDIT_MODE_RENDER);
 }
 
-void shapesEditor::disableEditMode(){
-	
-	// disable active shape
-	selectShape(NULL);
-	
-	setEditMode( EDIT_MODE_OFF );
+void shapesEditor::disableEditing(){
+	if( isInEditMode() ) setEditMode( EDIT_MODE_OFF );
 }
 
-void shapesEditor::switchEditMode(){
-	isInEditMode()?disableEditMode():enableEditMode();
+void shapesEditor::switchEditing(){
+	isInEditMode()?disableEditing():enableEditing();
 }
 
 bool shapesEditor::isInEditMode() const{
 	return !(editMode==EDIT_MODE_OFF);
 }
 
+// - - - - - - - -
+// EVENT LISTENERS
+// - - - - - - - -
+void shapesEditor::_draw(ofEventArgs &e){
+	draw();
+}
+
+void shapesEditor::_update(ofEventArgs &e){
+	update();
+}
+
 void shapesEditor::guiEvent(ofxUIEventArgs &e){
 	string name = e.getName();
 	
 	// scan for open dropdowns
-	// (dirty) bypass for issue https://github.com/rezaali/ofxUI/issues/68
-	//ofxUIDropDownList* addShapeDDL = (ofxUIDropDownList*) gui->getWidget("Add Shape");
-	//bool dropdownOpen = addShapeDDL->isOpen();
-    //if( selectConfigFileOpen && name != "Configuration File") return;
-	
 	
 	// interface options
 	// - - - - - - - - -
 	if(name==GUIToggleFullScreen){
 		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
 		ofSetFullscreen(toggle->getValue());
-	}
-	else if(name==GUIToggleMouseCursor){
-		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
-		toggle->getValue()?ofHideCursor():ofShowCursor();
 	}
 	
 	// selection handling
@@ -283,7 +294,7 @@ void shapesEditor::guiEvent(ofxUIEventArgs &e){
 	else if(name==GUImultiShapesSelection){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
 			selectShape(NULL);
-			setEditMode(EDIT_MODE_BATCH_NONE);
+			setEditMode(EDIT_MODE_BATCH_SELECT);
 		}
 	}
 	
@@ -313,7 +324,7 @@ void shapesEditor::guiEvent(ofxUIEventArgs &e){
 	}
 	else if(name==GUILoadConfig){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
-			if(!loadShapes(loadedConfiguration)) ofSystemAlertDialog("Failed to load from file: "+loadedConfiguration);
+			if(!loadScene(loadedConfiguration)) ofSystemAlertDialog("Failed to load from file: "+loadedConfiguration);
 		}
 	}
 	else if(name==GUISaveConfig){
@@ -322,7 +333,7 @@ void shapesEditor::guiEvent(ofxUIEventArgs &e){
 			if(loadedConfiguration.empty()){
 				ofSystemAlertDialog("In order to save, you must first select a configuration file.");
 			}
-			else saveShapes(loadedConfiguration);
+			else saveScene(loadedConfiguration);
 		}
 	}
 	else if(name==GUIAddShape){
@@ -368,7 +379,7 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 	// return back to main menu
 	else if(name==batchGUICancel){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
-			setEditMode( EDIT_MODE_NORMAL );
+			setEditMode( EDIT_MODE_RENDER );
 			multiPointHandlers.clear();
 			multiShapesSelection.clear();
 			updateMultiShapesSelection();
@@ -377,12 +388,12 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 	else if (name==batchGUIRescaleMode){
 		if( ( (ofxUILabelToggle*) e.getButton())->getValue() == true )
 			setEditMode( EDIT_MODE_BATCH_SCALE );
-		else setEditMode( EDIT_MODE_BATCH_NONE );
+		else setEditMode( EDIT_MODE_BATCH_SELECT );
 	}
 	else if (name==batchGUIMoveMode){
 		if( ( (ofxUILabelToggle*) e.getButton())->getValue() == true )
 			setEditMode( EDIT_MODE_BATCH_MOVE );
-		else setEditMode( EDIT_MODE_BATCH_NONE );
+		else setEditMode( EDIT_MODE_BATCH_SELECT );
 	}
 	else if(name==batchGUIFlipXMode || name==batchGUIFlipYMode){
 		if( ( (ofxUILabelToggle*) e.getButton())->getValue() == true){
@@ -394,23 +405,22 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 			multiShapesBoundingBox.scaleFromCenter(scale.x, scale.y);
 			
 			// apply transformation to shapes
-			for(list<basicShape*>::iterator it=multiShapesSelection.begin(); it!=multiShapesSelection.end(); it++){
-				basicShape* s = (*it);
+			for(auto it=multiShapesSelection.begin(); it!=multiShapesSelection.end(); it++){
 				
 				// move its position according to scale factor
-				ofVec2f newShapePos( ofMap(s->getPositionPtr()->x, originalBoundingBox.x, originalBoundingBox.x+originalBoundingBox.width, multiShapesBoundingBox.x, multiShapesBoundingBox.x+multiShapesBoundingBox.width), ofMap(s->getPositionPtr()->y, originalBoundingBox.y, originalBoundingBox.y+originalBoundingBox.height, multiShapesBoundingBox.y, multiShapesBoundingBox.y+multiShapesBoundingBox.height) );
-				s->setPosition( newShapePos );
+				ofVec2f newShapePos( ofMap((*it)->getPositionPtr()->x, originalBoundingBox.x, originalBoundingBox.x+originalBoundingBox.width, multiShapesBoundingBox.x, multiShapesBoundingBox.x+multiShapesBoundingBox.width), ofMap((*it)->getPositionPtr()->y, originalBoundingBox.y, originalBoundingBox.y+originalBoundingBox.height, multiShapesBoundingBox.y, multiShapesBoundingBox.y+multiShapesBoundingBox.height) );
+				(*it)->setPosition( newShapePos );
 				
 				// apply scale to shape
-				s->applyScale(scale);
+				(*it)->applyScale(scale);
 			}
 			// also prevents them from being moved
 			syncMultiSelectionHandlers();
 			
-			setEditMode( EDIT_MODE_BATCH_NONE );
+			setEditMode( EDIT_MODE_BATCH_SELECT );
 		}
 		// dont continue flipping forever
-		else setEditMode( EDIT_MODE_BATCH_NONE );
+		else setEditMode( EDIT_MODE_BATCH_SELECT );
 	}
 	else cout << "batchGuiEvent: " << name << endl;
 }
@@ -425,7 +435,7 @@ void shapesEditor::updateMultiShapesSelection(){
 	// getRectFromShapes
 	ofVec2f from(ofGetWidth(),ofGetHeight());
 	ofVec2f to(0,0);
-	for(list<basicShape*>::iterator it=multiShapesSelection.begin(); it!=multiShapesSelection.end(); it++){
+	for(auto it=multiShapesSelection.begin(); it!=multiShapesSelection.end(); it++){
 		ofRectangle bb = (*it)->getBoundingBox();
 		
 		if(bb.x<from.x) from.x=bb.x;
@@ -489,7 +499,7 @@ bool shapesEditor::addShape(string _shapeType){
 	if( result == NULL ) return false;
 	
 	// enable edit mode
-	selectShape(result);
+	selectShape( static_cast<basicShape*>(result) );
 	
 	return true;
 }
@@ -501,6 +511,8 @@ bool shapesEditor::removeShape(basicShape *_s){
 	
 	// deselect ?
 	if(activeShape==_s) selectShape(NULL);
+	
+	// todo
 	
 	return true;
 }
@@ -565,23 +577,40 @@ void shapesEditor::selectPrevShape(){
 }
 
 bool shapesEditor::setEditMode(shapesEditMode _mode){
-	
-	if(editMode!=EDIT_MODE_OFF && _mode==EDIT_MODE_OFF){
+	// edit mode gets disabled
+	if( isInEditMode() && _mode==EDIT_MODE_OFF){
+		cout << "shapesEditor::setEditMode() OFF" << endl;
+		
 		selectShape(NULL);
-		//ofRemoveListener(ofEvents().mousePressed, this, &shapesEditor::_mousePressed);
+		// unregister editor events
+		ofRemoveListener(ofEvents().mousePressed, this, &shapesEditor::_mousePressed);
+		
+		ofRemoveListener( ofEvents().mousePressed, this, &shapesEditor::_mousePressed );
+		ofRemoveListener( ofEvents().draw, this, &shapesEditor::_draw );
+		ofRemoveListener( ofEvents().update, this, &shapesEditor::_update );
+		
+		//ofRemoveListener( batchGui->newGUIEvent, this, &shapesEditor::batchGuiEvent );
+		//ofRemoveListener( gui->newGUIEvent, this, &shapesEditor::guiEvent );
+		
+		
 		//gui->disable();
 		//batchGui->disable();
 	}
 	
-	// show normal GUI ?
-	else if(editMode!=EDIT_MODE_NORMAL && _mode==EDIT_MODE_NORMAL){
-		ofSetBackgroundAuto(true);
-		//gui->enable();
-		//batchGui->disable();
+	// edit mode just got enabled
+	else if(!isInEditMode() && _mode==EDIT_MODE_RENDER){
+		cout << "shapesEditor::setEditMode() ON" << endl;
+		
+		selectShape(NULL);// todo: make this remember
+		
+		// enable listeners
+		ofAddListener( ofEvents().mousePressed, this, &shapesEditor::_mousePressed );
+		ofAddListener( ofEvents().draw, this, &shapesEditor::_draw );
+		ofAddListener( ofEvents().update, this, &shapesEditor::_update );
 	}
 	
 	// sho batch edit GUI ?
-	/*else if(_mode==EDIT_MODE_BATCH_NONE && !batchGui->isEnabled() ){
+	/*else if(_mode==EDIT_MODE_BATCH_SELECT && !batchGui->isEnabled() ){
 		gui->disable();
 		batchGui->enable();
 	}*/
@@ -590,12 +619,13 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 	editMode = _mode;
 	
 	// add listeners if previously off
-	//if( editMode==EDIT_MODE_NORMAL && editMode!=EDIT_MODE_NORMAL){
-	//}
+	if( editMode==EDIT_MODE_RENDER && editMode!=EDIT_MODE_RENDER){
+	
+	}
 	
 	// rm listener
-	if( _mode==EDIT_MODE_NORMAL ){
-		//ofRemoveListener(ofEvents().mousePressed, this, &shapesEditor::_mousePressed);
+	if( _mode==EDIT_MODE_RENDER ){
+		
 	}
 	
 	// desselect batchGui elements
@@ -614,16 +644,34 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 // - - - - - - - -
 
 void shapesEditor::_mousePressed(ofMouseEventArgs &e){
-	if(!isInEditMode()) return;
+	if( !isInEditMode() ) return;
+	
+	// ignore editorGui clicks
+	if( editorGui.getShape().inside( e.x, e.y) ){
+		cout << "ignored" << endl;
+	}
+	
+	else if( editMode==EDIT_MODE_SHAPE ){
+		if( e.button==0 ){
+			
+			// notify active shape of click ?
+			if( activeShape != NULL && activeShape->interceptMouseClick( e ) ){
+				
+			}
+			else {
+				
+			}
+		}
+	}
 	
 	// let user select shapes by clicking on them
-	if( editMode==EDIT_MODE_BATCH_NONE && e.button==0){
+	else if( editMode==EDIT_MODE_BATCH_SELECT && e.button==0){
 		for(auto it=shapes.begin(); it!=shapes.end(); it++){
 			if( (*it)->isInside( e )){
 				
 				// check if already inside ?
 				bool found = false;
-				for(list<basicShape*>::iterator its=multiShapesSelection.begin(); its!=multiShapesSelection.end(); its++){
+				for(auto its=multiShapesSelection.begin(); its!=multiShapesSelection.end(); its++){
 					// match ?
 					if((*its) == (*it)){
 						found = true;
@@ -643,62 +691,100 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 	}
 }
 
-void shapesEditor::buildMenus(){
-	// New GUI setup
-	//gui.setup("SHAPES EDITOR");
-	//gui.add
-	
-	/*gui->addSpacer();
-	string textString = "Edit, control and handle different shapes to map them on physical objects.";
-	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-	gui->addSpacer();
-	textString = "Keyboard shortcuts:";
-	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-	textString = "  H Show/Hide Pointer";
-	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-	textString = "  E Toggle edit mode";
-	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-	textString = "  F Toggle full screen";
-	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-	gui->addSpacer();
-	gui->addToggle(GUIToggleFullScreen, false);
-	gui->addToggle(GUIToggleMouseCursor, false);
-	gui->addFPSSlider("FPS");
-	
-	gui->addSpacer();
-	gui->addLabel("Load & Save...", OFX_UI_FONT_LARGE);
-	vector<string> configurations;
-	configurations.push_back("- new configuration -");
-	ofDirectory dir("saveFiles/");
-	if( !dir.exists() || !dir.canRead() ){
-		ofLogNotice("shapesEditor") << "Unable to load save files directory." << endl;
+void shapesEditor::_keyPressed(ofKeyEventArgs &e){
+	if(e.key=='h' || e.key=='H'){
+		mouseHidden ? ofShowCursor() : ofHideCursor();
+		mouseHidden = !mouseHidden;
+		
 	}
-	else{
-		dir.allowExt("xml");
-		dir.listDir();
-		dir.sort();
-		for(int i=0; i<dir.size(); i++){
-			if(dir.getPath(i)!=shapesEditor_SAVE_FILE) configurations.push_back(dir.getName(i));
+}
+
+
+// - - - - - - - -
+// MENU EVENT LISTENERS
+// - - - - - - - -
+void shapesEditor::showLoadMenu(){
+	//ofRectangle btn = loadButton.getShape();
+	ofFileDialogResult openFileResult= ofSystemLoadDialog("Select the XML file to load...", false, ofToDataPath("saveFiles/"));
+	
+	if(openFileResult.bSuccess){
+		// restrict to saveFiles dir
+		ofFile file( ofToDataPath("saveFiles/")+openFileResult.getName() );
+		if(file.exists()){
+			loadScene( openFileResult.getName() );
 		}
 	}
-	ofxUIDropDownList* ddl = gui->addDropDownList(GUIConfigFile, configurations);
-	ddl->setAllowMultiple(false);
-	ddl->setAutoClose(true);
-	//ddl->setModal(true);
+}
+
+void shapesEditor::showSaveDialog(){
+	//ofRectangle btn = loadButton.getShape();
+	ofFileDialogResult openFileResult= ofSystemSaveDialog(loadedConfiguration,"Where shall I save your scene?");
 	
-	//ddl->setShowCurrentSelected(true);
-	//gui->addLabel("Save/Load a configuration", OFX_UI_FONT_SMALL);
-	gui->addLabelButton(GUILoadConfig, false);
-	gui->addLabelButton(GUISaveConfig, false);
+	if(openFileResult.bSuccess){
+		// only keep the file name, not the path
+		saveScene( openFileResult.getName() );
+	}
+}
+
+void shapesEditor::setFullScreen(bool & _fullScreen){
+	ofSetFullscreen( _fullScreen );
+}
+
+void shapesEditor::enableShapeEditing(bool &_on){
+	if(_on) setEditMode(EDIT_MODE_SHAPE);
+	else setEditMode(EDIT_MODE_RENDER);
+}
+
+void shapesEditor::buildMenus(){
+	// New GUI setup
+	editorGui.setup("SHAPES EDITOR");
+	//editorGui.setShowHeader(false);
+	//editorGui.add( (new ofxLabelExtended())->setup("", "Welcome to the scene editor :)")->setShowLabelName(false) );
 	
-	gui->addSpacer();
-	gui->addLabel("Edit Shapes", OFX_UI_FONT_LARGE);
-	gui->addLabelButton(GUISelectNextShape, false);
-	gui->addLabelButton(GUISelectPrevShape, false);
-	gui->addLabelButton(GUIDeleteShape, false);
-	gui->addLabelButton(GUImultiShapesSelection, false);
-	//gui->addModalWidget();
-	//remove shape
+	editorGui.add( (new ofxGuiSpacer()) );
+	
+	
+	// Load & save
+	editorMenu.setup("Scene Editor Menu");
+	loadButton.setup( GUILoadConfig );
+	loadButton.addListener(this, &shapesEditor::showLoadMenu);
+	editorMenu.add(&loadButton);
+	
+	saveButton.setup( GUISaveConfig );
+	saveButton.addListener(this, &shapesEditor::showSaveDialog);
+	editorMenu.add( &saveButton );
+	
+	editorMenu.add( (new ofxGuiSpacer()) );
+	
+	fullScreenToggle.setup( GUIToggleFullScreen, fullScreenToggle );
+	fullScreenToggle.addListener(this, &shapesEditor::setFullScreen);
+	editorMenu.add( &fullScreenToggle );
+	editorMenu.add( (new ofxGuiSpacer()) );
+	
+	editorGui.add( &editorMenu );
+	
+	
+	shapesMenu.setup("Shape Editing");
+	
+	shapesMenu.add( (new ofxLabelExtended())->setup(GUINbSelectedShapes, "0") );
+	
+	enableEditingToggle.setup( GUIEnableEditing, enableEditingToggle );
+	enableEditingToggle.addListener(this, &shapesEditor::enableShapeEditing );
+	
+	shapesMenu.add( &enableEditingToggle );
+	
+	batchModeSelect.setup("Batch Editing",2);
+	batchModeSelect.add(new ofxMinimalToggle(ofParameter<bool>("Disabled",false)));
+	batchModeSelect.add(new ofxMinimalToggle(ofParameter<bool>("MultiSelect Mode",false)));
+	batchModeSelect.add(new ofxMinimalToggle(ofParameter<bool>("Scale",false)));
+	batchModeSelect.add(new ofxMinimalToggle(ofParameter<bool>("Move",false)));
+	batchModeSelect.allowMultipleActiveToggles(false);
+	shapesMenu.add( &batchModeSelect );
+	
+	editorGui.add( &shapesMenu );
+	
+	/*
+	
 	gui->addLabel("New shape", OFX_UI_FONT_LARGE);
 	vector<string> items;
 	items.push_back("vertexShape"); // todo: auto populate this with all available shapes
@@ -712,12 +798,6 @@ void shapesEditor::buildMenus(){
 	
 	
 	// setup rescale GUI
-	batchGui = new ofxUISuperCanvas("Shapes re-scale tool");
-	batchGui->setColorBack(ofColor(41,123,117,180));
-	batchGui->setColorFill(ofColor(255,160));
-	batchGui->setColorFillHighlight(ofColor(255,220));
-	batchGui->setPosition(10,10);
-	
 	textString = "This tool lets you rescale several shapes.";
 	batchGui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
 	textString = "Select the target shapes by clicking on them, then proceed to scaling.";

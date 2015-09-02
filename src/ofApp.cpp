@@ -17,9 +17,10 @@ void ofApp::setup(){
 	ofEnableSmoothing();
 	ofSetEscapeQuitsApp(false);
 	
-	// setup shapes
-	//server = shapesServer();
-	scene.setup();
+	// setup scene
+	//scene.loadLastUsedScene();
+	scene.loadScene("Vendome_1500_1200.xml");
+	//server.loadShapes("Vendome_Full_Small.xml");
 	
 	// start Ableton Liveset Decoder
 	ofx::AbletonLiveSet::LiveSet LS;
@@ -33,10 +34,7 @@ void ofApp::setup(){
 	// tmp
 	ofShowCursor();
 	mouseHidden = false;
-	
-	// tmp
-	//server.loadShapes("Vendome_Full_Small.xml");
-	scene.loadShapes("Vendome_1500_1200.xml");
+
 	
 	// sound analysis setup
 	// streams to default system sound stream

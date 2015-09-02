@@ -51,7 +51,7 @@ bool emptyEffect::render(){
 	
 	// effects are bound to shapes which to render the effect on
 	for(int i=0; i<shapes.size(); i++){
-		shapes[i]->render();
+		shapes[i]->sendToGPU();
 	}
 	
 	return true;

@@ -101,7 +101,7 @@ bool videoEffect::render(){
 			stream.getTexture().setTextureWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 			//cachedImage.getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);
 			stream.getTexture().bind();
-			(*it)->render();
+			(*it)->sendToGPU();
 			stream.getTexture().unbind();
 			
 			imageShader.end();

@@ -1,6 +1,11 @@
 #include "ofMain.h"
+
+#ifdef KM_EDITOR_APP
+#include "ofAppEditor.h"
+#else
 #include "ofApp.h"
-//#include "ofAppGlutWindow.h"
+#endif
+
 #ifdef TARGET_OPENGLES
 #include "ofGLProgrammableRenderer.h"
 #endif
@@ -30,6 +35,10 @@ int main( ){
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
 	// pass in width and height too:
+#ifdef KM_EDITOR_APP
+	ofRunApp(new ofAppEditor());
+#else
 	ofRunApp(new ofApp());
+#endif
 	
 }

@@ -112,7 +112,7 @@ bool imageEffect::render(){
 			cachedImage.setTextureWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
 			//cachedImage.getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);
 			cachedImage.bind();
-			(*it)->render();
+			(*it)->sendToGPU();
 			cachedImage.unbind();
 			
 			imageShader.end();
