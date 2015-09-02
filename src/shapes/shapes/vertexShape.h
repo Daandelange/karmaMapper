@@ -61,9 +61,6 @@ public:
 	// #########
 	// EDITING ESSENTIALS
 	virtual void render();
-	
-	// #########
-	// EDITING CONTROL
 	bool enableEditMode();
 	bool disableEditMode();
 	

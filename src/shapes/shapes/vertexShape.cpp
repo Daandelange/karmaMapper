@@ -20,7 +20,7 @@
 // CONSTRUCTORS
 // - - - - - - -
 vertexShape::vertexShape(){
-	initialized = false; // during 2nd constructor, disable shape
+	initialized = false;
 	shapeTypes.push_back("vertexShape");
 	
 	/*instructions.loadFont("fonts/UbuntuMono.ttf", 12);
@@ -89,70 +89,6 @@ void vertexShape::sendToGPU(){
 	ofPopMatrix();
 }
 
-void vertexShape::render(){
-	
-	ofPushStyle();
-	
-	// show container box
-	ofSetColor( 255, 150 );
-	ofNoFill();
-	ofDrawRectangle( boundingBox );
-	
-	// new colors!
-	//hasError?ofSetHexColor(0xFF0000):ofSetColor(fgColor);
-	ofSetColor( fgColor, 200 );
-	ofFill();
-	
-	// go to center
-	ofPushMatrix();
-	ofTranslate( position );
-	
-	// draw line of the shape
-	ofBeginShape();
-	for(auto it = points.begin(); it != points.end(); it++){
-		// draw center point
-		ofVertex( (*it).x, (*it).y );
-	}
-	ofEndShape(OF_CLOSE);
-	ofPopMatrix();
-	
-	// draw pointhandlers ?
-	if(bEditMode){
-		
-		// draw pointhandlers
-		int i=0;
-		for(list<movablePoint>::iterator it = pointHandlers.begin(); it != pointHandlers.end(); it++){
-			
-			(*it).draw();
-			
-			// show handler ID ?
-			if(it->isActive()) ofDrawBitmapStringHighlight(ofToString(i), (*it).getPos()+10);
-			
-			// incremment
-			i++;
-		}
-		
-		// draw center position
-		positionPointHandler.draw();
-		
-		// draw gui toggle
-		ofSetColor(fgColor, 200);
-		ofFill();
-		ofDrawRectangle(guiToggle);
-		
-		// draw instructions
-		ofSetColor(bgColor);
-		ofFill();
-		ofDrawRectangle( instructions.getRect() );
-		ofNoFill();
-		ofSetColor(fgColor);
-		instructions.draw();
-	}
-	
-	// reset
-	ofPopStyle();
-}
-
 // simply (re)computes shape data so that it fits in the boundingbox
 void vertexShape::calculateBoundingBox(){
 	// reset
@@ -170,6 +106,7 @@ void vertexShape::calculateBoundingBox(){
 	boundingBox.setHeight( abs(maxY-minY) );
 }
 
+// called when shape data changed.
 void vertexShape::onShapeChanged(){
 	// update relative points to absolute points
 	absolutePoints = points;
@@ -179,6 +116,10 @@ void vertexShape::onShapeChanged(){
 	
 	// let parent function do the rest
 	basicShape::onShapeChanged();
+	
+}
+
+void vertexShape::resetToScene() {
 	
 }
 
@@ -337,9 +278,74 @@ ofVec2f* vertexShape::getCenterPtr(){
 	return &zeroPoint;
 }
 
+
+#ifdef KM_EDITOR_APP
 // - - - - - - -
-// EDIT MODE
+// EDITING ESSENTIALS
 // - - - - - - -
+void vertexShape::render(){
+	
+	ofPushStyle();
+	
+	// show container box
+	ofSetColor( 255, 150 );
+	ofNoFill();
+	ofDrawRectangle( boundingBox );
+	
+	// new colors!
+	//hasError?ofSetHexColor(0xFF0000):ofSetColor(fgColor);
+	ofSetColor( fgColor, 200 );
+	ofFill();
+	
+	// go to center
+	ofPushMatrix();
+	ofTranslate( position );
+	
+	// draw line of the shape
+	ofBeginShape();
+	for(auto it = points.begin(); it != points.end(); it++){
+		// draw center point
+		ofVertex( (*it).x, (*it).y );
+	}
+	ofEndShape(OF_CLOSE);
+	ofPopMatrix();
+	
+	// draw pointhandlers ?
+	if(bEditMode){
+		
+		// draw pointhandlers
+		int i=0;
+		for(list<movablePoint>::iterator it = pointHandlers.begin(); it != pointHandlers.end(); it++){
+			
+			(*it).draw();
+			
+			// show handler ID ?
+			if(it->isActive()) ofDrawBitmapStringHighlight(ofToString(i), (*it).getPos()+10);
+			
+			// incremment
+			i++;
+		}
+		
+		// draw center position
+		positionPointHandler.draw();
+		
+		// draw gui toggle
+		ofSetColor(fgColor, 200);
+		ofFill();
+		ofDrawRectangle(guiToggle);
+		
+		// draw instructions
+		ofSetColor(bgColor);
+		ofFill();
+		ofDrawRectangle( instructions.getRect() );
+		ofNoFill();
+		ofSetColor(fgColor);
+		instructions.draw();
+	}
+	
+	// reset
+	ofPopStyle();
+}
 
 bool vertexShape::enableEditMode(){
 	// first of all, init vertex shape
@@ -394,7 +400,61 @@ bool vertexShape::disableEditMode(){
 	return (bEditMode==false);
 }
 
-// ### HANDLES
+// - - - - - - -
+// EDITING UI CONTROL
+// - - - - - - -
+
+void vertexShape::selectPrevHandle(){
+	basicShape::selectPrevHandle();
+}
+
+void vertexShape::selectNextHandle(){
+	basicShape::selectNextHandle();
+}
+
+void vertexShape::selectHandle( movablePoint* _i){
+	basicShape::selectHandle(_i);
+}
+
+void vertexShape::translateActiveHandle(ofVec2f _offset){
+	basicShape::translateActiveHandle(_offset);
+}
+
+bool vertexShape::handleExists(movablePoint* _i){
+	return basicShape::handleExists(_i);// todo
+}
+
+/*void vertexShape::removeHandle(movablePoint *_i){
+	
+	// create iterators
+	list<ofVec2f>::iterator p=points.end();
+	list<ofVec2f>::iterator ap=absolutePoints.end();
+	for(list<movablePoint>::iterator h=pointHandlers.end(); h!=pointHandlers.begin(); h--){
+		
+		if( &*h == _i ){
+			
+			// deselect
+			if(activeHandle==&*h) selectHandle(NULL);
+			
+			// remove point
+			points.erase(p);
+			absolutePoints.erase(ap);
+			pointHandlers.erase(h);
+			
+			onShapeChanged();
+			
+			break;
+		}
+		p--;
+		ap--;
+	}
+	
+}*/
+
+// - - - - - - - -
+// EDITING UTILITIES
+// - - - - - - - -
+
 // updates shape data from it's respective pointhandlers
 bool vertexShape::synchronisePointHandlers(){
 	
@@ -434,52 +494,6 @@ bool vertexShape::synchronisePointHandlers(){
 	
 	return true;
 }
-void vertexShape::selectPrevHandle(){
-	basicShape::selectPrevHandle();
-}
-
-void vertexShape::selectNextHandle(){
-	basicShape::selectNextHandle();
-}
-
-void vertexShape::selectHandle( movablePoint* _i){
-	basicShape::selectHandle(_i);
-}
-
-void vertexShape::translateActiveHandle(ofVec2f _offset){
-	basicShape::translateActiveHandle(_offset);
-}
-
-/*bool vertexShape::isSelectableItem(int _i){
-	return (_i>=0 && _i<points.size() );
-}*/
-
-void vertexShape::removeHandle(movablePoint *_i){
-	
-	// create iterators
-	list<ofVec2f>::iterator p=points.end();
-	list<ofVec2f>::iterator ap=absolutePoints.end();
-	for(list<movablePoint>::iterator h=pointHandlers.end(); h!=pointHandlers.begin(); h--){
-		
-		if( &*h == _i ){
-			
-			// deselect
-			if(activeHandle==&*h) selectHandle(NULL);
-			
-			// remove point
-			points.erase(p);
-			absolutePoints.erase(ap);
-			pointHandlers.erase(h);
-			
-			onShapeChanged();
-			
-			break;
-		}
-		p--;
-		ap--;
-	}
-	
-}
 
 void vertexShape::applyScale(ofVec2f scale){
 	// update points
@@ -491,17 +505,21 @@ void vertexShape::applyScale(ofVec2f scale){
 	onShapeChanged();
 }
 
+// - - - - - - - -
+// GUI LISTENERS
+// - - - - - - - -
+
 void vertexShape::keyPressed(ofKeyEventArgs &e){
 	basicShape::keyPressed(e);
 	
 	// delete active point ?
-	if( (e.key == 'r' || e.key == 'R' ) && handleExists( activeHandle ) ){
+	/*if( (e.key == 'r' || e.key == 'R' ) && handleExists( activeHandle ) ){
 		removeHandle(activeHandle);
-	}
+	}*/
 }
 
 // custom functions
-void vertexShape::mousePressed( ofMouseEventArgs& args ){
+bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 	// dont treat useless clicks
 	if(!isInEditMode() || !boundingBox.inside(args.x, args.y) ) return;
 	
@@ -514,7 +532,7 @@ void vertexShape::mousePressed( ofMouseEventArgs& args ){
 		for(list<movablePoint>::iterator h=pointHandlers.end(); h!=pointHandlers.begin(); h--){
 			
 			// remove it
-			if( h->isMouseOver() ) removeHandle( &*h );
+			//if( h->isMouseOver() ) removeHandle( &*h );
 		}
 	}
 	
@@ -589,16 +607,6 @@ void vertexShape::mousePressed( ofMouseEventArgs& args ){
 		}
 	}
 }
-
-/*void vertexShape::mouseDragged( ofMouseEventArgs& args ){
-	
-}
-
-void vertexShape::mouseReleased( ofMouseEventArgs& args ){
-	
-}*/
-#ifdef KM_EDITOR_APP
-
 
 // endif KM_EDITOR_APP
 #endif

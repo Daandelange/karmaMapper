@@ -23,6 +23,7 @@
 // todo:
 // implement some shape-serving functions such as getShapesbyVertexNumber(), getShapesByType, getRandomShapes(int _nb), getShapesByGroup(int _group_id), etc.
 // this will probably be problematic: http://stackoverflow.com/questions/3488571/does-insertion-of-elements-in-a-vector-damages-a-pointer-to-the-vector
+// todo: add static_cast<BasicShape*> everywhere
 
 class shapesScene { // holds the whole shapes "scene"
 	

@@ -26,6 +26,9 @@ enum shapesEditMode {
 	EDIT_MODE_BATCH_FLIPY	// Batch - Flip vertical
 };
 
+// The editor lets you load, edit and save scenes
+// It adds the UI and handles UI events for shapes
+
 // todo: make the shape edit tools (un)instanciable for a performance gain. Make it dependent on a shapesServer//karmaScene database class which stays loaded for serving raw (+rw) shape data and maybe some utilities.
 // todo: add a layer re-ordering panel
 
