@@ -92,7 +92,7 @@ private:
 	void updateMultiShapesSelection();
 	void syncMultiSelectionHandlers();
 	ofRectangle multiShapesBoundingBox;
-	vector<movablePoint> multiPointHandlers;
+	vector<basicPoint> multiPointHandlers;
 
 	ofImage background;
 	

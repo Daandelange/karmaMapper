@@ -11,7 +11,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "movablePoint.h"
+#include "basicPoint.h"
 #include "ofxXmlSettings.h"
 #include "ofxGui.h"
 #include "ofxGuiExtended.h"
@@ -23,8 +23,9 @@
 
 // When a shape exits edit mode, all coordinates are made absolute so they are easy to use for effects. Relative coordinates are easier for manipulation and storage.
 // Shape querying and altering happens trough absolute coordinates.
+// todo: use a struct instead of ofVec2f
 
-typedef list<ofVec2f>& vec2fListRef; // without the typedef returning this causes compiler errors.
+typedef list<basicPoint>& pointListRef; // without the typedef returning this causes compiler errors.
 
 class basicShape {
 
@@ -57,12 +58,12 @@ public:
 	vector<string> getTypes() const;
 	bool isType(const string _type) const;
 	virtual bool isInside( const ofVec2f _pos, const bool _isPositionAbsolute = true) const;
-	ofVec2f* getPositionPtr();
-	ofVec2f getPositionUnaltered() const;
+	basicPoint* getPositionPtr();
+	basicPoint getPositionUnaltered() const;
 
 	// #########
 	// global variables
-	static ofVec2f zeroPoint;
+	static basicPoint zeroPoint;
 	
 protected:
 	
@@ -74,12 +75,10 @@ protected:
 	string shapeName;
 	vector<string> shapeTypes;
 	
-	ofVec2f position; // absolute (other shape data will be relative to this)
+	basicPoint position; // absolute (other shape data will be relative to this)
 	
 	
 private:
-	// todo: put variables in here
-	//ofVec2f guiPos;
 
 	
 	// * * * * * * * * * * * * * * * * * * *
@@ -103,18 +102,18 @@ public:
 	// EDITING UI CONTROL
 	virtual void selectPrevHandle();
 	virtual void selectNextHandle();
-	virtual bool handleExists(movablePoint* _i);
-	virtual void selectHandle(movablePoint* _i);
-	virtual void translateActiveHandle(ofVec2f _offset);
+	virtual bool handleExists(basicPoint* _i);
+	virtual void selectHandle(basicPoint* _i);
+	virtual void translateActiveHandle(basicPoint _offset);
 	
 	// #########
 	// EDITING UTILITIES
 	virtual bool synchronisePointHandlers();
-	virtual void applyScale(ofVec2f scale);
+	virtual void applyScale(basicPoint scale);
 	
 	// #########
 	// SETTERS
-	bool setPosition(const ofVec2f _pos);
+	bool setPosition(const basicPoint _pos);
 	bool setGroupID(const int _id);
 	
 	// #########
@@ -130,8 +129,7 @@ protected:
 	static int maxGroupID; // used for color calculation
 	int prevMaxGroupID; // used for color calculation
 	
-	movablePoint* activeHandle = NULL;
-	movablePoint positionPointHandler;
+	basicPoint* activeHandle = NULL;
 	
 	// custom HUD GUI elements
 	ofRectangle guiToggle;

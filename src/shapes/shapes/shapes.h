@@ -12,7 +12,7 @@
 
 // required by ALL shape classes
 //#include "shapesHandler.h"
-#include "movablePoint.h"
+#include "basicPoint.h"
 
 // list all different shapes here
 #include "basicShape.h"

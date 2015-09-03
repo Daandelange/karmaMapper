@@ -16,7 +16,7 @@ imageBeatEffectItem::imageBeatEffectItem(basicShape* _shape) {
 	bAlive = true;
 	startTime = ofGetElapsedTimef();
 	center = shape->getCenterPtr();
-	position = *center - ofVec2f( shape->getBoundingBox().x, _shape->getBoundingBox().y );
+	position = *center - basicPoint( shape->getBoundingBox().x, _shape->getBoundingBox().y );
 	
 	// get image from shape
 	ofRectangle size = _shape->getBoundingBox();
@@ -112,8 +112,8 @@ void imageBeatEffectItem::render(float state) {
 	ofPushStyle();
 	
 	float scale = 1-state;
-	ofVec2f xy = *center - position*scale;
-	ofVec2f wh = ofVec2f( image.getWidth(), image.getHeight() )*scale;
+	basicPoint xy = *center - position*scale;
+	basicPoint wh = basicPoint( image.getWidth(), image.getHeight() )*scale;
 	image.draw( xy.x, xy.y, wh.x, wh.y );
 	
 	ofPopStyle();

@@ -9,7 +9,7 @@
 #include "basicShape.h"
 
 // static
-ofVec2f basicShape::zeroPoint = ofVec2f(0,0);
+basicPoint basicShape::zeroPoint = basicPoint(0,0);
 
 // - - - - - -
 // CONSTRUCTORS
@@ -46,7 +46,7 @@ basicShape::~basicShape(){
 // - - - - - - -
 void basicShape::initialiseVariables(){
 	// set position
-	position = ofVec2f( ofGetWidth()/2, ofGetHeight()/2 );
+	position = basicPoint( ofGetWidth()/2, ofGetHeight()/2 );
 	boundingBox = ofRectangle(0,0,0,0);
 	groupID = -1;
 	hasError = false;
@@ -78,7 +78,7 @@ void basicShape::sendToGPU(){
 	// prepare for drawing
 	ofPushMatrix();
 	ofPushStyle();
-	ofTranslate(position);
+	ofTranslate(position.x, position.y);
 	
 	if(hasError){
 		ofSetHexColor(0xFFFFFF);
@@ -93,7 +93,7 @@ void basicShape::sendToGPU(){
 // calculates BoundingBox from shape data
 void basicShape::calculateBoundingBox(){
 	// 2px box around position
-	boundingBox.setPosition( position - ofVec2f(-1.f) );
+	boundingBox.setPosition( position.x-1, position.y-1 );
 	boundingBox.setWidth( 2 );
 	boundingBox.setHeight( 2 );
 }
@@ -105,6 +105,11 @@ void basicShape::onShapeChanged(){
 	
 	// update boundingbox
 	calculateBoundingBox();
+	
+	// update GUI Toggle ?
+	if( isInEditMode() ){
+		guiToggle.setPosition( boundingBox.getTopRight()+5 );
+	}
 }
 
 // called by animator to reset possibly altered properties to the shape's initial (scene) properties
@@ -134,11 +139,9 @@ bool basicShape::saveToXML(ofxXmlSettings &xml){
 bool basicShape::loadFromXML(ofxXmlSettings& xml){
 	
 	xml.pushTag("position");
-	ofVec2f pos( xml.getValue("X", 0), xml.getValue("Y", 0));
+	basicPoint position( xml.getValue("X", 0), xml.getValue("Y", 0));
 	xml.popTag(); // pop position
 	
-	// todo: must be  a basicShape;
-	position = pos;
 	groupID = xml.getValue("groupID", -1);
 	
 	return true; // todo
@@ -179,20 +182,20 @@ bool basicShape::isType(const string _type) const {
 
 bool basicShape::isInside( const ofVec2f _pos, const bool _isPositionAbsolute) const{
 	if( _isPositionAbsolute ) return boundingBox.inside(_pos);
-	else return boundingBox.inside( -position + _pos  );
+	else return boundingBox.inside( -position.x + _pos.x, -position.y + _pos.y );
 }
 
 /*ofVec2f basicShape::getPosition() const{
 	return position;
 }*/
 
-ofVec2f* basicShape::getPositionPtr(){
+basicPoint* basicShape::getPositionPtr(){
 	// todo: make positionAltered;
 	return &position;
 }
 
 // allows to retrieve the original, unaltered shape position
-ofVec2f basicShape::getPositionUnaltered() const{
+basicPoint basicShape::getPositionUnaltered() const{
 	return position;
 }
 
@@ -296,7 +299,7 @@ void basicShape::render(){
 		ofFill();
 		
 		// draw center position
-		positionPointHandler.draw();
+		position.draw();
 		
 		// draw gui toggle
 		ofSetColor(fgColor, 200);
@@ -343,22 +346,15 @@ bool basicShape::enableEditMode(){
 	bEditMode = true;
 	activeHandle = NULL;
 	
-	positionPointHandler = movablePoint();
-	positionPointHandler.setup();
-	positionPointHandler.setPos( position );
-	positionPointHandler.setEditable( true );
+	position.setEditable( true );
 	
 	// enable GUI
 	guiToggle = ofRectangle( boundingBox.getTopRight()+5, 10, 10 );
 	//guiToggle
 	//guiTabBar->addLabel("+", OFX_UI_FONT_SMALL);
 	
-	
 	// set GUI color
 	setColorFromGroupID();
-	
-	// call virtual function for sub-classes
-	//editModeChanged(bEditMode);
 	
 	return (bEditMode==true);
 }
@@ -367,23 +363,8 @@ bool basicShape::disableEditMode(){
 	
 	if( bEditMode ){
 		
-		// update position of whole shape
-		ofVec2f difference = positionPointHandler.getPos() - position;
-		position += difference;
-		
-		/*/ update relative point positions to absolute
-		 list<ofVec2f>::iterator it = absolutePoints.begin();
-		 for(list<ofVec2f>::iterator it = points.begin(); it != points.end(); it++){
-			(*it) = pointHandlers.front().getPos() - this->position;
-			// clear first item when we copied it
-			pointHandlers.pop_front();
-		 }*/
-		// update points from pointHandlers
-		synchronisePointHandlers();
-		
 		// remember
 		bEditMode = false;
-		//guiPos = ofVec2f(gui->getRect()->x, gui->getRect()->y);
 		
 		// clear memory
 		selectHandle(NULL);
@@ -404,18 +385,8 @@ bool basicShape::switchEditMode(){
 
 // updates shape data from it's respective pointhandlers
 bool basicShape::synchronisePointHandlers(){
-	
-	// update shape position
-	position = positionPointHandler.getPos();
-	
-	// sync shape variables
-	onShapeChanged();
-	
-	// update GUI Toggle ?
-	if( isInEditMode() ){
-		guiToggle.setPosition( boundingBox.getTopRight()+5 );
-	}
-	
+	// todo: rm this function
+
 	return true;
 }
 
@@ -424,15 +395,15 @@ bool basicShape::isInEditMode() const{
 }
 
 void basicShape::selectPrevHandle(){
-	if( activeHandle==&positionPointHandler ) selectHandle(NULL);
-	else selectHandle( &positionPointHandler );
+	if( activeHandle==&position ) selectHandle(NULL);
+	else selectHandle( &position );
 }
 
 void basicShape::selectNextHandle(){
 	basicShape::selectPrevHandle();
 }
 
-void basicShape::selectHandle(movablePoint* _i){
+void basicShape::selectHandle(basicPoint* _i){
 	if( _i == NULL || handleExists(_i) ){
 		// deselect prev active handle
 		if(handleExists(activeHandle)) activeHandle->blur();
@@ -445,19 +416,19 @@ void basicShape::selectHandle(movablePoint* _i){
 	}
 }
 
-void basicShape::translateActiveHandle(ofVec2f _offset){
+void basicShape::translateActiveHandle(basicPoint _offset){
 	if(!bEditMode) return;
 	
 	if( handleExists(activeHandle) ) activeHandle->translate(_offset);
 	
 }
 
-void basicShape::applyScale(ofVec2f scale){
+void basicShape::applyScale(basicPoint scale){
 	// no size, no scale! xD
 }
 
-bool basicShape::handleExists( movablePoint* _i ){
-	return (_i == &positionPointHandler);
+bool basicShape::handleExists( basicPoint* _i ){
+	return (_i == &position);
 }
 
 // - - - - - - -
@@ -480,13 +451,13 @@ void basicShape::keyPressed(ofKeyEventArgs& e){
 	
 	// editActiveHandleWithArrows
 	else if( bEditMode && handleExists(activeHandle) ){
-		ofVec2f translation(0,0);
+		basicPoint translation(0,0);
 		int amplifier = 1 + ofGetKeyPressed(OF_KEY_SHIFT)*10;
 		
-		if( e.key == OF_KEY_DOWN ) translation += ofVec2f(0,1);
-		else if( e.key == OF_KEY_UP ) translation += ofVec2f(0,-1);
-		else if( e.key == OF_KEY_LEFT ) translation += ofVec2f(-1,0);
-		else if( e.key == OF_KEY_RIGHT ) translation += ofVec2f(1,0);
+		if( e.key == OF_KEY_DOWN ) translation += basicPoint(0,1);
+		else if( e.key == OF_KEY_UP ) translation += basicPoint(0,-1);
+		else if( e.key == OF_KEY_LEFT ) translation += basicPoint(-1,0);
+		else if( e.key == OF_KEY_RIGHT ) translation += basicPoint(1,0);
 		
 		if(translation.x!=0 || translation.y!=0)translateActiveHandle( translation*amplifier );
 	}
@@ -497,9 +468,15 @@ void basicShape::keyPressed(ofKeyEventArgs& e){
 // returns true if intercepted (stops event bubbling), false otherwise
 bool basicShape::interceptMouseClick(ofMouseEventArgs &e){
 	if( isInEditMode() ){
+		// toggle GUI ?
 		if( guiToggle.inside(e.x, e.y) ){
 			//gui->toggleVisible();
 			// todo
+			return true;
+		}
+		
+		// move shape ?
+		else if( position.isMouseOver() ){
 			return true;
 		}
 	}
@@ -519,8 +496,8 @@ void basicShape::setColorFromGroupID(){
 //
 // SETTERS
 //
-bool basicShape::setPosition( const ofVec2f _pos) {
-	position.set( _pos );
+bool basicShape::setPosition( const basicPoint _pos) {
+	position.setPos( _pos );
 	onShapeChanged();
 }
 

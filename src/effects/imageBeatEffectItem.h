@@ -24,8 +24,8 @@ public:
 	bool isAlive() const;
 	
 protected:
-	ofVec2f* center;
-	ofVec2f position;
+	basicPoint* center;
+	basicPoint position;
 	ofTexture image;
 	
 	float startTime;

@@ -16,6 +16,8 @@
 
 // todo: crashes when you keep switching edit mode very quickly (ex: hold 'e')
 
+list<basicPoint> vertexShape::zeroList = list<basicPoint>();
+
 // - - - - - - -
 // CONSTRUCTORS
 // - - - - - - -
@@ -33,8 +35,8 @@ vertexShape::vertexShape(){
 	
 	// spread 4 points trough space
 	int i=0;
-	for(list<ofVec2f>::iterator p = points.begin(); p!=points.end(); p++, i++){
-		(*p) = ofPoint( cos( PI-(TWO_PI/points.size())*i ), sin( PI-(TWO_PI/points.size())*i ))*100;
+	for(auto p = points.begin(); p!=points.end(); p++, i++){
+		(*p) = basicPoint( cos( PI-(TWO_PI/points.size())*i ), sin( PI-(TWO_PI/points.size())*i ))*100;
 		//cout << "["<< points[i].x << ","<< points[i].y << "]" << endl;//
 	}
 	
@@ -59,7 +61,6 @@ void vertexShape::initialiseVariables(){
 	// do some other stuff
 	points.clear();
 	absolutePoints.clear();
-	pointHandlers.clear();
 	
 	showInstructions = true;
 	//instructions.setText("VERTEX SHAPE\nh		Toggle help.\n[]	Shape vertex selection.\nlr	Shape selection.\nHold r while clicking on a point to remove it.\nRight click on an edge to insert a point.");
@@ -71,14 +72,14 @@ void vertexShape::sendToGPU(){
 	// prepare for drawing
 	ofPushMatrix();
 	ofPushStyle();
-	ofTranslate(position);
+	ofTranslate(position.x, position.y);
 	
 	// if shape has error, draw it in red
 	ofSetColor(255,255,255,255);
 	
 	ofBeginShape();
 	// draw elements
-	for(list<ofVec2f>::iterator it = points.begin(); it != points.end(); it++){
+	for(auto it = points.begin(); it != points.end(); it++){
 		// draw center point
 		ofVertex( (*it).x, (*it).y );
 	}
@@ -93,7 +94,7 @@ void vertexShape::sendToGPU(){
 void vertexShape::calculateBoundingBox(){
 	// reset
 	int minX=0, minY=0, maxX=0, maxY=0;
-	for(list<ofVec2f>::iterator it = points.begin(); it != points.end(); it++){
+	for(auto it = points.begin(); it != points.end(); it++){
 		if((*it).x > maxX) maxX = (*it).x;
 		if((*it).x < minX) minX = (*it).x;
 		
@@ -108,14 +109,26 @@ void vertexShape::calculateBoundingBox(){
 
 // called when shape data changed.
 void vertexShape::onShapeChanged(){
+	
+	// let parent function do it's thing
+	basicShape::onShapeChanged();
+	
 	// update relative points to absolute points
 	absolutePoints = points;
-	for(list<ofVec2f>::iterator it = absolutePoints.begin(); it!=absolutePoints.end(); it++ ){
+	for(auto it = absolutePoints.begin(); it!=absolutePoints.end(); it++ ){
 		*it = *it + position;
 	}
 	
-	// let parent function do the rest
-	basicShape::onShapeChanged();
+	// update GUI Toggle ?
+	if( isInEditMode() ){
+		guiToggle.setPosition( boundingBox.getTopRight()+5 );
+		
+		// update displayed information with real-time data
+		// todo
+		//if( gui!=NULL ) ((ofxUITextArea*) gui->getWidget("info_Vertexes"))->setTextString("Number of Vertexes:  " + ofToString(points.size()));
+	}
+	
+	// todo: update centerPos & more
 	
 }
 
@@ -150,7 +163,7 @@ bool vertexShape::saveToXML(ofxXmlSettings &xml){
 	xml.pushTag("vectors");
 	//points is a vector<ofPoint> that we want to save to a file
 	int p=0;
-	for(list<ofVec2f>::iterator it = points.begin(); it != points.end(); it++, p++){
+	for(auto it = points.begin(); it != points.end(); it++, p++){
 		//each vector tag represents one point
 		xml.addTag("vector");
 		xml.pushTag("vector", p);
@@ -171,11 +184,10 @@ bool vertexShape::loadFromXML(ofxXmlSettings& xml){
 	points.clear();
 	
 	xml.pushTag("position");
-	ofVec2f pos( xml.getValue("X", 0), xml.getValue("Y", 0));
+	basicPoint position( xml.getValue("X", 0), xml.getValue("Y", 0) );
 	xml.popTag(); // pop position
 	
 	// todo: must be  a basicShape;
-	position = pos;
 	setGroupID( xml.getValue("groupID", -1) );
 	
 	xml.pushTag("vectors");
@@ -183,11 +195,10 @@ bool vertexShape::loadFromXML(ofxXmlSettings& xml){
 	for(int i = 0; i < numVectors; i++){
 		xml.pushTag("vector", i);
 		
-		ofVec2f p;
-		p.x = xml.getValue("X", 0);
-		p.y = xml.getValue("Y", 0);
-		
-		points.push_back(p);
+		points.push_back( basicPoint(
+			xml.getValue("X", 0),
+			xml.getValue("Y", 0)
+		));
 		xml.popTag();
 	}
 	xml.popTag(); // pop vectors
@@ -202,13 +213,11 @@ bool vertexShape::loadFromXML(ofxXmlSettings& xml){
 // - - - - - - -
 
 // ### GETTERS
-list<ofVec2f> & vertexShape::getPoints(){
+list<basicPoint>& vertexShape::getPoints(){
 	// restrict this to edit mode
 	if( isInEditMode() ){
-		list<ofVec2f> ret;
-		ret.resize(0);
-		// todo: BAAAAD could cause null pointer to invalidated local reference
-		return ret;
+		// todo -> what is this function for?!?! Rm this ?
+		return zeroList;
 	}
 	
 	return points;
@@ -217,37 +226,6 @@ list<ofVec2f> & vertexShape::getPoints(){
 int vertexShape::getNumPoints(){
 	return points.size();
 }
-
-/*/ ### SETTERS
- bool basicShape::putPoints( list<ofVec2f>& _points ){ // DEPRECIATED
-	// restrict this to edit mode
-	if( isInEditMode() ) return false;
-	
-	bool tmpInEditMode = false;
-	
-	// it's easier to change points while not in edit mode #dirty
-	if( isInEditMode() ){
- disableEditMode();
- tmpInEditMode = true;
-	}
-	
-	// check if we have to re-allocate memory
-	if( _points.size() != points.size() ) {
- points.resize( _points.size() );
- absolutePoints.resize( _points.size() );
-	}
-	
-	// transfer points
-	points = _points;
-	
-	// take changes in account
-	onShapeChanged();
-	
-	// restore edit mode ?
-	if(tmpInEditMode) enableEditMode();
-	
-	return true;
- }*/
 
 // ### UTILITIES
 
@@ -262,20 +240,17 @@ int vertexShape::getNumPoints(){
  }*/
 
 // gets alterable vertex pointer holding relative point coordinates
-ofVec2f* vertexShape::getRandomVertexPtr(){
+basicPoint* vertexShape::getRandomVertexPtr(){
 	if( points.size()==0 ) return &zeroPoint;
 	
-	list<ofVec2f>::iterator it = absolutePoints.begin();
+	auto it = absolutePoints.begin();
 	std::advance(it, round(ofRandom(absolutePoints.size()-1)) );
-	ofVec2f ret = *it;
 	return &*it;
 }
 
-ofVec2f* vertexShape::getCenterPtr(){
-	return &position;
-	
+basicPoint* vertexShape::getCenterPtr(){
 	// todo
-	return &zeroPoint;
+	return &position;
 }
 
 
@@ -299,7 +274,7 @@ void vertexShape::render(){
 	
 	// go to center
 	ofPushMatrix();
-	ofTranslate( position );
+	ofTranslate( position.x, position.y );
 	
 	// draw line of the shape
 	ofBeginShape();
@@ -315,19 +290,19 @@ void vertexShape::render(){
 		
 		// draw pointhandlers
 		int i=0;
-		for(list<movablePoint>::iterator it = pointHandlers.begin(); it != pointHandlers.end(); it++){
+		for(auto it = points.begin(); it != points.end(); it++){
 			
 			(*it).draw();
 			
 			// show handler ID ?
-			if(it->isActive()) ofDrawBitmapStringHighlight(ofToString(i), (*it).getPos()+10);
+			if(it->isFocused()) ofDrawBitmapStringHighlight(ofToString(i), (*it).getPos()+10);
 			
 			// incremment
 			i++;
 		}
 		
 		// draw center position
-		positionPointHandler.draw();
+		position.draw();
 		
 		// draw gui toggle
 		ofSetColor(fgColor, 200);
@@ -370,16 +345,11 @@ bool vertexShape::enableEditMode(){
 	// first of all, init vertex shape
 	basicShape::enableEditMode();
 	
-	// create point handlers
-	pointHandlers.clear();
-	pointHandlers.resize( 0 );
-	for(list<ofVec2f>::iterator it = points.begin(); it != points.end(); it++){
-		pointHandlers.push_back( movablePoint() );
-		pointHandlers.back().setup();
-		pointHandlers.back().setPos( position + (*it) );
-		pointHandlers.back().setEditable( true );
+	// enable point handlers
+	for(auto it = points.begin(); it != points.end(); it++){
+		it->setEditable( true );
 	}
-	positionPointHandler.makeParent( pointHandlers );
+	position.makeParent( points );
 	
 	return (bEditMode==true);
 }
@@ -390,12 +360,15 @@ bool vertexShape::disableEditMode(){
 		
 		basicShape::disableEditMode();
 		
+		// enable point handlers
+		for(auto it = points.begin(); it != points.end(); it++){
+			it->setEditable( false );
+		}
+		position.removeChildren();
+		
 		// remember
 		bEditMode = false;
 		//guiPos = ofVec2f(gui->getRect()->x, gui->getRect()->y);
-		
-		// free memory
-		pointHandlers.clear();
 		
 		// recalc some variables
 		onShapeChanged();
@@ -416,24 +389,24 @@ void vertexShape::selectNextHandle(){
 	basicShape::selectNextHandle();
 }
 
-void vertexShape::selectHandle( movablePoint* _i){
+void vertexShape::selectHandle( basicPoint* _i){
 	basicShape::selectHandle(_i);
 }
 
-void vertexShape::translateActiveHandle(ofVec2f _offset){
+void vertexShape::translateActiveHandle(basicPoint _offset){
 	basicShape::translateActiveHandle(_offset);
 }
 
-bool vertexShape::handleExists(movablePoint* _i){
+bool vertexShape::handleExists(basicPoint* _i){
 	return basicShape::handleExists(_i);// todo
 }
 
-/*void vertexShape::removeHandle(movablePoint *_i){
+/*void vertexShape::removeHandle(basicPoint *_i){
 	
 	// create iterators
 	list<ofVec2f>::iterator p=points.end();
 	list<ofVec2f>::iterator ap=absolutePoints.end();
-	for(list<movablePoint>::iterator h=pointHandlers.end(); h!=pointHandlers.begin(); h--){
+	for(list<basicPoint>::iterator h=pointHandlers.end(); h!=pointHandlers.begin(); h--){
 		
 		if( &*h == _i ){
 			
@@ -462,7 +435,7 @@ bool vertexShape::handleExists(movablePoint* _i){
 // updates shape data from it's respective pointhandlers
 bool vertexShape::synchronisePointHandlers(){
 	
-	// points size not right ?
+	/*/ points size not right ?
 	if( pointHandlers.size() !=  points.size()){
 		// resize one of them
 		if(!bEditMode){
@@ -475,10 +448,10 @@ bool vertexShape::synchronisePointHandlers(){
 	}
 	
 	// update shape position
-	position = positionPointHandler.getPos();
+	position = positionHandler.getPos();
 	
 	// update relative point positions to absolute
-	list<movablePoint>::iterator ph = pointHandlers.begin();
+	list<basicPoint>::iterator ph = pointHandlers.begin();
 	for(list<ofVec2f>::iterator pts = points.begin(); pts != points.end(); pts++){
 		(*pts) = (*ph).getPos() - position;
 		ph++;
@@ -487,21 +460,13 @@ bool vertexShape::synchronisePointHandlers(){
 	// sync shape variables
 	onShapeChanged();
 	
-	// update GUI Toggle ?
-	if( isInEditMode() ){
-		guiToggle.setPosition( boundingBox.getTopRight()+5 );
-		
-		// update displayed information with real-time data
-		// todo
-		//if( gui!=NULL ) ((ofxUITextArea*) gui->getWidget("info_Vertexes"))->setTextString("Number of Vertexes:  " + ofToString(points.size()));
-	}
-	
 	return true;
+	 */
 }
 
-void vertexShape::applyScale(ofVec2f scale){
+void vertexShape::applyScale(basicPoint scale){
 	// update points
-	for(list<ofVec2f>::iterator it=points.begin(); it!=points.end(); it++){
+	for(auto it=points.begin(); it!=points.end(); it++){
 		(*it) *= scale;
 	}
 	
@@ -524,19 +489,28 @@ void vertexShape::keyPressed(ofKeyEventArgs &e){
 
 // custom functions
 bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
+	if(basicShape::interceptMouseClick(args)) return true;
+	
 	// dont treat useless clicks
 	if(!isInEditMode() || !boundingBox.inside(args.x, args.y) ) return false;
 	
-	ofVec2f mousePos = ofVec2f( args.x, args.y ) - position;
+	basicPoint mousePos = basicPoint( args.x, args.y ) - position;
 	
-	// remove point
-	if( (ofGetKeyPressed('r') || ofGetKeyPressed('R')) ){
+	// check if a point is hovered
+	for(auto h=points.rbegin(); h!=points.rend(); h++){
 		
-		// check if a point is hovered
-		for(list<movablePoint>::iterator h=pointHandlers.end(); h!=pointHandlers.begin(); h--){
+		// interact?
+		if( h->isMouseOver() ){
 			
-			// remove it
-			//if( h->isMouseOver() ) removeHandle( &*h );
+			// remove point ?
+			if( (ofGetKeyPressed('r') || ofGetKeyPressed('R')) ){
+				//removeHandle( &*h );
+			}
+			else {
+				h->setPos( args.x, args.y );
+			}
+			
+			return true;
 		}
 	}
 	
@@ -547,9 +521,9 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 		// Search for the right place to insert the point in the array
 		// Based on code from https://github.com/patriciogonzalezvivo/ofxComposer
 		//
-		ofVec2f* prevPoint = &points.back();
+		basicPoint* prevPoint = &points.back();
 		int i=0;
-		for(list<ofVec2f>::iterator p = points.begin(); p!=points.end(); p++, i++){
+		for(auto p = points.begin(); p!=points.end(); p++, i++){
 			
 			// obscure math
 			// borrowed from https://processing.org/discourse/beta/num_1276644884.html
@@ -562,7 +536,7 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 			float sa = dy/d; // sine
 			float mX = (-p->x+mousePos.x)*ca + (-p->y+mousePos.y)*sa;
 			
-			ofVec2f pointOnLine = ( mX <= 0 ) ? ofVec2f(*p) : (( mX >= d )? ofVec2f(*prevPoint) : (*p)+ofVec2f(mX*ca, mX*sa) );
+			basicPoint pointOnLine = ( mX <= 0 ) ? basicPoint(*p) : (( mX >= d )? basicPoint(*prevPoint) : (*p)+basicPoint(mX*ca, mX*sa) );
 			
 			dx = mousePos.x - pointOnLine.x;
 			dy = mousePos.y - pointOnLine.y;
@@ -581,34 +555,22 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 			if ( d < 4){ // define tolerance here (distance in px)
 				
 				// add a vertex
-				points.insert( p , mousePos );
-				
-				list<ofVec2f>::iterator ap = absolutePoints.begin();
-				std::advance(ap, i); // calls h++ i times.
-				absolutePoints.insert(ap , mousePos + position);
-				
-				// grab iterator for pointHandlers
-				list<movablePoint>::iterator ph = pointHandlers.begin();
-				std::advance(ph, i); // calls h++ i times.
-				
-				// add pointhandler
-				// todo : (?) make a reloadPointHandlers function.
-				movablePoint* newPoint = &*pointHandlers.insert( ph, *new movablePoint() );
-				
-				newPoint->setup();
-				newPoint->setPos( position + mousePos );
-				newPoint->setEditable( true );
+				basicPoint* newPoint =  &*points.insert( p , mousePos );
+				newPoint->setEditable(true);
 				
 				//selectHandle(newPoint);
+				
+				list<basicPoint>::iterator ap = absolutePoints.begin();
+				std::advance(ap, i); // calls h++ i times.
+				absolutePoints.insert(ap , mousePos + position);
 				
 				// call callback
 				onShapeChanged();
 				
 				// nothing to do anymore
-				break;
+				return true;
 			}
 			prevPoint = &*p;
-			return true;
 		}
 	}
 	return false;

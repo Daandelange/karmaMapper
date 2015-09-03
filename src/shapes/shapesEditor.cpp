@@ -397,7 +397,7 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 	}
 	else if(name==batchGUIFlipXMode || name==batchGUIFlipYMode){
 		if( ( (ofxUILabelToggle*) e.getButton())->getValue() == true){
-			ofVec2f scale(name==batchGUIFlipXMode?-1:1, name==batchGUIFlipYMode?-1:1);
+			basicPoint scale(name==batchGUIFlipXMode?-1:1, name==batchGUIFlipYMode?-1:1);
 			
 			// mirror the positions
 			ofRectangle originalBoundingBox(multiShapesBoundingBox);
@@ -408,7 +408,10 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 			for(auto it=multiShapesSelection.begin(); it!=multiShapesSelection.end(); it++){
 				
 				// move its position according to scale factor
-				ofVec2f newShapePos( ofMap((*it)->getPositionPtr()->x, originalBoundingBox.x, originalBoundingBox.x+originalBoundingBox.width, multiShapesBoundingBox.x, multiShapesBoundingBox.x+multiShapesBoundingBox.width), ofMap((*it)->getPositionPtr()->y, originalBoundingBox.y, originalBoundingBox.y+originalBoundingBox.height, multiShapesBoundingBox.y, multiShapesBoundingBox.y+multiShapesBoundingBox.height) );
+				basicPoint newShapePos(
+					ofMap((*it)->getPositionPtr()->x, originalBoundingBox.x, originalBoundingBox.x+originalBoundingBox.width, multiShapesBoundingBox.x, multiShapesBoundingBox.x+multiShapesBoundingBox.width),
+					ofMap((*it)->getPositionPtr()->y, originalBoundingBox.y, originalBoundingBox.y+originalBoundingBox.height, multiShapesBoundingBox.y, multiShapesBoundingBox.y+multiShapesBoundingBox.height)
+				);
 				(*it)->setPosition( newShapePos );
 				
 				// apply scale to shape
@@ -460,7 +463,6 @@ void shapesEditor::syncMultiSelectionHandlers(){
 		multiPointHandlers.clear();
 		multiPointHandlers.resize(4);
 		for(int i=0; i<multiPointHandlers.size(); i++){
-			multiPointHandlers[i].setup();
 			multiPointHandlers[i].setEditable( true );
 		}
 	}
@@ -468,16 +470,16 @@ void shapesEditor::syncMultiSelectionHandlers(){
 	for(int i=0; i<multiPointHandlers.size(); i++){
 		switch (i) {
 			case 0:
-				multiPointHandlers[i].setPos( ofVec2f(multiShapesBoundingBox.x, multiShapesBoundingBox.y) );
+				multiPointHandlers[i].setPos( basicPoint(multiShapesBoundingBox.x, multiShapesBoundingBox.y) );
 				break;
 			case 1:
-				multiPointHandlers[i].setPos( ofVec2f(multiShapesBoundingBox.x+multiShapesBoundingBox.width, multiShapesBoundingBox.y) );
+				multiPointHandlers[i].setPos( basicPoint(multiShapesBoundingBox.x+multiShapesBoundingBox.width, multiShapesBoundingBox.y) );
 				break;
 			case 2:
-				multiPointHandlers[i].setPos( ofVec2f(multiShapesBoundingBox.x+multiShapesBoundingBox.width, multiShapesBoundingBox.y+multiShapesBoundingBox.height) );
+				multiPointHandlers[i].setPos( basicPoint(multiShapesBoundingBox.x+multiShapesBoundingBox.width, multiShapesBoundingBox.y+multiShapesBoundingBox.height) );
 				break;
 			case 3:
-				multiPointHandlers[i].setPos( ofVec2f(multiShapesBoundingBox.x, multiShapesBoundingBox.y+multiShapesBoundingBox.height) );
+				multiPointHandlers[i].setPos( basicPoint(multiShapesBoundingBox.x, multiShapesBoundingBox.y+multiShapesBoundingBox.height) );
 				break;
 			default:
 				break;
@@ -646,7 +648,7 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 	if( !isInEditMode() ) return;
 	
-	// ignore editorGui clicks
+	// ignore editor guiMenu clicks
 	if( editorGui.getShape().inside( e.x, e.y) ){
 		
 	}
