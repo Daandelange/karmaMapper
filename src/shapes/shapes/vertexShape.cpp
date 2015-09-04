@@ -62,8 +62,10 @@ void vertexShape::initialiseVariables(){
 	points.clear();
 	absolutePoints.clear();
 	
+#ifdef KM_EDITOR_APP
 	showInstructions = true;
 	//instructions.setText("VERTEX SHAPE\nh		Toggle help.\n[]	Shape vertex selection.\nlr	Shape selection.\nHold r while clicking on a point to remove it.\nRight click on an edge to insert a point.");
+#endif
 	
 }
 
@@ -119,6 +121,7 @@ void vertexShape::onShapeChanged(){
 		*it = *it + position;
 	}
 	
+#ifdef KM_EDITOR_APP
 	// update GUI Toggle ?
 	if( isInEditMode() ){
 		guiToggle.setPosition( boundingBox.getTopRight()+5 );
@@ -127,6 +130,7 @@ void vertexShape::onShapeChanged(){
 		// todo
 		//if( gui!=NULL ) ((ofxUITextArea*) gui->getWidget("info_Vertexes"))->setTextString("Number of Vertexes:  " + ofToString(points.size()));
 	}
+#endif
 	
 	// todo: update centerPos & more
 	
@@ -213,12 +217,6 @@ bool vertexShape::loadFromXML(ofxXmlSettings& xml){
 
 // ### GETTERS
 list<basicPoint>& vertexShape::getPoints(){
-	// restrict this to edit mode
-	if( isInEditMode() ){
-		// todo -> what is this function for?!?! Rm this ?
-		return zeroList;
-	}
-	
 	return points;
 }
 

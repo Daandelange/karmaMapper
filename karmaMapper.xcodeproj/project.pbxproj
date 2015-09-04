@@ -144,7 +144,6 @@
 		8554524A1B921F8800A36079 /* basicPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855452421B921F8800A36079 /* basicPoint.cpp */; };
 		8554524B1B921F8800A36079 /* vertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855452451B921F8800A36079 /* vertexShape.cpp */; };
 		8554524C1B921F8800A36079 /* vertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855452451B921F8800A36079 /* vertexShape.cpp */; };
-		8554524F1B921FB000A36079 /* shapesEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8554524D1B921FB000A36079 /* shapesEditor.cpp */; };
 		855452501B921FB000A36079 /* shapesEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8554524D1B921FB000A36079 /* shapesEditor.cpp */; };
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
 		85E773091B965980003AF890 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
@@ -1437,7 +1436,6 @@
 				851FA9AC1B9321FD00F94851 /* ofxGuiSpacer.cpp in Sources */,
 				851FA9AA1B9321FD00F94851 /* ofxGuiMatrix.cpp in Sources */,
 				DE282D918EAEDBA1BEE73BEA /* shapesDB.cpp in Sources */,
-				8554524F1B921FB000A36079 /* shapesEditor.cpp in Sources */,
 				BDC07F74E020CFD64A47D99A /* shapesScene.cpp in Sources */,
 				53A1001DF525275B12A44635 /* EventHandler.cpp in Sources */,
 				4427D23AE6DA65CA5FC780C8 /* Model.cpp in Sources */,

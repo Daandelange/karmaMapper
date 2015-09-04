@@ -109,10 +109,12 @@ void basicShape::onShapeChanged(){
 	// update boundingbox
 	calculateBoundingBox();
 	
+#ifdef KM_EDITOR_APP
 	// update GUI Toggle ?
 	if( isInEditMode() ){
 		guiToggle.setPosition( boundingBox.getTopRight()+5 );
 	}
+#endif
 }
 
 // called by animator to reset possibly altered properties to the shape's initial (scene) properties
@@ -142,10 +144,19 @@ bool basicShape::saveToXML(ofxXmlSettings &xml){
 bool basicShape::loadFromXML(ofxXmlSettings& xml){
 	
 	xml.pushTag("position");
+#ifdef KM_EDITOR_APP
 	position.setPos( xml.getValue("X", 0), xml.getValue("Y", 0));
+#else
+	position.x = xml.getValue("X", 0);
+	position.y = xml.getValue("Y", 0);
+#endif
 	xml.popTag(); // pop position
 	
+#ifdef KM_EDITOR_APP
 	setGroupID( xml.getValue("groupID", -1) );
+#else
+	groupID = xml.getValue("groupID", -1);
+#endif
 	
 	return true; // todo
 }

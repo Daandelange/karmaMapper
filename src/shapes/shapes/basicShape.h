@@ -11,6 +11,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "KMSettings.h"
 #include "basicPoint.h"
 #include "ofxXmlSettings.h"
 #include "ofxGui.h"

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "KMSettings.h"
 
 #include "shapes.h"
 #include "shapesScene.h"
