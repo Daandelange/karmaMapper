@@ -33,6 +33,7 @@ basicShape::~basicShape(){
 #ifdef KM_EDITOR_APP
 	disableEditMode();
 	
+	position.unbindShape();
 	delete shapeGui;
 #endif
 
@@ -55,6 +56,8 @@ void basicShape::initialiseVariables(){
 	shapeTypes.push_back("basicShape");
 
 #ifdef KM_EDITOR_APP
+	position.setShape( *this );
+	
 	bEditMode = false;
 	activeHandle = NULL;
 	
@@ -124,8 +127,8 @@ bool basicShape::saveToXML(ofxXmlSettings &xml){
 	// create position tag
 	xml.addTag("position");
 	xml.pushTag("position");
-	xml.addValue("X", getPositionUnaltered().x);
-	xml.addValue("Y", getPositionUnaltered().y);
+	xml.addValue("X", getPositionUnaltered()->x);
+	xml.addValue("Y", getPositionUnaltered()->y);
 	xml.popTag();
 	
 	xml.addValue("shapeType", "basicShape" );
@@ -139,10 +142,10 @@ bool basicShape::saveToXML(ofxXmlSettings &xml){
 bool basicShape::loadFromXML(ofxXmlSettings& xml){
 	
 	xml.pushTag("position");
-	basicPoint position( xml.getValue("X", 0), xml.getValue("Y", 0));
+	position.setPos( xml.getValue("X", 0), xml.getValue("Y", 0));
 	xml.popTag(); // pop position
 	
-	groupID = xml.getValue("groupID", -1);
+	setGroupID( xml.getValue("groupID", -1) );
 	
 	return true; // todo
 }
@@ -195,8 +198,8 @@ basicPoint* basicShape::getPositionPtr(){
 }
 
 // allows to retrieve the original, unaltered shape position
-basicPoint basicShape::getPositionUnaltered() const{
-	return position;
+basicPoint* basicShape::getPositionUnaltered(){
+	return &position;
 }
 
 /*void basicShape::addXMLValues(ofxXmlSettings* xml, int _nb){
@@ -383,13 +386,6 @@ bool basicShape::switchEditMode(){
 	return (bEditMode!=tmp);
 }
 
-// updates shape data from it's respective pointhandlers
-bool basicShape::synchronisePointHandlers(){
-	// todo: rm this function
-
-	return true;
-}
-
 bool basicShape::isInEditMode() const{
 	return bEditMode;
 }
@@ -476,7 +472,8 @@ bool basicShape::interceptMouseClick(ofMouseEventArgs &e){
 		}
 		
 		// move shape ?
-		else if( position.isMouseOver() ){
+		else if( position.interceptMouseClick(e) ){
+			
 			return true;
 		}
 	}

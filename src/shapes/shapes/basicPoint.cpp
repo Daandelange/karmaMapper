@@ -9,6 +9,13 @@
 #include "basicPoint.h"
 #define KM_BASIC_POINT_SIZE 5
 
+// needed forward declaration
+class basicShape {
+public:
+	void onShapeChanged();
+	basicPoint* getPositionUnaltered();
+};
+
 basicPoint::basicPoint(){
 	basicPoint(0,0);
 }
@@ -27,6 +34,8 @@ basicPoint::basicPoint(float _x, float _y): x(_x), y(_y){
 	color = ofColor(255,255,255);
 	children = NULL;
 	isEventBound = false;
+	parentShape = NULL;
+	isPositionRelative = false;
 #endif
 }
 
@@ -43,6 +52,13 @@ basicPoint::~basicPoint(){
 
 void basicPoint::draw() {
 	if( !isEditable ) return;
+
+	float absX(x);
+	float absY(y);
+	if(parentShape && isPositionRelative){
+		absX += parentShape->getPositionUnaltered()->x;
+		absY += parentShape->getPositionUnaltered()->y;
+	}
 	
 	ofPushStyle();
 	// draw dragging zone
@@ -51,7 +67,7 @@ void basicPoint::draw() {
 		ofSetColor(color, 100);
 		if( isMouseHold ) ofSetColor(color, 50);
 		
-		ofDrawCircle( x, y, KM_BASIC_POINT_SIZE );
+		ofDrawCircle( absX, absY, KM_BASIC_POINT_SIZE );
 	}
 	
 	// draw point or cross
@@ -59,18 +75,18 @@ void basicPoint::draw() {
 	if( isActive ) ofSetColor(255, 50, 50);
 	
 	if( isMouseHold || isActive ){
-		ofDrawLine( x-KM_BASIC_POINT_SIZE, y, x+KM_BASIC_POINT_SIZE, y );
-		ofDrawLine( x, y-KM_BASIC_POINT_SIZE, x, y+KM_BASIC_POINT_SIZE );
+		ofDrawLine( absX-KM_BASIC_POINT_SIZE, absY, absX+KM_BASIC_POINT_SIZE, absY );
+		ofDrawLine( absX, absY-KM_BASIC_POINT_SIZE, absX, absY+KM_BASIC_POINT_SIZE );
 	}
 	else if(isParentOfOthers){
 		ofFill();
-		ofDrawCircle( x, y, KM_BASIC_POINT_SIZE*2);
+		ofDrawCircle( absX, absY, KM_BASIC_POINT_SIZE*2);
 		ofNoFill();
 		ofSetColor( color.getInverted() );
-		ofDrawLine( x - KM_BASIC_POINT_SIZE, y, x + KM_BASIC_POINT_SIZE, y );
-		ofDrawLine( x, y - KM_BASIC_POINT_SIZE, x, y + KM_BASIC_POINT_SIZE );
+		ofDrawLine( absX - KM_BASIC_POINT_SIZE, absY, absX + KM_BASIC_POINT_SIZE, absY );
+		ofDrawLine( absX, absY - KM_BASIC_POINT_SIZE, absX, absY + KM_BASIC_POINT_SIZE );
 	}
-	else ofDrawCircle( x, y, KM_BASIC_POINT_SIZE);
+	else ofDrawCircle( absX, absY, KM_BASIC_POINT_SIZE);
 	
 	// draw tool tips ?
 	if(isParentOfOthers && (isMouseHold || isActive)) drawToolTip("Hold alt to move only the anchor point.");
@@ -91,6 +107,16 @@ void basicPoint::makeParent(list<basicPoint>& _children){
 	
 	// keep pointer reference to children
 	children = &_children;
+}
+
+void basicPoint::setShape(basicShape &_shape, bool _isPositionRelative){
+	parentShape = &_shape;
+	isPositionRelative = _isPositionRelative;
+}
+
+void basicPoint::unbindShape(){
+	parentShape = NULL;
+	isPositionRelative = false;
 }
 
 void basicPoint::removeChildren(){
@@ -128,6 +154,8 @@ void basicPoint::setPos( float _x, float _y){
 	// update position of element
 	x = _x;
 	y = _y;
+	
+	if(parentShape) parentShape->onShapeChanged();
 }
 
 void basicPoint::translate(const basicPoint& _offset){
@@ -143,8 +171,14 @@ bool basicPoint::isMouseOver() const{
 }
 
 bool basicPoint::isMouseOver(const float _x, const float _y) const{
+	float absX(x);
+	float absY(y);
+	if(parentShape && isPositionRelative){
+		absX += parentShape->getPositionUnaltered()->x;
+		absY += parentShape->getPositionUnaltered()->y;
+	}
 	// mouse over is defined by the distance from center (circle)
-	return ofDist(x, y, _x, _y) <= KM_BASIC_POINT_SIZE;
+	return ofDist(absX, absY, _x, _y) <= KM_BASIC_POINT_SIZE;
 }
 
 bool basicPoint::isFocused() const {
@@ -185,7 +219,7 @@ void basicPoint::unbindMouseEvents(){
 
 bool basicPoint::interceptMouseClick(ofMouseEventArgs &e){
 	// prevent editing ?
-	if(!isEditable) return;
+	if(!isEditable) return false;
 	
 	// is the zone hovered ?
 	if(e.button==0 && isMouseOver()){
@@ -194,13 +228,22 @@ bool basicPoint::interceptMouseClick(ofMouseEventArgs &e){
 		// track mouse clicks
 		isMouseHold=true;
 		bindMouseEvents();
+		return true;
 	}
+	
+	return false;
 }
 
 void basicPoint::_mouseDragged(ofMouseEventArgs &e){
 	
 	if( isEditable && e.button==0 && isMouseHold){
-		setPos(e.x, e.y);
+		if(parentShape && isPositionRelative){
+			setPos(
+				   e.x - parentShape->getPositionUnaltered()->x,
+				   e.y - parentShape->getPositionUnaltered()->y
+			);
+		}
+		else setPos(e.x, e.y);
 	}
 }
 

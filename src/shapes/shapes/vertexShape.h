@@ -77,7 +77,6 @@ public:
 	
 	// #########
 	// EDITING UTILITIES
-	bool synchronisePointHandlers();
 	virtual void applyScale(basicPoint scale);
 	
 	// #########

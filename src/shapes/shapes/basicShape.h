@@ -59,7 +59,7 @@ public:
 	bool isType(const string _type) const;
 	virtual bool isInside( const ofVec2f _pos, const bool _isPositionAbsolute = true) const;
 	basicPoint* getPositionPtr();
-	basicPoint getPositionUnaltered() const;
+	basicPoint* getPositionUnaltered();
 
 	// #########
 	// global variables
@@ -108,7 +108,6 @@ public:
 	
 	// #########
 	// EDITING UTILITIES
-	virtual bool synchronisePointHandlers();
 	virtual void applyScale(basicPoint scale);
 	
 	// #########

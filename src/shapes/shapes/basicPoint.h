@@ -11,6 +11,9 @@
 #include "ofMain.h"
 #include "KMSettings.h"
 
+// needed forward declaration
+class basicShape;
+
 class basicPoint {
 	
 public:
@@ -22,29 +25,33 @@ public:
 	float x;
 	float y;
 	
-	inline bool operator==( const basicPoint& p ) const;
-	inline bool operator!=( const basicPoint& p ) const;
+	inline bool operator ==( const basicPoint& p ) const;
+	inline bool operator !=( const basicPoint& p ) const;
 	
-	basicPoint operator+( const basicPoint& p ) const;
-	basicPoint operator-( const basicPoint& p ) const;
-	basicPoint operator*( const basicPoint& p ) const;
-	basicPoint operator/( const basicPoint& p ) const;
+	basicPoint operator + ( const basicPoint& p ) const;
+	basicPoint operator - ( const basicPoint& p ) const;
+	basicPoint operator * ( const basicPoint& p ) const;
+	basicPoint operator / ( const basicPoint& p ) const;
 
 	
-	basicPoint& operator+=( const basicPoint& p );
-	basicPoint& operator+=( const float& f );
-	basicPoint& operator-=( const basicPoint& p );
-	basicPoint& operator-=( const float& f );
-	basicPoint& operator*=( const basicPoint& p );
-	basicPoint& operator*=( const float& f );
-	basicPoint& operator/=( const basicPoint& p );
-	basicPoint& operator/=( const float& f );
+	basicPoint& operator += ( const basicPoint& p );
+	basicPoint& operator += ( const float& f );
+	basicPoint& operator -= ( const basicPoint& p );
+	basicPoint& operator -= ( const float& f );
+	basicPoint& operator *= ( const basicPoint& p );
+	basicPoint& operator *= ( const float& f );
+	basicPoint& operator /= ( const basicPoint& p );
+	basicPoint& operator /= ( const float& f );
 	
 #ifdef KM_EDITOR_APP
 	void draw();
 	
+	// todo: rm these functionality ?
 	void makeParent( list<basicPoint>& _children );
 	void removeChildren();
+	
+	void setShape( basicShape& _shape, bool _isPositionRelative = false );
+	void unbindShape();
 	
 	void focus();
 	void blur();
@@ -59,6 +66,11 @@ public:
 	bool isMouseOver( const float _x, const float _y ) const;
 	bool isFocused() const;
 	
+	// listeners
+	bool interceptMouseClick(ofMouseEventArgs &e);
+	void _mouseDragged(ofMouseEventArgs &e);
+	void _mouseReleased(ofMouseEventArgs &e);
+	
 private:
 	// utility
 	void drawToolTip(const string _tip);
@@ -71,13 +83,13 @@ private:
 	bool isEditable;
 	bool isActive;
 	bool isParentOfOthers;
-	list<basicPoint>* children;
-
 	bool isMouseHold;
+	
+	list<basicPoint>* children; // rm this ?
+	basicShape* parentShape;
+	bool isPositionRelative;
+	
 	ofColor color;
-	bool interceptMouseClick(ofMouseEventArgs &e);
-	void _mouseDragged(ofMouseEventArgs &e);
-	void _mouseReleased(ofMouseEventArgs &e);
 #endif
 };
 
@@ -95,65 +107,65 @@ inline bool basicPoint::operator!=( const basicPoint& p ) const {
 }
 
 // operations
-basicPoint basicPoint::operator+( const basicPoint& p ) const {
+inline basicPoint basicPoint::operator +( const basicPoint& p ) const {
 	return basicPoint( x+p.x, y+p.y);
 }
 
-basicPoint basicPoint::operator-( const basicPoint& p ) const {
+inline basicPoint basicPoint::operator -( const basicPoint& p ) const {
 	return basicPoint( x+p.x, y+p.y);
 }
 
-basicPoint basicPoint::operator*( const basicPoint& p ) const {
+inline basicPoint basicPoint::operator *( const basicPoint& p ) const {
 	return basicPoint( x*p.x, y*p.y);
 }
 
-inline basicPoint basicPoint::operator/( const basicPoint& p ) const {
+inline basicPoint basicPoint::operator /( const basicPoint& p ) const {
 	return basicPoint( x/p.x, y/p.y);
 }
 
 // overloading
-basicPoint& basicPoint::operator+=( const basicPoint& p ) {
+inline basicPoint& basicPoint::operator +=( const basicPoint& p ) {
 	x += p.x;
 	y += p.y;
 	return *this;
 }
 
-inline basicPoint& basicPoint::operator+=( const float& f ) {
+inline basicPoint& basicPoint::operator +=( const float& f ) {
 	x += f;
 	y += f;
 	return *this;
 }
 
-inline basicPoint& basicPoint::operator-=( const basicPoint& p ) {
+inline basicPoint& basicPoint::operator -=( const basicPoint& p ) {
 	x -= p.x;
 	y -= p.y;
 	return *this;
 }
 
-inline basicPoint& basicPoint::operator-=( const float& f ) {
+inline basicPoint& basicPoint::operator -=( const float& f ) {
 	x -= f;
 	y -= f;
 	return *this;
 }
 
-basicPoint& basicPoint::operator*=( const basicPoint& p ) {
+inline basicPoint& basicPoint::operator *=( const basicPoint& p ) {
 	x *= p.x;
 	y *= p.y;
 	return *this;
 }
 
-inline basicPoint& basicPoint::operator*=( const float& f ) {
+inline basicPoint& basicPoint::operator *=( const float& f ) {
 	x *= f;
 	y *= f;
 	return *this;
 }
 
-inline basicPoint& basicPoint::operator/=( const basicPoint& p ) {
+inline basicPoint& basicPoint::operator /=( const basicPoint& p ) {
 	x /= p.x;
 	y /= p.y;
 	return *this;
 }
-inline basicPoint& basicPoint::operator/=( const float& f ) {
+inline basicPoint& basicPoint::operator /=( const float& f ) {
 	x /= f;
 	y /= f;
 	return *this;

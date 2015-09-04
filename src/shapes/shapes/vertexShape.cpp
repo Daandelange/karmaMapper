@@ -144,8 +144,8 @@ bool vertexShape::saveToXML(ofxXmlSettings &xml){
 	// create position tag
 	xml.addTag("position");
 	xml.pushTag("position");
-	xml.addValue("X", getPositionUnaltered().x);
-	xml.addValue("Y", getPositionUnaltered().y);
+	xml.addValue("X", getPositionUnaltered()->x);
+	xml.addValue("Y", getPositionUnaltered()->y);
 	xml.popTag();
 	
 	/*/ create GUI position tag
@@ -181,31 +181,30 @@ bool vertexShape::saveToXML(ofxXmlSettings &xml){
 // xml's cursor is pushed in the shape to load
 bool vertexShape::loadFromXML(ofxXmlSettings& xml){
 	
+	// position:X, position:Y and groupID are set by basicShape
+	if( !basicShape::loadFromXML(xml) ) return false;
+	
 	points.clear();
-	
-	xml.pushTag("position");
-	basicPoint position( xml.getValue("X", 0), xml.getValue("Y", 0) );
-	xml.popTag(); // pop position
-	
-	// todo: must be  a basicShape;
-	setGroupID( xml.getValue("groupID", -1) );
-	
-	xml.pushTag("vectors");
-	int numVectors = xml.getNumTags("vector");
-	for(int i = 0; i < numVectors; i++){
-		xml.pushTag("vector", i);
+	if( xml.pushTag("vectors") ){
+		int numVectors = xml.getNumTags("vector");
 		
-		points.push_back( basicPoint(
-			xml.getValue("X", 0),
-			xml.getValue("Y", 0)
-		));
-		xml.popTag();
+		for(int i = 0; i < numVectors; i++){
+			xml.pushTag("vector", i);
+		
+			points.push_back( basicPoint(
+				xml.getValue("X", 0),
+				xml.getValue("Y", 0)
+			));
+			xml.popTag();
+		}
+		xml.popTag(); // pop vectors
+	
+		onShapeChanged();
+		
+		return true;
 	}
-	xml.popTag(); // pop vectors
 	
-	onShapeChanged();    
-	
-	return true; // todo
+	return false;
 }
 
 // - - - - - - -
@@ -295,7 +294,7 @@ void vertexShape::render(){
 			(*it).draw();
 			
 			// show handler ID ?
-			if(it->isFocused()) ofDrawBitmapStringHighlight(ofToString(i), (*it).getPos()+10);
+			if(it->isFocused()) ofDrawBitmapStringHighlight(ofToString(i), (*it).x+position.x+10, (*it).y+position.y+10);
 			
 			// incremment
 			i++;
@@ -315,7 +314,7 @@ void vertexShape::render(){
 		ofDrawRectangle( instructions.getRect() );
 		ofNoFill();
 		ofSetColor(fgColor);
-		instructions.draw();
+		//instructions.draw();
 	}
 	
 	// reset
@@ -348,8 +347,9 @@ bool vertexShape::enableEditMode(){
 	// enable point handlers
 	for(auto it = points.begin(); it != points.end(); it++){
 		it->setEditable( true );
+		it->setShape(*this, true);
 	}
-	position.makeParent( points );
+	//position.makeParent( points );
 	
 	return (bEditMode==true);
 }
@@ -363,8 +363,9 @@ bool vertexShape::disableEditMode(){
 		// enable point handlers
 		for(auto it = points.begin(); it != points.end(); it++){
 			it->setEditable( false );
+			it->unbindShape();
 		}
-		position.removeChildren();
+		//position.removeChildren();
 		
 		// remember
 		bEditMode = false;
@@ -432,38 +433,6 @@ bool vertexShape::handleExists(basicPoint* _i){
 // EDITING UTILITIES
 // - - - - - - - -
 
-// updates shape data from it's respective pointhandlers
-bool vertexShape::synchronisePointHandlers(){
-	
-	/*/ points size not right ?
-	if( pointHandlers.size() !=  points.size()){
-		// resize one of them
-		if(!bEditMode){
-			pointHandlers.resize(points.size());
-		}
-		else{
-			absolutePoints.resize(pointHandlers.size());
-			points.resize(pointHandlers.size());
-		}
-	}
-	
-	// update shape position
-	position = positionHandler.getPos();
-	
-	// update relative point positions to absolute
-	list<basicPoint>::iterator ph = pointHandlers.begin();
-	for(list<ofVec2f>::iterator pts = points.begin(); pts != points.end(); pts++){
-		(*pts) = (*ph).getPos() - position;
-		ph++;
-	}
-	
-	// sync shape variables
-	onShapeChanged();
-	
-	return true;
-	 */
-}
-
 void vertexShape::applyScale(basicPoint scale){
 	// update points
 	for(auto it=points.begin(); it!=points.end(); it++){
@@ -494,27 +463,27 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 	// dont treat useless clicks
 	if(!isInEditMode() || !boundingBox.inside(args.x, args.y) ) return false;
 	
-	basicPoint mousePos = basicPoint( args.x, args.y ) - position;
-	
 	// check if a point is hovered
-	for(auto h=points.rbegin(); h!=points.rend(); h++){
+	for(auto p=points.rbegin(); p!=points.rend(); p++){
 		
 		// interact?
-		if( h->isMouseOver() ){
+		if( p->interceptMouseClick( args ) ){
 			
 			// remove point ?
 			if( (ofGetKeyPressed('r') || ofGetKeyPressed('R')) ){
 				//removeHandle( &*h );
 			}
 			else {
-				h->setPos( args.x, args.y );
+				// moving is done by basicPoint
+				//p->setPos( args.x, args.y );
 			}
 			
 			return true;
 		}
 	}
 	
-	// Add new vertex if clicked on a vertex line
+	// todo : restrore this feature
+	/*/ Add new vertex if clicked on a vertex line
 	if(args.button == 2){ // right click
 		//ofVec2f* addNew = NULL;
 		
@@ -549,7 +518,7 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 			 
 			 float a = atan2f(AtoM.x, AtoM.y);
 			 float b = atan2f(AtoB.x, AtoB.y);
-			 float d = abs(a-b); // */
+			 float d = abs(a-b); // * /
 			
 			// hit ?
 			if ( d < 4){ // define tolerance here (distance in px)
@@ -572,7 +541,7 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 			}
 			prevPoint = &*p;
 		}
-	}
+	}*/
 	return false;
 }
 
