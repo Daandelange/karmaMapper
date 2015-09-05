@@ -193,11 +193,14 @@ void shapesEditor::draw() {
 	// tmp ofScale(0.5, 0.5);
 	// draw shapes (edit mode)
 	for(auto it = shapes.begin(); it != shapes.end(); it++){
-		if( (*it)->isReady() ){
+		if( (*it)->isReady() && *it != activeShape ){
 			if( (*it)->isInEditMode() ) (*it)->render();
 			else (*it)->sendToGPU();
 		}
 	}
+	
+	// draw active shape
+	if( activeShape ) activeShape->render();
 
 	// draw rescale tool
 	if(editMode!=EDIT_MODE_RENDER && multiShapesSelection.size()>0){

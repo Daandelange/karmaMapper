@@ -77,7 +77,13 @@ void vertexShape::sendToGPU(){
 	ofTranslate(position.x, position.y);
 	
 	// if shape has error, draw it in red
-	ofSetColor(255,255,255,255);
+#ifdef KM_EDITOR_APP
+	ofSetColor(fgColor, 200);
+	ofFill();
+#else
+	ofSetColor(255);
+	ofFill();
+#endif
 	
 	ofBeginShape();
 	// draw elements
@@ -265,8 +271,7 @@ void vertexShape::render(){
 	ofDrawRectangle( boundingBox );
 	
 	// new colors!
-	//hasError?ofSetHexColor(0xFF0000):ofSetColor(fgColor);
-	ofSetColor( fgColor, 200 );
+	hasError?ofSetHexColor(0xFF0000):ofSetColor( fgColor, 200 );
 	ofFill();
 	
 	// go to center
@@ -306,6 +311,9 @@ void vertexShape::render(){
 		ofFill();
 		ofDrawRectangle(guiToggle);
 		
+		// draw additional shape gui.
+		if( drawShapeGui && shapeGui ) shapeGui->draw();
+		
 		// draw instructions
 		ofSetColor(bgColor);
 		ofFill();
@@ -324,7 +332,7 @@ void vertexShape::buildMenu(){
 	
 	vertexMenu.clear();
 	vertexMenu.add( (new ofxLabelExtended())
-				   ->setup("vertexShape", "extended Label")
+				   ->setup("vertexShape", "vertexShape")
 				   ->setShowLabelName(false)
 				   );
 	/*

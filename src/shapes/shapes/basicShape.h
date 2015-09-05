@@ -72,7 +72,11 @@ protected:
 	bool initialized = false;
 	bool hasError = false;
 	ofRectangle boundingBox; // contains all shapes
-	int groupID; // [-1=none, other = groupID]
+#ifdef KM_EDITOR_APP
+	ofParameter<int> groupID; // [-1=none, other = groupID]
+#else
+	int groupID;
+#endif
 	string shapeName;
 	vector<string> shapeTypes;
 	
@@ -120,6 +124,7 @@ public:
 	// GUI LISTENERS
 	virtual void keyPressed(ofKeyEventArgs& e);
 	virtual bool interceptMouseClick(ofMouseEventArgs &e);
+	void groupIDUpdated(int& val);
 	
 protected:
 	bool bEditMode;
@@ -134,7 +139,8 @@ protected:
 	// custom HUD GUI elements
 	ofRectangle guiToggle;
 	ofxPanelExtended* shapeGui = NULL;
-	ofxGuiGroupExtended menuParams;
+	ofxGuiGroupExtended basicShapeGui;
+	bool drawShapeGui = false;
 	
 	void setColorFromGroupID();
 	
@@ -142,3 +148,7 @@ protected:
 #endif
 
 };
+
+// GUI translations
+#define GUIinfo_GroupID		("Group ID")
+#define GUIinfo_ShapeName	("Name")

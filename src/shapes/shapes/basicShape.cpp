@@ -70,6 +70,11 @@ void basicShape::initialiseVariables(){
 	
 	if(shapeGui!=NULL) delete shapeGui;
 	shapeGui = NULL;
+	drawShapeGui = false;
+	
+	// name our variables
+	groupID.set(GUIinfo_GroupID, groupID, -1, maxGroupID);
+	groupID.addListener(this, &basicShape::groupIDUpdated);
 #endif
 	
 	initialized = true;
@@ -152,11 +157,8 @@ bool basicShape::loadFromXML(ofxXmlSettings& xml){
 #endif
 	xml.popTag(); // pop position
 	
-#ifdef KM_EDITOR_APP
-	setGroupID( xml.getValue("groupID", -1) );
-#else
 	groupID = xml.getValue("groupID", -1);
-#endif
+	setColorFromGroupID();
 	
 	return true; // todo
 }
@@ -319,6 +321,9 @@ void basicShape::render(){
 		ofSetColor(fgColor, 200);
 		ofFill();
 		ofDrawRectangle(guiToggle);
+		
+		// draw additional shape gui.
+		if( drawShapeGui && shapeGui ) shapeGui->draw();
 	}
 	
 	// reset
@@ -328,12 +333,15 @@ void basicShape::render(){
 void basicShape::buildMenu(){
 	// build custom UI
 	
-	menuParams.clear();
-	menuParams.setup( getShapeType() );
-	menuParams.setShowHeader(false);
+	basicShapeGui.clear();
+	basicShapeGui.setup( getShapeType() );
+	basicShapeGui.setShowHeader(false);
 	
-	menuParams.add( (new ofxLabelExtended())->setup("LabelName", getShapeType()+" ["+ofToString(this)+"]")->setShowLabelName(false));
-	//gui->addTextArea("info_GroupID", "Group ID:"+ofToString(groupID), OFX_UI_FONT_SMALL);
+	basicShapeGui.add( (new ofxLabelExtended())->setup("LabelName", getShapeType()+" ["+ofToString(this)+"]")->setShowLabelName(false));
+	
+	basicShapeGui.add( (new ofxIntSlider( groupID )) );
+	
+	basicShapeGui.add( (new ofxLabelExtended())->setup(GUIinfo_ShapeName, shapeName) );
 	/*ofxUITextInput* ti = gui->addTextInput("Num Groups", ofToString(maxGroupID) );
 	 ti->setOnlyNumericInput(true);
 	 ti->setAutoClear(false);
@@ -346,7 +354,8 @@ void basicShape::buildMenu(){
 	
 	
 	shapeGui = new ofxPanelExtended();
-	shapeGui->add( &menuParams );
+	shapeGui->setup();
+	shapeGui->add( &basicShapeGui );
 	//shapeGui->setShowHeader(false);
 }
 
@@ -477,8 +486,13 @@ bool basicShape::interceptMouseClick(ofMouseEventArgs &e){
 	if( isInEditMode() ){
 		// toggle GUI ?
 		if( guiToggle.inside(e.x, e.y) ){
-			//gui->toggleVisible();
-			// todo
+			drawShapeGui = !drawShapeGui;
+			if(shapeGui) shapeGui->setPosition( boundingBox.getTopRight()+ofVec2f(5,20));
+			return true;
+		}
+		
+		// over shapeGui ?
+		else if(drawShapeGui && shapeGui && shapeGui->getShape().inside(e.x,e.y)){
 			return true;
 		}
 		
@@ -509,17 +523,13 @@ bool basicShape::setPosition( const basicPoint _pos) {
 	onShapeChanged();
 }
 
-bool basicShape::setGroupID(const int _id){
-	groupID = _id;
-	
+void basicShape::groupIDUpdated(int& val){
 	// keep new maxGroupID ?
 	if(maxGroupID <= groupID){
 		maxGroupID = groupID+1;
 	}
 	
 	setColorFromGroupID();
-	
-	return true;
 }
 // endif KM_EDITOR_APP
 #endif
