@@ -74,10 +74,11 @@ protected:
 	ofRectangle boundingBox; // contains all shapes
 #ifdef KM_EDITOR_APP
 	ofParameter<int> groupID; // [-1=none, other = groupID]
+	ofParameter<string> shapeName;
 #else
 	int groupID;
-#endif
 	string shapeName;
+#endif
 	vector<string> shapeTypes;
 	
 	basicPoint position; // absolute (other shape data will be relative to this)
@@ -125,6 +126,7 @@ public:
 	virtual void keyPressed(ofKeyEventArgs& e);
 	virtual bool interceptMouseClick(ofMouseEventArgs &e);
 	void groupIDUpdated(int& val);
+	void nameUpdated(string& val);
 	
 protected:
 	bool bEditMode;
@@ -138,7 +140,7 @@ protected:
 	
 	// custom HUD GUI elements
 	ofRectangle guiToggle;
-	ofxPanelExtended* shapeGui = NULL;
+	ofxPanelExtended shapeGui;
 	ofxGuiGroupExtended basicShapeGui;
 	bool drawShapeGui = false;
 	

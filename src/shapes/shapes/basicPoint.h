@@ -71,6 +71,8 @@ public:
 	void _mouseDragged(ofMouseEventArgs &e);
 	void _mouseReleased(ofMouseEventArgs &e);
 	
+	static unsigned int pointSize;
+	
 private:
 	// utility
 	void drawToolTip(const string _tip);

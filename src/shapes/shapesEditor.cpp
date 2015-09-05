@@ -524,13 +524,6 @@ bool shapesEditor::removeShape(basicShape *_s){
 
 void shapesEditor::selectShape(basicShape* _i){
 	
-	// toggle selection ?
-	if( activeShape==_i && shapeExists(_i) ){
-		_i->disableEditMode();
-		activeShape = NULL;
-		return;
-	}
-	
 	// disable edit mode on current one
 	if( shapeExists(activeShape) ) activeShape->disableEditMode();
 	
@@ -623,14 +616,9 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 	// remember
 	editMode = _mode;
 	
-	// add listeners if previously off
-	if( editMode==EDIT_MODE_RENDER && editMode!=EDIT_MODE_RENDER){
-	
-	}
-	
-	// rm listener
-	if( _mode==EDIT_MODE_RENDER ){
-		
+	// No selection allowed in render mode
+	if( editMode==EDIT_MODE_RENDER){
+		if(activeShape) selectShape(NULL);
 	}
 	
 	// desselect batchGui elements
@@ -653,15 +641,15 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 	
 	// ignore editor guiMenu clicks
 	if( editorGui.getShape().inside( e.x, e.y) ){
-		
+		return;
 	}
 	
 	else if( editMode==EDIT_MODE_SHAPE ){
+		
 		if( e.button==0 ){
-			
 			// notify active shape of click ?
-			if( activeShape != NULL && activeShape->interceptMouseClick( e ) ){
-				
+			if( activeShape && activeShape->interceptMouseClick( e ) ){
+				return;
 			}
 			// check if we can select a shape ?
 			else {

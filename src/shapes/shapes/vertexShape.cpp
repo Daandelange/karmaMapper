@@ -312,7 +312,7 @@ void vertexShape::render(){
 		ofDrawRectangle(guiToggle);
 		
 		// draw additional shape gui.
-		if( drawShapeGui && shapeGui ) shapeGui->draw();
+		if( drawShapeGui ) shapeGui.draw();
 		
 		// draw instructions
 		ofSetColor(bgColor);
@@ -343,7 +343,7 @@ void vertexShape::buildMenu(){
 	 gui->addTextArea("addPoint", "Right click on an edge to insert an additional point", OFX_UI_FONT_SMALL );
 	 gui->addTextArea("addPoint", "R + click on point to remove", OFX_UI_FONT_SMALL );*/
 	
-	shapeGui->add( &vertexMenu );
+	shapeGui.add( &vertexMenu );
 }
 
 bool vertexShape::enableEditMode(){
@@ -467,7 +467,12 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 	if(basicShape::interceptMouseClick(args)) return true;
 	
 	// dont treat useless clicks
-	if(!isInEditMode() || !boundingBox.inside(args.x, args.y) ) return false;
+	if(!isInEditMode()) return false;
+	
+	// upsize rect so point handles are inside
+	ofRectangle biggerRect(boundingBox);
+	biggerRect.growToInclude( boundingBox.getTopLeft()-basicPoint::pointSize, boundingBox.getBottomRight()+basicPoint::pointSize );
+	if( !biggerRect.inside(args.x, args.y) ) return false;
 	
 	// check if a point is hovered
 	for(auto p=points.rbegin(); p!=points.rend(); p++){

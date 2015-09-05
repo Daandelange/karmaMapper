@@ -9,6 +9,11 @@
 #include "basicPoint.h"
 #define KM_BASIC_POINT_SIZE 5
 
+#ifdef KM_EDITOR_APP
+// for universal access
+unsigned int basicPoint::pointSize = KM_BASIC_POINT_SIZE;
+#endif
+
 // needed forward declaration
 class basicShape {
 public:

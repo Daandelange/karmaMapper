@@ -23,7 +23,7 @@ basicShape::basicShape() {
 #endif
 	
 #ifdef KM_LOG_INSTANCIATIONS
-	ofLogNotice("basicShape::basicShape") << (string)typeid(this).name();
+	ofLogNotice("basicShape::basicShape") << " [" << &*this << "]";
 #endif
 }
 
@@ -31,10 +31,12 @@ basicShape::~basicShape(){
 	initialized = false;
 
 #ifdef KM_EDITOR_APP
+	groupID.removeListener(this, &basicShape::groupIDUpdated);
+	
 	disableEditMode();
 	
 	position.unbindShape();
-	delete shapeGui;
+	
 #endif
 
 #ifdef KM_LOG_INSTANCIATIONS
@@ -68,13 +70,13 @@ void basicShape::initialiseVariables(){
 	fgColor = ofColor(255, 210);
 	bgColor = ofColor(0);
 	
-	if(shapeGui!=NULL) delete shapeGui;
-	shapeGui = NULL;
 	drawShapeGui = false;
 	
 	// name our variables
-	groupID.set(GUIinfo_GroupID, groupID, -1, maxGroupID);
+	groupID.set(GUIinfo_GroupID, -1, -1, maxGroupID);
 	groupID.addListener(this, &basicShape::groupIDUpdated);
+	
+	shapeName.set(GUIinfo_ShapeName, "");
 #endif
 	
 	initialized = true;
@@ -158,7 +160,9 @@ bool basicShape::loadFromXML(ofxXmlSettings& xml){
 	xml.popTag(); // pop position
 	
 	groupID = xml.getValue("groupID", -1);
+#ifdef KM_EDITOR_APP
 	setColorFromGroupID();
+#endif
 	
 	return true; // todo
 }
@@ -323,7 +327,7 @@ void basicShape::render(){
 		ofDrawRectangle(guiToggle);
 		
 		// draw additional shape gui.
-		if( drawShapeGui && shapeGui ) shapeGui->draw();
+		if( drawShapeGui ) shapeGui.draw();
 	}
 	
 	// reset
@@ -337,25 +341,12 @@ void basicShape::buildMenu(){
 	basicShapeGui.setup( getShapeType() );
 	basicShapeGui.setShowHeader(false);
 	
-	basicShapeGui.add( (new ofxLabelExtended())->setup("LabelName", getShapeType()+" ["+ofToString(this)+"]")->setShowLabelName(false));
-	
 	basicShapeGui.add( (new ofxIntSlider( groupID )) );
 	
-	basicShapeGui.add( (new ofxLabelExtended())->setup(GUIinfo_ShapeName, shapeName) );
-	/*ofxUITextInput* ti = gui->addTextInput("Num Groups", ofToString(maxGroupID) );
-	 ti->setOnlyNumericInput(true);
-	 ti->setAutoClear(false);
-	 ti->setInputTriggerType(OFX_UI_TEXTINPUT_ON_UNFOCUS);
-	 gui->addIntSlider("Group ID", -1, maxGroupID, groupID);
-	 
-	 gui->addSpacer();
-	 gui->addLabel("Keyboard Shortcuts", OFX_UI_FONT_MEDIUM);
-	 gui->addTextArea("prevNextHandle", "[ ]   Select prev/next handle", OFX_UI_FONT_SMALL);*/
+	basicShapeGui.add( (new ofxLabel( shapeName )) );
 	
-	
-	shapeGui = new ofxPanelExtended();
-	shapeGui->setup();
-	shapeGui->add( &basicShapeGui );
+	shapeGui.setup();
+	shapeGui.add( &basicShapeGui );
 	//shapeGui->setShowHeader(false);
 }
 
@@ -487,16 +478,23 @@ bool basicShape::interceptMouseClick(ofMouseEventArgs &e){
 		// toggle GUI ?
 		if( guiToggle.inside(e.x, e.y) ){
 			drawShapeGui = !drawShapeGui;
-			if(shapeGui) shapeGui->setPosition( boundingBox.getTopRight()+ofVec2f(5,20));
+			shapeGui.setPosition( boundingBox.getTopRight()+ofVec2f(5,20));
 			return true;
 		}
 		
 		// over shapeGui ?
-		else if(drawShapeGui && shapeGui && shapeGui->getShape().inside(e.x,e.y)){
+		else if(drawShapeGui && shapeGui.getShape().inside(e.x,e.y)){
+			// if click on name, then ask for new name... #hacky
+			ofxBaseGui* nameLabel = basicShapeGui.getControl(GUIinfo_ShapeName);
+			if(nameLabel && nameLabel->getShape().inside(e.x, e.y) ){
+				shapeName = ofSystemTextBoxDialog("Enter the shape name...", shapeName);
+				ofLogNotice("basicShape::interceptMouseClick") << "New shape name: " << shapeName;
+			}
+			
 			return true;
 		}
 		
-		// move shape ?
+		// on position handler ?
 		else if( position.interceptMouseClick(e) ){
 			
 			return true;
@@ -531,5 +529,6 @@ void basicShape::groupIDUpdated(int& val){
 	
 	setColorFromGroupID();
 }
+
 // endif KM_EDITOR_APP
 #endif
