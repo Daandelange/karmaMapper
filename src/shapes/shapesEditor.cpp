@@ -57,6 +57,17 @@ void shapesEditor::update() {
 	// only use computing power if in edit mode.
 	if( !isInEditMode() || editMode==EDIT_MODE_RENDER ) return;
 	
+	// check for shape deletion
+	// trick from http://stackoverflow.com/a/8621457/58565
+	for(auto s = shapes.rbegin(); s!=shapes.rend(); ){
+		if( (*s)->pleaseDeleteMe ){
+			if(activeShape == *s) selectShape(NULL);
+			s++;
+			s= std::list<basicShape*>::reverse_iterator( shapes.erase(s.base()) );
+		}
+		else s++;
+	}
+	
 	// single edit mode
 	if( editMode==EDIT_MODE_SHAPE ){
 		
@@ -176,12 +187,6 @@ void shapesEditor::update() {
 	/ * / update GUI ?
 	if(isInEditMode()){
 		guiToggle.setPosition( boundingBox.getTopRight()+5 );
-		
-		if(gui!=NULL){
-			
-			// update displayed information with real-time data
-			((ofxUITextArea*) gui->getWidget("info_Vertexes"))->setTextString("Number of Vertexes:  " + ofToString(points.size()));
-		}
 	}*/
 }
 
@@ -210,7 +215,7 @@ void shapesEditor::draw() {
 		for(auto it = multiShapesSelection.begin(); it != multiShapesSelection.end(); it++){
 			if( (*it)->isReady() ){
 				ofSetColor(0);
-				(*it)->render();
+				(*it)->sendToGPU();
 			}
 		}
 		

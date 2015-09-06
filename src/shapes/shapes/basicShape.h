@@ -126,6 +126,8 @@ public:
 	void groupIDUpdated(int& val);
 	void nameUpdated(string& val);
 	
+	bool pleaseDeleteMe;
+	
 protected:
 	bool bEditMode;
 	

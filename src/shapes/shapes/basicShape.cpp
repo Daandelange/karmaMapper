@@ -77,6 +77,8 @@ void basicShape::initialiseBasicVariables(){
 	groupID.addListener(this, &basicShape::groupIDUpdated);
 	
 	shapeName.set(GUIinfo_ShapeName, "");
+	
+	pleaseDeleteMe = false;
 #endif
 	
 	initialized = true;
@@ -496,6 +498,11 @@ bool basicShape::interceptMouseClick(ofMouseEventArgs &e){
 		
 		// on position handler ?
 		else if( position.interceptMouseClick(e) ){
+			
+			// erase whole shape ?
+			if( ofGetKeyPressed('r') || ofGetKeyPressed('R') ){
+				pleaseDeleteMe = true;
+			}
 			
 			return true;
 		}

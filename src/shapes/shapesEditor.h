@@ -32,7 +32,7 @@ enum shapesEditMode {
 
 // todo: make the shape edit tools (un)instanciable for a performance gain. Make it dependent on a shapesServer//karmaScene database class which stays loaded for serving raw (+rw) shape data and maybe some utilities.
 // todo: add a layer re-ordering panel
-// todo: draw active shape(s) on top of others
+// todo: add contrast mode for configuring shapes easier on the field
 
 class shapesEditor : public shapesScene {
 

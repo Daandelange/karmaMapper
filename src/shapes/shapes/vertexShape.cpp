@@ -403,33 +403,6 @@ bool vertexShape::handleExists(basicPoint* _i){
 	return basicShape::handleExists(_i);// todo
 }
 
-/*void vertexShape::removeHandle(basicPoint *_i){
-	
-	// create iterators
-	list<ofVec2f>::iterator p=points.end();
-	list<ofVec2f>::iterator ap=absolutePoints.end();
-	for(list<basicPoint>::iterator h=pointHandlers.end(); h!=pointHandlers.begin(); h--){
-		
-		if( &*h == _i ){
-			
-			// deselect
-			if(activeHandle==&*h) selectHandle(NULL);
-			
-			// remove point
-			points.erase(p);
-			absolutePoints.erase(ap);
-			pointHandlers.erase(h);
-			
-			onShapeChanged();
-			
-			break;
-		}
-		p--;
-		ap--;
-	}
-	
-}*/
-
 // - - - - - - - -
 // EDITING UTILITIES
 // - - - - - - - -
@@ -470,14 +443,15 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 	if( !biggerRect.inside(args.x, args.y) ) return false;
 	
 	// check if a point is hovered
-	for(auto p=points.rbegin(); p!=points.rend(); p++){
+	for(auto p=points.begin(); p!=points.end(); p++){
 		
 		// interact?
 		if( p->interceptMouseClick( args ) ){
 			
 			// remove point ?
-			if( (ofGetKeyPressed('r') || ofGetKeyPressed('R')) ){
-				//removeHandle( &*h );
+			if( ofGetKeyPressed('r') || ofGetKeyPressed('R') ){
+				points.erase(p);
+				onShapeChanged();
 			}
 			else {
 				// moving is done by basicPoint
