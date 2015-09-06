@@ -36,7 +36,6 @@ public:
 	
 	// #########
 	// MAIN FUNCTIONS
-	virtual void initialiseVariables();
 	virtual void sendToGPU();
 	
 	// #########
@@ -95,7 +94,6 @@ public:
 	// #########
 	// EDITING ESSENTIALS
 	virtual void render();
-	virtual void buildMenu();
 	
 	// #########
 	// EDITING CONTROL
@@ -145,6 +143,10 @@ protected:
 	bool drawShapeGui = false;
 	
 	void setColorFromGroupID();
+	
+private:
+	void initialiseBasicVariables();
+	void buildBasicMenu();
 	
 // endif KM_EDITOR_APP
 #endif

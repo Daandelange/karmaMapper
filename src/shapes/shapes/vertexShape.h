@@ -20,7 +20,6 @@ public:
 	
 	// #########
 	// MAIN FUNCTIONS
-	virtual void initialiseVariables();
 	virtual void sendToGPU();
 	
 	// #########
@@ -61,10 +60,8 @@ public:
 	// #########
 	// EDITING ESSENTIALS
 	virtual void render();
-	virtual void buildMenu();
 	bool enableEditMode();
 	bool disableEditMode();
-	
 	
 	// #########
 	// EDITING UI CONTROL
@@ -86,14 +83,22 @@ public:
 	
 protected:
 	ofxGuiGroupExtended vertexMenu;
+	ofParameter<string> menuNumVertexes;
 
 	// instructions stuff
 	ofxTextBox instructions;
 	bool showInstructions;
 	
 private:
+	// constructor helpers
+	void initialiseVertexVariables();
+	void buildVertexMenu();
+	
 	
 // endif KM_EDITOR_APP
 #endif
 
 };
+
+// GUI translations
+#define GUIinfo_numVertexes		("Vertexes")

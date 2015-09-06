@@ -14,34 +14,17 @@
 
 #define VECT_SHAPE_DEFAULT_NUM_POINTS 4
 
-// todo: crashes when you keep switching edit mode very quickly (ex: hold 'e')
-
 list<basicPoint> vertexShape::zeroList = list<basicPoint>();
 
 // - - - - - - -
 // CONSTRUCTORS
 // - - - - - - -
 vertexShape::vertexShape(){
-	initialized = false;
-	shapeTypes.push_back("vertexShape");
+	initialiseVertexVariables();
 	
-	/*instructions.loadFont("fonts/UbuntuMono.ttf", 12);
-	instructions.setRectangle( ofRectangle(ofGetWidth()-220,20,200,300) );
-	instructions.showsFrame(false);*/
-	
-	// init variables
-	points.resize( VECT_SHAPE_DEFAULT_NUM_POINTS );
-	absolutePoints.resize( VECT_SHAPE_DEFAULT_NUM_POINTS );
-	
-	// spread 4 points trough space
-	int i=0;
-	for(auto p = points.begin(); p!=points.end(); p++, i++){
-		(*p) = basicPoint( cos( PI-(TWO_PI/points.size())*i ), sin( PI-(TWO_PI/points.size())*i ))*100;
-		//cout << "["<< points[i].x << ","<< points[i].y << "]" << endl;//
-	}
-	
-	// recalculate bounding box & stuff
-	onShapeChanged();
+#ifdef KM_EDITOR_APP
+	buildVertexMenu();
+#endif
 	
 	initialized = true;
 }
@@ -54,19 +37,34 @@ vertexShape::~vertexShape(){
 // - - - - - - -
 // OVER-RULED BASICSHAPE FUNCTIONS
 // - - - - - - -
-void vertexShape::initialiseVariables(){
-	// act like basic shape
-	basicShape::initialiseVariables();
+void vertexShape::initialiseVertexVariables(){
 	
-	// do some other stuff
-	points.clear();
+	initialized = false;
+	shapeTypes.push_back("vertexShape");
+	
+	/*instructions.loadFont("fonts/UbuntuMono.ttf", 12);
+	 instructions.setRectangle( ofRectangle(ofGetWidth()-220,20,200,300) );
+	 instructions.showsFrame(false);*/
+	
+	// init variables
+	points.resize( VECT_SHAPE_DEFAULT_NUM_POINTS );
 	absolutePoints.clear();
+	
+	// spread 4 points trough space
+	int i=0;
+	for(auto p = points.begin(); p!=points.end(); p++, i++){
+		(*p) = basicPoint( cos( PI-(TWO_PI/points.size())*i ), sin( PI-(TWO_PI/points.size())*i ))*100;
+	}
+	
+	// recalculate bounding box & stuff
+	onShapeChanged();
 	
 #ifdef KM_EDITOR_APP
 	showInstructions = true;
 	//instructions.setText("VERTEX SHAPE\nh		Toggle help.\n[]	Shape vertex selection.\nlr	Shape selection.\nHold r while clicking on a point to remove it.\nRight click on an edge to insert a point.");
-#endif
 	
+	menuNumVertexes.set(GUIinfo_numVertexes, "");
+#endif
 }
 
 void vertexShape::sendToGPU(){
@@ -129,13 +127,13 @@ void vertexShape::onShapeChanged(){
 	
 #ifdef KM_EDITOR_APP
 	// update GUI Toggle ?
-	if( isInEditMode() ){
-		guiToggle.setPosition( boundingBox.getTopRight()+5 );
+	guiToggle.setPosition( boundingBox.getTopRight()+5 );
 		
 		// update displayed information with real-time data
 		// todo
 		//if( gui!=NULL ) ((ofxUITextArea*) gui->getWidget("info_Vertexes"))->setTextString("Number of Vertexes:  " + ofToString(points.size()));
-	}
+	
+	menuNumVertexes = ofToString( points.size() );
 #endif
 	
 	// todo: update centerPos & more
@@ -327,21 +325,18 @@ void vertexShape::render(){
 	ofPopStyle();
 }
 
-void vertexShape::buildMenu(){
-	basicShape::buildMenu();
+void vertexShape::buildVertexMenu(){
 	
 	vertexMenu.clear();
-	vertexMenu.add( (new ofxLabelExtended())
-				   ->setup("vertexShape", "vertexShape")
-				   ->setShowLabelName(false)
-				   );
-	/*
-	 gui->addTextArea("info_Vertexes", "Loading..." + ofToString(points.size()), OFX_UI_FONT_SMALL);
+	vertexMenu.setup( getShapeType() );
+	basicShapeGui.setShowHeader(true);
+	
+	vertexMenu.add( new ofxLabel(menuNumVertexes) );
 	 
-	 //gui->addSpacer();
+	 /*/gui->addSpacer();
 	 gui->addLabel("Keyboard Shortcuts", OFX_UI_FONT_MEDIUM);
 	 gui->addTextArea("addPoint", "Right click on an edge to insert an additional point", OFX_UI_FONT_SMALL );
-	 gui->addTextArea("addPoint", "R + click on point to remove", OFX_UI_FONT_SMALL );*/
+	 gui->addTextArea("addPoint", "R + click on point to remove");*/
 	
 	shapeGui.add( &vertexMenu );
 }

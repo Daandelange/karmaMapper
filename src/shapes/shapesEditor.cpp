@@ -23,6 +23,8 @@ shapesEditor::shapesEditor( ) {
 	
 	// init variables
 	activeShape = NULL;
+	enableEditingToggle = false;
+	fullScreenToggle = false;;
 	editMode = EDIT_MODE_OFF;
 	
 	buildMenus();
@@ -525,7 +527,9 @@ bool shapesEditor::removeShape(basicShape *_s){
 void shapesEditor::selectShape(basicShape* _i){
 	
 	// disable edit mode on current one
-	if( shapeExists(activeShape) ) activeShape->disableEditMode();
+	if( shapeExists(activeShape) ){
+		activeShape->disableEditMode();
+	}
 	
 	// select it
 	if( shapeExists(_i) ){
@@ -536,8 +540,13 @@ void shapesEditor::selectShape(basicShape* _i){
 		// enter edit mode
 		// todo: even if its a vertexShape, this seems to only call basicShape::enableEditmode();
 		_i->enableEditMode();
+		
+		menuNumSelectedShapes = "1";
 	}
-	else activeShape = NULL;
+	else{
+		activeShape = NULL;
+		menuNumSelectedShapes = "0";
+	}
 }
 
 void shapesEditor::selectNextShape(){
@@ -764,7 +773,8 @@ void shapesEditor::buildMenus(){
 	
 	shapesMenu.setup("Shape Editing");
 	
-	shapesMenu.add( (new ofxLabelExtended())->setup(GUINbSelectedShapes, "0") );
+	menuNumSelectedShapes.set( GUINbSelectedShapes, "0");
+	shapesMenu.add( (new ofxLabel(menuNumSelectedShapes)) );
 	
 	enableEditingToggle.setup( GUIEnableEditing, enableEditingToggle );
 	enableEditingToggle.addListener(this, &shapesEditor::enableShapeEditing );

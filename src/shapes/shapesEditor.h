@@ -86,6 +86,7 @@ private:
 	ofxMinimalButton loadButton, saveButton;
 	ofxToggle fullScreenToggle, enableEditingToggle;
 	ofxGuiMatrix batchModeSelect, simpleMode;
+	ofParameter<string> menuNumSelectedShapes;
 	void buildMenus();
 	
 	// multi shapes edit stuff

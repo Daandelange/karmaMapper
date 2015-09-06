@@ -16,10 +16,10 @@ basicPoint basicShape::zeroPoint = basicPoint(0,0);
 // - - - - - -
 basicShape::basicShape() {
 	
-	initialiseVariables();
+	initialiseBasicVariables();
 	
 #ifdef KM_EDITOR_APP
-	buildMenu();
+	buildBasicMenu();
 #endif
 	
 #ifdef KM_LOG_INSTANCIATIONS
@@ -47,7 +47,7 @@ basicShape::~basicShape(){
 // - - - - - - -
 // MAIN FUNCTIONS
 // - - - - - - -
-void basicShape::initialiseVariables(){
+void basicShape::initialiseBasicVariables(){
 	// set position
 	position = basicPoint( ofGetWidth()/2, ofGetHeight()/2 );
 	boundingBox = ofRectangle(0,0,0,0);
@@ -334,12 +334,12 @@ void basicShape::render(){
 	ofPopStyle();
 }
 
-void basicShape::buildMenu(){
+void basicShape::buildBasicMenu(){
 	// build custom UI
 	
 	basicShapeGui.clear();
 	basicShapeGui.setup( getShapeType() );
-	basicShapeGui.setShowHeader(false);
+	basicShapeGui.setShowHeader(true);
 	
 	basicShapeGui.add( (new ofxIntSlider( groupID )) );
 	
