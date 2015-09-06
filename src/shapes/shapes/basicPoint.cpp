@@ -49,6 +49,10 @@ basicPoint::~basicPoint(){
 #ifdef KM_EDITOR_APP
 	unbindMouseEvents();
 #endif
+
+//#ifdef KM_LOG_INSTANCIATIONS
+//	ofLogNotice("basicPoint::~basicPoint") << " [" << &*this << "]";
+//#endif
 }
 
 // - - - - - - - - - - -

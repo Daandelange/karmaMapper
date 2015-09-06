@@ -437,7 +437,8 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 	// dont treat useless clicks
 	if(!isInEditMode()) return false;
 	
-	// upsize rect so point handles are inside
+	// restrict to shape area
+	// (upsizes rect so point handles are inside)
 	ofRectangle biggerRect(boundingBox);
 	biggerRect.growToInclude( boundingBox.getTopLeft()-basicPoint::pointSize, boundingBox.getBottomRight()+basicPoint::pointSize );
 	if( !biggerRect.inside(args.x, args.y) ) return false;
@@ -462,10 +463,9 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 		}
 	}
 	
-	// todo : restrore this feature
-	/*/ Add new vertex if clicked on a vertex line
+	// todo : restore this feature
+	// Add new vertex if clicked on a vertex line
 	if(args.button == 2){ // right click
-		//ofVec2f* addNew = NULL;
 		
 		// Search for the right place to insert the point in the array
 		// Based on code from https://github.com/patriciogonzalezvivo/ofxComposer
@@ -478,6 +478,7 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 			// borrowed from https://processing.org/discourse/beta/num_1276644884.html
 			// x, y mouse coords
 			// x1, x2, y1, y2 = line  coords
+			basicPoint mousePos(args.x-position.x, args.y-position.y);
 			float dx =  (*prevPoint).x - p->x;
 			float dy =  (*prevPoint).y - p->y;
 			float d = sqrt( dx*dx + dy*dy );
@@ -485,7 +486,7 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 			float sa = dy/d; // sine
 			float mX = (-p->x+mousePos.x)*ca + (-p->y+mousePos.y)*sa;
 			
-			basicPoint pointOnLine = ( mX <= 0 ) ? basicPoint(*p) : (( mX >= d )? basicPoint(*prevPoint) : (*p)+basicPoint(mX*ca, mX*sa) );
+			basicPoint pointOnLine = ( mX <= 0 ) ? *p : (( mX >= d )? *prevPoint : (*p)+basicPoint(mX*ca, mX*sa) );
 			
 			dx = mousePos.x - pointOnLine.x;
 			dy = mousePos.y - pointOnLine.y;
@@ -498,20 +499,15 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 			 
 			 float a = atan2f(AtoM.x, AtoM.y);
 			 float b = atan2f(AtoB.x, AtoB.y);
-			 float d = abs(a-b); // * /
+			 float d = abs(a-b); // */
 			
 			// hit ?
 			if ( d < 4){ // define tolerance here (distance in px)
 				
 				// add a vertex
-				basicPoint* newPoint =  &*points.insert( p , mousePos );
+				basicPoint* newPoint =  &*points.insert( p , basicPoint(mousePos.x, mousePos.y) );
+				newPoint->setShape(*this, true);
 				newPoint->setEditable(true);
-				
-				//selectHandle(newPoint);
-				
-				list<basicPoint>::iterator ap = absolutePoints.begin();
-				std::advance(ap, i); // calls h++ i times.
-				absolutePoints.insert(ap , mousePos + position);
 				
 				// call callback
 				onShapeChanged();
@@ -521,7 +517,7 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 			}
 			prevPoint = &*p;
 		}
-	}*/
+	}
 	return false;
 }
 

@@ -62,6 +62,7 @@ void shapesEditor::update() {
 	for(auto s = shapes.rbegin(); s!=shapes.rend(); ){
 		if( (*s)->pleaseDeleteMe ){
 			if(activeShape == *s) selectShape(NULL);
+			delete *s;
 			s++;
 			s= std::list<basicShape*>::reverse_iterator( shapes.erase(s.base()) );
 		}
@@ -660,17 +661,15 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 	
 	else if( editMode==EDIT_MODE_SHAPE ){
 		
-		if( e.button==0 ){
-			// notify active shape of click ?
-			if( activeShape && activeShape->interceptMouseClick( e ) ){
-				return;
-			}
-			// check if we can select a shape ?
-			else {
-				for(auto it=shapes.begin(); it!=shapes.end(); it++){
-					if( (*it)->isInside( e )){
-						selectShape(*it);
-					}
+		// notify active shape of click ?
+		if( activeShape && activeShape->interceptMouseClick( e ) ){
+			return;
+		}
+		// check if we can select a shape ?
+		else if( e.button==0 ) {
+			for(auto it=shapes.begin(); it!=shapes.end(); it++){
+				if( (*it)->isInside( e )){
+					selectShape(*it);
 				}
 			}
 		}

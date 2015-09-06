@@ -24,6 +24,7 @@ shapesScene::shapesScene(){
 
 shapesScene::~shapesScene(){
 	
+	unloadShapes();
 }
 
 // - - - - - - - -

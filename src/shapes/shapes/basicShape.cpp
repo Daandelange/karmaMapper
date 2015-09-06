@@ -40,7 +40,7 @@ basicShape::~basicShape(){
 #endif
 
 #ifdef KM_LOG_INSTANCIATIONS
-	ofLogNotice("basicShape::basicShape") << (string)typeid(this).name();
+	ofLogNotice("basicShape::~basicShape") << (string)typeid(this).name();
 #endif
 }
 
