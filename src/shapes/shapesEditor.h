@@ -34,6 +34,30 @@ enum shapesEditMode {
 // todo: add a layer re-ordering panel
 // todo: add contrast mode for configuring shapes easier on the field
 
+
+
+// utility class for transforming shape groups
+class shapesTransformator {
+public:
+	shapesTransformator();
+	shapesTransformator(list<basicShape*>& _shapes);
+	~shapesTransformator();
+	
+	void setShapes( list<basicShape*>& _shapes );
+	void onShapeSelectionUpdated();
+	void drawHandles();
+	
+	void calculateMultiShapesContainer();
+	void syncMultiSelectionHandlers();
+	list<basicPoint> multiShapeHandlers;
+	
+private:
+	list<basicShape*>* shapesSelection;
+	ofRectangle container, containerCached;
+	list<basicPoint> containerHandles;
+	basicPoint centerHandle;
+};
+
 class shapesEditor : public shapesScene {
 
 public:
@@ -51,11 +75,13 @@ public:
 	void disableEditing();
 	void switchEditing();
 	bool isInEditMode() const;
+	bool isInEditModeBatch() const;
+	bool isInEditModeSingle() const;
 	
 	// custom functions
 	bool addShape(string _shapeType);
 	bool removeShape( basicShape* _s );
-	void selectShape(basicShape* _i);
+	void selectShape(basicShape* _i, const bool& preventToggle=false);
 	void selectNextShape();
 	void selectPrevShape();
 	bool setEditMode(shapesEditMode _mode);
@@ -92,16 +118,15 @@ private:
 	// multi shapes edit stuff
 	//ofxUISuperCanvas* batchGui;
 	list<basicShape*> multiShapesSelection;
-	void updateMultiShapesSelection();
-	void syncMultiSelectionHandlers();
-	ofRectangle multiShapesBoundingBox;
-	vector<basicPoint> multiPointHandlers;
+	shapesTransformator multiShapesHandler;
 
 	ofImage background;
 	
 	bool mouseHidden = false;
 	
 };
+
+
 
 // GUI translations
 #define GUIToggleFullScreen		(" Full Screen")
