@@ -13,18 +13,14 @@
 
 #include "shapes.h"
 #include "shapesScene.h"
+#include "shapesTransformator.h"
 #include "ofxUI.h"
 #include "ofxGui.h"
 
 enum shapesEditMode {
 	EDIT_MODE_OFF,			// Everything disabled
 	EDIT_MODE_RENDER,		// Render the scene
-	EDIT_MODE_SHAPE,		// Edit (single) shapes
-	EDIT_MODE_BATCH_SELECT,	// Batch - (multi)select shapes
-	EDIT_MODE_BATCH_SCALE,	// Batch - scale shapes
-	EDIT_MODE_BATCH_MOVE,	// Batch - move shapes
-	EDIT_MODE_BATCH_FLIPX,	// Batch - Flip horizontal
-	EDIT_MODE_BATCH_FLIPY	// Batch - Flip vertical
+	EDIT_MODE_SHAPE			// Edit (single) shapes
 };
 
 // The editor lets you load, edit and save scenes
@@ -34,29 +30,7 @@ enum shapesEditMode {
 // todo: add a layer re-ordering panel
 // todo: add contrast mode for configuring shapes easier on the field
 
-
-
-// utility class for transforming shape groups
-class shapesTransformator {
-public:
-	shapesTransformator();
-	shapesTransformator(list<basicShape*>& _shapes);
-	~shapesTransformator();
-	
-	void setShapes( list<basicShape*>& _shapes );
-	void onShapeSelectionUpdated();
-	void drawHandles();
-	
-	void calculateMultiShapesContainer();
-	void syncMultiSelectionHandlers();
-	list<basicPoint> multiShapeHandlers;
-	
-private:
-	list<basicShape*>* shapesSelection;
-	ofRectangle container, containerCached;
-	list<basicPoint> containerHandles;
-	basicPoint centerHandle;
-};
+// todo: right-click to add a shape somewhere
 
 class shapesEditor : public shapesScene {
 
@@ -81,7 +55,7 @@ public:
 	// custom functions
 	bool addShape(string _shapeType);
 	bool removeShape( basicShape* _s );
-	void selectShape(basicShape* _i, const bool& preventToggle=false);
+	void selectShape(basicShape* _i, const bool& preventToggle=false, const bool allowMultiple=false);
 	void selectNextShape();
 	void selectPrevShape();
 	bool setEditMode(shapesEditMode _mode);
@@ -103,7 +77,10 @@ public:
 private:
 	
 private:
-	basicShape* activeShape; // only used for comparison, never access it. Not guaranteed to point to an instance.
+	// multi shapes edit stuff
+	//ofxUISuperCanvas* batchGui;
+	list<basicShape*> selectedShapes;
+	shapesTransformator multiShapesHandler;
 	shapesEditMode editMode;
 	
 	// GUI (new)
@@ -115,14 +92,11 @@ private:
 	ofParameter<string> menuNumSelectedShapes;
 	void buildMenus();
 	
-	// multi shapes edit stuff
-	//ofxUISuperCanvas* batchGui;
-	list<basicShape*> multiShapesSelection;
-	shapesTransformator multiShapesHandler;
+	
 
 	ofImage background;
 	
-	bool mouseHidden = false;
+	bool mouseHidden;
 	
 };
 
@@ -136,7 +110,7 @@ private:
 #define GUISelectNextShape		("Select Next Shape")
 #define GUISelectPrevShape		("Select Prev Shape")
 #define GUIDeleteShape			("Delete current shape")
-#define GUImultiShapesSelection	("Batch Edit...")
+#define GUIselectedShapes		("Batch Edit...")
 #define GUIConfigFile			("Configuration File")
 #define GUILoadConfig			("Load...")
 #define GUISaveConfig			("Save...")

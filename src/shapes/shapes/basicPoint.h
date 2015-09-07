@@ -85,6 +85,7 @@ private:
 	bool isEditable;
 	bool isActive;
 	bool isParentOfOthers;
+	bool hasParentShape;
 	bool isMouseHold;
 	
 	list<basicPoint>* children; // rm this ?

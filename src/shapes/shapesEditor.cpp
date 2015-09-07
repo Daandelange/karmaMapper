@@ -16,20 +16,24 @@
 	
 //}
 
-shapesEditor::shapesEditor( ) {
+shapesEditor::shapesEditor( ) : multiShapesHandler(selectedShapes) {
+	// IMPORTANT NOTE: some crashed occur related to selectedShapes changing.
+	// Then we might need to store the iterator instead of passing the reference to the list.
 #ifdef KM_LOG_INSTANCIATIONS
 	ofLogNotice("shapesEditor::shapesEditor()");
 #endif
 	
-	// init variables
-	activeShape = NULL;
-	enableEditingToggle = false;
-	fullScreenToggle = false;;
 	editMode = EDIT_MODE_OFF;
+	selectedShapes.clear();
+
+	// init variables
+	enableEditingToggle = false;
+	fullScreenToggle = false;
+	mouseHidden = false;
 	
 	buildMenus();
 	
-	// load image
+	// tmp : load image
 	background.load("vendome_full.jpg");
 }
 
@@ -58,7 +62,7 @@ void shapesEditor::update() {
 	// trick from http://stackoverflow.com/a/8621457/58565
 	for(auto s = shapes.rbegin(); s!=shapes.rend(); ){
 		if( (*s)->pleaseDeleteMe ){
-			if(activeShape == *s) selectShape(NULL);
+			selectShape(NULL); // todo: [later] this is wrong if we (can) delete from batch mode
 			delete *s;
 			s++;
 			s= std::list<basicShape*>::reverse_iterator( shapes.erase(s.base()) );
@@ -67,11 +71,7 @@ void shapesEditor::update() {
 	}
 	
 	// single edit mode
-	if( editMode==EDIT_MODE_SHAPE ){
-		
-		if( activeShape != NULL ){
-			//activeShape->update();
-		}
+	if( isInEditModeSingle() ){
 		
 	}
 	
@@ -80,7 +80,7 @@ void shapesEditor::update() {
 		syncMultiSelectionHandlers();
 	}
 	// update multiPointHandlers
-	else if( multiShapesSelection.size()>0){
+	else if( selectedShapes.size()>0){
 		
 		// did one point move ? (compare to rescale
 		for(int i = 0; i < multiPointHandlers.size(); i++){
@@ -144,7 +144,7 @@ void shapesEditor::update() {
 					ofVec2f scale(multiShapesBoundingBox.width/originalBoundingBox.width, multiShapesBoundingBox.height/originalBoundingBox.height);
 					
 					// apply transformation to shapes
-					for(list<basicShape*>::iterator it=multiShapesSelection.begin(); it!=multiShapesSelection.end(); it++){
+					for(list<basicShape*>::iterator it=selectedShapes.begin(); it!=selectedShapes.end(); it++){
 						basicShape* s = (*it);
 						
 						// move its position according to scale factor
@@ -167,7 +167,7 @@ void shapesEditor::update() {
 					syncMultiSelectionHandlers();
 					
 					// apply transformation to shapes
-					for(list<basicShape*>::iterator it=multiShapesSelection.begin(); it!=multiShapesSelection.end(); it++){
+					for(list<basicShape*>::iterator it=selectedShapes.begin(); it!=selectedShapes.end(); it++){
 						basicShape* s = (*it);
 						
 						// just move the shape
@@ -197,28 +197,37 @@ void shapesEditor::draw() {
 	
 	// tmp ofScale(0.5, 0.5);
 	// draw shapes (edit mode)
-	for(auto it = shapes.begin(); it != shapes.end(); it++){
-		if( (*it)->isReady() && *it != activeShape ){
-			if( (*it)->isInEditMode() ) (*it)->render();
-			else (*it)->sendToGPU();
+	if( isInEditModeBatch() ){
+		// draw all shapes
+		for(auto it = shapes.begin(); it != shapes.end(); it++){
+			(*it)->sendToGPU();
 		}
-	}
-	
-	// draw active shape
-	if( activeShape ) activeShape->render();
-
-	// draw rescale tool
-	if(editMode!=EDIT_MODE_RENDER && multiShapesSelection.size()>0){
+		
 		// highlight selection
-		for(auto it = multiShapesSelection.begin(); it != multiShapesSelection.end(); it++){
+		for(auto it = selectedShapes.begin(); it != selectedShapes.end(); it++){
 			if( (*it)->isReady() ){
 				ofSetColor(0);
 				(*it)->sendToGPU();
 			}
 		}
 		
-		// draw handlers
-		if(isInEditModeBatch() ) multiShapesHandler.drawHandles();
+		// draw handles
+		multiShapesHandler.drawHandles();
+	}
+	else {
+		basicShape* activeShape = NULL;
+		// draw regular shapes
+		for(auto it = shapes.begin(); it != shapes.end(); it++){
+			if( (*it)->isReady() ){
+				if( (*it)->isInEditMode() ){
+					activeShape=*it;
+				}
+				else (*it)->sendToGPU();
+			}
+		}
+		
+		// draw active shape
+		if( activeShape ) activeShape->render();
 	}
 	
 	editorGui.draw();
@@ -245,20 +254,11 @@ bool shapesEditor::isInEditMode() const{
 }
 
 bool shapesEditor::isInEditModeBatch() const {
-	switch (editMode) {
-		case EDIT_MODE_BATCH_SELECT:
-		case EDIT_MODE_BATCH_SCALE:
-		case EDIT_MODE_BATCH_MOVE:
-		case EDIT_MODE_BATCH_FLIPX:
-		case EDIT_MODE_BATCH_FLIPY:
-			return true;
-		default:
-			return false;
-	}
+	return ( isInEditMode() && selectedShapes.size()>1 );
 }
 
 bool shapesEditor::isInEditModeSingle() const {
-	return (editMode == EDIT_MODE_SHAPE);
+	return ( isInEditMode() && selectedShapes.size()<=1 );
 }
 
 // - - - - - - - -
@@ -294,21 +294,10 @@ void shapesEditor::guiEvent(ofxUIEventArgs &e){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true )
 			selectPrevShape();
 	}
-	else if(name==GUIDeleteShape){
-		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
-			// is a shape selected & does it still exist ?
-			if(activeShape!=NULL && shapeExists(activeShape) ){
-				removeShape(activeShape);
-				
-				// deselect
-				selectShape(NULL);
-			}
-		}
-	}
-	else if(name==GUImultiShapesSelection){
+	else if(name==GUIselectedShapes){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
 			selectShape(NULL);
-			setEditMode(EDIT_MODE_BATCH_SELECT);
+			//setEditMode(EDIT_MODE_BATCH_SELECT);
 		}
 	}
 	
@@ -378,16 +367,16 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 	
 	/*if(name==batchGUISelectAll){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
-			multiShapesSelection.clear();
+			selectedShapes.clear();
 			for(auto it=shapes.begin(); it!=shapes.end(); it++){
-				multiShapesSelection.push_back( *it );
+				selectedShapes.push_back( *it );
 			}
 			multiShapesHandler.onSelectionUpdated();
 		}
 	}
 	else if(name==batchGUISelectNone){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
-			multiShapesSelection.clear();
+			selectedShapes.clear();
 			multiShapesHandler.onSelectionUpdated();
 		}
 	}
@@ -395,7 +384,7 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 	else if(name==batchGUICancel){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
 			setEditMode( EDIT_MODE_RENDER );
-			multiShapesSelection.clear();
+			selectedShapes.clear();
 			multiShapesHandler.onSelectionUpdated();
 		}
 	}
@@ -419,7 +408,7 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 			multiShapesBoundingBox.scaleFromCenter(scale.x, scale.y);
 			
 			// apply transformation to shapes
-			for(auto it=multiShapesSelection.begin(); it!=multiShapesSelection.end(); it++){
+			for(auto it=selectedShapes.begin(); it!=selectedShapes.end(); it++){
 				
 				// move its position according to scale factor
 				basicPoint newShapePos(
@@ -450,14 +439,17 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 
 // adds a shape
 bool shapesEditor::addShape(string _shapeType){
+	
 	// todo: make this shape-specific (check if shape type exists)
 	vertexShape* s = new vertexShape();
 	
 	basicShape* result = insertShape(s);
+	
+	//cout << "AddShape():: " << &result << "\t :: " << &s << endl;
 	if( result == NULL ) return false;
 	
 	// enable edit mode
-	selectShape( static_cast<basicShape*>(result) );
+	selectShape( result );
 	
 	return true;
 }
@@ -468,67 +460,61 @@ bool shapesEditor::removeShape(basicShape *_s){
 	if( !removeShape(_s) ) return false;
 	
 	// deselect ?
-	if(activeShape==_s) selectShape(NULL);
+	//if(activeShape==_s) selectShape(NULL);
 	
 	// todo
 	
 	return true;
 }
 
-void shapesEditor::selectShape(basicShape* _i, const bool& preventToggle){
+void shapesEditor::selectShape(basicShape* _i, const bool& preventToggle, const bool allowMultiple){
 	
-	// BATCH MODE
-	if(isInEditModeBatch()) {
-		// add to selection if not
+	if( shapeExists(_i) ){
+	
+		// Check if already in selection
 		bool found = false;
-		for(auto it=multiShapesSelection.begin(); it!=multiShapesSelection.end(); it++){
+		for(auto it=selectedShapes.begin(); it!=selectedShapes.end(); it++){
 			if( *it == _i){
 				found = true;
+				
 				// toggle selection
-				if(!preventToggle) multiShapesSelection.erase(it);
+				if(!preventToggle){
+					(*it)->disableEditMode();
+					selectedShapes.erase(it);
+					multiShapesHandler.onShapeSelectionUpdated( selectedShapes );
+				}
 				break;
 			}
 		}
-		if(!found) multiShapesSelection.push_back(_i);
 		
+		// prevent selecting multiple ?
+		if( !allowMultiple ){
+			selectShape(NULL);
+		}
+		
+		if(!found){
+			_i->enableEditMode();
+			selectedShapes.push_back(_i);
+			multiShapesHandler.onShapeSelectionUpdated( selectedShapes );
+		}
 	}
 	
-	// SINGLE MODE
-	else if (isInEditModeSingle()){
-		
-		// disable edit mode on current one
-		if( shapeExists(activeShape) ){
-			activeShape->disableEditMode();
-			
-			// just toggle ?
-			if( !preventToggle && _i == activeShape ){
-				activeShape = NULL;
-				return;
-			}
-			
+	// clear selection ?
+	else if ( _i == NULL && selectedShapes.size()>0 ){
+		for(auto it=selectedShapes.begin(); it!=selectedShapes.end(); it++){
+			(*it)->disableEditMode();
 		}
-		
-		// select it
-		if( shapeExists(_i) ){
-			
-			// remember
-			activeShape = _i;
-			
-			// enter edit mode
-			// todo: even if its a vertexShape, this seems to only call basicShape::enableEditmode();
-			_i->enableEditMode();
-			
-			menuNumSelectedShapes = "1";
-		}
-		else{
-			activeShape = NULL;
-			menuNumSelectedShapes = "0";
-		}
+		selectedShapes.clear();
+		multiShapesHandler.onShapeSelectionUpdated( selectedShapes );
 	}
+	
+	// update number of selected shapes (GUI feature only)
+	menuNumSelectedShapes = ofToString( selectedShapes.size() );
 }
 
 void shapesEditor::selectNextShape(){
-	if( getNumShapes()==1 && activeShape!=NULL) selectShape(NULL);
+	// todo
+	/*if( getNumShapes()==1 && activeShape!=NULL) selectShape(NULL);
 	else if(activeShape==NULL) selectShape( shapes.front() );
 	
 	else{
@@ -541,10 +527,12 @@ void shapesEditor::selectNextShape(){
 			}
 		}
 		selectShape( next );
-	}
+	}*/
 }
 
 void shapesEditor::selectPrevShape(){
+	// todo
+	/*
 	if( getNumShapes()==1 && activeShape!=NULL) selectShape(NULL);
 	else if(activeShape==NULL) selectShape( shapes.back() );
 	
@@ -558,7 +546,7 @@ void shapesEditor::selectPrevShape(){
 			}
 		}
 		selectShape( prev );
-	}
+	}*/
 }
 
 bool shapesEditor::setEditMode(shapesEditMode _mode){
@@ -605,7 +593,7 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 	
 	// No selection allowed in render mode
 	if( editMode==EDIT_MODE_RENDER){
-		if(activeShape) selectShape(NULL);
+		selectShape(NULL);
 	}
 	
 	// desselect batchGui elements
@@ -631,44 +619,29 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 		return;
 	}
 	
-	else if( editMode==EDIT_MODE_SHAPE ){
-		
-		// notify active shape of click ?
-		if( activeShape && activeShape->interceptMouseClick( e ) ){
-			return;
-		}
-		// check if we can select a shape ?
-		else if( e.button==0 ) {
-			for(auto it=shapes.begin(); it!=shapes.end(); it++){
-				if( (*it)->isInside( e )){
-					selectShape(*it);
-				}
+	// edit a single shape ?
+	else if( isInEditModeSingle() ){
+		for(auto it=selectedShapes.begin(); it!=selectedShapes.end(); it++){
+			if( (*it)->interceptMouseClick( e ) ){
+				return;
 			}
 		}
 	}
 	
-	// let user select shapes by clicking on them
-	else if( editMode==EDIT_MODE_BATCH_SELECT && e.button==0){
+	// batch-edit shapes ?
+	else if( isInEditModeBatch() ){
+		if( multiShapesHandler.interceptMousePress(e) ) return;
+	}
+	
+	// let user select multiple shapes by clicking on them
+	if( e.button==0 ){
 		for(auto it=shapes.begin(); it!=shapes.end(); it++){
 			if( (*it)->isInside( e )){
+				bool allowMultiple = ofGetKeyPressed( OF_KEY_SHIFT) || ofGetKeyPressed( OF_KEY_RIGHT_SHIFT) || isInEditModeBatch();
 				
-				// check if already inside ?
-				bool found = false;
-				for(auto its=multiShapesSelection.begin(); its!=multiShapesSelection.end(); its++){
-					// match ?
-					if((*its) == (*it)){
-						found = true;
-						
-						// remove from selection
-						multiShapesSelection.erase(its);
-						
-						break;
-					}
-				}
-				
-				if(!found) multiShapesSelection.push_back( *it );
-					
-				multiShapesHandler.onShapeSelectionUpdated();
+				// toggle clicked shape
+				selectShape( *it, false, allowMultiple );
+				return;
 			}
 		}
 	}
@@ -814,75 +787,4 @@ void shapesEditor::buildMenus(){
 	batchGui->disable();
 	
 	ofAddListener(batchGui->newGUIEvent, this, &shapesEditor::batchGuiEvent);*/
-}
-
-// #############
-// SHAPESTRANSFORMATOR
-// - - - - - - -
-shapesTransformator::shapesTransformator(){
-	shapesSelection=NULL;
-}
-
-shapesTransformator::shapesTransformator(list<basicShape*>& _shapes):
-	shapesSelection( &_shapes ){
-	
-}
-
-shapesTransformator::~shapesTransformator(){
-	// dont delete shapesSelection, it's only a reference to the real one
-}
-
-void shapesTransformator::setShapes(list<basicShape *> &_shapes){
-	shapesSelection = &_shapes;
-}
-
-void shapesTransformator::onShapeSelectionUpdated(){
-	// todo: cancel currently happening transformations ?
-	
-	calculateMultiShapesContainer();
-	
-	// set center
-	centerHandle.setPos(container.getCenter().x, container.getCenter().y );
-	
-	// set handlers on its corners
-	if(shapesSelection->size()!=0){
-		containerHandles.clear();
-		containerHandles.push_back( basicPoint( container.x, container.y) );
-		containerHandles.push_back( basicPoint( container.x+container.width, container.y) );
-		containerHandles.push_back( basicPoint( container.x+container.width, container.y+container.height) );
-		containerHandles.push_back( basicPoint(container.x, container.y+container.height) );
-	}
-}
-
-void shapesTransformator::drawHandles(){
-	for(auto it=containerHandles.begin(); it!=containerHandles.end(); it++){
-		(*it).draw();
-	}
-	centerHandle.draw();
-}
-
-void shapesTransformator::calculateMultiShapesContainer(){
-	if(shapesSelection->size()==0){
-		container.set(0,0,0,0);
-		containerCached = container;
-		multiShapeHandlers.clear();
-		return;
-	}
-	
-	// getRectFromShapes
-	ofVec2f from(ofGetWidth(),ofGetHeight());
-	ofVec2f to(0,0);
-	for(auto it=shapesSelection->begin(); it!=shapesSelection->end(); it++){
-		ofRectangle bb = (*it)->getBoundingBox();
-		
-		if(bb.x<from.x) from.x=bb.x;
-		if(bb.y<from.y) from.y=bb.y;
-		
-		if(bb.x+bb.width > to.x) to.x=bb.x+bb.width;
-		if(bb.y+bb.height > to.y) to.y=bb.y+bb.height;
-	}
-	container.set(from.x, from.y, to.x-from.x, to.y-from.y);
-	
-	// copy
-	containerCached = container;
 }

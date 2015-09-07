@@ -32,7 +32,7 @@ basicPoint::basicPoint(float _f){
 basicPoint::basicPoint(float _x, float _y): x(_x), y(_y){
 	
 #ifdef KM_EDITOR_APP
-	isEditable = true;
+	isEditable = false;
 	isParentOfOthers = false;
 	isActive = false;
 	isMouseHold = false;
@@ -41,6 +41,7 @@ basicPoint::basicPoint(float _x, float _y): x(_x), y(_y){
 	isEventBound = false;
 	parentShape = NULL;
 	isPositionRelative = false;
+	hasParentShape = false;
 #endif
 }
 
@@ -64,7 +65,7 @@ void basicPoint::draw() {
 
 	float absX(x);
 	float absY(y);
-	if(parentShape && isPositionRelative){
+	if(hasParentShape && parentShape && isPositionRelative){
 		absX += parentShape->getPositionUnaltered()->x;
 		absY += parentShape->getPositionUnaltered()->y;
 	}
@@ -120,12 +121,16 @@ void basicPoint::makeParent(list<basicPoint>& _children){
 
 void basicPoint::setShape(basicShape &_shape, bool _isPositionRelative){
 	parentShape = &_shape;
+	hasParentShape = true;
 	isPositionRelative = _isPositionRelative;
 }
 
 void basicPoint::unbindShape(){
 	parentShape = NULL;
+	hasParentShape = false;
 	isPositionRelative = false;
+	
+	// todo: removeChildren() here ?
 }
 
 void basicPoint::removeChildren(){
@@ -164,7 +169,7 @@ void basicPoint::setPos( float _x, float _y){
 	x = _x;
 	y = _y;
 	
-	if(parentShape) parentShape->onShapeChanged();
+	if( hasParentShape && parentShape) parentShape->onShapeChanged();
 }
 
 void basicPoint::translate(const basicPoint& _offset){
@@ -182,7 +187,7 @@ bool basicPoint::isMouseOver() const{
 bool basicPoint::isMouseOver(const float _x, const float _y) const{
 	float absX(x);
 	float absY(y);
-	if(parentShape && isPositionRelative){
+	if(hasParentShape && parentShape && isPositionRelative){
 		absX += parentShape->getPositionUnaltered()->x;
 		absY += parentShape->getPositionUnaltered()->y;
 	}
@@ -246,7 +251,7 @@ bool basicPoint::interceptMouseClick(ofMouseEventArgs &e){
 void basicPoint::_mouseDragged(ofMouseEventArgs &e){
 	
 	if( isEditable && e.button==0 && isMouseHold){
-		if(parentShape && isPositionRelative){
+		if(hasParentShape && parentShape && isPositionRelative){
 			setPos(
 				   e.x - parentShape->getPositionUnaltered()->x,
 				   e.y - parentShape->getPositionUnaltered()->y
