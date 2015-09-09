@@ -44,6 +44,7 @@ public:
 	basicPoint& operator /= ( const float& f );
 	
 #ifdef KM_EDITOR_APP
+	void initEditorVariables();
 	void draw();
 	
 	// todo: rm these functionality ?

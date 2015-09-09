@@ -21,32 +21,28 @@ public:
 	basicPoint* getPositionUnaltered();
 };
 
-basicPoint::basicPoint(){
-	basicPoint(0,0);
+basicPoint::basicPoint(): x(0), y(0){
+	//cout << "basicPoint::basicPoint()" << endl;
+#ifdef KM_EDITOR_APP
+	initEditorVariables();
+#endif
 }
 
-basicPoint::basicPoint(float _f){
-	basicPoint(_f, _f);
+basicPoint::basicPoint(float _f): x(_f), y(_f){
+#ifdef KM_EDITOR_APP
+	initEditorVariables();
+#endif
 }
 
 basicPoint::basicPoint(float _x, float _y): x(_x), y(_y){
-	
+	//cout << "basicPoint::basicPoint(0,0)" << endl;
 #ifdef KM_EDITOR_APP
-	isEditable = false;
-	isParentOfOthers = false;
-	isActive = false;
-	isMouseHold = false;
-	color = ofColor(255,255,255);
-	children = NULL;
-	isEventBound = false;
-	parentShape = NULL;
-	isPositionRelative = false;
-	hasParentShape = false;
+	initEditorVariables();
 #endif
 }
 
 basicPoint::~basicPoint(){
-
+	//cout << "basicPoint::~basicPoint()" << endl;
 #ifdef KM_EDITOR_APP
 	unbindMouseEvents();
 #endif
@@ -59,6 +55,19 @@ basicPoint::~basicPoint(){
 // - - - - - - - - - - -
 
 #ifdef KM_EDITOR_APP
+
+void basicPoint::initEditorVariables(){
+	isEditable = false;
+	isParentOfOthers = false;
+	isActive = false;
+	isMouseHold = false;
+	color = ofColor(255,255,255);
+	children = NULL;
+	isEventBound = false;
+	parentShape = NULL;
+	isPositionRelative = false;
+	hasParentShape = false;
+}
 
 void basicPoint::draw() {
 	if( !isEditable ) return;

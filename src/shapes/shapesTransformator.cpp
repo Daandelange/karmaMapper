@@ -14,16 +14,15 @@
 
 shapesTransformator::shapesTransformator(list<basicShape*>& _shapes):
 shapesSelection( _shapes ){
-	centerHandle.setEditable(true);
 	centerHandle.x = 0;
 	centerHandle.y = 0;
 	container.set(0,0,0,0);
 	
 	containerHandles.clear();
-	containerHandles.push_back( basicPoint() );
-	containerHandles.push_back( basicPoint() );
-	containerHandles.push_back( basicPoint() );
-	containerHandles.push_back( basicPoint() );
+	containerHandles.push_back( basicPoint(0,0) );
+	containerHandles.push_back( basicPoint(0,0) );
+	containerHandles.push_back( basicPoint(0,0) );
+	containerHandles.push_back( basicPoint(0,0) );
 }
 
 shapesTransformator::~shapesTransformator(){
@@ -44,7 +43,7 @@ void shapesTransformator::onShapeSelectionUpdated( list<basicShape *>& _shapes )
 	// todo: cancel currently happening transformations ?
 	
 	// set handlers on its corners
-	if(shapesSelection.size()!=0){
+	if(shapesSelection.size()>1){
 		
 		calculateMultiShapesContainer();
 		
@@ -53,12 +52,14 @@ void shapesTransformator::onShapeSelectionUpdated( list<basicShape *>& _shapes )
 		centerHandle.setPos(container.getCenter().x, container.getCenter().y );
 		
 		// update corner handles
+		int i=0;
 		for(auto it=containerHandles.begin(); it!=containerHandles.end(); it++){
-			(*it).setPos( container.x, container.y);
-			(*it).setPos( container.x+container.width, container.y);
-			(*it).setPos( container.x+container.width, container.y+container.height);
-			(*it).setPos(container.x, container.y+container.height);
-		
+			if(i==0) (*it).setPos( container.x, container.y);
+			else if(i==1) (*it).setPos( container.x+container.width, container.y);
+			else if(i==2) (*it).setPos( container.x+container.width, container.y+container.height);
+			else if(i==3) (*it).setPos(container.x, container.y+container.height);
+			(*it).setEditable(true);
+			i++;
 		}
 	}
 	
@@ -67,7 +68,7 @@ void shapesTransformator::onShapeSelectionUpdated( list<basicShape *>& _shapes )
 		
 		// make them editable
 		for(auto it=containerHandles.begin(); it!=containerHandles.end(); it++){
-			(*it).setEditable(true);
+			(*it).setEditable(false);
 		}
 	}
 }
