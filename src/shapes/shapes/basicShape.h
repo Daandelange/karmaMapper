@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "shapeFactory.hpp"
 #include "ofMain.h"
 #include "KMSettings.h"
 #include "basicPoint.h"
@@ -29,10 +30,21 @@
 typedef list<basicPoint>& pointListRef; // without the typedef returning this causes compiler errors.
 
 class basicShape {
-
+	
+	// needed for creating Derived* instances from string name
+	// see: http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
+	typedef basicShape * (*crfnptr)();
+	typedef std::map<std::string, crfnptr> shapeTypesMap;
+	static shapeTypesMap shapeTypes;
+	
 public:
 	basicShape();
 	virtual ~basicShape();
+	//const bool isShapeRegistered;
+	
+	// #########
+	// Instantiation helper (singleton)
+	basicShape* newBasicShape(){ return new basicShape; }
 	
 	// #########
 	// MAIN FUNCTIONS
@@ -78,7 +90,7 @@ protected:
 	int groupID;
 	string shapeName;
 #endif
-	vector<string> shapeTypes;
+	vector<string> myShapeTypes;
 	
 	basicPoint position; // absolute (other shape data will be relative to this)
 	
@@ -158,3 +170,30 @@ private:
 // GUI translations
 #define GUIinfo_GroupID		("Group ID")
 #define GUIinfo_ShapeName	("Name")
+
+namespace shape
+{
+	basicShape* create(const std::string& name);
+	void destroy(const basicShape* comp);
+	vector< std::string > getAllShapeTypes();
+}
+
+// allow shape registration
+#define SHAPE_REGISTER(TYPE, NAME)                                        \
+namespace shape {                                                         \
+namespace factory {                                                       \
+namespace                                                                 \
+{                                                                         \
+template<class T>                                                         \
+class shapeRegistration;                                                  \
+\
+template<>                                                                \
+class shapeRegistration<TYPE>                                             \
+{                                                                         \
+static const ::shape::factory::RegistryEntry<TYPE>& reg;                  \
+};                                                                        \
+\
+const ::shape::factory::RegistryEntry<TYPE>&                              \
+shapeRegistration<TYPE>::reg =                                            \
+::shape::factory	::RegistryEntry<TYPE>::Instance(NAME);                \
+}}}

@@ -11,7 +11,6 @@
 #include "KMSettings.h"
 
 #include "ofMain.h"
-
 #include "shapes.h"
 #include "ofxXmlSettings.h"
 

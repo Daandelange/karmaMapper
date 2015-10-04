@@ -8,6 +8,10 @@
 
 #include "shapesScene.h"
 
+// forward declare
+//namespace shape {
+//	basicShape* create(const std::string& name);
+//}
 
 // - - - - - - - -
 // CONSTRUCTORS
@@ -177,8 +181,16 @@ bool shapesScene::loadScene( const string _fileName ){
 			
 			// todo: make this shape specific
 			// --> http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
-			shapes.push_back( new vertexShape() );
-			shapes.back()->loadFromXML( sceneXML );
+			string shapeType = sceneXML.getValue("shapeType", "basicShape");
+			basicShape* shape = shape::create(shapeType);
+			if( shape != nullptr ){
+				shapes.push_back( shape );
+				shapes.back()->loadFromXML( sceneXML );
+			}
+			else {
+				// unknow shape type
+				ofLogError("basicShape* shape::create") << "Shapetype not found: " << shapeType;
+			}
 			
 			sceneXML.popTag(); // pop shape
 		}

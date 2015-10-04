@@ -14,6 +14,8 @@
 // needed forward declaration
 class basicShape;
 
+// todo: rename basicPoint so shapePoint
+
 class basicPoint {
 	
 public:

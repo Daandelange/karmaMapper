@@ -13,6 +13,7 @@
 // required by ALL shape classes
 //#include "shapesHandler.h"
 #include "basicPoint.h"
+//#include "shapeFactory.hpp"
 
 // list all different shapes here
 #include "basicShape.h"

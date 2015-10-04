@@ -40,7 +40,7 @@ vertexShape::~vertexShape(){
 void vertexShape::initialiseVertexVariables(){
 	
 	initialized = false;
-	shapeTypes.push_back("vertexShape");
+	myShapeTypes.push_back("vertexShape");
 	
 	/*instructions.loadFont("fonts/UbuntuMono.ttf", 12);
 	 instructions.setRectangle( ofRectangle(ofGetWidth()-220,20,200,300) );
@@ -523,3 +523,6 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 
 // endif KM_EDITOR_APP
 #endif
+
+// register shape type
+SHAPE_REGISTER( vertexShape , "vertexShape" );

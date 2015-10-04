@@ -54,8 +54,8 @@ void basicShape::initialiseBasicVariables(){
 	groupID = -1;
 	hasError = false;
 	
-	shapeTypes.clear();
-	shapeTypes.push_back("basicShape");
+	myShapeTypes.clear();
+	myShapeTypes.push_back("basicShape");
 
 #ifdef KM_EDITOR_APP
 	position.setShape( *this );
@@ -179,7 +179,7 @@ bool basicShape::isReady() const{
 }
 
 const string basicShape::getShapeType() const {
-	return shapeTypes.back();
+	return myShapeTypes.back();
 }
 
 ofRectangle basicShape::getBoundingBox() const{
@@ -199,7 +199,7 @@ vector<string> basicShape::getTypes() const{
 }
 
 bool basicShape::isType(const string _type) const {
-	return (std::find( shapeTypes.begin(), shapeTypes.end(), _type) != shapeTypes.end());
+	return (std::find( myShapeTypes.begin(), myShapeTypes.end(), _type) != myShapeTypes.end());
 }
 
 bool basicShape::isInside( const ofVec2f _pos, const bool _isPositionAbsolute) const{
@@ -539,3 +539,46 @@ void basicShape::groupIDUpdated(int& val){
 
 // endif KM_EDITOR_APP
 #endif
+
+
+//
+// SHAPE FACTORY
+//
+
+// Bind with factory
+namespace shape
+{
+	basicShape* create(const std::string& name){
+		//std::cout << "create() --> " << name << std::endl;
+		factory::shapeRegistry& reg = factory::getShapeRegistry();
+		factory::shapeRegistry::iterator it = reg.find(name);
+		
+		if (it == reg.end()) {
+			// This happens when there is no shape registered to this name.
+			ofLogError("basicShape* shape::create") << "Shapetype not found: " << name;
+			return nullptr;
+		}
+		
+		factory::CreateShapeFunc func = it->second;
+		return func();
+	}
+	
+	void destroy(const basicShape* comp){
+		delete comp;
+	}
+	
+	vector< std::string > getAllShapeTypes() {
+		factory::shapeRegistry& reg = factory::getShapeRegistry();
+		vector< std::string > ret;
+		ret.clear();
+		for( auto it=reg.begin(); it != reg.end(); ++it){
+			ret.push_back( it->first );
+		}
+		return ret;
+	}
+} // namespace shape
+
+// register shape type
+SHAPE_REGISTER( basicShape , "basicShape" );
+
+

@@ -147,6 +147,8 @@
 		8554524C1B921F8800A36079 /* vertexShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855452451B921F8800A36079 /* vertexShape.cpp */; };
 		855452501B921FB000A36079 /* shapesEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8554524D1B921FB000A36079 /* shapesEditor.cpp */; };
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
+		8574FEB01BC13BC20058E916 /* shapeFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */; };
+		8574FEB11BC13BC20058E916 /* shapeFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */; };
 		85E773091B965980003AF890 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BFFBBF4CC43DEE890B3C3E /* OscTypes.cpp */; };
 		8DED5056525646FA71980866 /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDE55D82BD962DAC0E94B708 /* ofxAssimpModelLoader.cpp */; };
@@ -416,6 +418,8 @@
 		8554524D1B921FB000A36079 /* shapesEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shapesEditor.cpp; path = shapes/shapesEditor.cpp; sourceTree = "<group>"; };
 		8554524E1B921FB000A36079 /* shapesEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapesEditor.h; path = shapes/shapesEditor.h; sourceTree = "<group>"; };
 		856BF5AB0322D0689EE63829 /* ofxUIRangeSlider.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIRangeSlider.h; path = ../../../addons/ofxUI/src/ofxUIRangeSlider.h; sourceTree = SOURCE_ROOT; };
+		8574FEAE1BC131E40058E916 /* shapeFactory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = shapeFactory.hpp; path = shapes/shapeFactory.hpp; sourceTree = "<group>"; };
+		8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shapeFactory.cpp; path = shapes/shapeFactory.cpp; sourceTree = "<group>"; };
 		87035EFE3D4427294D4D1338 /* ofxUIUtils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUIUtils.h; path = ../../../addons/ofxUI/src/ofxUIUtils.h; sourceTree = SOURCE_ROOT; };
 		876BBA9542E267584885CAD8 /* ofxUIBiLabelSlider.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxUIBiLabelSlider.cpp; path = ../../../addons/ofxUI/src/ofxUIBiLabelSlider.cpp; sourceTree = SOURCE_ROOT; };
 		87F26B4B24CBD428AD9EEBAA /* ofxBaseGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBaseGui.h; path = ../../../addons/ofxGui/src/ofxBaseGui.h; sourceTree = SOURCE_ROOT; };
@@ -748,6 +752,8 @@
 				210345EFBAEAC697B4BA7AEF /* shapesScene.h */,
 				8554524D1B921FB000A36079 /* shapesEditor.cpp */,
 				8554524E1B921FB000A36079 /* shapesEditor.h */,
+				8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */,
+				8574FEAE1BC131E40058E916 /* shapeFactory.hpp */,
 				850D6F051B9E10370047DB3D /* shapesTransformator.cpp */,
 				850D6F061B9E10370047DB3D /* shapesTransformator.h */,
 				E3B8B966110C6E9FCA2502A7 /* shapesDB.cpp */,
@@ -809,11 +815,11 @@
 		8554523E1B921EA100A36079 /* shapes */ = {
 			isa = PBXGroup;
 			children = (
+				855452441B921F8800A36079 /* shapes.h */,
 				855452401B921F8800A36079 /* basicShape.cpp */,
 				855452411B921F8800A36079 /* basicShape.h */,
 				855452421B921F8800A36079 /* basicPoint.cpp */,
 				855452431B921F8800A36079 /* basicPoint.h */,
-				855452441B921F8800A36079 /* shapes.h */,
 				855452451B921F8800A36079 /* vertexShape.cpp */,
 				855452461B921F8800A36079 /* vertexShape.h */,
 			);
@@ -1365,6 +1371,7 @@
 				851FA9BF1B9321FD00F94851 /* ofxMasterSlaveControl.cpp in Sources */,
 				8554524A1B921F8800A36079 /* basicPoint.cpp in Sources */,
 				851FA9B91B9321FD00F94851 /* ofxGuiGroupExtended.cpp in Sources */,
+				8574FEB11BC13BC20058E916 /* shapeFactory.cpp in Sources */,
 				851FA9BC1B9321FD00F94851 /* ofxGuiSpacer.cpp in Sources */,
 				851FA9C61B9321FD00F94851 /* ofxVerticalSlider.cpp in Sources */,
 				855451DD1B91FB4C00A36079 /* shapesDB.cpp in Sources */,
@@ -1496,6 +1503,7 @@
 				851FA9B41B9321FD00F94851 /* ofxTabbedPages.cpp in Sources */,
 				7F2CD93F681F3C1547B3BF2C /* ofxUIImageButton.cpp in Sources */,
 				FBD0CD0AFE3849C14E829CAF /* ofxUIImageSampler.cpp in Sources */,
+				8574FEB01BC13BC20058E916 /* shapeFactory.cpp in Sources */,
 				26874B150C8535AEA0F24C8C /* ofxUIImageSlider.cpp in Sources */,
 				FB8AA9FA6535767BE31806BC /* ofxUIImageToggle.cpp in Sources */,
 				851FA9B51B9321FD00F94851 /* ofxValuePlotter.cpp in Sources */,

@@ -178,7 +178,7 @@ bool animationController::start(){
 		effects.push_back(e);
 	}
 	
-	/*{
+	/ *{
 	basicEffect* e;
 	e = new imageMeltingEffect();
 	e->initialise();

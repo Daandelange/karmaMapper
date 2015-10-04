@@ -766,7 +766,7 @@ void shapesEditor::buildMenus(){
 	batchGui->addLabelButton(batchGUISelectAll, false);
 	batchGui->addLabelButton(batchGUISelectNone, false);
 	
-	/* / generate list of all shapes
+	/ * / generate list of all shapes
 	 int i = 0;
 	 for(list<basicShape*>::iterator it=shapes.begin(); it!=shapes.end(); it++){
 	 batchGui->addToggle((*it)->shapeType+"[" + ofToString(i)+"]" + ofToString(shapes.size()), false);
