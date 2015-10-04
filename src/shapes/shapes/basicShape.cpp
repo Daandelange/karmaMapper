@@ -528,6 +528,11 @@ bool basicShape::setPosition( const basicPoint _pos) {
 	onShapeChanged();
 }
 
+bool basicShape::setGroupID(const int& _id){
+	groupID = _id;
+	return true;
+}
+
 void basicShape::groupIDUpdated(int& val){
 	// keep new maxGroupID ?
 	if(maxGroupID <= groupID){

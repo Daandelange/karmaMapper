@@ -230,6 +230,8 @@ void shapesEditor::draw() {
 		if( activeShape ) activeShape->render();
 	}
 	
+	if(shapeCreationGuiVisible) shapeCreationGui.draw();
+	
 	editorGui.draw();
 }
 
@@ -249,9 +251,12 @@ void shapesEditor::switchEditing(){
 	isInEditMode()?disableEditing():enableEditing();
 }
 
-bool shapesEditor::isInEditMode() const{
-	return !(editMode==EDIT_MODE_OFF);
+bool shapesEditor::isInEditMode( shapesEditMode _mode ) const{
+	if(_mode==EDIT_MODE_OFF) return !(editMode==_mode);
+	return (editMode==_mode);
 }
+
+
 
 bool shapesEditor::isInEditModeBatch() const {
 	return ( isInEditMode() && selectedShapes.size()>1 );
@@ -512,6 +517,10 @@ void shapesEditor::selectShape(basicShape* _i, const bool& preventToggle, const 
 	menuNumSelectedShapes = ofToString( selectedShapes.size() );
 }
 
+bool shapesEditor::hasSelectedShape() const {
+	return (selectedShapes.size() > 0);
+}
+
 void shapesEditor::selectNextShape(){
 	// todo
 	/*if( getNumShapes()==1 && activeShape!=NULL) selectShape(NULL);
@@ -614,15 +623,51 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 	if( !isInEditMode() ) return;
 	
+	// handle shape creation menu
+	ofRectangle c = shapeCreationGui.getShape();
+	if(shapeCreationGuiVisible && shapeCreationGui.getShape().inside( e.x, e.y) ){
+		float offsetX = shapeCreationGui.getShape().x;
+		float offsetY = shapeCreationGui.getShape().y;
+		
+		for(auto it = shapeCreationGuiElements.begin(); it!=shapeCreationGuiElements.end(); ++it){
+			if( (*it)->getShape().inside(e.x, e.y) ){
+				shapeCreationGuiVisible = false;
+				basicShape* newShape = shape::create( (*it)->getName() );
+				
+				// place shape on click position
+				newShape->setPosition(lastRightClickPosition);
+				
+				// use same group ID as first active shape ?
+				if( selectedShapes.size() > 0 ) newShape->setGroupID( (*selectedShapes.begin())->getGroupID() );
+				
+				shapesScene::insertShape( newShape );
+				
+				selectShape(newShape);
+				
+				return; // prevents mouse click propagation / bubbling
+			}
+		}
+	}
+	// hide shape creation menu
+	else {
+		shapeCreationGuiVisible = false;
+	}
+	
 	// ignore editor guiMenu clicks
 	if( editorGui.getShape().inside( e.x, e.y) ){
 		return;
 	}
 	
 	// edit a single shape ?
-	else if( isInEditModeSingle() ){
+	else if( isInEditMode() && hasSelectedShape() ){
 		for(auto it=selectedShapes.begin(); it!=selectedShapes.end(); it++){
-			if( (*it)->interceptMouseClick( e ) ){
+			if( (*it)->interceptMouseClick( e )){
+				return;
+			}
+		}
+		// 2nd pass, prevent event propagation to allow no mouse interactions while being handled
+		if( !isInEditModeBatch() ) for(auto it=selectedShapes.begin(); it!=selectedShapes.end(); it++){
+			if( (*it)->getBoundingBox().inside( e.x, e.y )){
 				return;
 			}
 		}
@@ -634,9 +679,9 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 	}
 	
 	// let user select multiple shapes by clicking on them
-	if( e.button==0 ){
+	if( e.button==0 && isInEditMode()){
 		for(auto it=shapes.begin(); it!=shapes.end(); it++){
-			if( (*it)->isInside( e )){
+			if( (*it)->isInside( e ) ){
 				bool allowMultiple = ofGetKeyPressed( OF_KEY_SHIFT) || ofGetKeyPressed( OF_KEY_RIGHT_SHIFT) || isInEditModeBatch();
 				
 				// toggle clicked shape
@@ -644,6 +689,17 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 				return;
 			}
 		}
+		
+		// deselect
+		if( !isInEditModeBatch() ) selectShape(NULL);
+	}
+	
+	// show right click shape creation menu
+	if(e.button==2 && isInEditMode(EDIT_MODE_SHAPE) ){
+		shapeCreationGuiVisible = !shapeCreationGuiVisible;
+		lastRightClickPosition.setPos(e.x, e.y);
+		shapeCreationGui.setPosition( lastRightClickPosition.x, lastRightClickPosition.y );
+		return;
 	}
 }
 
@@ -787,4 +843,23 @@ void shapesEditor::buildMenus(){
 	batchGui->disable();
 	
 	ofAddListener(batchGui->newGUIEvent, this, &shapesEditor::batchGuiEvent);*/
+	
+	// Build shape creation menu (right-click)
+	shapeCreationGuiVisible = false;
+	lastRightClickPosition.setPos(0,0);
+	shapeCreationGui.setup("Select the shape to add");
+	shapeCreationGui.setShowHeader(false);
+	shapeCreationGui.unregisterMouseEvents(); // dont listen to mouse events (done manually in void _mousePressed() )
+	// populate
+	auto types = shape::getAllShapeTypes();
+	shapeCreationGuiElements .clear();
+	for(auto it=types.begin(); it!=types.end(); ++it){
+		ofxMinimalButton* btn = new ofxMinimalButton( *it );
+		shapeCreationGuiElements.push_back( btn );
+		//btn->setup( , btn );
+		//btn->addListener(this, &shapesEditor::spawnShape);
+		shapeCreationGui.add( shapeCreationGuiElements.back() );
+	}
+	//shapeCreationGui.
+	//shapeCreationGui.disable();
 }

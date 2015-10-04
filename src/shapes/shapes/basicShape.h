@@ -44,6 +44,7 @@ public:
 	
 	// #########
 	// Instantiation helper (singleton)
+	// todo: can this be removed ?
 	basicShape* newBasicShape(){ return new basicShape; }
 	
 	// #########
@@ -129,7 +130,7 @@ public:
 	// #########
 	// SETTERS
 	bool setPosition(const basicPoint _pos);
-	bool setGroupID(const int _id);
+	bool setGroupID(const int& _id);
 	
 	// #########
 	// GUI LISTENERS

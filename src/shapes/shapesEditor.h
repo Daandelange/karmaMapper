@@ -48,7 +48,7 @@ public:
 	void enableEditing();
 	void disableEditing();
 	void switchEditing();
-	bool isInEditMode() const;
+	bool isInEditMode(shapesEditMode _mode = EDIT_MODE_OFF ) const;
 	bool isInEditModeBatch() const;
 	bool isInEditModeSingle() const;
 	
@@ -56,6 +56,7 @@ public:
 	bool addShape(string _shapeType);
 	bool removeShape( basicShape* _s );
 	void selectShape(basicShape* _i, const bool& preventToggle=false, const bool allowMultiple=false);
+	bool hasSelectedShape() const;
 	void selectNextShape();
 	void selectPrevShape();
 	bool setEditMode(shapesEditMode _mode);
@@ -90,6 +91,10 @@ private:
 	ofxToggle fullScreenToggle, enableEditingToggle;
 	ofxGuiMatrix batchModeSelect, simpleMode;
 	ofParameter<string> menuNumSelectedShapes;
+	ofxPanelExtended shapeCreationGui;
+	bool shapeCreationGuiVisible;
+	list<ofxMinimalButton*> shapeCreationGuiElements;
+	basicPoint lastRightClickPosition;
 	void buildMenus();
 	
 	
