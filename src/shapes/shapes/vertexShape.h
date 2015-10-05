@@ -20,6 +20,7 @@ public:
 	
 	// #########
 	// MAIN FUNCTIONS
+	void initialiseVertexVariables();
 	virtual void sendToGPU();
 	
 	// #########
@@ -91,7 +92,6 @@ protected:
 	
 private:
 	// constructor helpers
-	void initialiseVertexVariables();
 	void buildVertexMenu();
 	
 	

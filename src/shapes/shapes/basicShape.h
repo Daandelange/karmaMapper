@@ -31,24 +31,14 @@ typedef list<basicPoint>& pointListRef; // without the typedef returning this ca
 
 class basicShape {
 	
-	// needed for creating Derived* instances from string name
-	// see: http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
-	typedef basicShape * (*crfnptr)();
-	typedef std::map<std::string, crfnptr> shapeTypesMap;
-	static shapeTypesMap shapeTypes;
-	
 public:
 	basicShape();
 	virtual ~basicShape();
 	//const bool isShapeRegistered;
 	
 	// #########
-	// Instantiation helper (singleton)
-	// todo: can this be removed ?
-	basicShape* newBasicShape(){ return new basicShape; }
-	
-	// #########
 	// MAIN FUNCTIONS
+	void initialiseBasicVariables();
 	virtual void sendToGPU();
 	
 	// #########
@@ -160,7 +150,6 @@ protected:
 	void setColorFromGroupID();
 	
 private:
-	void initialiseBasicVariables();
 	void buildBasicMenu();
 	
 // endif KM_EDITOR_APP
