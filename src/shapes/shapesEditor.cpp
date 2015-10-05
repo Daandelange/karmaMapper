@@ -515,6 +515,17 @@ void shapesEditor::selectShape(basicShape* _i, const bool& preventToggle, const 
 	
 	// update number of selected shapes (GUI feature only)
 	menuNumSelectedShapes = ofToString( selectedShapes.size() );
+	
+	// adapt edit mode to selection
+	if( selectedShapes.size() == 1 && !isInEditMode(EDIT_MODE_SHAPE) ){
+		setEditMode(EDIT_MODE_SHAPE);
+	}
+	else if( selectedShapes.size() > 1 && !isInEditModeBatch() ){
+		setEditMode(EDIT_MODE_BATCH);
+	}
+	else if ( selectedShapes.size() < 1 && !isInEditMode() ){
+		setEditMode(EDIT_MODE_RENDER);
+	}
 }
 
 bool shapesEditor::hasSelectedShape() const {
@@ -561,7 +572,7 @@ void shapesEditor::selectPrevShape(){
 bool shapesEditor::setEditMode(shapesEditMode _mode){
 	// edit mode gets disabled
 	if( isInEditMode() && _mode==EDIT_MODE_OFF){
-		cout << "shapesEditor::setEditMode() OFF" << endl;
+		ofLogNotice("shapesEditor::setEditMode()") << "OFF";
 		
 		selectShape(NULL);
 		// unregister editor events
@@ -580,10 +591,10 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 	}
 	
 	// edit mode just got enabled
-	else if(!isInEditMode() && _mode==EDIT_MODE_RENDER){
-		cout << "shapesEditor::setEditMode() ON" << endl;
+	else if(!isInEditMode() && _mode != EDIT_MODE_OFF ){
+		ofLogNotice("shapesEditor::setEditMode()") << "ON";
 		
-		selectShape(NULL);// todo: make this remember
+		//selectShape(NULL);// todo: make this remember shapes
 		
 		// enable listeners
 		ofAddListener( ofEvents().mousePressed, this, &shapesEditor::_mousePressed );
@@ -612,6 +623,7 @@ bool shapesEditor::setEditMode(shapesEditMode _mode){
 		if( _mode!=EDIT_MODE_BATCH_FLIPX ) ((ofxUILabelToggle*)batchGui->getWidget(batchGUIFlipXMode))->setValue(false);
 		if( _mode!=EDIT_MODE_BATCH_FLIPY ) ((ofxUILabelToggle*)batchGui->getWidget(batchGUIFlipYMode))->setValue(false);
 	}*/
+	enableEditingToggle = isInEditModeSingle() || isInEditModeBatch();
 	
 	return (editMode == _mode);
 }
@@ -781,7 +793,7 @@ void shapesEditor::buildMenus(){
 	menuNumSelectedShapes.set( GUINbSelectedShapes, "0");
 	shapesMenu.add( (new ofxLabel(menuNumSelectedShapes)) );
 	
-	enableEditingToggle.setup( GUIEnableEditing, enableEditingToggle );
+	enableEditingToggle.setup( GUIEnableEditing );
 	enableEditingToggle.addListener(this, &shapesEditor::enableShapeEditing );
 	
 	shapesMenu.add( &enableEditingToggle );

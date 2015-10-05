@@ -20,17 +20,16 @@
 enum shapesEditMode {
 	EDIT_MODE_OFF,			// Everything disabled
 	EDIT_MODE_RENDER,		// Render the scene
-	EDIT_MODE_SHAPE			// Edit (single) shapes
+	EDIT_MODE_SHAPE,		// Edit (single) shapes
+	EDIT_MODE_BATCH
 };
 
 // The editor lets you load, edit and save scenes
 // It adds the UI and handles UI events for shapes
 
-// todo: make the shape edit tools (un)instanciable for a performance gain. Make it dependent on a shapesServer//karmaScene database class which stays loaded for serving raw (+rw) shape data and maybe some utilities.
 // todo: add a layer re-ordering panel
-// todo: add contrast mode for configuring shapes easier on the field
-
-// todo: right-click to add a shape somewhere
+// todo: add contrast mode for configuring shapes easier "on the field"
+// todo: edit modes are a mess, clarify & tidy up
 
 class shapesEditor : public shapesScene {
 
