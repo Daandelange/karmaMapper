@@ -14,7 +14,6 @@
 #include "shapes.h"
 #include "shapesScene.h"
 #include "shapesTransformator.h"
-#include "ofxUI.h"
 #include "ofxGui.h"
 
 enum shapesEditMode {
@@ -63,8 +62,8 @@ public:
 	// event listeners
 	void _draw( ofEventArgs &e );
 	void _update( ofEventArgs &e );
-	void guiEvent( ofxUIEventArgs &e);
-	void batchGuiEvent( ofxUIEventArgs &e);
+	//void guiEvent( ofxUIEventArgs &e);
+	//void batchGuiEvent( ofxUIEventArgs &e);
 	void _mousePressed( ofMouseEventArgs &e);
 	void _keyPressed( ofKeyEventArgs &e );
 	

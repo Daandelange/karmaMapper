@@ -36,7 +36,6 @@ basicShape::~basicShape(){
 	disableEditMode();
 	
 	position.unbindShape();
-	
 #endif
 
 #ifdef KM_LOG_INSTANCIATIONS
@@ -86,11 +85,19 @@ void basicShape::initialiseBasicVariables(){
 
 // This function simply uploads data to GPU. basicEffect* will set styling
 void basicShape::sendToGPU(){
-	
 	// prepare for drawing
 	ofPushMatrix();
 	ofPushStyle();
 	ofTranslate(position.x, position.y);
+	
+	// if shape has error, draw it in red
+#ifdef KM_EDITOR_APP
+	ofSetColor(fgColor, 200);
+	ofFill();
+#else
+	ofSetColor(255);
+	ofFill();
+#endif
 	
 	if(hasError){
 		ofSetHexColor(0xFFFFFF);

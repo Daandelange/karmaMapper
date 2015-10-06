@@ -34,7 +34,7 @@ shapesScene::~shapesScene(){
 // - - - - - - - -
 // BASIC FUNCTIONS
 // - - - - - - - -
-bool shapesScene::isEditorClass(){
+bool shapesScene::isEditorClass() const{
 	return false;
 }
 
@@ -58,6 +58,10 @@ void shapesScene::loadLastUsedScene() {
 	}
 	sceneSettings.clear();
 	
+}
+
+string shapesScene::getLoadedScene() const {
+	return loadedConfiguration;
 }
 
 // - - - - - - - -

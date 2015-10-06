@@ -14,13 +14,13 @@
 #include "basicShape.h"
 #include "effects.h"
 #include "shapesDB.h"
-#include "ofxUI.h"
+#include "ofxGui.h"
 #include "oscRouter.h"
 #include "mirReceiver.h"
 #include "durationReceiver.h"
 #include "fboRecorder.h"
 
-// todo: an overall mask that hides any unwanted projection zones
+// todo: an overall mask that hides any unwanted projection zones (could be done by an effect too)
 
 class animationController {
 	
@@ -36,15 +36,33 @@ public:
 	bool isEnabled() const;
 	
 	// listeners
-	void update(ofEventArgs& event);
-	void draw(ofEventArgs& event);
-	void guiEvent( ofxUIEventArgs &e);
+	void update( ofEventArgs& event );
+	void draw( ofEventArgs& event );
+	void guiEvent( ofxUIEventArgs &e );
+	void _keyPressed( ofKeyEventArgs& e );
+	
+	// menu listeners
+	void showShapeLoadMenu( );
+	void showSaveDialog( );
+	void setFullScreen( bool & _fullScreen );
+	//void enableAnimations( bool & _on );
 	
 protected:
+	// app variables
+	bool bIsFullScreen;
+	bool bMouseHidden;
+	
 	// gui
-	ofxUISuperCanvas* gui;
-	ofxUILabel* guiNumEffects;
-	ofxUILabel* guiNumShapes;
+	ofxPanelExtended animationGui;
+	ofParameter<string> guiNumEffects, guiNumShapes, guiLoadedShapesScene;
+	ofxGuiGroupExtended shortCutsMenu, shapesInfoMenu, effectsMenu;
+	ofxMinimalButton guiLoadShapesSceneBtn;
+// tmp
+//	ofxMinimalButton loadButton, saveButton;
+//	ofxToggle fullScreenToggle, enableEditingToggle;
+//	ofxGuiMatrix batchModeSelect, simpleMode;
+//	ofParameter<string> menuNumSelectedShapes;
+//	ofxPanelExtended shapeCreationGui;
 	
 	// effects stuff
 	bool isEffectsIndex(int i);
@@ -54,7 +72,6 @@ protected:
 	
 	// music
 	ofSoundPlayer music;
-	
 	
 	// OSC
 	//OSCRouter& oscRouter;
@@ -66,13 +83,30 @@ protected:
 	
 private:
 	bool bEnabled;
+	bool bShowGui;
 	
 };
 
 
 // GUI translations
-#define GUIToggleFullScreen		("Full Screen")
-#define GUIToggleMouseCursor	("Hide Mouse")
 
+// Keyboard Shordcuts
+#define GUIksMouseHide	("Hide Cursor")
+#define GUIksGuiToggle	("Toggle GUI")
+#define GUIselected		("Toggle GUI")
+
+
+// Shapes
+#define GUIShapesInfo		("Scene Information")
+#define GUILoadScene		("Load Shapes...")
+#define GUILoadedScene		("") // empty for value more space
+#define GUIShapesNumShapes	("# Shapes:\t")
+
+
+// Effects
+#define GUIEffectsTitle			("Animation Information")
+#define GUIToggleFullScreen		("Full Screen")
 #define GUIEffectsNumEffects	("# Effects:\t")
-#define GUIShapesNumShapes		("# Shapes:\t")
+//#define GUI()
+
+

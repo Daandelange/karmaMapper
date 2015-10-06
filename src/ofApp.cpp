@@ -1,8 +1,8 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-ofApp::ofApp() {
-	//controller = animationController(server, osc);
+ofApp::ofApp(): controller( scene ) {
+	//controller.setOSCServer(server, osc);
 }
 
 ofApp::~ofApp(){
@@ -10,26 +10,30 @@ ofApp::~ofApp(){
 }
 
 void ofApp::setup(){
-	//fboHack.resize(1500,1200);
-	// drawing environment
-	ofEnableAlphaBlending();
-	ofEnableAntiAliasing();
-	ofEnableSmoothing();
+
 	ofSetEscapeQuitsApp(false);
+	ofSetWindowTitle( "karmaMapper::Animator" );
+	
+	// drawing environment
+	//ofEnableAlphaBlending();
+	//ofEnableAntiAliasing();
+	//ofEnableSmoothing();
 	
 	// setup scene
 	//scene.loadLastUsedScene();
-	scene.loadScene("Vendome_1500_1200.xml");
-	//server.loadShapes("Vendome_Full_Small.xml");
+	//scene.loadScene("Vendome_1500_1200.xml");
+	scene.loadScene("Vendome_Full_Small.xml");
+	
+	// enable animation controller
+	controller.start();
 	
 	// start Ableton Liveset Decoder
-	ofx::AbletonLiveSet::LiveSet LS;
-	ofx::AbletonLiveSet::Parser parser(LS);
-	
-	if(!parser.open("vendome_daan_v1.0/mappingvendome.als")) ofLogNotice("ofApp::setup()", "Could not parse ALS file.");
+	//ofx::AbletonLiveSet::LiveSet LS;
+	//ofx::AbletonLiveSet::Parser parser(LS);
+	//if(!parser.open("vendome_daan_v1.0/mappingvendome.als")) ofLogNotice("ofApp::setup()", "Could not parse ALS file.");
 	
 	//liveSetEvents.enableMetronomEvents(LS);
-	liveSetEvents.enableNoteEvents(LS);
+	//liveSetEvents.enableNoteEvents(LS);
 	
 	// tmp
 	ofShowCursor();
@@ -54,7 +58,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	// display FPS in window title
-	ofSetWindowTitle( ofToString(ofGetFrameRate(), 2)+" FPS");
+	//ofSetWindowTitle( ofToString(ofGetFrameRate(), 2)+" FPS");
 }
 
 //--------------------------------------------------------------

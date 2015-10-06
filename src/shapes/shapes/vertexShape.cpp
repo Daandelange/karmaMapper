@@ -77,11 +77,14 @@ void vertexShape::sendToGPU(){
 	// if shape has error, draw it in red
 #ifdef KM_EDITOR_APP
 	ofSetColor(fgColor, 200);
-	ofFill();
 #else
 	ofSetColor(255);
-	ofFill();
 #endif
+	ofFill();
+	
+	if(hasError){
+		ofSetHexColor(0xFFFFFF);
+	}
 	
 	ofBeginShape();
 	// draw elements

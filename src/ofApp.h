@@ -44,7 +44,7 @@ class ofApp : public ofBaseApp{
 private:
 	ofx::AbletonLiveSet::EventHandler liveSetEvents;
 	shapesDB scene;
-	//animationController controller;
+	animationController controller;
 	//karmaSoundAnalyser analyser;
 	//ofSoundStream soundStream;
 	//OSCRouter osc;

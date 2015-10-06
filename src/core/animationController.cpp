@@ -15,57 +15,79 @@
 // - - - - - - - -
 animationController::animationController( shapesDB& _scene ): scene(_scene){
 	bEnabled = false;
+	bShowGui = false;
+	
+	bMouseHidden = false;
+	bIsFullScreen = false;
+	
 	effects.clear();
 	effects.resize(0);
 	
 	ofAddListener( ofEvents().draw , this, &animationController::draw );
 	ofAddListener( ofEvents().update , this, &animationController::update );
 	
+	ofAddListener( ofEvents().keyPressed, this, &animationController::_keyPressed );
+	
 	// build GUI
-	gui = new ofxUISuperCanvas("ANIMATION CONTROLLER");
-	gui->setColorBack(ofColor(41,123,117,180));
-	gui->setColorFill(ofColor(255,160));
-	gui->setColorFillHighlight(ofColor(255,220));
-	//gui->setColorPadded(ofColor(255,150));
+	animationGui.setup("ANIMATION CONTROLLER");
 	
-	//gui->setPosition(pos.x, pos.y);
+	// add menu shortcuts
+	shortCutsMenu.setup("Keyboard Shortcuts");
+	shortCutsMenu.add( (new ofxLabel())->setup("Hide mouse", "M") );
+	shortCutsMenu.add( (new ofxLabel())->setup("Toggle Gui", "H") );
+	animationGui.add( &shortCutsMenu );
 	
-	gui->addSpacer();
-	string textString = "Control'em'all! ^_^";
-	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-	gui->addSpacer();
-	textString = "Keyboard shortcuts:";
-	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-	textString = "  H Show/Hide Pointer";
-	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-	textString = "  F Toggle full screen";
-	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+	animationGui.add( (new ofxGuiSpacer()) );
+	
+//	textString = "Keyboard shortcuts:";
+//	animationGui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+//	textString = "  H Show/Hide Pointer";
+//	animationGui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
+//	textString = "  F Toggle full screen";
+//	animationGui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
 	
 	/*gui->addSpacer();
 	gui->addToggle(GUIToggleFullScreen, false);
 	gui->addToggle(GUIToggleMouseCursor, false);
 	gui->addFPSSlider("FPS"); */
 	
-	gui->addSpacer();
-	gui->addLabel("Scene", OFX_UI_FONT_LARGE);
-	guiNumEffects = gui->addLabel(GUIEffectsNumEffects, OFX_UI_FONT_SMALL);
-	guiNumShapes = gui->addLabel(GUIShapesNumShapes, OFX_UI_FONT_SMALL);
+	// Setup Scene info
+	shapesInfoMenu.setup( GUIShapesInfo );
 	
-	gui->autoSizeToFitWidgets();
-	gui->disable();
-	ofAddListener(gui->newGUIEvent, this, &animationController::guiEvent);
+	guiLoadShapesSceneBtn.setup(GUILoadScene);
+	guiLoadShapesSceneBtn.addListener(this, &animationController::showShapeLoadMenu);
+	shapesInfoMenu.add( &guiLoadShapesSceneBtn );
+	
+	guiLoadedShapesScene.set(GUILoadedScene, scene.getLoadedScene());
+	shapesInfoMenu.add(new ofxLabel(guiLoadedShapesScene) );
+	
+	guiNumShapes.set( GUIShapesNumShapes, "0" );
+	shapesInfoMenu.add( (new ofxLabel(guiNumShapes)) );
+	
+	animationGui.add( &shapesInfoMenu );
+	animationGui.add( (new ofxGuiSpacer()) );
+	
+	// Setup Scene info
+	effectsMenu.setup( GUIEffectsTitle );
+	guiNumEffects.set( GUIEffectsNumEffects, "0" );
+	effectsMenu.add( new ofxLabel(guiNumEffects) );
+	
+	animationGui.add( &effectsMenu );
+
+	// hide gui
+	bShowGui = false;
 }
 
 animationController::~animationController(){
 	ofRemoveListener( ofEvents().draw , this, &animationController::draw );
 	ofRemoveListener( ofEvents().update , this, &animationController::update );
 	
+	ofRemoveListener( ofEvents().keyPressed , this, &animationController::_keyPressed );
+	
 	// rm GUI stuff correctly
-	ofRemoveListener( gui->newGUIEvent, this, &animationController::guiEvent );
-	gui->disable();
-	guiNumEffects = NULL;
-	guiNumShapes = NULL;
-	delete gui;
+	guiLoadShapesSceneBtn.removeListener(this, &animationController::showShapeLoadMenu);
+	bShowGui = false;
+
 }
 
 // - - - - - - - -
@@ -73,7 +95,7 @@ animationController::~animationController(){
 // - - - - - - - -
 bool animationController::start(){
 	bEnabled = true;
-	gui->enable();
+	bShowGui = true;
 	
 	// all black! xD
 	ofSetBackgroundAuto(false);
@@ -224,7 +246,7 @@ bool animationController::stop(){
 	//durationOSCReceiver.stop();
 	//oscRouter.removeNode( &durationOSCReceiver );
 	
-	gui->disable();
+	bShowGui = false;
 	
 	{
 		// play music with VLC
@@ -252,7 +274,7 @@ bool animationController::stop(){
 	recorder.stopRecording();
 	
 	bEnabled = false;
-	return isEnabled()==false;
+	return !isEnabled();
 }
 
 bool animationController::isEnabled() const {
@@ -266,11 +288,22 @@ void animationController::update(ofEventArgs &event){
 	if(!isEnabled()) return;
 	
 	// update GUI data
-	if(guiNumEffects!=NULL) guiNumEffects->setLabel(GUIEffectsNumEffects + ofToString(effects.size()) );
-	if(guiNumShapes!=NULL) guiNumShapes->setLabel(GUIShapesNumShapes + ofToString( scene.getNumShapes() ) );
+	// todo: dont do this every frame (after loading scene)
+	if( bShowGui){
+		if(ofToString(effects.size()) != ofToString(guiNumEffects) ){
+			guiNumEffects = ofToString(effects.size()) ;
+		}
+		if( bShowGui && ofToString(scene.getNumShapes()) != ofToString(guiNumShapes) ){
+			guiNumShapes = ofToString(scene.getNumShapes()) ;
+		}
+		if( ofToString(guiLoadedShapesScene) != scene.getLoadedScene() ){
+			guiLoadedShapesScene = scene.getLoadedScene();// ofToString();
+		}
+	}
 	
-	// create animation state (bunch of variables)
 	
+	// todo:
+	// update/create animation state (bunch of variables)
 	
 	// update effects (run mode)
 	for(int i=0; i<effects.size(); i++){
@@ -288,12 +321,55 @@ void animationController::draw(ofEventArgs& event){
 	// tmp
 	ofClear(0,1);
 	
+	// render a scene without effects (tmp?)
+	if(effects.size()==0){
+		for(auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it){
+			(*it)->sendToGPU();
+		}
+	}
+	
+	
 	// draw effects
-	for(int i=0; i<effects.size(); i++){
+	else for(int i=0; i<effects.size(); i++){
 		effects[i]->render();
 	}
 	
 	recorder.endFrame(true);
+	
+	// draw gui ?
+	if(bShowGui) animationGui.draw();
+}
+
+// - - - - - - - -
+// MENU EVENT LISTENERS
+// - - - - - - - -
+void animationController::showShapeLoadMenu(){
+	//ofRectangle btn = loadButton.getShape();
+	ofFileDialogResult openFileResult= ofSystemLoadDialog("Select the XML file to load...", false, ofToDataPath("saveFiles/"));
+	
+	if(openFileResult.bSuccess){
+		// restrict to saveFiles dir
+		ofFile file( ofToDataPath("saveFiles/")+openFileResult.getName() );
+		if(file.exists()){
+			scene.loadScene( openFileResult.getName() );
+		}
+	}
+}
+
+void animationController::showSaveDialog(){
+	ofFileDialogResult openFileResult= ofSystemSaveDialog(scene. getLoadedScene(), "Where shall I save your scene?");
+	
+	if(openFileResult.bSuccess){
+		// only keep the file name, not the path
+		scene.saveScene( openFileResult.getName() );
+	}
+}
+
+void animationController::setFullScreen(bool & _fullScreen){
+	if( bIsFullScreen != _fullScreen ){
+		bIsFullScreen = _fullScreen;
+		ofSetFullscreen( _fullScreen );
+	}
 }
 
 void animationController::guiEvent(ofxUIEventArgs &e){
@@ -312,7 +388,7 @@ void animationController::guiEvent(ofxUIEventArgs &e){
 		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
 		ofSetFullscreen(toggle->getValue());
 	}
-	else if(name==GUIToggleMouseCursor){
+	else if(name=="lololol"){
 		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
 		toggle->getValue()?ofHideCursor():ofShowCursor();
 	}
@@ -322,4 +398,33 @@ void animationController::guiEvent(ofxUIEventArgs &e){
 		ofLogNotice("animationController::guiEvent") << "Unknown GUI event: " << name << endl;
 	}
 	#endif
+}
+
+void animationController::_keyPressed(ofKeyEventArgs &e){
+	// ignore case for shortcuts
+	int keyToLower = ofToChar( ofToLower( ofToString((char) e.key )));
+	
+	// check key combinations
+	if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+		
+		// save ?
+//		if ( 's' == keyToLower ){
+//			
+//		}
+	}
+	
+	else {
+		
+		// toggle gui ?
+		if ( 'h' == keyToLower ){
+			bShowGui = !bShowGui;
+		}
+		
+		if ( 'm' == keyToLower ){
+			bMouseHidden ? ofShowCursor() : ofHideCursor();
+			bMouseHidden = !bMouseHidden;
+		}
+		
+	}
+	
 }

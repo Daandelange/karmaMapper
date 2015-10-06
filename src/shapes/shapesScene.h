@@ -19,10 +19,13 @@
 
 // this class references and serves shapes
 
+// note: this class is focused on not changing the pointer addresses of some *basicShape instances, thus the use of std::list
+
 // todo:
 // implement some shape-serving functions such as getShapesbyVertexNumber(), getShapesByType, getRandomShapes(int _nb), getShapesByGroup(int _group_id), etc.
-// this will probably be problematic: http://stackoverflow.com/questions/3488571/does-insertion-of-elements-in-a-vector-damages-a-pointer-to-the-vector
+
 // todo: add static_cast<BasicShape*> everywhere
+// todo: add event notifiers onSceneLoaded(arg configurationName) for animation controller 
 
 class shapesScene { // holds the whole shapes "scene"
 	
@@ -33,8 +36,9 @@ public:
 	~shapesScene();
 	
 	// basic functions
-	virtual bool isEditorClass();
+	virtual bool isEditorClass() const;
 	void loadLastUsedScene();
+	string getLoadedScene() const;
 	
 	// custom functions
 	basicShape* insertShape(basicShape* _shape);

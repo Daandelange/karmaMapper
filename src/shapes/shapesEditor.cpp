@@ -206,7 +206,7 @@ void shapesEditor::draw() {
 		// highlight selection
 		for(auto it = selectedShapes.begin(); it != selectedShapes.end(); it++){
 			if( (*it)->isReady() ){
-				ofSetColor(0);
+				ofSetColor(0); // todo: doesn't work atm, color is overrided by sendToGPU()
 				(*it)->sendToGPU();
 			}
 		}
@@ -277,7 +277,7 @@ void shapesEditor::_update(ofEventArgs &e){
 	update();
 }
 
-void shapesEditor::guiEvent(ofxUIEventArgs &e){
+/*void shapesEditor::guiEvent(ofxUIEventArgs &e){
 	string name = e.getName();
 	
 	// scan for open dropdowns
@@ -370,7 +370,7 @@ void shapesEditor::guiEvent(ofxUIEventArgs &e){
 void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 	string name = e.getName();
 	
-	/*if(name==batchGUISelectAll){
+	/ *if(name==batchGUISelectAll){
 		if( ( (ofxUILabelButton*) e.getButton())->getValue() == true ){
 			selectedShapes.clear();
 			for(auto it=shapes.begin(); it!=shapes.end(); it++){
@@ -434,8 +434,8 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 		else setEditMode( EDIT_MODE_BATCH_SELECT );
 	}
 	else cout << "batchGuiEvent: " << name << endl;
-	*/
-}
+	* /
+} */
 
 
 // - - - - - - - -
@@ -715,6 +715,7 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 	}
 }
 
+// todo: is this used ?
 void shapesEditor::_keyPressed(ofKeyEventArgs &e){
 	if(e.key=='h' || e.key=='H'){
 		mouseHidden ? ofShowCursor() : ofHideCursor();
