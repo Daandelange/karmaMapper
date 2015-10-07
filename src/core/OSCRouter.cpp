@@ -18,26 +18,20 @@ OSCRouter::OSCRouter(  ){
 	nodes.clear();
 	
 	// build GUI
-	gui = new ofxUISuperCanvas("OSC Router");
-	gui->setColorBack(ofColor(41,123,117,180));
-	gui->setColorFill(ofColor(255,160));
-	gui->setColorFillHighlight(ofColor(255,220));
-	//gui->setColorPadded(ofColor(255,150));
+	gui.setup("OSC Router");
+	gui.add( new ofxGuiSpacer());
 	
-	//gui->setPosition(pos.x, pos.y);
+	gui.add( (new ofxLabel())->setup("Routing OSC since 2015...","") );
+	gui.add( new ofxGuiSpacer());
 	
-	gui->addSpacer();
-	string textString = "Routing OSC since 2015...";
-	gui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
 	
-	gui->addSpacer();
-	gui->addLabel("Stats", OFX_UI_FONT_LARGE);
-	guiStatus = gui->addLabel(GUIOSCRouterStatus, OFX_UI_FONT_SMALL);
-	guiNumRoutes = gui->addLabel(GUIOSCRouterNumRoutes, OFX_UI_FONT_SMALL);
+	gui.add( (new ofxLabel())->setup("Stats...","") );
+	guiStatus.set(GUIOSCRouterStatus, "");
+	gui.add( (new ofxLabel(guiStatus)) );
+	guiNumRoutes.set(GUIOSCRouterNumRoutes, "");
 	
-	gui->autoSizeToFitWidgets();
-	gui->disable();
-	ofAddListener(gui->newGUIEvent, this, &OSCRouter::guiEvent);
+	bGuiEnabled = false;
+	//ofAddListener(gui->newGUIEvent, this, &OSCRouter::guiEvent);
 }
 
 OSCRouter::~OSCRouter(){
@@ -45,10 +39,9 @@ OSCRouter::~OSCRouter(){
 	ofRemoveListener( ofEvents().update , this, &OSCRouter::update );
 	
 	// rm GUI stuff correctly
-	ofRemoveListener( gui->newGUIEvent, this, &OSCRouter::guiEvent );
-	gui->disable();
-	guiNumRoutes = NULL;
-	delete gui;
+	//ofRemoveListener( gui->newGUIEvent, this, &OSCRouter::guiEvent );
+	bGuiEnabled = false;
+	guiNumRoutes = "";
 	
 	// inform nodes to detach listeners
 	for( list<OSCNode*>::iterator it=nodes.begin(); it!=nodes.end(); it++){
@@ -138,8 +131,7 @@ bool OSCRouter::start(int _port){
 	ofAddListener( ofEvents().update , this, &OSCRouter::update );
 	
 	// gui
-	gui->enable();
-	ofAddListener(gui->newGUIEvent, this, &OSCRouter::guiEvent);
+	bGuiEnabled = true;
 	
 	// OSC
 	setup( _port );
@@ -151,8 +143,7 @@ bool OSCRouter::start(int _port){
 bool OSCRouter::stop(){
 	bEnabled = false;
 	ofRemoveListener( ofEvents().update , this, &OSCRouter::update );
-	ofRemoveListener(gui->newGUIEvent, this, &OSCRouter::guiEvent);
-	gui->disable();
+	
 	
 	
 	return isEnabled()==false;
@@ -194,30 +185,30 @@ void OSCRouter::update(ofEventArgs &event){
 	if(!isEnabled()) return;
 	
 	// update GUI data
-	if(guiStatus!=NULL) guiStatus->setLabel(GUIOSCRouterStatus + ofToString(isEnabled()?"Running":"Down") );
-	if(guiNumRoutes!=NULL) guiNumRoutes->setLabel(GUIOSCRouterNumRoutes + ofToString(nodes.size()) );
+	guiStatus = ofToString(isEnabled()?"Running":"Down");
+	guiNumRoutes = ofToString(nodes.size());
 	
 }
 
-void OSCRouter::guiEvent(ofxUIEventArgs &e){
-	string name = e.getName();
-	
-	// scan for open dropdowns
-	// (dirty) bypass for issue https://github.com/rezaali/ofxUI/issues/68
-	//ofxUIDropDownList* addShapeDDL = (ofxUIDropDownList*) gui->getWidget("Add Shape");
-	//bool dropdownOpen = addShapeDDL->isOpen();
-	//if( selectConfigFileOpen && name != "Configuration File") return;
-	
-	
-	// interface options
-	// - - - - - - - - -
-	if(name==GUIOSCRouterNumRoutes){
-		return;
-	}
-	
-	#ifdef KARMAMAPPER__DEBUG
-	else {
-		ofLogNotice("OSCRouter::guiEvent") << "Unknown GUI event: " << name << endl;
-	}
-	#endif
-}
+//void OSCRouter::guiEvent(ofxUIEventArgs &e){
+//	string name = e.getName();
+//	
+//	// scan for open dropdowns
+//	// (dirty) bypass for issue https://github.com/rezaali/ofxUI/issues/68
+//	//ofxUIDropDownList* addShapeDDL = (ofxUIDropDownList*) gui->getWidget("Add Shape");
+//	//bool dropdownOpen = addShapeDDL->isOpen();
+//	//if( selectConfigFileOpen && name != "Configuration File") return;
+//	
+//	
+//	// interface options
+//	// - - - - - - - - -
+//	if(name==GUIOSCRouterNumRoutes){
+//		return;
+//	}
+//	
+//	#ifdef KARMAMAPPER__DEBUG
+//	else {
+//		ofLogNotice("OSCRouter::guiEvent") << "Unknown GUI event: " << name << endl;
+//	}
+//	#endif
+//}

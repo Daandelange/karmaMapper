@@ -15,6 +15,8 @@
 #include "effects.h"
 #include "shapesDB.h"
 #include "ofxGui.h"
+#include "animationParamsServer.h"
+
 #include "oscRouter.h"
 #include "mirReceiver.h"
 #include "durationReceiver.h"
@@ -34,17 +36,18 @@ public:
 	bool start();
 	bool stop();
 	bool isEnabled() const;
-	
+
 	// listeners
 	void update( ofEventArgs& event );
 	void draw( ofEventArgs& event );
-	void guiEvent( ofxUIEventArgs &e );
+	//void guiEvent( ofxUIEventArgs& e );
 	void _keyPressed( ofKeyEventArgs& e );
 	
 	// menu listeners
 	void showShapeLoadMenu( );
 	void showSaveDialog( );
-	void setFullScreen( bool & _fullScreen );
+	void setFullScreen( bool& _fullScreen );
+	void showAnimationsGui( bool& _b );
 	//void enableAnimations( bool & _on );
 	
 protected:
@@ -56,6 +59,8 @@ protected:
 	ofxPanelExtended animationGui;
 	ofParameter<string> guiNumEffects, guiNumShapes, guiLoadedShapesScene;
 	ofxGuiGroupExtended shortCutsMenu, shapesInfoMenu, effectsMenu;
+	ofParameter<bool> bGuiShowAnimParams;
+	//ofxMinimalToggle guiShowAnimParamsToggle;
 	ofxMinimalButton guiLoadShapesSceneBtn;
 // tmp
 //	ofxMinimalButton loadButton, saveButton;
@@ -67,6 +72,8 @@ protected:
 	// effects stuff
 	bool isEffectsIndex(int i);
 	vector<basicEffect*> effects;
+	
+	animationParamsServer animationParams;
 	
 	shapesDB& scene;
 	
@@ -107,6 +114,6 @@ private:
 #define GUIEffectsTitle			("Animation Information")
 #define GUIToggleFullScreen		("Full Screen")
 #define GUIEffectsNumEffects	("# Effects:\t")
-//#define GUI()
+#define GUIEffectsViewParams	("Show Animation Vars")
 
 

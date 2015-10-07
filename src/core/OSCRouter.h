@@ -8,7 +8,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxUI.h"
+//#include "ofxUI.h"
+#include "ofxGui.h"
+#include "ofxGuiExtended.h"
 #include "ofxOSC.h"
 #include "OSCNode.h"
 
@@ -38,14 +40,14 @@ public:
 	
 	// listeners
 	void update( ofEventArgs& event );
-	void guiEvent( ofxUIEventArgs &e );
+	//void guiEvent( ofxUIEventArgs &e );
 	
 protected:
 	// gui
-	ofxUISuperCanvas* gui;
-	ofxUILabel* guiNumRoutes;
-	ofxUILabel* guiStatus;
-	
+	ofxGuiGroup gui;
+	ofParameter<string> guiNumRoutes;
+	ofParameter<string> guiStatus;
+	ofParameter<bool> bGuiEnabled;
 	list<OSCNode* > nodes;
 	
 private:
@@ -55,5 +57,5 @@ private:
 
 
 // GUI translations
-#define GUIOSCRouterStatus		("Status: \t")
-#define GUIOSCRouterNumRoutes	("# Routes: \t")
+#define GUIOSCRouterStatus		("Status")
+#define GUIOSCRouterNumRoutes	("Nb Routes")

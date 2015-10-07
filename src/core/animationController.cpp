@@ -23,10 +23,10 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	effects.clear();
 	effects.resize(0);
 	
-	ofAddListener( ofEvents().draw , this, &animationController::draw );
-	ofAddListener( ofEvents().update , this, &animationController::update );
+	ofAddListener( ofEvents().draw , this, &animationController::draw, OF_EVENT_ORDER_APP );
+	ofAddListener( ofEvents().update , this, &animationController::update, OF_EVENT_ORDER_APP );
 	
-	ofAddListener( ofEvents().keyPressed, this, &animationController::_keyPressed );
+	ofAddListener( ofEvents().keyPressed, this, &animationController::_keyPressed, OF_EVENT_ORDER_APP );
 	
 	// build GUI
 	animationGui.setup("ANIMATION CONTROLLER");
@@ -67,10 +67,13 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	animationGui.add( &shapesInfoMenu );
 	animationGui.add( (new ofxGuiSpacer()) );
 	
-	// Setup Scene info
+	// Setup Effects info
 	effectsMenu.setup( GUIEffectsTitle );
 	guiNumEffects.set( GUIEffectsNumEffects, "0" );
 	effectsMenu.add( new ofxLabel(guiNumEffects) );
+	bGuiShowAnimParams.set(GUIEffectsViewParams, false);
+	bGuiShowAnimParams.addListener(this, &animationController::showAnimationsGui);
+	effectsMenu.add( new ofxMinimalToggle(bGuiShowAnimParams) );
 	
 	animationGui.add( &effectsMenu );
 
@@ -372,33 +375,40 @@ void animationController::setFullScreen(bool & _fullScreen){
 	}
 }
 
-void animationController::guiEvent(ofxUIEventArgs &e){
-	string name = e.getName();
-	
-	// scan for open dropdowns
-	// (dirty) bypass for issue https://github.com/rezaali/ofxUI/issues/68
-	//ofxUIDropDownList* addShapeDDL = (ofxUIDropDownList*) gui->getWidget("Add Shape");
-	//bool dropdownOpen = addShapeDDL->isOpen();
-	//if( selectConfigFileOpen && name != "Configuration File") return;
-	
-	
-	// interface options
-	// - - - - - - - - -
-	if(name==GUIToggleFullScreen){
-		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
-		ofSetFullscreen(toggle->getValue());
-	}
-	else if(name=="lololol"){
-		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
-		toggle->getValue()?ofHideCursor():ofShowCursor();
-	}
-	
-	#ifdef KARMAMAPPER__DEBUG
-	else {
-		ofLogNotice("animationController::guiEvent") << "Unknown GUI event: " << name << endl;
-	}
-	#endif
+void animationController::showAnimationsGui( bool& _b){
+	// sync var bGuiShowAnimParams
+	animationParams.setShowParams(_b);
 }
+
+//
+
+//void animationController::guiEvent(ofxUIEventArgs &e){
+//	string name = e.getName();
+//	
+//	// scan for open dropdowns
+//	// (dirty) bypass for issue https://github.com/rezaali/ofxUI/issues/68
+//	//ofxUIDropDownList* addShapeDDL = (ofxUIDropDownList*) gui->getWidget("Add Shape");
+//	//bool dropdownOpen = addShapeDDL->isOpen();
+//	//if( selectConfigFileOpen && name != "Configuration File") return;
+//	
+//	
+//	// interface options
+//	// - - - - - - - - -
+//	if(name==GUIToggleFullScreen){
+//		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
+//		ofSetFullscreen(toggle->getValue());
+//	}
+//	else if(name=="lololol"){
+//		ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
+//		toggle->getValue()?ofHideCursor():ofShowCursor();
+//	}
+//	
+//	#ifdef KARMAMAPPER__DEBUG
+//	else {
+//		ofLogNotice("animationController::guiEvent") << "Unknown GUI event: " << name << endl;
+//	}
+//	#endif
+//}
 
 void animationController::_keyPressed(ofKeyEventArgs &e){
 	// ignore case for shortcuts
