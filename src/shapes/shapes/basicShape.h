@@ -49,7 +49,8 @@ public:
 	// #########
 	// UTILITIES
 	virtual void calculateBoundingBox();
-	virtual void onShapeChanged();
+	virtual void onShapeModified();
+	virtual void onShapeEdited();
 	virtual void resetToScene();
 	
 	// #########

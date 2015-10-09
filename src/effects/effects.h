@@ -11,16 +11,18 @@
 
 // add all effect files to this file and they'll all be automatically included in files that need all effects
 #include "basicEffect.h"
-#include "musicEffect.h"
-#include "imageEffect.h"
-#include "imageGrainEffect.h"
-#include "imageMeltingEffect.h"
+//#include "musicEffect.h"
+//#include "imageEffect.h"
+//#include "imageGrainEffect.h"
+//#include "imageMeltingEffect.h"
 //#include "shaderEffect.h"
-#include "videoEffect.h"
+//#include "videoEffect.h"
 //#include "gifEffect.h"
 #include "lineEffect.h"
-#include "imageBeatEffect.h"
+//#include "imageBeatEffect.h"
 //#include "meshRenderer3D.h"
 //#include "videoStreamEffect.h"
+#include "distortEffect.h"
+#include "lineEffect.h"
 
 #endif

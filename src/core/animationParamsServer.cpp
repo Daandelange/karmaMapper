@@ -16,7 +16,7 @@
 
 animationParamsServer::animationParamsServer(){
 	bShowParams = false;
-	randomizeUIDs();
+	randomize();
 	paramsGui.setup("Animation Parameters");
 	//paramsGui.add( new ofxGuiSpacer() );
 	paramsGuiFbo.allocate(KM_AP_guiTextureWidth, KM_AP_guiTextureHeight, GL_RGBA);
@@ -43,8 +43,9 @@ animationParamsServer::~animationParamsServer(){
 // METHODS
 // - - - - -
 
-void animationParamsServer::randomizeUIDs(){
-	// todo: make this better (HEX string?)
+void animationParamsServer::randomize(){
+	
+	// randomizeUIDs
 	string time = ofToString( ofGetUnixTime() );
 	std::reverse(time.begin(), time.end());
 	
@@ -63,6 +64,11 @@ void animationParamsServer::randomizeUIDs(){
 		prevNum = *it;
 	}
 	params.uniqueID = ss.str();
+	
+	// randomize colors
+	params.varyingColors.main = ofFloatColor::fromHsb(ofRandom(0.5f,.8f), ofRandom(0.5f,.7f), ofRandom(0.5f,.8f) );
+	params.varyingColors.secondary = params.varyingColors.main;
+	params.varyingColors.secondary.setHue( fmod(params.varyingColors.main.getHue()-0.3f, 1));
 }
 
 void animationParamsServer::setShowParams(const bool &_b){
@@ -83,20 +89,39 @@ void animationParamsServer::setShowParams(const bool &_b){
 // LISTENERS
 // - - - - - -
 
-// todo: generate unique ID
+// update the params
 void animationParamsServer::_update(ofEventArgs &e){
+	
+	params.fps = ofGetFrameRate();
 	params.elapsedTime = ofGetElapsedTimef();
 	
 	// set seasons
-	float seasonValue = fmod( params.elapsedTime, KMAnimSeasonsYear) ;// ((int)KMAnimSeasonsYear);
-	params.seasons.winter = (sin( seasonValue/KMAnimSeasonsYear*TWO_PI )+1)/2;
-	seasonValue+=KMAnimSeasonsYear/4;
-	params.seasons.spring = (sin( seasonValue/KMAnimSeasonsYear*TWO_PI + PI/2 )+1)/2;
-	seasonValue+=KMAnimSeasonsYear/4;
-	params.seasons.summer = (sin( seasonValue/KMAnimSeasonsYear*TWO_PI + PI )+1)/2;
-	seasonValue+=KMAnimSeasonsYear/4;
-	params.seasons.autumn = (sin( seasonValue/KMAnimSeasonsYear*TWO_PI + (3*PI)/2 )+1)/2;
-	seasonValue+=KMAnimSeasonsYear/4;
+	// formulaes used: (synchronized)
+	// cos(x)+cos(2*x)
+	// 1+cos(3*x)
+	float seasonValue = fmod( params.elapsedTime, KMAnimSeasonsYear)/KMAnimSeasonsYear;// ((int)KMAnimSeasonsYear);
+	
+	if( cos(seasonValue*TWO_PI)+cos(2*seasonValue*TWO_PI) < 0 ) params.seasons.winter = 0;
+	else params.seasons.winter = ofClamp( (cos( seasonValue*TWO_PI*3)+1)/2, 0,1);
+	//float other = cos(seasonValue*TWO_PI)+cos(2*seasonValue*TWO_PI);
+	//cout << ((cos( seasonValue*TWO_PI*3)+1)/2) << " \t \t " << other << ((other > 0)?" OK OK OK":"") << endl;
+	
+	seasonValue = fmod(seasonValue+0.25f,1);
+	if( cos(seasonValue*TWO_PI)+cos(2*seasonValue*TWO_PI) < 0 ) params.seasons.autumn = 0;
+	else params.seasons.autumn = ofClamp( (cos( seasonValue*TWO_PI*3)+1)/2, 0,1);
+	
+	seasonValue = fmod(seasonValue+0.25f,1);
+	if( cos(seasonValue*TWO_PI)+cos(2*seasonValue*TWO_PI) < 0 ) params.seasons.summer = 0;
+	else params.seasons.summer = ofClamp( (cos( seasonValue*TWO_PI*3)+1)/2, 0,1);
+	
+	seasonValue = fmod(seasonValue+0.25f,1);
+	if( cos(seasonValue*TWO_PI)+cos(2*seasonValue*TWO_PI) < 0 ) params.seasons.spring = 0;
+	else params.seasons.spring = ofClamp( (cos( seasonValue*TWO_PI*3)+1)/2, 0,1);
+	
+	// change colors
+	// todo: make this more interesting
+	params.varyingColors.main.setHue( fmod(params.varyingColors.main.getHue()+ (0.0005f+params.seasons.summer*0.003f)*(ofGetFrameRate()/60), 1) );
+	params.varyingColors.secondary.setHue( fmod(params.varyingColors.main.getHue()+0.3f,1) );
 }
 
 void animationParamsServer::_draw(ofEventArgs &e){
@@ -111,9 +136,15 @@ void animationParamsServer::_draw(ofEventArgs &e){
 		
 		paramsGuiFbo.begin();
 		ofClear(255,255);
-		ofSetColor(0,255);
+		
 		ofFill();
 		
+		// numbers
+		ofSetColor(0,255);
+		ofDrawBitmapString("FPS: "+ ofToString(params.fps), ITEM_spacing_x, height+KM_AP_guiElementHeight/1.2);
+		height += (KM_AP_guiElementHeight + KM_AP_guiElementSpacing);
+		
+		ofSetColor(0,255);
 		ofDrawBitmapString("elapsedUpdates: "+ ofToString(params.elapsedUpdates), ITEM_spacing_x, height+KM_AP_guiElementHeight/1.2);
 		height += (KM_AP_guiElementHeight + KM_AP_guiElementSpacing);
 		
@@ -123,6 +154,7 @@ void animationParamsServer::_draw(ofEventArgs &e){
 		ofDrawBitmapString("elapsedTime: "+ ofToString(params.elapsedTime), ITEM_spacing_x, height+KM_AP_guiElementHeight/1.2);
 		height += (KM_AP_guiElementHeight + KM_AP_guiElementSpacing);
 		
+		// strings
 		ofDrawBitmapString("uniqueID: "+ ofToString(params.uniqueID), ITEM_spacing_x, height+KM_AP_guiElementHeight/1.2);
 		height += (KM_AP_guiElementHeight + KM_AP_guiElementSpacing);
 		
@@ -157,8 +189,16 @@ void animationParamsServer::_draw(ofEventArgs &e){
 		ofSetColor(0);
 		height += KM_AP_guiElementHeight + KM_AP_guiElementSpacing;
 		
-		//ofDrawRectangle(ITEM_spacing_x, height, ITEM_width, KM_AP_guiElementHeight);
-		//height += KM_AP_guiElementHeight + KM_AP_guiElementSpacing;
+		// display colors
+		ofSetColor(params.varyingColors.main);
+		varyingColorsRect.set(ITEM_spacing_x, height, ITEM_width/2-ITEM_spacing_x/2, KM_AP_guiElementHeight);
+		ofDrawRectangle( varyingColorsRect );
+		ofSetColor(params.varyingColors.secondary);
+		varyingColorsRectSec.set(ITEM_width/2+ITEM_spacing_x/2, height, ITEM_width/2-ITEM_spacing_x/2, KM_AP_guiElementHeight);
+		ofDrawRectangle( varyingColorsRectSec );
+		ofSetColor(0);
+		ofDrawBitmapString("varyingColors", ITEM_spacing_x+3, height+KM_AP_guiElementHeight/1.2);
+		height += KM_AP_guiElementHeight + KM_AP_guiElementSpacing;
 		
 		ofNoFill();
 		paramsGuiFbo.end();

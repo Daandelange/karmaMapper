@@ -115,16 +115,3 @@ basicShape* shapesDB::getRandomShapeByGroup(int _group){
 	return ret[round(-.49f+(ofRandomuf()*(ret.size()-.011f)))];
 }
 
-vector<basicShape*> shapesDB::getAllShapes(){
-	vector<basicShape*> ret;
-	ret.clear();
-	ret.resize(shapes.size());
-	
-	// loop trough shapes and return the wanted ones
-	for(auto it = shapes.begin(); it != shapes.end(); it++){
-		ret.push_back((*it));
-	}
-	
-	return ret;
-}
-

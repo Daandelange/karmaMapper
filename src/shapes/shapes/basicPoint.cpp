@@ -12,14 +12,14 @@
 #ifdef KM_EDITOR_APP
 // for universal access
 unsigned int basicPoint::pointSize = KM_BASIC_POINT_SIZE;
-#endif
 
 // needed forward declaration
 class basicShape {
 public:
-	void onShapeChanged();
+	void onShapeEdited();
 	basicPoint* getPositionUnaltered();
 };
+#endif
 
 basicPoint::basicPoint(): x(0), y(0){
 	//cout << "basicPoint::basicPoint()" << endl;
@@ -178,7 +178,7 @@ void basicPoint::setPos( float _x, float _y){
 	x = _x;
 	y = _y;
 	
-	if( hasParentShape && parentShape) parentShape->onShapeChanged();
+	if( hasParentShape && parentShape) parentShape->onShapeEdited();
 }
 
 void basicPoint::translate(const basicPoint& _offset){

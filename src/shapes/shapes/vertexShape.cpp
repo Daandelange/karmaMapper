@@ -57,7 +57,7 @@ void vertexShape::initialiseVertexVariables(){
 	}
 	
 	// recalculate bounding box & stuff
-	onShapeChanged();
+	onShapeModified();
 	
 #ifdef KM_EDITOR_APP
 	showInstructions = true;
@@ -71,16 +71,17 @@ void vertexShape::sendToGPU(){
 	
 	// prepare for drawing
 	ofPushMatrix();
-	ofPushStyle();
+	//ofPushStyle();
+	// todo: this should be changingPosition
 	ofTranslate(position.x, position.y);
 	
 	// if shape has error, draw it in red
 #ifdef KM_EDITOR_APP
 	ofSetColor(fgColor, 200);
 #else
-	ofSetColor(255);
+	//ofSetColor(255);
 #endif
-	ofFill();
+	//ofFill();
 	
 	if(hasError){
 		ofSetHexColor(0xFFFFFF);
@@ -88,14 +89,14 @@ void vertexShape::sendToGPU(){
 	
 	ofBeginShape();
 	// draw elements
-	for(auto it = points.begin(); it != points.end(); it++){
+	for(auto it = changingPoints.begin(); it != changingPoints.end(); it++){
 		// draw center point
 		ofVertex( (*it).x, (*it).y );
 	}
 	ofEndShape(OF_CLOSE);
 	
 	// reset
-	ofPopStyle();
+	//ofPopStyle();
 	ofPopMatrix();
 }
 
@@ -116,17 +117,31 @@ void vertexShape::calculateBoundingBox(){
 	boundingBox.setHeight( abs(maxY-minY) );
 }
 
-// called when shape data changed.
-void vertexShape::onShapeChanged(){
+// updates other shape date after it's been (temporarily) altered (by effect for example)
+void vertexShape::onShapeModified(){
 	
 	// let parent function do it's thing
-	basicShape::onShapeChanged();
+	basicShape::onShapeModified();
 	
 	// update relative points to absolute points
-	absolutePoints = points;
+	absolutePoints = changingPoints;
 	for(auto it = absolutePoints.begin(); it!=absolutePoints.end(); it++ ){
 		*it = *it + position;
 	}
+	
+	// todo: update centerPos & more
+	
+}
+
+// called when the shape has been edited so it can update some ot if't other variables
+void vertexShape::onShapeEdited(){
+	
+	// let parent function do it's thing
+	basicShape::onShapeEdited();
+
+	changingPoints = points;
+	
+	vertexShape::onShapeModified();
 	
 #ifdef KM_EDITOR_APP
 	// update GUI Toggle ?
@@ -137,14 +152,17 @@ void vertexShape::onShapeChanged(){
 		//if( gui!=NULL ) ((ofxUITextArea*) gui->getWidget("info_Vertexes"))->setTextString("Number of Vertexes:  " + ofToString(points.size()));
 	
 	menuNumVertexes = ofToString( points.size() );
-#endif
 	
 	// todo: update centerPos & more
-	
+#endif
 }
 
+
 void vertexShape::resetToScene() {
+	basicShape::resetToScene();
 	
+	// syncs original shape data with modifyable data
+	onShapeEdited();
 }
 
 // ### LOAD & SAVE
@@ -210,7 +228,7 @@ bool vertexShape::loadFromXML(ofxXmlSettings& xml){
 		}
 		xml.popTag(); // pop vectors
 	
-		onShapeChanged();
+		onShapeEdited();
 		
 		return true;
 	}
@@ -224,7 +242,7 @@ bool vertexShape::loadFromXML(ofxXmlSettings& xml){
 
 // ### GETTERS
 list<basicPoint>& vertexShape::getPoints(){
-	return points;
+	return changingPoints;
 }
 
 int vertexShape::getNumPoints(){
@@ -376,7 +394,7 @@ bool vertexShape::disableEditMode(){
 		//guiPos = ofVec2f(gui->getRect()->x, gui->getRect()->y);
 		
 		// recalc some variables
-		onShapeChanged();
+		onShapeEdited();
 	}
 	
 	return (bEditMode==false);
@@ -417,7 +435,7 @@ void vertexShape::applyScale(basicPoint scale){
 	}
 	
 	// update
-	onShapeChanged();
+	onShapeEdited();
 }
 
 // - - - - - - - -
@@ -455,7 +473,7 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 			// remove point ?
 			if( ofGetKeyPressed('r') || ofGetKeyPressed('R') ){
 				points.erase(p);
-				onShapeChanged();
+				onShapeEdited();
 			}
 			else {
 				// moving is done by basicPoint
@@ -513,7 +531,7 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 				newPoint->setEditable(true);
 				
 				// call callback
-				onShapeChanged();
+				onShapeEdited();
 				
 				// nothing to do anymore
 				return true;

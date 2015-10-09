@@ -21,9 +21,9 @@ public:
 	lineEffect();
 	~lineEffect();
 
-	virtual bool initialise();
-	virtual bool render();
-	virtual void update();
+	virtual bool initialise(const animationParams& params);
+	virtual bool render(const animationParams& params);
+	virtual void update(const animationParams& params);
 	virtual void reset();
 	
 	//bool grabSomeShapes();

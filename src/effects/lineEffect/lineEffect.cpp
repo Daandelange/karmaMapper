@@ -39,9 +39,9 @@ lineEffect::~lineEffect(){
 	ofRemoveListener(mirReceiver::mirOnSetEvent, this, &lineEffect::onSetEventListener);
 }
 
-bool lineEffect::initialise(){
+bool lineEffect::initialise(const animationParams& params){
 	
-	basicEffect::initialise();
+	basicEffect::initialise(params);
 	
 	// tmp
 	ofAddListener(durationReceiver::durationFloatEvent, this, &lineEffect::floatListener);
@@ -66,7 +66,7 @@ bool lineEffect::initialise(){
 
 // update --> animation
 // overrule this function with your own
-bool lineEffect::render(){
+bool lineEffect::render(const animationParams& params){
 	effectMutex.lock();
 	
 	ofFill();
@@ -99,7 +99,7 @@ bool lineEffect::render(){
 	
 	effectMutex.lock();
 	ofSetColor(255);
-	for(std::list<lineEffectLine>::iterator it=lines.begin(); it!= lines.end(); ++it){
+	for(auto it=lines.begin(); it!= lines.end(); ++it){
 		(*it).render();
 	}
 	effectMutex.unlock();
@@ -110,8 +110,9 @@ bool lineEffect::render(){
 	}
 }
 
-void lineEffect::update(){
-	basicEffect::update();
+void lineEffect::update(const animationParams& params){
+	basicEffect::update(params);
+	
 	
 	ofScopedLock lock(effectMutex);
 	if(!isReady()) return;
@@ -136,7 +137,7 @@ void lineEffect::update(){
 	
 	
 	// add lines ?
-	//if(lines.size() < shapes.size()*30) lines.push_back( getRandomLine() );
+	if(lines.size() < shapes.size()*90) lines.push_back( getRandomLine(true) );
 	
 	// check for dead lines
 	for(std::list<lineEffectLine>::reverse_iterator it=lines.rbegin(); it!= lines.rend(); it--){
@@ -212,8 +213,8 @@ lineEffectLine lineEffect::getRandomLine( const bool onSameShape){
 // note: when you call this function, mutex must be locked
 lineEffectLine lineEffect::getRandomLine(basicShape *_sh1, basicShape *_sh2) {
 	
-	ofVec2f* from;
-	ofVec2f* to;
+	basicPoint* from;
+	basicPoint* to;
 	if( !_sh1->isReady() || !_sh2->isReady() ){
 		from = &basicShape::zeroPoint;
 		to = &basicShape::zeroPoint;

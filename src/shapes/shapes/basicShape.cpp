@@ -118,9 +118,21 @@ void basicShape::calculateBoundingBox(){
 }
 
 // called after the shape data changed
-// used to sync extra short-hand data with the basic shape data
+// used to sync extra short-hand data with the basic shape modified data
 // ex: sync relative points with absolute points
-void basicShape::onShapeChanged(){
+// used to sync relative points with absolute points
+void basicShape::onShapeModified(){
+	// todo: position stuff
+	
+	// update boundingbox
+	calculateBoundingBox();
+	
+}
+
+// called after the shape was (hard) edited
+// used to sync extra short-hand data with the basic shape original data
+// ex: sync relative points with absolute points
+void basicShape::onShapeEdited(){
 	
 	// update boundingbox
 	calculateBoundingBox();
@@ -532,7 +544,7 @@ void basicShape::setColorFromGroupID(){
 //
 bool basicShape::setPosition( const basicPoint _pos) {
 	position.setPos( _pos );
-	onShapeChanged();
+	onShapeEdited();
 }
 
 bool basicShape::setGroupID(const int& _id){

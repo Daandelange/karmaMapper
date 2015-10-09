@@ -8,7 +8,7 @@
 
 #include "lineEffectLine.h"
 
-lineEffectLine::lineEffectLine(ofVec2f* _from, ofVec2f* _to) {
+lineEffectLine::lineEffectLine(basicPoint* _from, basicPoint* _to) {
 	bAlive = true;
 	startTime = ofGetElapsedTimef();
 	

@@ -54,6 +54,9 @@
 
 //#define KM_NULL_SHAPE(NULL)
 
+// forward declaration
+struct animationParams;
+
 class basicEffect {
 	
 public:
@@ -62,9 +65,9 @@ public:
 	virtual ~basicEffect();
 	
 	// global effect functions
-	virtual bool initialise();
-	virtual bool render();
-	virtual void update();
+	virtual bool initialise(const animationParams& params);
+	virtual bool render(const animationParams& params);
+	virtual void update(const animationParams& params);
 	virtual void reset();
 	void enable();
 	void disable();
@@ -86,6 +89,7 @@ public:
 	// shape binding tools
 	bool bindWithShape(basicShape* _shape);
 	bool bindWithShapes(vector<basicShape*> _shapes);
+	bool bindWithShapes(list<basicShape*>& _shapes);
 	/*virtual void bindWithShapes(vector<basicShape*>& _shapesRef);*/
 	bool detachFromAllShapes();
 	bool detachFromShape(basicShape* _shape);

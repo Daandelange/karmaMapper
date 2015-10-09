@@ -236,6 +236,22 @@ bool animationController::start(){
 		effects.push_back(e);
 	}// */
 	
+	{
+		basicEffect* e;
+		e = new lineEffect();
+		e->initialise(animationParams.params);
+		e->bindWithShapes( scene.getShapesRef() );
+		effects.push_back(e);
+	}
+	
+	{
+		basicEffect* e;
+		e = new distortEffect();
+		e->initialise(animationParams.params);
+		e->bindWithShapes( scene.getShapesRef() );
+		effects.push_back(e);
+	}
+	
 	return isEnabled()==true;
 }
 
@@ -304,13 +320,18 @@ void animationController::update(ofEventArgs &event){
 		}
 	}
 	
+	// reset shapes data to original state
+	for(auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it){
+		(*it)->resetToScene();
+	}
+	
 	
 	// todo:
 	// update/create animation state (bunch of variables)
 	
 	// update effects (run mode)
 	for(int i=0; i<effects.size(); i++){
-		effects[i]->update();
+		effects[i]->update(animationParams.params);
 	}
 }
 
@@ -326,6 +347,8 @@ void animationController::draw(ofEventArgs& event){
 	
 	// render a scene without effects (tmp?)
 	if(effects.size()==0){
+		ofSetColor( ofFloatColor(1.f, 1));//params.seasons.summer));
+		ofFill();
 		for(auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it){
 			(*it)->sendToGPU();
 		}
@@ -334,7 +357,7 @@ void animationController::draw(ofEventArgs& event){
 	
 	// draw effects
 	else for(int i=0; i<effects.size(); i++){
-		effects[i]->render();
+		effects[i]->render(animationParams.params);
 	}
 	
 	recorder.endFrame(true);

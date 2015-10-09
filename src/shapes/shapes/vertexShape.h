@@ -31,7 +31,8 @@ public:
 	// #########
 	// UTILITIES
 	virtual void calculateBoundingBox();
-	virtual void onShapeChanged();
+	virtual void onShapeModified();
+	virtual void onShapeEdited();
 	virtual void resetToScene();
 	
 	// #########
@@ -53,6 +54,7 @@ private:
 	
 	// vertexShape Properties
 	list<basicPoint> points; // relative coordinates
+	list<basicPoint> changingPoints; // relative coordinates
 	list<basicPoint> absolutePoints; // copy of above but using absolute coordinates
 
 #ifdef KM_EDITOR_APP

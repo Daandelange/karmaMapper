@@ -18,7 +18,7 @@
 class lineEffectLine {
 
 public:
-	lineEffectLine( ofVec2f* _from, ofVec2f* _to);
+	lineEffectLine( basicPoint* _from, basicPoint* _to);
 	lineEffectLine( basicShape* targetShape );
 	lineEffectLine( vertexShape* targetShape );
 	~lineEffectLine();
@@ -28,8 +28,8 @@ public:
 	bool isAlive() const;
 	
 protected:
-	ofVec2f* posFrom;
-	ofVec2f* posTo;
+	basicPoint* posFrom;
+	basicPoint* posTo;
 	ofColor color;
 	float startTime;
 	bool bAlive;

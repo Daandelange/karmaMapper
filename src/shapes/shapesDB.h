@@ -28,7 +28,6 @@ public:
 	basicShape* getRandomShapeByType(string _type);
 	vector<basicShape*> getShapesByGroup(int _group);
 	basicShape* getRandomShapeByGroup(int _group);
-	vector<basicShape*> getAllShapes();
 	
 private:
 	

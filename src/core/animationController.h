@@ -11,7 +11,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "basicShape.h"
+#include "shapes.h"
 #include "effects.h"
 #include "shapesDB.h"
 #include "ofxGui.h"

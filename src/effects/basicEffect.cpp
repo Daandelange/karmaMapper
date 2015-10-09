@@ -36,8 +36,8 @@ basicEffect::~basicEffect(){
 // This function is called before it starts rendering.
 // Rendering without having called this function should not be possible.
 // isReady() should return true after this is done. (can take a long time)
-bool basicEffect::initialise(){
-	// init values
+bool basicEffect::initialise(const animationParams& params){
+	
 	basicEffect::reset();
 	
 	isLoading = true;
@@ -55,7 +55,7 @@ bool basicEffect::initialise(){
 
 // todo: update -(handled by)-> animation
 // returns true if rendering succeeded
-bool basicEffect::render(){
+bool basicEffect::render(const animationParams& params){
 	if( !isReady() ) return false;
 	
 	// draw bounding box
@@ -74,7 +74,7 @@ bool basicEffect::render(){
 // like ofApp::update()
 // todo: update should receive parameters like update rate, time variables, etc.
 // todo: this should always be called in fact. imageGrainEffect::update() should be called by it.
-void basicEffect::update(){
+void basicEffect::update(const animationParams& params){
 	ofScopedLock lock(effectMutex);
 	
 	if( !isReady() ) return;
@@ -206,6 +206,33 @@ bool basicEffect::bindWithShapes(vector<basicShape*> _shapes){
 		
 	}
 
+	updateBoundingBox();
+	
+	return success;
+}
+
+// copy of above function for list<>.
+// todo: make this a templated function
+bool basicEffect::bindWithShapes(list<basicShape *>& _shapes){
+	if(_shapes.size()==0) return false;
+	
+	bool success = true;
+	for(auto _shape=_shapes.cbegin(); _shape!=_shapes.cend();	++_shape){
+		
+		if( *_shape == NULL ){
+			success = false;
+			continue;
+		}
+		
+		// prevent adding the same shape several times
+		for(auto it=shapes.begin(); it!=shapes.end();	++it){
+			if( *_shape == *it ) continue;  // already exists
+		}
+		
+		//shapes.push_back( *_shape );
+		shapes.insert(shapes.end(), *_shape);
+	}
+	
 	updateBoundingBox();
 	
 	return success;
