@@ -15,7 +15,7 @@
 //#include "imageEffect.h"
 //#include "imageGrainEffect.h"
 //#include "imageMeltingEffect.h"
-//#include "shaderEffect.h"
+#include "shaderEffect.h"
 //#include "videoEffect.h"
 //#include "gifEffect.h"
 #include "lineEffect.h"

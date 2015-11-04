@@ -36,7 +36,9 @@ bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 	}
 	
 	fbo.allocate(_w, _h, GL_RGB, 4); // 4 = anti-aliasing
-	//fbo.getTexture();
+	ofSetWindowShape(_w, _h);
+	//fbo.getTexture().setTextureWrap( GL_WRAP_BORDER, GL_WRAP_BORDER);
+	fbo.getTexture().getTextureData().bFlipTexture = true;
 	
 	fbo.begin();
 	ofClear(0,0,0);
@@ -46,17 +48,20 @@ bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 	// videoRecorder(ofFilePath::getAbsolutePath("ffmpeg")); // use this is you have ffmpeg installed in your data folder
 	
 	// run 'ffmpeg -codecs' to find out what your implementation supports (or -formats on some older versions)
-	ofxVideoRecorder::setVideoCodec("mpeg4");
-	//ofxVideoRecorder::setVideoCodec("h264");
-	ofxVideoRecorder::setVideoBitrate("30000k");
+	//ofxVideoRecorder::setVideoCodec("mpeg4");
+	//ofxVideoRecorder::setVideoCodec("png"); // heavy but very good results
+	ofxVideoRecorder::setVideoCodec("h264"); // good size, acceptable quality
+	ofxVideoRecorder::setVideoBitrate("40000k");
 	
 	//videoRecorder.setAudioCodec("mp3");
 	//videoRecorder.setAudioBitrate("192k");
+	
 	
 	// tmp
 	string file(_fileName);
 	if(file.compare("")==0) file = "videoRecorder"+ofGetTimestampString()+".mov";
 	ofxVideoRecorder::setup(file, fbo.getWidth(), fbo.getHeight(), 60);
+	ofxVideoRecorder::start();
 
 	bRecording = fbo.isAllocated();
 	
@@ -79,8 +84,8 @@ bool fboRecorder::beginFrame(){
 	
 	if(!bFrameStarted){
 		bFrameStarted=true;
-		
-		fbo.begin();
+		//ofGLProgrammableRenderer
+		fbo.begin(false);
 		//ofClear(0);
 		
 		/*/ tmp
@@ -103,7 +108,7 @@ bool fboRecorder::endFrame(bool _showBuffer){
 	fbo.end();
 	//fbo.getTexture().getTextureData().bFlipTexture = false;
 	bFrameStarted=false;
-	if(_showBuffer) fbo.draw(0,0); // show recorded image
+	if(_showBuffer) fbo.draw(0,0,fbo.getWidth(), fbo.getHeight()); // show recorded image
 	
 	ofPixels pix;
 	pix.allocate(fbo.getWidth(),fbo.getHeight(), ofGetImageTypeFromGLType(GL_RGB));

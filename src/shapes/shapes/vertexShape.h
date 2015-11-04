@@ -40,9 +40,10 @@ public:
 	
 	// Utilities
 	//basicPoint& getRandomVertex();
-	list<basicPoint> & getPoints();
+	list<basicPoint> & getPoints( const basicShapePointType& _type = POINT_POSITION_RELATIVE );
 	int getNumPoints();
-	basicPoint* getRandomVertexPtr();
+	basicPoint* getRandomVertexPtr( const basicShapePointType& _type = POINT_POSITION_RELATIVE );
+	basicPoint* getNextVertexPtr(basicPoint& _p, const basicShapePointType& _type = POINT_POSITION_RELATIVE, bool _getPrev = false);
 	basicPoint* getCenterPtr();
 	// idea: add gravity alterable values: point, averagePosition, etc.
 	
@@ -54,7 +55,7 @@ private:
 	
 	// vertexShape Properties
 	list<basicPoint> points; // relative coordinates
-	list<basicPoint> changingPoints; // relative coordinates
+	list<basicPoint> changingPoints; // relative alterable coordinates
 	list<basicPoint> absolutePoints; // copy of above but using absolute coordinates
 
 #ifdef KM_EDITOR_APP

@@ -111,33 +111,36 @@ bool animationController::start(){
 	//music.play();
 	
 	// Setup video recording
-	//recorder.startRecording("", 1500, 1200);
+	//recorder.startRecording("", 850, 700);
 	
-	{
-		// play music with VLC
-		ofxVLCRemote vlc;
-		vlc.setup("/Users/daan/vlc.sock"); // client-specific... :(
-		vlc.run("repeat on");
-		vlc.run("normal"); // playback speed
-		vlc.run("volume 256"); // 0-1024 (256=normal)
-		
-		//vlc.run("adev 7"); // tell VLC to use device 7 (soundflower 2ch)
-		vlc.run("play");
-		vlc.run("prev");
-		//vlc.run("got0 0");
-		
-	}
+//	{
+//		// play music with VLC
+//		ofxVLCRemote vlc;
+//		vlc.setup("/Users/daan/vlc.sock"); // client-specific... :(
+//		vlc.run("repeat on");
+//		vlc.run("normal"); // playback speed
+//		vlc.run("volume 256"); // 0-1024 (256=normal)
+//		
+//		//vlc.run("adev 7"); // tell VLC to use device 7 (soundflower 2ch)
+//		vlc.run("play");
+//		vlc.run("prev");
+//		//vlc.run("got0 0");
+//		
+//	}
+//	
+//	{	// SYNC DURATION
+//		durationRC rc;
+//		rc.setupOSC();
+//		rc.rewindAndPlay();
+//	}
 	
-	{	// SYNC DURATION
-		durationRC rc;
-		rc.setupOSC();
-		rc.rewindAndPlay();
-	}
 	
+	// setup the OSC Router
+	oscRouter.start();
 	
 	// enable mirOSCReceiver
-	//mirOSCReceiver.start();
-	//oscRouter.addNode( &mirOSCReceiver );
+	mirOSCReceiver.start();
+	oscRouter.addNode( &mirOSCReceiver );
 	
 	// enable durationOSCReceiver
 	//durationOSCReceiver.start();
@@ -238,19 +241,31 @@ bool animationController::start(){
 	
 	{
 		basicEffect* e;
-		e = new lineEffect();
+		e = new distortEffect();
 		e->initialise(animationParams.params);
 		e->bindWithShapes( scene.getShapesRef() );
 		effects.push_back(e);
 	}
 	
 	{
+		//ofSetLogLevel(OF_LOG_VERBOSE);
+		shaderEffect* e;
+		e = new shaderEffect();
+		e->initialise(animationParams.params);
+		e->bindWithShapes( scene.getShapesRef() );
+		//e->loadShader("",  "../../src/effects/shaderEffect/menger_journey.frag");
+		e->loadShader("../../src/effects/shaderEffect/defaultShader.vert", "../../src/effects/shaderEffect/defaultShader.frag" );
+		effects.push_back(e);
+	}
+	
+	{
 		basicEffect* e;
-		e = new distortEffect();
+		e = new lineEffect();
 		e->initialise(animationParams.params);
 		e->bindWithShapes( scene.getShapesRef() );
 		effects.push_back(e);
 	}
+	
 	
 	return isEnabled()==true;
 }
@@ -258,12 +273,14 @@ bool animationController::start(){
 bool animationController::stop(){
 	
 	// disable mirOSCReceiver
-	//mirOSCReceiver.stop();
-	//oscRouter.removeNode( &mirOSCReceiver );
+	mirOSCReceiver.stop();
+	oscRouter.removeNode( &mirOSCReceiver );
 	
 	// disable durationOSCReceiver
 	//durationOSCReceiver.stop();
 	//oscRouter.removeNode( &durationOSCReceiver );
+	
+	oscRouter.stop();
 	
 	bShowGui = false;
 	
@@ -344,9 +361,10 @@ void animationController::draw(ofEventArgs& event){
 	
 	// tmp
 	ofClear(0,1);
+	//ofBackground(255,0,0);
 	
 	// render a scene without effects (tmp?)
-	if(effects.size()==0){
+	if(effects.size()==0 || ofGetKeyPressed(OF_KEY_LEFT_SHIFT)){
 		ofSetColor( ofFloatColor(1.f, 1));//params.seasons.summer));
 		ofFill();
 		for(auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it){

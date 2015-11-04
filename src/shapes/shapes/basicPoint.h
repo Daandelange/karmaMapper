@@ -14,6 +14,12 @@
 // needed forward declaration
 class basicShape;
 
+enum basicShapePointType {
+	POINT_POSITION_RELATIVE,
+	POINT_POSITION_RELATIVE_UNALTERED,
+	POINT_POSITION_ABSOLUTE
+};
+
 // todo: rename basicPoint so shapePoint
 
 class basicPoint {
@@ -24,8 +30,13 @@ public:
 	basicPoint(float _x, float _y);
 	~basicPoint();
 	
+	// #########
+	// global variables
+	static basicPoint nullPoint;
+	
 	float x;
 	float y;
+	
 	
 	inline bool operator ==( const basicPoint& p ) const;
 	inline bool operator !=( const basicPoint& p ) const;

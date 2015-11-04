@@ -13,7 +13,7 @@
 #include "ofxGuiExtended.h"
 #include "animationParams.h"
 
-#define KMAnimSeasonsYear 10 // (sec) year cycle duration
+#define KMAnimSeasonsYear 20 // (sec) year cycle duration
 
 #define KM_AP_guiTextureWidth 200
 #define KM_AP_guiTextureHeight 250

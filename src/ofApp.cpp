@@ -15,9 +15,11 @@ void ofApp::setup(){
 	ofSetWindowTitle( "karmaMapper::Animator" );
 	
 	// drawing environment
-	//ofEnableAlphaBlending();
-	//ofEnableAntiAliasing();
-	//ofEnableSmoothing();
+	ofEnableAlphaBlending();
+	ofSetVerticalSync(true);
+	ofEnableAntiAliasing();
+	ofEnableSmoothing();
+	ofSetVerticalSync(true);
 	
 	// setup scene
 	//scene.loadLastUsedScene();
@@ -28,12 +30,12 @@ void ofApp::setup(){
 	controller.start();
 	
 	// start Ableton Liveset Decoder
-	//ofx::AbletonLiveSet::LiveSet LS;
-	//ofx::AbletonLiveSet::Parser parser(LS);
-	//if(!parser.open("vendome_daan_v1.0/mappingvendome.als")) ofLogNotice("ofApp::setup()", "Could not parse ALS file.");
+	ofx::AbletonLiveSet::LiveSet LS;
+	ofx::AbletonLiveSet::Parser parser(LS);
+	if(!parser.open("vendome_daan_v1.0/mappingvendome.als")) ofLogNotice("ofApp::setup()", "Could not parse ALS file.");
 	
-	//liveSetEvents.enableMetronomEvents(LS);
-	//liveSetEvents.enableNoteEvents(LS);
+	liveSetEvents.enableMetronomEvents(LS);
+	liveSetEvents.enableNoteEvents(LS);
 	
 	// tmp
 	ofShowCursor();
@@ -47,10 +49,9 @@ void ofApp::setup(){
 	//soundStream.setDeviceID(7); // 7 = soundflower 2 ch
 	//soundStream.setup(this, 0, 2, 44100, 256, 4);
 	//analyser.start();
-	ofSoundStreamStop();
+	//ofSoundStreamStop();
 	
-	// setup the OSC Router
-	//osc.start();
+	
 	
 	// tmp
 }
@@ -73,6 +74,7 @@ void ofApp::exit(){
 	
 	//osc.stop();
 	//analyser.stop();
+	controller.stop();
 }
 
 //--------------------------------------------------------------

@@ -81,9 +81,9 @@ protected:
 	ofSoundPlayer music;
 	
 	// OSC
-	//OSCRouter& oscRouter;
+	OSCRouter oscRouter;
 	mirReceiver mirOSCReceiver;
-	durationReceiver durationOSCReceiver;
+	//durationReceiver durationOSCReceiver;
 	
 	// Video recording
 	fboRecorder recorder;
@@ -106,7 +106,7 @@ private:
 // Shapes
 #define GUIShapesInfo		("Scene Information")
 #define GUILoadScene		("Load Shapes...")
-#define GUILoadedScene		("") // empty for value more space
+#define GUILoadedScene		("") // empty for having more gui space
 #define GUIShapesNumShapes	("# Shapes:\t")
 
 

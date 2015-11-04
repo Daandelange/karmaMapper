@@ -56,6 +56,7 @@ void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const osc::IpEndpo
 	// first part is the same as parent class
 	// convert the message to an ofxOscMessage
 	
+	if(!bEnabled) return;
 	// todo: we need a mutex here....
 	
 	// set the address
@@ -90,15 +91,12 @@ void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const osc::IpEndpo
 	}
 	
 	bool handled = false;
-	for(list<OSCNode*>::iterator it=nodes.begin(); it!=nodes.end(); it++){
+	if( !nodes.empty() ) for(list<OSCNode*>::iterator it=nodes.begin(); it!=nodes.end(); it++){
 		if((*it)->canHandle(ofMsg)){
 			handled = (*it)->handle(ofMsg);
 			//if(handled==true) return;
 		}
 	}
-	
-	
-	
 	
 	/* cycle trough arguments:
 	for(int i = 0; i < m.getNumArgs(); i++){

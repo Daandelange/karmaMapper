@@ -62,25 +62,26 @@ bool distortEffect::render(const animationParams &params){
 	for(std::vector<basicShape*>::iterator it=shapes.begin(); it!=shapes.end(); ++it){
 		// todo: basicEffect should have a nice downcast function like .asType<vertexShape>()
 		if( (*it)->isType("vertexShape") ){
-			if(params.seasons.summer > 0 ){
-				//ofEnableAlphaBlending();
-				ofSetColor( ofFloatColor(1.f, params.seasons.summer*.1f));
-				ofFill();
-				
-			   (*it)->sendToGPU();
-			}
-			ofSetColor( ofFloatColor(1.f, 1));
-			ofFill();
+//			if(params.seasons.summer > 0 ){
+//				//ofEnableAlphaBlending();
+//				ofSetColor( ofFloatColor(1.f, params.seasons.summer*.1f));
+//				ofFill();
+//				
+//			   (*it)->sendToGPU();
+//			}
+//			ofSetColor( ofFloatColor(1.f, 1));
+//			ofFill();
 			
-			ofPushMatrix();
-			ofTranslate((*it)->getPositionPtr()->x, (*it)->getPositionPtr()->y);
-			list<basicPoint>& pts = ((vertexShape*)(*it))->getPoints();
-			for(auto it=pts.begin(); it!=pts.end(); ++it){
-				ofDrawRectangle((*it).x, (*it).y, 2, 2);
-			}
-			ofPopMatrix();
+//			ofPushMatrix();
+//			ofTranslate((*it)->getPositionPtr()->x, (*it)->getPositionPtr()->y);
+//			list<basicPoint>& pts = ((vertexShape*)(*it))->getPoints();
+//			for(auto it=pts.begin(); it!=pts.end(); ++it){
+//				ofDrawRectangle((*it).x, (*it).y, 2, 2);
+//			}
+//			ofPopMatrix();
 		}
 	}
+	
 	return true;
 }
 
@@ -94,15 +95,15 @@ void distortEffect::update(const animationParams& params){
 	
 	if(shapes.size()<1) return;
 	
+	int offset = 0;
 	for(auto it=shapes.begin(); it!=shapes.end(); it++){
 		// todo: basicEffect should have a nice downcast getter function like .asType<vertexShape>()
 		if( (*it)->isType("vertexShape") ){
-			list<basicPoint>& pts = ((vertexShape*)(*it))->getPoints();
-			int offset = 0;
+			list<basicPoint>& pts = ((vertexShape*)(*it))->getPoints(POINT_POSITION_RELATIVE);
 			for(auto itb=pts.begin(); itb!=pts.end(); ++itb){
 				(*itb) += basicPoint(
-					sin(params.seasons.summer*TWO_PI+offset*params.seasons.summer)*50,
-					cos(params.seasons.summer*TWO_PI+offset*params.seasons.summer)*50
+					( sin( params.elapsedTime *(TWO_PI+(offset/3%4)))*25 + cos( params.elapsedTime* (TWO_PI+(offset/5%8)/4))*25) * (params.seasons.summer*0.9f + 0.1f),
+					( cos( params.elapsedTime *(TWO_PI+(offset/4%7)))*25 - sin( params.elapsedTime* (TWO_PI+(offset/8%3)))*25) * (params.seasons.summer*0.9f + 0.1f)
 				);
 				offset++;
 			}

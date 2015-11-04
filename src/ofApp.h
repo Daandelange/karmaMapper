@@ -47,7 +47,7 @@ private:
 	animationController controller;
 	//karmaSoundAnalyser analyser;
 	//ofSoundStream soundStream;
-	//OSCRouter osc;
+	OSCRouter osc;
 	
 	bool mouseHidden = true;
 	

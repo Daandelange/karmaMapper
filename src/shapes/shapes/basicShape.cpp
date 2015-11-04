@@ -9,7 +9,7 @@
 #include "basicShape.h"
 
 // static
-basicPoint basicShape::zeroPoint = basicPoint(0,0);
+basicShape basicShape::nullShape = basicShape();
 
 // - - - - - -
 // CONSTRUCTORS
@@ -48,7 +48,7 @@ basicShape::~basicShape(){
 // - - - - - - -
 void basicShape::initialiseBasicVariables(){
 	// set position
-	position = basicPoint( ofGetWidth()/2, ofGetHeight()/2 );
+	position = basicPoint( 0, 0 );
 	boundingBox = ofRectangle(0,0,0,0);
 	groupID = -1;
 	hasError = false;

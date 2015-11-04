@@ -67,7 +67,7 @@ public:
 
 	// #########
 	// global variables
-	static basicPoint zeroPoint;
+	static basicShape nullShape;
 	
 protected:
 	

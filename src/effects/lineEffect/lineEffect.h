@@ -9,7 +9,12 @@
 #pragma once
 
 #include "ofMain.h"
+
 #include "basicEffect.h"
+
+#include "basicShape.h"
+#include "vertexShape.h"
+
 #include "lineEffectLine.h"
 #include "ofxAbletonLiveSet.h"
 #include "mirReceiver.h"
@@ -46,6 +51,7 @@ protected:
 	
 	//void clearWithTransparency(float transparency);
 	
+	// cached vars
 	basicShape* fromShape;
 	basicShape* toShape;
 	

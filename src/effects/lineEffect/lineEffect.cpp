@@ -88,10 +88,7 @@ bool lineEffect::render(const animationParams& params){
 		glEnable(GL_BLEND);
 		glBlendEquation(GL_FUNC_SUBTRACT);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		ofSetColor(0,0,0,50); // */
-		
-		//ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-		//ofSetColor(0,0,0, (mirReceiver::mirCache.pitch/1024+2)*255-2); // multiplies current buffer color by this one
+		ofSetColor(0,0,0,50);
 		ofFill();
 		ofDrawRectangle(0,0,renderer.getWidth(), renderer.getHeight());
 		ofDisableBlendMode(); // resets blending modes manually enabled above
@@ -216,14 +213,24 @@ lineEffectLine lineEffect::getRandomLine(basicShape *_sh1, basicShape *_sh2) {
 	basicPoint* from;
 	basicPoint* to;
 	if( !_sh1->isReady() || !_sh2->isReady() ){
-		from = &basicShape::zeroPoint;
-		to = &basicShape::zeroPoint;
+		from = &basicPoint::nullPoint;
+		to = &basicPoint::nullPoint;
 	}
 	else if( _sh1->isType("vertexShape") ){
-		from = ((vertexShape*) _sh1)->getRandomVertexPtr();
-		to = ((vertexShape*) _sh2)->getRandomVertexPtr();
-		while( _sh1!=_sh2 && from==to ){
-			to = ((vertexShape*) _sh2)->getRandomVertexPtr();
+		from = ((vertexShape*) _sh1)->getRandomVertexPtr(POINT_POSITION_ABSOLUTE);
+		
+		if( _sh1 == _sh2 ){
+			to = ((vertexShape*) _sh2)->getNextVertexPtr( *from,POINT_POSITION_ABSOLUTE);
+			if(to == &basicPoint::nullPoint) while( _sh1!=_sh2 && from==to ){
+				to = ((vertexShape*) _sh2)->getRandomVertexPtr(POINT_POSITION_ABSOLUTE);
+			}
+			
+		}
+		else {
+			to = ((vertexShape*) _sh2)->getRandomVertexPtr( POINT_POSITION_ABSOLUTE);
+			if(to == &basicPoint::nullPoint) while( _sh1!=_sh2 && from==to ){
+				to = ((vertexShape*) _sh2)->getRandomVertexPtr(POINT_POSITION_ABSOLUTE);
+			}
 		}
 	}
 	else {

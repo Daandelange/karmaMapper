@@ -73,7 +73,7 @@ void vertexShape::sendToGPU(){
 	ofPushMatrix();
 	//ofPushStyle();
 	// todo: this should be changingPosition
-	ofTranslate(position.x, position.y);
+	ofTranslate( getPositionPtr()->x, getPositionPtr()->y);
 	
 	// if shape has error, draw it in red
 #ifdef KM_EDITOR_APP
@@ -81,12 +81,14 @@ void vertexShape::sendToGPU(){
 #else
 	//ofSetColor(255);
 #endif
-	//ofFill();
 	
 	if(hasError){
 		ofSetHexColor(0xFFFFFF);
+		ofFill();
 	}
 	
+	//ofSetPolyMode(OF_POLY_WINDING_NONZERO);
+	//shared_ptr<ofBaseRenderer> tmp = ofGetCurrentRenderer();
 	ofBeginShape();
 	// draw elements
 	for(auto it = changingPoints.begin(); it != changingPoints.end(); it++){
@@ -241,8 +243,20 @@ bool vertexShape::loadFromXML(ofxXmlSettings& xml){
 // - - - - - - -
 
 // ### GETTERS
-list<basicPoint>& vertexShape::getPoints(){
-	return changingPoints;
+list<basicPoint>& vertexShape::getPoints( const basicShapePointType& _type ){
+	switch( _type ){
+		case POINT_POSITION_ABSOLUTE:
+			return absolutePoints;
+			break;
+		case POINT_POSITION_RELATIVE:
+			return changingPoints;
+			break;
+		
+		case POINT_POSITION_RELATIVE_UNALTERED:
+		default:
+			return points;
+			break;
+	}
 }
 
 int vertexShape::getNumPoints(){
@@ -262,12 +276,62 @@ int vertexShape::getNumPoints(){
  }*/
 
 // gets alterable vertex pointer holding relative point coordinates
-basicPoint* vertexShape::getRandomVertexPtr(){
-	if( points.size()==0 ) return &zeroPoint;
+basicPoint* vertexShape::getRandomVertexPtr( const basicShapePointType& _type ){
+	if( points.size()==0 ) return &basicPoint::nullPoint;
 	
-	auto it = absolutePoints.begin();
-	std::advance(it, round(ofRandom(absolutePoints.size()-1)) );
-	return &*it;
+	if( _type == POINT_POSITION_RELATIVE ){
+		auto it = changingPoints.begin();
+		std::advance(it, round(ofRandom(changingPoints.size()-1)) );
+		return &*it;
+	}
+	else if( _type == POINT_POSITION_ABSOLUTE ){
+		auto it = absolutePoints.begin();
+		std::advance(it, round(ofRandom(absolutePoints.size()-1)) );
+		return &*it;
+	}
+	else if( _type == POINT_POSITION_RELATIVE_UNALTERED ){
+		auto it = points.begin();
+		std::advance(it, round(ofRandom(points.size()-1)) );
+		return &*it;
+	}
+	else {
+		return &basicPoint::nullPoint;
+	}
+}
+
+basicPoint* vertexShape::getNextVertexPtr(basicPoint &_p, const basicShapePointType& _type, bool _getPrev){
+	if( _type == POINT_POSITION_RELATIVE ){
+		auto it= std::find( changingPoints.begin(), changingPoints.end(), _p );
+		if( it != changingPoints.end() ){
+			_getPrev ? --it : ++it;
+			return &*it;
+		}
+		else return &basicPoint::nullPoint;
+	}
+	else if( _type == POINT_POSITION_ABSOLUTE ){
+		auto it= std::find( absolutePoints.begin(), absolutePoints.end(), _p );
+		if( it != absolutePoints.end() ){
+			if(_getPrev && it == absolutePoints.begin()) return &*absolutePoints.end();
+			// incremment
+			_getPrev ? --it : ++it;
+			
+			if(!_getPrev && it==absolutePoints.end()) return &*absolutePoints.begin();
+
+			return &(*it);
+		}
+		else return &basicPoint::nullPoint;
+	}
+	else if( _type == POINT_POSITION_RELATIVE_UNALTERED ){
+		auto it= std::find( points.begin(), points.end(), _p );
+		if( it != points.end() ){
+			_getPrev ? --it : ++it;
+			return &*it;
+		}
+		else return &basicPoint::nullPoint;
+	}
+	else {
+		return &basicPoint::nullPoint;
+	}
 }
 
 basicPoint* vertexShape::getCenterPtr(){

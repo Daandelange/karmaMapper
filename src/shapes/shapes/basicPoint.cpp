@@ -21,6 +21,9 @@ public:
 };
 #endif
 
+// static
+basicPoint basicPoint::nullPoint = basicPoint(-999,-999);
+
 basicPoint::basicPoint(): x(0), y(0){
 	//cout << "basicPoint::basicPoint()" << endl;
 #ifdef KM_EDITOR_APP

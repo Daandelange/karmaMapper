@@ -23,6 +23,7 @@ int main( ){
 	
 	#else
 	ofGLWindowSettings s;
+	//s.setGLVersion(2,1);
 	s.setGLVersion(3,3);
 	//s.setGLVersion(4,3);
 	ofCreateWindow(s);
