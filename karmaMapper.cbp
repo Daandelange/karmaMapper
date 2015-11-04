@@ -1,0 +1,756 @@
+<?xml version="1.0"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="karmaMapper" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="addons/;src/;build config/;" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/$(PROJECT_NAME)_debug" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
+				<Option object_output="obj/Debug/" />
+				<Option external_deps="../../../libs/openFrameworksCompiled/lib/linux64/libopenFrameworksDebug.a;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+			</Target>
+			<Target title="Release">
+				<Option output="bin/$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
+				<Option object_output="obj/Release/" />
+				<Option external_deps="../../../libs/openFrameworksCompiled/lib/linux64/libopenFrameworks.a;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+			</Target>
+		</Build>
+		<Unit filename="config.make">
+			<Option virtualFolder="build config" />
+		</Unit>
+		<Unit filename="src/main.cpp">
+			<Option virtualFolder="src/" />
+		</Unit>
+		<Unit filename="src/ofApp.cpp">
+			<Option virtualFolder="src/" />
+		</Unit>
+		<Unit filename="src/ofApp.h">
+			<Option virtualFolder="src/" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+		<Unit filename="src/core/animationController.cpp">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/animationController.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/animationParams.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/animationParamsServer.cpp">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/animationParamsServer.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/durationEvents.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/durationRC.cpp">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/durationRC.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/durationReceiver.cpp">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/durationReceiver.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/fboRecorder.cpp">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/fboRecorder.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/karmaSoundAnalyser.cpp">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/karmaSoundAnalyser.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/mirEvents.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/mirReceiver.cpp">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/mirReceiver.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/OSCNode.cpp">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/OSCNode.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/OSCRouter.cpp">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/core/OSCRouter.h">
+			<Option virtualFolder="src/core" />
+		</Unit>
+		<Unit filename="src/effects/basicEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/basicEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/distortEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/distortEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/effects.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/emptyEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/emptyEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageBeatEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageBeatEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageBeatEffectItem.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageBeatEffectItem.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageFolderEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageFolderEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageGrainEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageGrainEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageGrainEffect_bckup.zip">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageMeltingEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/imageMeltingEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/lineEffect/lineEffect.cpp">
+			<Option virtualFolder="src/effects/lineEffect" />
+		</Unit>
+		<Unit filename="src/effects/lineEffect/lineEffect.h">
+			<Option virtualFolder="src/effects/lineEffect" />
+		</Unit>
+		<Unit filename="src/effects/lineEffect/lineEffectLine.cpp">
+			<Option virtualFolder="src/effects/lineEffect" />
+		</Unit>
+		<Unit filename="src/effects/lineEffect/lineEffectLine.h">
+			<Option virtualFolder="src/effects/lineEffect" />
+		</Unit>
+		<Unit filename="src/effects/meshRenderer3D.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/meshRenderer3D.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/musicEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/musicEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/shaderEffect/defaultShader.frag">
+			<Option virtualFolder="src/effects/shaderEffect" />
+		</Unit>
+		<Unit filename="src/effects/shaderEffect/defaultShader.vert">
+			<Option virtualFolder="src/effects/shaderEffect" />
+		</Unit>
+		<Unit filename="src/effects/shaderEffect/menger_journey.frag">
+			<Option virtualFolder="src/effects/shaderEffect" />
+		</Unit>
+		<Unit filename="src/effects/shaderEffect/shaderEffect.cpp">
+			<Option virtualFolder="src/effects/shaderEffect" />
+		</Unit>
+		<Unit filename="src/effects/shaderEffect/shaderEffect.h">
+			<Option virtualFolder="src/effects/shaderEffect" />
+		</Unit>
+		<Unit filename="src/effects/subdivisionEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/subdivisionEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/videoEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/videoEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/videoEffectOld.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/videoEffectOld.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/videoStreamEffect.cpp">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/effects/videoStreamEffect.h">
+			<Option virtualFolder="src/effects" />
+		</Unit>
+		<Unit filename="src/KMSettings.h">
+			<Option virtualFolder="src" />
+		</Unit>
+		<Unit filename="src/ofAppEditor.cpp">
+			<Option virtualFolder="src" />
+		</Unit>
+		<Unit filename="src/ofAppEditor.h">
+			<Option virtualFolder="src" />
+		</Unit>
+		<Unit filename="src/shapes/shapeFactory.cpp">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapeFactory.hpp">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapes/basicPoint.cpp">
+			<Option virtualFolder="src/shapes/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapes/basicPoint.h">
+			<Option virtualFolder="src/shapes/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapes/basicShape.cpp">
+			<Option virtualFolder="src/shapes/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapes/basicShape.h">
+			<Option virtualFolder="src/shapes/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapes/shapes.h">
+			<Option virtualFolder="src/shapes/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapes/vertexShape.cpp">
+			<Option virtualFolder="src/shapes/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapes/vertexShape.h">
+			<Option virtualFolder="src/shapes/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapesDB.cpp">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapesDB.h">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapesEditor.cpp">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapesEditor.h">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapesScene.cpp">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapesScene.h">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapesTransformator.cpp">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapesTransformator.h">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="src/shapes/shapeUtils.h">
+			<Option virtualFolder="src/shapes" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet/Constants.h">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet/EventHandler.cpp">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet/EventHandler.h">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet/Model.cpp">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet/Model.h">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet/Parser.cpp">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet/Parser.h">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet/Tempo.cpp">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet/Tempo.h">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/src/ofxAbletonLiveSet.h">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/libs/pugixml/src/pugiconfig.hpp">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/libs/pugixml/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/libs/pugixml/src/pugixml.cpp">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/libs/pugixml/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAbletonLiveSet/libs/pugixml/src/pugixml.hpp">
+			<Option virtualFolder="addons/ofxAbletonLiveSet/libs/pugixml/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/src/ofxAssimpAnimation.cpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/src/ofxAssimpAnimation.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/src/ofxAssimpMeshHelper.cpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/src/ofxAssimpMeshHelper.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/src/ofxAssimpModelLoader.cpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/src/ofxAssimpModelLoader.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/src/ofxAssimpTexture.cpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/src/ofxAssimpTexture.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/src/ofxAssimpUtils.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/ai_assert.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/anim.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/camera.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/cexport.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/cfileio.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/cimport.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/color4.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/Compiler/poppack1.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp/Compiler" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/Compiler/pstdint.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp/Compiler" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/Compiler/pushpack1.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp/Compiler" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/config.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/DefaultLogger.hpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/defs.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/Exporter.hpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/Importer.hpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/importerdesc.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/IOStream.hpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/IOSystem.hpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/light.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/Logger.hpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/LogStream.hpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/material.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/matrix3x3.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/matrix4x4.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/mesh.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/metadata.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/NullLogger.hpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/postprocess.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/ProgressHandler.hpp">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/quaternion.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/scene.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/texture.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/types.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/vector2.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/vector3.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxAssimpModelLoader/libs/assimp/include/assimp/version.h">
+			<Option virtualFolder="addons/ofxAssimpModelLoader/libs/assimp/include/assimp" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxBaseGui.cpp">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxBaseGui.h">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxButton.cpp">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxButton.h">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxGui.h">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxGuiGroup.cpp">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxGuiGroup.h">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxLabel.cpp">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxLabel.h">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxPanel.cpp">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxPanel.h">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxSlider.cpp">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxSlider.h">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxSliderGroup.cpp">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxSliderGroup.h">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxToggle.cpp">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGui/src/ofxToggle.h">
+			<Option virtualFolder="addons/ofxGui/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxFpsPlotter.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxFpsPlotter.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiBaseDraws.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiBaseDraws.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiExtended.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiGroupExtended.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiGroupExtended.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiMatrix.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiMatrix.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiPage.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiPage.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiSpacer.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiSpacer.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiZoomableBaseDraws.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxGuiZoomableBaseDraws.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxLabelExtended.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxLabelExtended.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxMasterSlaveControl.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxMasterSlaveControl.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxMinimalButton.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxMinimalButton.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxMinimalToggle.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxMinimalToggle.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxPanelExtended.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxPanelExtended.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxRotarySlider.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxRotarySlider.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxTabbedPages.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxTabbedPages.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxValuePlotter.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxValuePlotter.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxVerticalSlider.cpp">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxGuiExtended/src/ofxVerticalSlider.h">
+			<Option virtualFolder="addons/ofxGuiExtended/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOsc.h">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscArg.h">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscBundle.cpp">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscBundle.h">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscMessage.cpp">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscMessage.h">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscParameterSync.cpp">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscParameterSync.h">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscReceiver.cpp">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscReceiver.h">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscSender.cpp">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/src/ofxOscSender.h">
+			<Option virtualFolder="addons/ofxOsc/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.cpp">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/ip" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/ip" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/ip/NetworkingUtils.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/ip" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/ip/PacketListener.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/ip" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/ip/posix/NetworkingUtils.cpp">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/ip/posix" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/ip/posix/UdpSocket.cpp">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/ip/posix" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/ip/TimerListener.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/ip" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/ip" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/MessageMappingOscPacketListener.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscException.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscHostEndianness.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.cpp">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscPacketListener.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscPrintReceivedElements.cpp">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscPrintReceivedElements.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.cpp">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscTypes.cpp">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h">
+			<Option virtualFolder="addons/ofxOsc/libs/oscpack/src/osc" />
+		</Unit>
+		<Unit filename="../../../addons/ofxTextBox/src/ofxTextBox.h">
+			<Option virtualFolder="addons/ofxTextBox/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxTrueTypeFontUC/src/ofxTrueTypeFontUC.cpp">
+			<Option virtualFolder="addons/ofxTrueTypeFontUC/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxTrueTypeFontUC/src/ofxTrueTypeFontUC.h">
+			<Option virtualFolder="addons/ofxTrueTypeFontUC/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxVLCRemote/src/ofxVLCRemote.cpp">
+			<Option virtualFolder="addons/ofxVLCRemote/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxVLCRemote/src/ofxVLCRemote.h">
+			<Option virtualFolder="addons/ofxVLCRemote/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxVideoRecorder/src/ofxVideoRecorder.cpp">
+			<Option virtualFolder="addons/ofxVideoRecorder/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxVideoRecorder/src/ofxVideoRecorder.h">
+			<Option virtualFolder="addons/ofxVideoRecorder/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxXmlSettings/src/ofxXmlSettings.cpp">
+			<Option virtualFolder="addons/ofxXmlSettings/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxXmlSettings/src/ofxXmlSettings.h">
+			<Option virtualFolder="addons/ofxXmlSettings/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxXmlSettings/libs/tinyxml.cpp">
+			<Option virtualFolder="addons/ofxXmlSettings/libs" />
+		</Unit>
+		<Unit filename="../../../addons/ofxXmlSettings/libs/tinyxml.h">
+			<Option virtualFolder="addons/ofxXmlSettings/libs" />
+		</Unit>
+		<Unit filename="../../../addons/ofxXmlSettings/libs/tinyxmlerror.cpp">
+			<Option virtualFolder="addons/ofxXmlSettings/libs" />
+		</Unit>
+		<Unit filename="../../../addons/ofxXmlSettings/libs/tinyxmlparser.cpp">
+			<Option virtualFolder="addons/ofxXmlSettings/libs" />
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

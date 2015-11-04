@@ -1,10 +1,10 @@
 ofxAbletonLiveSet
 ofxAssimpModelLoader
 ofxGui
+ofxGuiExtended
 ofxOsc
 ofxTextBox
 ofxTrueTypeFontUC
-ofxUI
 ofxVLCRemote
 ofxVideoRecorder
 ofxXmlSettings
