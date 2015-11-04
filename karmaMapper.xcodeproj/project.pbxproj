@@ -68,6 +68,7 @@
 		851FA9C41B9321FD00F94851 /* ofxTabbedPages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851FA9A11B9321FD00F94851 /* ofxTabbedPages.cpp */; };
 		851FA9C51B9321FD00F94851 /* ofxValuePlotter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851FA9A31B9321FD00F94851 /* ofxValuePlotter.cpp */; };
 		851FA9C61B9321FD00F94851 /* ofxVerticalSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851FA9A51B9321FD00F94851 /* ofxVerticalSlider.cpp */; };
+		854045F01BC9643B005C25D2 /* shaderEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 854045EE1BC9643B005C25D2 /* shaderEffect.cpp */; };
 		855451C11B91FB4C00A36079 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
 		855451C21B91FB4C00A36079 /* animationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB15C2F981CCE54007D5DE40 /* animationController.cpp */; };
 		855451C31B91FB4C00A36079 /* durationRC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FED9B3D78FAEF95E0274AC32 /* durationRC.cpp */; };
@@ -314,6 +315,8 @@
 		851FA9A41B9321FD00F94851 /* ofxValuePlotter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxValuePlotter.h; sourceTree = "<group>"; };
 		851FA9A51B9321FD00F94851 /* ofxVerticalSlider.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxVerticalSlider.cpp; sourceTree = "<group>"; };
 		851FA9A61B9321FD00F94851 /* ofxVerticalSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxVerticalSlider.h; sourceTree = "<group>"; };
+		854045EE1BC9643B005C25D2 /* shaderEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shaderEffect.cpp; sourceTree = "<group>"; };
+		854045EF1BC9643B005C25D2 /* shaderEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shaderEffect.h; sourceTree = "<group>"; };
 		855452371B91FB4C00A36079 /* karmaMapperEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = karmaMapperEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8554523B1B921A1400A36079 /* ofAppEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofAppEditor.cpp; sourceTree = "<group>"; };
 		8554523C1B921A1400A36079 /* ofAppEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofAppEditor.h; sourceTree = "<group>"; };
@@ -688,6 +691,16 @@
 			path = ../../../addons/ofxGuiExtended/src;
 			sourceTree = "<group>";
 		};
+		854045ED1BC9643B005C25D2 /* shaderEffect */ = {
+			isa = PBXGroup;
+			children = (
+				854045EE1BC9643B005C25D2 /* shaderEffect.cpp */,
+				854045EF1BC9643B005C25D2 /* shaderEffect.h */,
+			);
+			name = shaderEffect;
+			path = effects/shaderEffect;
+			sourceTree = "<group>";
+		};
 		8554523E1B921EA100A36079 /* shapes */ = {
 			isa = PBXGroup;
 			children = (
@@ -911,6 +924,7 @@
 				8557B8431BC5C15200DAC695 /* distortEffect.cpp */,
 				8557B8441BC5C15200DAC695 /* distortEffect.h */,
 				8557B83C1BC5B4ED00DAC695 /* lineEffect */,
+				854045ED1BC9643B005C25D2 /* shaderEffect */,
 			);
 			name = effects;
 			sourceTree = "<group>";
@@ -1266,6 +1280,7 @@
 				ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */,
 				67FE4C7B15C2F0478C8126C2 /* NetworkingUtils.cpp in Sources */,
 				510CAFE035E576A4E1502D52 /* UdpSocket.cpp in Sources */,
+				854045F01BC9643B005C25D2 /* shaderEffect.cpp in Sources */,
 				851FA9A71B9321FD00F94851 /* ofxFpsPlotter.cpp in Sources */,
 				62545D179C94265CA1389D4A /* OscOutboundPacketStream.cpp in Sources */,
 				C4782ECC372420ACE0615B74 /* OscPrintReceivedElements.cpp in Sources */,
