@@ -88,7 +88,7 @@
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_DEFINES = 
+PROJECT_DEFINES = KM_EDITOR_APP
 
 ################################################################################
 # PROJECT CFLAGS
@@ -105,7 +105,7 @@
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_CFLAGS = 
+PROJECT_CFLAGS = -fpermissive
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS
