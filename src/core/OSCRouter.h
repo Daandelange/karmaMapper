@@ -11,7 +11,7 @@
 //#include "ofxUI.h"
 #include "ofxGui.h"
 #include "ofxGuiExtended.h"
-#include "ofxOSC.h"
+#include "ofxOsc.h"
 #include "OSCNode.h"
 
 #define KM_OSC_PORT 12000
