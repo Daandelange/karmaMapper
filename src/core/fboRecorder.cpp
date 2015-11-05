@@ -28,7 +28,7 @@ fboRecorder::~fboRecorder(){
 // filename can be empty (will use timestamp)
 // set _w and _h in px to use a huge off-screen framebuffer if you want
 bool fboRecorder::startRecording(string _fileName, int _w, int _h){
-	if(isRecording()) return;
+	if(isRecording()) return true;
 	
 	if( _w==0 || _h==0 ){
 		_w = ofGetWindowWidth();
@@ -74,6 +74,10 @@ bool fboRecorder::stopRecording(){
 	ofxVideoRecorder::close();
 	//ofxVideoRecorder::~ofxVideoRecorder();
 	bRecording=false;
+}
+
+ofTexture& fboRecorder::getTexture(){
+	return fbo.getTexture();
 }
 
 // - - - - - - - -

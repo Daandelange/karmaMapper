@@ -27,6 +27,7 @@ public:
 	// Enablers
 	bool startRecording(string _fileName="", int _w=0, int _h=0);
 	bool stopRecording();
+	ofTexture& getTexture();
 	
 	// Recording
 	bool beginFrame();

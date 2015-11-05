@@ -22,6 +22,10 @@
 #include "durationReceiver.h"
 #include "fboRecorder.h"
 
+#ifdef TARGET_OS_MAC
+	#include "ofxSyphon.h"
+#endif
+
 // todo: an overall mask that hides any unwanted projection zones (could be done by an effect too)
 
 class animationController {
@@ -92,6 +96,9 @@ private:
 	bool bEnabled;
 	bool bShowGui;
 	
+#ifdef TARGET_OS_MAC
+	ofxSyphonServer syphonTexture;
+#endif
 };
 
 

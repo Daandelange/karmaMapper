@@ -104,6 +104,12 @@ bool animationController::start(){
 	ofSetBackgroundAuto(false);
 	ofClear(0,0,0,255);
 	
+	// syphon
+#ifdef TARGET_OS_MAC
+	syphonTexture.setName("Texture Output");
+	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
+#endif
+	
 	// play music
 	//sound.loadSound("TEST MIX V0.1.wav");
 	//music.load("music.wav");
@@ -379,6 +385,16 @@ void animationController::draw(ofEventArgs& event){
 	}
 	
 	recorder.endFrame(true);
+	
+	// syphon
+#ifdef TARGET_OS_MAC
+	if(recorder.isRecording()){
+		syphonTexture.publishTexture( &recorder.getTexture() );
+	}
+	else {
+		syphonTexture.publishScreen();
+	}
+#endif
 	
 	// draw gui ?
 	if(bShowGui) animationGui.draw();
