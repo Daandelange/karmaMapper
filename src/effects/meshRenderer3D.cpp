@@ -9,7 +9,7 @@
 //  Bla bla bla
 //
 
-#include "MeshRenderer3D.h"
+#include "meshRenderer3D.h"
 
 MeshRenderer3D::MeshRenderer3D(){
 	basicEffect::basicEffect();
@@ -26,7 +26,6 @@ MeshRenderer3D::MeshRenderer3D(){
 }
 
 MeshRenderer3D::~MeshRenderer3D(){
-	basicEffect::~basicEffect();
 	
 	ofRemoveListener(ofx::AbletonLiveSet::EventHandler::noteEvent, this, &MeshRenderer3D::noteEventListener);
 }
@@ -65,11 +64,13 @@ bool MeshRenderer3D::render(){
 	mesh.addColors(myColors);
 	
 	int i=0;
-	for(vector<basicShape*>::iterator it=shapes.begin(); it!=shapes.end(); it++, i++){
-		//(*it)->render();
+	for(vector<basicShape*>::iterator shape=shapes.begin(); shape!=shapes.end(); shape++, i++){
+		//(*shape)->render();
 		
 		ofPushMatrix();
-		ofTranslate( *(*it)->getPositionPtr() );
+
+		basicPoint* shapePos = (*shape)->getPositionPtr();
+		ofTranslate(shapePos->x, shapePos->y, 0);
 		
 		ofVec3f meshOffset = min+meshSize/2;
 		

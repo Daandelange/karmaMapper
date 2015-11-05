@@ -75,8 +75,9 @@ void imageGrainEffect::update(){
 	basicEffect::update();
 	
 	//if( shapes.size()==0 ) return;
-	
-	if( items.size() < 20 && ofRandom(0,5)>3 ) items.push_back(imageGrainItem(*shapes[round(ofRandom(0, shapes.size()-.51f))]->getPositionPtr()));
+
+	basicPoint* shapePos = shapes[round(ofRandom(0, shapes.size()-.51f))]->getPositionPtr();
+	if( items.size() < 20 && ofRandom(0,5)>3 ) items.push_back(imageGrainItem(ofPoint(shapePos->x, shapePos->y)));
 	
 	for(int i=items.size()-1; i>=0; i--){
 		if(items[i].isDead){

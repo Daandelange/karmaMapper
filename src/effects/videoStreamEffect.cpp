@@ -20,8 +20,6 @@ videoStreamEffect::videoStreamEffect(){
 }
 
 videoStreamEffect::~videoStreamEffect(){
-	basicEffect::~basicEffect();
-	
 	ofRemoveListener(ofx::AbletonLiveSet::EventHandler::noteEvent, this, &videoStreamEffect::noteEventListener);
 }
 
@@ -37,15 +35,17 @@ bool videoStreamEffect::render(){
 	ofTexture texture = grabber.getTexture();
 	
 	int i=0;
-	for(vector<basicShape*>::iterator it=shapes.begin(); it!=shapes.end(); it++, i++){
-		//(*it)->render();
+	for(vector<basicShape*>::iterator shape=shapes.begin(); shape!=shapes.end(); shape++, i++){
+		//(*shape)->render();
 		
 		ofPushMatrix();
-		ofTranslate( *(*it)->getPositionPtr() );
+
+		basicPoint* shapePos = (*shape)->getPositionPtr();
+		ofTranslate(shapePos->x, shapePos->y, 0);
 		
 		// calc scale
 		bool coverMode = true;
-		ofRectangle s = (*it)->getBoundingBox();
+		ofRectangle s = (*shape)->getBoundingBox();
 		float scaleH = s.height/grabber.getHeight();
 		float scaleW = s.width/grabber.getWidth();
 		float scale = 1.f;
