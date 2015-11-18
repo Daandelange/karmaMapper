@@ -107,7 +107,6 @@ bool animationController::start(){
 	// syphon
 #ifdef TARGET_OS_MAC
 	syphonTexture.setName("Texture Output");
-	tex.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
 #endif
 	
 	// play music

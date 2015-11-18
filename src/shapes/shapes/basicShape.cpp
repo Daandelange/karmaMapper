@@ -9,12 +9,14 @@
 #include "basicShape.h"
 
 // static
-basicShape basicShape::nullShape = basicShape();
+//basicShape basicShape::nullShape;// = basicShape();
 
 // - - - - - -
 // CONSTRUCTORS
 // - - - - - -
 basicShape::basicShape() {
+	
+	//if(this == &basicShape::nullShape) return;
 	
 	initialiseBasicVariables();
 	

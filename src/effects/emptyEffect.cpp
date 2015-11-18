@@ -31,13 +31,13 @@ emptyEffect::~emptyEffect(){
 // BASIC EFFECT FUNCTIONS
 // - - - - - - -
 
-bool emptyEffect::initialise(){
-	basicEffect::initialise();
+bool emptyEffect::initialise(const animationParams& params){
+	basicEffect::initialise(params);
 }
 
 
 // return true if rendering succeeded
-bool emptyEffect::render(){
+bool emptyEffect::render(const animationParams& params){
 	// No matrix transformations are set, evrything is up to you.
 	// below is a default behaviour that you can use as you wish
 	
@@ -58,8 +58,8 @@ bool emptyEffect::render(){
 }
 
 // like ofApp::update()
-void emptyEffect::update(){
-	basicEffect::update();
+void emptyEffect::update(const animationParams& params){
+	basicEffect::update(params);
 }
 
 // resets all values

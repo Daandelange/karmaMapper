@@ -12,9 +12,6 @@
 // - - - - - - - -
 // CONSTRUCTORS
 // - - - - - - - -
-//shapesEditor::shapesEditor( ): scene( NULL ) {
-	
-//}
 
 shapesEditor::shapesEditor( ) : multiShapesHandler(selectedShapes) {
 	// IMPORTANT NOTE: some crashed occur related to selectedShapes changing.
@@ -34,7 +31,7 @@ shapesEditor::shapesEditor( ) : multiShapesHandler(selectedShapes) {
 	buildMenus();
 	
 	// tmp : load image
-	background.load("vendome_full.jpg");
+	background.load("vendome_full_small.jpeg");
 }
 
 shapesEditor::~shapesEditor(){
