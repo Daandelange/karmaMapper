@@ -23,7 +23,7 @@
 #include "fboRecorder.h"
 
 #ifdef TARGET_OS_MAC
-	#include "ofxSyphon.h"
+//	#include "ofxSyphon.h"
 #endif
 
 // todo: an overall mask that hides any unwanted projection zones (could be done by an effect too)
@@ -97,7 +97,7 @@ private:
 	bool bShowGui;
 	
 #ifdef TARGET_OS_MAC
-	ofxSyphonServer syphonTexture;
+        //ofxSyphonServer syphonTexture;
 #endif
 };
 

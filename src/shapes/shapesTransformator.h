@@ -8,7 +8,7 @@
 
 #pragma once
 #include "ofMain.h"
-#include "basicPoint.h"
+#include "shapes/basicPoint.h"
 #include "basicShape.h"
 
 // utility class for transforming shape groups

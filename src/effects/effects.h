@@ -15,14 +15,14 @@
 //#include "imageEffect.h"
 //#include "imageGrainEffect.h"
 //#include "imageMeltingEffect.h"
-#include "shaderEffect.h"
+#include "shaderEffect/shaderEffect.h"
 //#include "videoEffect.h"
 //#include "gifEffect.h"
-#include "lineEffect.h"
+#include "lineEffect/lineEffect.h"
 //#include "imageBeatEffect.h"
 //#include "meshRenderer3D.h"
 //#include "videoStreamEffect.h"
 #include "distortEffect.h"
-#include "lineEffect.h"
+#include "lineEffect/lineEffect.h"
 
 #endif

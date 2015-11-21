@@ -106,7 +106,7 @@ bool animationController::start(){
 	
 	// syphon
 #ifdef TARGET_OS_MAC
-	syphonTexture.setName("Texture Output");
+//	syphonTexture.setName("Texture Output");
 #endif
 	
 	// play music
@@ -388,10 +388,10 @@ void animationController::draw(ofEventArgs& event){
 	// syphon
 #ifdef TARGET_OS_MAC
 	if(recorder.isRecording()){
-		syphonTexture.publishTexture( &recorder.getTexture() );
+//		syphonTexture.publishTexture( &recorder.getTexture() );
 	}
 	else {
-		syphonTexture.publishScreen();
+//		syphonTexture.publishScreen();
 	}
 #endif
 	
