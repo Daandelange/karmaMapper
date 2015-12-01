@@ -53,6 +53,9 @@ bool basicEffect::initialise(const animationParams& params){
 	return isInitialised;
 }
 
+// Usefull ?
+bool basicEffect::initialise(){}
+
 // todo: update -(handled by)-> animation
 // returns true if rendering succeeded
 bool basicEffect::render(const animationParams& params){
@@ -80,6 +83,9 @@ void basicEffect::update(const animationParams& params){
 	if( !isReady() ) return;
 	aliveSince = ofGetSystemTime() - startTime;
 }
+
+// Usefull ?
+void basicEffect::update(){}
 
 // resets all values
 void basicEffect::reset(){

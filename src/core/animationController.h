@@ -17,7 +17,7 @@
 #include "ofxGui.h"
 #include "animationParamsServer.h"
 
-#include "oscRouter.h"
+#include "OSCRouter.h"
 #include "mirReceiver.h"
 #include "durationReceiver.h"
 //#include "fboRecorder.h"

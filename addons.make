@@ -5,6 +5,9 @@ ofxGuiExtended
 ofxOsc
 ofxTextBox
 ofxTrueTypeFontUC
-ofxVLCRemote
 ofxVideoRecorder
 ofxXmlSettings
+ofxGuiExtended
+ofxVLCRemote
+ofxOsc
+ofxVideoRecorder

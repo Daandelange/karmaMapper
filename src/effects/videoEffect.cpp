@@ -19,7 +19,6 @@ videoEffect::videoEffect(){
 }
 
 videoEffect::~videoEffect(){
-	//basicEffect::~basicEffect();
 	
 	stream.close();
 }

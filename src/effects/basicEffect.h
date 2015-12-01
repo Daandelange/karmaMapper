@@ -66,8 +66,10 @@ public:
 	
 	// global effect functions
 	virtual bool initialise(const animationParams& params);
+	virtual bool initialise();
 	virtual bool render(const animationParams& params);
 	virtual void update(const animationParams& params);
+	virtual void update();
 	virtual void reset();
 	void enable();
 	void disable();

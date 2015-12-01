@@ -97,7 +97,9 @@ void imageMeltingEffect::update(){
 		
 		//ofVec2f* _pos = shapes[randomShape]->getPositionPtr();
 		ofVec2f _pos = shapes[randomShape]->getBoundingBox().getTopLeft();
-		ofVec2f dir = *shapes[randomShape]->getPositionPtr() - ofVec2f(ofGetWidth()/2.0f, ofGetHeight()/10.0f);
+
+		basicPoint* shapePos = shapes[randomShape]->getPositionPtr();
+		ofVec2f dir = ofVec2f(shapePos->x, shapePos->y) - ofVec2f(ofGetWidth()/2.0f, ofGetHeight()/10.0f);
 		dir.normalize();
 		ofVec2f velocity = dir*karmaSoundAnalyser::getInstance().getSpectrumVariation()/200.f;
 		for(int i=0; i<karmaSoundAnalyser::getInstance().getSpectrumVariation()/100.f; i++){
