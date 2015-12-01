@@ -312,7 +312,7 @@ bool animationController::stop(){
 	effects.resize(0);
 	
 	// save recorded file ?
-	recorder.stopRecording();
+	//recorder.stopRecording();
 	
 	bEnabled = false;
 	return !isEnabled();
@@ -362,7 +362,7 @@ void animationController::draw(ofEventArgs& event){
 	
 	//ofScale(0.5, 0.5); // tmp
 	
-	recorder.beginFrame();
+	//recorder.beginFrame();
 	
 	// tmp
 	ofClear(0,1);
@@ -383,16 +383,16 @@ void animationController::draw(ofEventArgs& event){
 		effects[i]->render(animationParams.params);
 	}
 	
-	recorder.endFrame(true);
+	//recorder.endFrame(true);
 	
 	// syphon
 #ifdef TARGET_OS_MAC
-	if(recorder.isRecording()){
+	//if(recorder.isRecording()){
 //		syphonTexture.publishTexture( &recorder.getTexture() );
-	}
-	else {
+	//}
+	//else {
 //		syphonTexture.publishScreen();
-	}
+	//}
 #endif
 	
 	// draw gui ?

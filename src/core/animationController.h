@@ -20,7 +20,7 @@
 #include "oscRouter.h"
 #include "mirReceiver.h"
 #include "durationReceiver.h"
-#include "fboRecorder.h"
+//#include "fboRecorder.h"
 
 #ifdef TARGET_OS_MAC
 //	#include "ofxSyphon.h"
@@ -90,7 +90,7 @@ protected:
 	//durationReceiver durationOSCReceiver;
 	
 	// Video recording
-	fboRecorder recorder;
+	//fboRecorder recorder;
 	
 private:
 	bool bEnabled;
