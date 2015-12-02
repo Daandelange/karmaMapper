@@ -10,7 +10,7 @@
 
 #include "ofMain.h"
 #include "basicShape.h"
-#include "ofxTextBox.h"
+//#include "ofxTextBox.h"
 
 class vertexShape : public basicShape {
 	
@@ -90,7 +90,7 @@ protected:
 	ofParameter<string> menuNumVertexes;
 
 	// instructions stuff
-	ofxTextBox instructions;
+	//ofxTextBox instructions;
 	bool showInstructions;
 	
 private:

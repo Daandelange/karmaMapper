@@ -398,11 +398,11 @@ void vertexShape::render(){
 		if( drawShapeGui ) shapeGui.draw();
 		
 		// draw instructions
-		ofSetColor(bgColor);
-		ofFill();
-		ofDrawRectangle( instructions.getRect() );
-		ofNoFill();
-		ofSetColor(fgColor);
+//		ofSetColor(bgColor);
+//		ofFill();
+//		ofDrawRectangle( instructions.getRect() );
+//		ofNoFill();
+//		ofSetColor(fgColor);
 		//instructions.draw();
 	}
 	

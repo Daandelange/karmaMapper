@@ -19,13 +19,16 @@ echo "If you're using linux, please make sure you checkout the develop branch of
 
 ${PREFIX}frauzufall/ofxGuiExtended.git
 
-${PREFIX}toruurakawa/ofxTextBox.git
+#${PREFIX}toruurakawa/ofxTextBox.git
 
-${PREFIX}hironishihara/ofxTrueTypeFontUC.git
+# Not needed anymore ?
+#${PREFIX}hironishihara/ofxTrueTypeFontUC.git
+#${PREFIX}ofxTrueTypeFontUC.git
 
 ${PREFIX}runemadsen/ofxVLCRemote.git
 
-${PREFIX}timscaffidi/ofxVideoRecorder.git -b 0.9.0
+#${PREFIX}timscaffidi/ofxVideoRecorder.git -b 0.9.0
+${PREFIX}timscaffidi/ofxVideoRecorder.git
 
 # will probably become: ${PREFIX}astellato/ofxSyphon.git -b OF-9.0
 ${PREFIX}asus4/ofxSyphon.git -b of_v0.9.0_OpenGL3
