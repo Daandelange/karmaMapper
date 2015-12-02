@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 __MyCompanyName__. All rights reserved.
 //
 
+#ifdef KM_EDITOR_APP
+
 #include "shapesEditor.h"
 
 
@@ -873,3 +875,5 @@ void shapesEditor::buildMenus(){
 	//shapeCreationGui.
 	//shapeCreationGui.disable();
 }
+
+#endif // KM_EDITOR_APP

@@ -1,3 +1,5 @@
+#ifdef KM_EDITOR_APP
+
 #include "ofAppEditor.h"
 
 //--------------------------------------------------------------
@@ -85,3 +87,5 @@ void ofAppEditor::gotMessage(ofMessage msg){
 void ofAppEditor::dragEvent(ofDragInfo dragInfo){ 
 
 }
+
+#endif // KM_EDITOR_APP

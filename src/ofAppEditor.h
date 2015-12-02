@@ -1,3 +1,5 @@
+#ifdef KM_EDITOR_APP
+
 #pragma once
 
 #include "KMSettings.h"
@@ -37,3 +39,5 @@ private:
 	shapesEditor editor;
 	
 };
+
+#endif // KM_EDITOR_APP

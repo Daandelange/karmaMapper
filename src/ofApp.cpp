@@ -1,3 +1,5 @@
+#ifndef KM_EDITOR_APP
+
 #include "ofApp.h"
 
 //--------------------------------------------------------------
@@ -132,3 +134,5 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
+
+#endif // not def KM_EDITOR_APP

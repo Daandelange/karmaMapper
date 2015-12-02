@@ -5,6 +5,7 @@
 //  Created by Daan on 07/09/15.
 //
 //
+#ifdef KM_EDITOR_APP
 
 #pragma once
 #include "ofMain.h"
@@ -41,3 +42,5 @@ public:
 	
 	
 };
+
+#endif // KM_EDITOR_APP

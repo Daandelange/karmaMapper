@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 __MyCompanyName__. All rights reserved.
 //
 
+#ifdef KM_EDITOR_APP
+
 #pragma once
 
 #include "ofMain.h"
@@ -126,3 +128,5 @@ private:
 #define batchGUIMoveMode		("Move")
 #define batchGUIFlipXMode		("Flip Horizontal")
 #define batchGUIFlipYMode		("Flip Vertical")
+
+#endif // KM_EDITOR_APP

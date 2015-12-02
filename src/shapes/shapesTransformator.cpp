@@ -6,6 +6,8 @@
 //
 //
 
+#ifdef KM_EDITOR_APP
+
 #include "shapesTransformator.h"
 
 // #############
@@ -124,4 +126,4 @@ bool shapesTransformator::interceptMousePress(ofMouseEventArgs &e){
 	return false;
 }
 
-
+#endif // KM_EDITOR_APP

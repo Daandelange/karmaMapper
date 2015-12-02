@@ -108,7 +108,8 @@ Project{
         of.cFlags: ['-fpermissive']  // flags passed to the c compiler
         of.cxxFlags: []         // flags passed to the c++ compiler
         of.linkerFlags: []      // flags passed to the linker
-        of.defines: ['KM_EDITOR_APP']          // defines are passed as -D to the compiler
+        //of.defines: ['KM_EDITOR_APP']          // defines are passed as -D to the compiler
+        of.defines: ['KM_ANIMATOR_APP']
         // and can be checked with #ifdef or #if in the code
         of.frameworks: []       // osx only, additional frameworks to link with the project
 
