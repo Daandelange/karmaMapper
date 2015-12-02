@@ -3,11 +3,6 @@ ofxAssimpModelLoader
 ofxGui
 ofxGuiExtended
 ofxOsc
-ofxTextBox
-ofxTrueTypeFontUC
 ofxVideoRecorder
 ofxXmlSettings
-ofxGuiExtended
 ofxVLCRemote
-ofxOsc
-ofxVideoRecorder
