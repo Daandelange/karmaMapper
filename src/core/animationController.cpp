@@ -244,13 +244,13 @@ bool animationController::start(){
 		effects.push_back(e);
 	}// */
 	
-	{
-		basicEffect* e;
-		e = new distortEffect();
-		e->initialise(animationParams.params);
-		e->bindWithShapes( scene.getShapesRef() );
-		effects.push_back(e);
-	}
+//	{
+//		basicEffect* e;
+//		e = new distortEffect();
+//		e->initialise(animationParams.params);
+//		e->bindWithShapes( scene.getShapesRef() );
+//		effects.push_back(e);
+//	}
 	
 	{
 		//ofSetLogLevel(OF_LOG_VERBOSE);
@@ -263,13 +263,13 @@ bool animationController::start(){
 		effects.push_back(e);
 	}
 	
-	{
-		basicEffect* e;
-		e = new lineEffect();
-		e->initialise(animationParams.params);
-		e->bindWithShapes( scene.getShapesRef() );
-		effects.push_back(e);
-	}
+//	{
+//		basicEffect* e;
+//		e = new lineEffect();
+//		e->initialise(animationParams.params);
+//		e->bindWithShapes( scene.getShapesRef() );
+//		effects.push_back(e);
+//	}
 	
 	
 	return isEnabled()==true;
@@ -289,12 +289,12 @@ bool animationController::stop(){
 	
 	bShowGui = false;
 	
-	{
-		// play music with VLC
-		ofxVLCRemote vlc;
-		vlc.setup("/Users/daan/vlc.sock"); // client-specific... :(
-		vlc.run("stop");
-	}
+//	{
+//		// play music with VLC
+//		ofxVLCRemote vlc;
+//		vlc.setup("/Users/daan/vlc.sock"); // client-specific... :(
+//		vlc.run("stop");
+//	}
 	
 	{	// SYNC DURATION
 		durationRC rc;
@@ -410,7 +410,9 @@ void animationController::showShapeLoadMenu(){
 		// restrict to saveFiles dir
 		ofFile file( ofToDataPath("saveFiles/")+openFileResult.getName() );
 		if(file.exists()){
+			stop();
 			scene.loadScene( openFileResult.getName() );
+			start();
 		}
 	}
 }

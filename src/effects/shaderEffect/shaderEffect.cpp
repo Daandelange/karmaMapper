@@ -107,7 +107,8 @@ bool shaderEffect::render(const animationParams &params){
 	// draw shape so GPU gets their vertex data
 	for(auto it=shapes.begin(); it!=shapes.end(); ++it){
 		if( (*it)->isType("vertexShape") ){
-			
+			shader.setUniform4f("shapeBoundingBox", (*it)->getBoundingBox().x, (*it)->getBoundingBox().y, (*it)->getBoundingBox().width, (*it)->getBoundingBox().height );
+			//cout << (*it)->getBoundingBox().width << endl;
 			(*it)->sendToGPU();
 		}
 	}
@@ -183,15 +184,25 @@ void shaderEffect::registerShaderVariables(const animationParams& params){
 	shader.setUniform1f("timeValX", ofGetElapsedTimef() * 0.1 );
 	shader.setUniform1f("timeValY", -ofGetElapsedTimef() * 0.18 );
 	
-	effectMutex.lock();
-	shader.setUniform1f("mirZeroCrossings", mirReceiver::mirCache.zcr );
-	effectMutex.unlock();
-	shader.setUniform1f("mirOnSetCalls", onSetCalls );
+	shader.setUniform2f("fboCanvas", ofGetWidth(), ofGetHeight() );
 	
 	shader.setUniform3f("iResolution", ofGetWidth(), ofGetHeight(), 0);
 	shader.setUniform4f("iMouse", ofGetMouseX(), ofGetMouseY(), 0, 0 );
 	shader.setUniform1f("iGlobalTime", ofGetElapsedTimef());
 	shader.setUniform1i("tex", 0);
+	
+	
+	// sound related stuff
+	effectMutex.lock();
+	shader.setUniform1f("mirZeroCrossings", mirReceiver::mirCache.zcr );
+	shader.setUniform1f("mirZcr", mirReceiver::mirCache.zcr);
+	shader.setUniform1f("mirPitch", mirReceiver::mirCache.pitch);
+	shader.setUniform1f("mirBpm", mirReceiver::mirCache.bpm);
+	shader.setUniform1f("mirBalance", mirReceiver::mirCache.balance);
+	shader.setUniform1f("mirVolume", mirReceiver::mirCache.volumeMono);
+	shader.setUniform1i("mirSilence", mirReceiver::mirCache.silence);
+	effectMutex.unlock();
+	shader.setUniform1f("mirOnSetCalls", onSetCalls );
 }
 
 bool shaderEffect::loadShader(string _vert, string _frag){

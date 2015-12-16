@@ -97,13 +97,15 @@ void distortEffect::update(const animationParams& params){
 	
 	int offset = 0;
 	for(auto it=shapes.begin(); it!=shapes.end(); it++){
+		if( !(*it)->isReady() ) continue;
+		
 		// todo: basicEffect should have a nice downcast getter function like .asType<vertexShape>()
 		if( (*it)->isType("vertexShape") ){
 			list<basicPoint>& pts = ((vertexShape*)(*it))->getPoints(POINT_POSITION_RELATIVE);
 			for(auto itb=pts.begin(); itb!=pts.end(); ++itb){
 				(*itb) += basicPoint(
-					( sin( params.elapsedTime *(TWO_PI+(offset/3%4)))*25 + cos( params.elapsedTime* (TWO_PI+(offset/5%8)/4))*25) * (params.seasons.summer*0.9f + 0.1f),
-					( cos( params.elapsedTime *(TWO_PI+(offset/4%7)))*25 - sin( params.elapsedTime* (TWO_PI+(offset/8%3)))*25) * (params.seasons.summer*0.9f + 0.1f)
+					( sin( params.elapsedTime *(TWO_PI+(offset/3%4)))*25 + cos( params.elapsedTime* (TWO_PI+(offset/5%8)/4))*25) * (params.seasons.summer*0.9f + 0.05f),
+					( cos( params.elapsedTime *(TWO_PI+(offset/4%7)))*25 - sin( params.elapsedTime* (TWO_PI+(offset/8%3)))*25) * (params.seasons.summer*0.9f + 0.05f)
 				);
 				offset++;
 			}

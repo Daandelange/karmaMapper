@@ -26,9 +26,10 @@ in vec4 position;
 in vec2 texcoord;
 in vec4 color;
 in vec4 normal;
+uniform vec4 shapeBoundingBox;
 
 // texture coordinates are sent to fragment shader
-//out vec2 texCoordVarying;
+out vec2 texCoordVarying;
 //out vec4 texColor;
 
 void main(){
@@ -41,6 +42,6 @@ void main(){
 	// gl_Position
 
 	//texColor = globalColor;
-    //texCoordVarying = modelViewProjectionMatrix * position;
+    texCoordVarying = position.xy;//shapeBox.xy;//gl_Position.xy;//(modelViewProjectionMatrix * position).xy;
 	gl_Position = modelViewProjectionMatrix * position;
 }
