@@ -2,21 +2,28 @@ karmaSoundAnalyser
 ==================
 
 A Puredata real-time music analysis patch using Lib Aubio and OSC communication.  
-_dependency_: Aubio pd plugin (v0.3.3)
+__Depends on__: [Aubio pd plugin](http://aubio.org/pd-aubio/) (v0.4)
 
 ![Preview](https://secure-b.vimeocdn.com/ts/461/411/461411483_960.jpg)  
+_Note: Old screenshot._  
 [Click here to watch a demo video](https://vimeo.com/84516862)
 
 Details
 =======
+__Currently the Pd-Vanilla version works best.__  
+ 
+  Tested on: 
+  
+- Os X, Pd-Extended 0.43.4 (64 bit) with Aubio 0.4. 
+- Os X, Pd-Vanilla 0.46-7 (64 bit) with Aubio 0.4.
+- Ubuntu 14.0, Pd-Vanilla (latest) (64 bit), pd-aubio 0.4.
 
-It uses lib Aubio for onset and tempo detection.
-I’ve had difficulties compiling the Pd plugin and I got it working using Pd-Extended compiled in 64 bit with Aubio 0.3.3 also in 64 bit.
+It uses lib Aubio for onset and tempo detection.  
 Other features include an alternative onSet detection, pitch detection, silence detection and a 5-band equaliser.  
 
-Note: not all collected data is yet set to be forwarded trough OSC.  
+__Note__: _not all collected data is yet set to be forwarded trough OSC._  
 
-Note: Configure Pd to load aubio on launch or you'll have to open the pd patch twice.  
+__Note__: _Configure Pd to load aubio on launch or you'll have to open the pd patch twice._  
 
 - - - -
 
@@ -35,3 +42,8 @@ Installing Jack on linux can also be useful.
 `sudo-apt-get install jackd qjackctl`  
 
 
+Installing (Mac)
+==================
+On mac you need [Pd-vanilla 0.46-7](https://puredata.info/downloads/pure-data) (64 bit) and [Aubio](http://aubio.org/pd-aubio/), then it should work out of the box.
+
+Installing [SoundFlower](https://github.com/mattingalls/Soundflower) or [Jack](http://www.jackaudio.org/) can be usefull for routing Audio.
