@@ -11,14 +11,13 @@ _Curently (19-11-2015), there's a scene editor allowing you to configure a set o
 ## Dependencies
 #### Required:  
 - [OpenFrameworks 9.0](http://www.openframeworks.cc/) with the following addons:  
-	- [ofxGui](https://github.com/rezaali/ofxGui)
+	- [ofxImUI](https://github.com/jvcleave/ofxImGui)
 	- [ofxAbletonLiveSet](https://github.com/satoruhiga/ofxAbletonLiveSet)	
-	- etc.
+	- Etc. _(see `clone_addons.sh`)_
 	- __Note__: _Some effects may have other dependencies._
  
 #### Install the dependencies
 - Run `./clone_addons.sh` _(Mac & Linux only)_
-
 
 
 #### Optional:

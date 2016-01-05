@@ -19,6 +19,8 @@ echo "If you're using linux, please make sure you checkout the develop branch of
 
 ${PREFIX}frauzufall/ofxGuiExtended.git
 
+${PREFIX}jvcleave/ofxImGui.git
+
 #${PREFIX}toruurakawa/ofxTextBox.git
 
 # Not needed anymore ?
