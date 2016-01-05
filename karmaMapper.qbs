@@ -22,25 +22,27 @@ Project{
             // CORE
             'src/core/animationController.cpp',
             'src/core/animationController.h',
-            'src/core/animationParams.h',
-            'src/core/animationParamsServer.cpp',
-            'src/core/animationParamsServer.h',
-            'src/core/durationEvents.h',
-            'src/core/durationRC.cpp',
-            'src/core/durationRC.h',
-            'src/core/durationReceiver.cpp',
-            'src/core/durationReceiver.h',
             'src/core/fboRecorder.cpp',
             'src/core/fboRecorder.h',
             'src/core/karmaSoundAnalyser.cpp',
             'src/core/karmaSoundAnalyser.h',
-            'src/core/mirEvents.h',
-            'src/core/mirReceiver.cpp',
-            'src/core/mirReceiver.h',
-            'src/core/OSCNode.cpp',
-            'src/core/OSCNode.h',
-            'src/core/OSCRouter.cpp',
-            'src/core/OSCRouter.h',
+
+            // PARAMS
+            'src/parameters/animationParams.h',
+            'src/parameters/animationParamsServer.cpp',
+            'src/parameters/animationParamsServer.h',
+            'src/parameters/durationEvents.h',
+            'src/parameters/durationRC.cpp',
+            'src/parameters/durationRC.h',
+            'src/parameters/durationReceiver.cpp',
+            'src/parameters/durationReceiver.h',
+            'src/parameters/mirEvents.h',
+            'src/parameters/mirReceiver.cpp',
+            'src/parameters/mirReceiver.h',
+            'src/parameters/OSCNode.cpp',
+            'src/parameters/OSCNode.h',
+            'src/parameters/OSCRouter.cpp',
+            'src/parameters/OSCRouter.h',
 
             // EFFECTS
             'src/effects/effects.h',
@@ -97,6 +99,7 @@ Project{
              'ofxVLCRemote',
              'ofxVideoRecorder',
              'ofxXmlSettings',
+             'ofxImGui'
             //'ofxSyphon'
         ]
 
@@ -104,7 +107,7 @@ Project{
         // flags by default to add the core libraries, search paths...
         // this flags can be augmented through the following properties:
         of.pkgConfigs: []       // list of additional system pkgs to include
-        of.includePaths: ['src/shapes/shapes/', 'src/shapes/', 'src', 'src/core', 'src/effects']     // include search paths
+        of.includePaths: ['src/shapes/shapes/', 'src/shapes/', 'src', 'src/core', 'src/effects', 'src/parameters']     // include search paths
         of.cFlags: ['-fpermissive']  // flags passed to the c compiler
         of.cxxFlags: []         // flags passed to the c++ compiler
         of.linkerFlags: []      // flags passed to the linker
