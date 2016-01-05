@@ -15,6 +15,7 @@
 #include "effects.h"
 #include "shapesDB.h"
 #include "ofxGui.h"
+#include "ofxImGui.h"
 #include "animationParamsServer.h"
 
 #include "OSCRouter.h"
@@ -41,11 +42,11 @@ public:
 	bool stop();
 	bool isEnabled() const;
 
-	// listeners
+	// evet handlers
 	void update( ofEventArgs& event );
 	void draw( ofEventArgs& event );
-	//void guiEvent( ofxUIEventArgs& e );
 	void _keyPressed( ofKeyEventArgs& e );
+	void _mousePressed( ofMouseEventArgs& e );
 	
 	// menu listeners
 	void showShapeLoadMenu( );
@@ -58,20 +59,23 @@ protected:
 	// app variables
 	bool bIsFullScreen;
 	bool bMouseHidden;
+	bool showShortcuts;
 	
 	// gui
-	ofxPanelExtended animationGui;
-	ofParameter<string> guiNumEffects, guiNumShapes, guiLoadedShapesScene;
-	ofxGuiGroupExtended shortCutsMenu, shapesInfoMenu, effectsMenu;
-	ofParameter<bool> bGuiShowAnimParams;
+	ofxImGui gui;
+	//ofxPanelExtended animationGui;
+	//ofParameter<string> guiNumEffects, guiLoadedShapesScene;
+	//ofxGuiGroupExtended shortCutsMenu, shapesInfoMenu, effectsMenu;
+	//ofParameter<bool> bGuiShowAnimParams;
 	//ofxMinimalToggle guiShowAnimParamsToggle;
-	ofxMinimalButton guiLoadShapesSceneBtn;
+	//ofxMinimalButton guiLoadShapesSceneBtn;
 // tmp
 //	ofxMinimalButton loadButton, saveButton;
 //	ofxToggle fullScreenToggle, enableEditingToggle;
 //	ofxGuiMatrix batchModeSelect, simpleMode;
 //	ofParameter<string> menuNumSelectedShapes;
 //	ofxPanelExtended shapeCreationGui;
+	bool bGuiShowAnimParams;
 	
 	// effects stuff
 	bool isEffectsIndex(int i);
@@ -105,8 +109,8 @@ private:
 // GUI translations
 
 // Keyboard Shordcuts
-#define GUIksMouseHide	("Hide Cursor")
-#define GUIksGuiToggle	("Toggle GUI")
+#define GUIMouseHide	("Hide Cursor")
+#define GUIGuiToggle	("Toggle GUI")
 #define GUIselected		("Toggle GUI")
 
 

@@ -35,8 +35,8 @@ lineEffect::lineEffect(){
 lineEffect::~lineEffect(){
 	ofRemoveListener(durationReceiver::durationFloatEvent, this, &lineEffect::floatListener);
 	//ofRemoveListener(ofx::AbletonLiveSet::EventHandler::noteEvent, this, &lineEffect::noteEventListener);
-	ofRemoveListener(mirReceiver::mirTempoEvent, this, &lineEffect::tempoEventListener);
-	ofRemoveListener(mirReceiver::mirOnSetEvent, this, &lineEffect::onSetEventListener);
+	//ofRemoveListener(mirReceiver::mirTempoEvent, this, &lineEffect::tempoEventListener);
+	//ofRemoveListener(mirReceiver::mirOnSetEvent, this, &lineEffect::onSetEventListener);
 }
 
 bool lineEffect::initialise(const animationParams& params){
@@ -45,8 +45,8 @@ bool lineEffect::initialise(const animationParams& params){
 	
 	// tmp
 	ofAddListener(durationReceiver::durationFloatEvent, this, &lineEffect::floatListener);
-	ofAddListener(mirReceiver::mirTempoEvent, this, &lineEffect::tempoEventListener);
-	ofAddListener(mirReceiver::mirOnSetEvent, this, &lineEffect::onSetEventListener);
+	//ofAddListener(mirReceiver::mirTempoEvent, this, &lineEffect::tempoEventListener);
+	//ofAddListener(mirReceiver::mirOnSetEvent, this, &lineEffect::onSetEventListener);
 	//ofAddListener(ofx::AbletonLiveSet::EventHandler::noteEvent, this, &lineEffect::noteEventListener);
 	
 	
@@ -249,51 +249,51 @@ void lineEffect::floatListener(durationFloatEventArgs &_args){
 	//lines.push_back();
 }
 
-void lineEffect::noteEventListener(ofx::AbletonLiveSet::LSNoteEvent &noteEvent){
-	ofScopedLock lock(effectMutex);
-	//lines.push_back();
-}
+//void lineEffect::noteEventListener(ofx::AbletonLiveSet::LSNoteEvent &noteEvent){
+//	ofScopedLock lock(effectMutex);
+//	//lines.push_back();
+//}
 
-void lineEffect::tempoEventListener(mirTempoEventArgs &_args){
-	if( _args.isTempoBis ){
-		
-		ofScopedLock lock(effectMutex);
-		if(fromShape==NULL || toShape==NULL) return;
-		
-		
-		int amount = round(mirReceiver::mirCache.zcr*120.0f);
-		//if( totalLinesNb%150 == 0){ // get new shapes every X lines
-		//cout << amount << endl;
-		if(amount > 22){
-			fromShape = toShape;
-			toShape = shapes[ round( ofRandom(-0.49f, -0.51f+shapes.size()) )];
-			cout << "tempoChange" << endl;
-		}
-		for(int i=0; i<amount; i++){
-			lines.push_back( getRandomLine(fromShape, toShape) );
-			totalLinesNb++;
-		}
-	}
-}
+//void lineEffect::tempoEventListener(mirTempoEventArgs &_args){
+//	if( _args.isTempoBis ){
+//		
+//		ofScopedLock lock(effectMutex);
+//		if(fromShape==NULL || toShape==NULL) return;
+//		
+//		
+//		int amount = round(mirReceiver::mirCache.zcr*120.0f);
+//		//if( totalLinesNb%150 == 0){ // get new shapes every X lines
+//		//cout << amount << endl;
+//		if(amount > 22){
+//			fromShape = toShape;
+//			toShape = shapes[ round( ofRandom(-0.49f, -0.51f+shapes.size()) )];
+//			cout << "tempoChange" << endl;
+//		}
+//		for(int i=0; i<amount; i++){
+//			lines.push_back( getRandomLine(fromShape, toShape) );
+//			totalLinesNb++;
+//		}
+//	}
+//}
 
-void lineEffect::onSetEventListener(mirOnSetEventArgs &_args){
-	ofScopedLock lock(effectMutex);
-	
-	if(shapes.size()<=0) return;
-	
-	if(_args.source.compare("aubioOnSet")==0){
-		tempoCalls++;
-		for(int i=0; i<1; i++){
-			lines.push_back( getRandomLine(fromShape, toShape) );
-		}
-		
-		if(tempoCalls%10==0){
-			fromShape = toShape;
-			toShape = shapes[ round( ofRandom(-0.49f, -0.51f+shapes.size()) )];
-			cout << "onSetChange" << endl;
-		}
-	}
-	
-	//else if(_args.source.compare("")==0){}
-}
+//void lineEffect::onSetEventListener(mirOnSetEventArgs &_args){
+//	ofScopedLock lock(effectMutex);
+//	
+//	if(shapes.size()<=0) return;
+//	
+//	if(_args.source.compare("aubioOnSet")==0){
+//		tempoCalls++;
+//		for(int i=0; i<1; i++){
+//			lines.push_back( getRandomLine(fromShape, toShape) );
+//		}
+//		
+//		if(tempoCalls%10==0){
+//			fromShape = toShape;
+//			toShape = shapes[ round( ofRandom(-0.49f, -0.51f+shapes.size()) )];
+//			cout << "onSetChange" << endl;
+//		}
+//	}
+//	
+//	//else if(_args.source.compare("")==0){}
+//}
 

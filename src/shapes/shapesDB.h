@@ -25,9 +25,15 @@ public:
 	basicShape* getRandomShape();
 	vector<basicShape*> getRandomShapes(int _amount=1, bool _returnExactAmount = true );
 	vector<basicShape*> getShapesByType(string _type);
+	map<string, vector<basicShape*> > getAllShapesByType() const;
+	map<string, vector<basicShape*>> getAllShapesByGroup() const;
+	
+	
 	basicShape* getRandomShapeByType(string _type);
 	vector<basicShape*> getShapesByGroup(int _group);
 	basicShape* getRandomShapeByGroup(int _group);
+	
+	
 	
 private:
 	

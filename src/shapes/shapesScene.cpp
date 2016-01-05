@@ -120,10 +120,10 @@ bool shapesScene::saveScene(const string _fileName){
 			ofSystemAlertDialog("Please provide a name for the save file!");
 			return false;
 		}
-		else fullPath = "saveFiles/"+loadedConfiguration;
+		else fullPath = KM_SCENE_SAVE_PATH+loadedConfiguration;
 		
 	}
-	else fullPath = "saveFiles/"+_fileName;
+	else fullPath = KM_SCENE_SAVE_PATH+_fileName;
 	
 	ofxXmlSettings sceneXML;
 	sceneXML.addTag("shapes");
@@ -161,9 +161,9 @@ bool shapesScene::loadScene( const string _fileName ){
 	// use default config ?
 	if( _fileName.empty() ){
 		if( loadedConfiguration.empty() ) return false; // we have no input file
-		else fullPath = "saveFiles/"+loadedConfiguration;
+		else fullPath = KM_SCENE_SAVE_PATH+loadedConfiguration;
 	}
-	else fullPath = "saveFiles/"+_fileName;
+	else fullPath = KM_SCENE_SAVE_PATH+_fileName;
 	
 	ofxXmlSettings sceneXML;
 	

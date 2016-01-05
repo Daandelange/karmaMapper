@@ -32,12 +32,12 @@ void ofApp::setup(){
 	controller.start();
 	
 	// start Ableton Liveset Decoder
-	ofx::AbletonLiveSet::LiveSet LS;
-	ofx::AbletonLiveSet::Parser parser(LS);
-	if(!parser.open("vendome_daan_v1.0/mappingvendome.als")) ofLogNotice("ofApp::setup()", "Could not parse ALS file.");
+	//ofx::AbletonLiveSet::LiveSet LS;
+	//ofx::AbletonLiveSet::Parser parser(LS);
+	//if(!parser.open("vendome_daan_v1.0/mappingvendome.als")) ofLogNotice("ofApp::setup()", "Could not parse ALS file.");
 	
-	liveSetEvents.enableMetronomEvents(LS);
-	liveSetEvents.enableNoteEvents(LS);
+	//liveSetEvents.enableMetronomEvents(LS);
+	//liveSetEvents.enableNoteEvents(LS);
 	
 	// tmp
 	ofShowCursor();

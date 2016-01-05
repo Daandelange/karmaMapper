@@ -15,6 +15,7 @@
 #include "ofxXmlSettings.h"
 
 #define KM_SCENE_SAVE_FILE "saveFiles/karmaMapperSceneSettings.xml"
+#define KM_SCENE_SAVE_PATH "saveFiles/scenes/"
 #define KM_DEFAULT_SCENE "defaultScene.xml"
 
 // this class references and serves shapes

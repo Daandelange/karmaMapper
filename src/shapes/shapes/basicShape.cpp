@@ -82,6 +82,8 @@ void basicShape::initialiseBasicVariables(){
 	pleaseDeleteMe = false;
 #endif
 	
+	shapeName = ofToString(reinterpret_cast<uintptr_t>(this));
+	
 	initialized = true;
 }
 
@@ -165,6 +167,7 @@ bool basicShape::saveToXML(ofxXmlSettings &xml){
 	
 	xml.addValue("shapeType", "basicShape" );
 	xml.addValue("groupID", getGroupID() );
+	xml.addValue("shapeName", shapeName );
 	
 	return true;
 }
@@ -183,6 +186,7 @@ bool basicShape::loadFromXML(ofxXmlSettings& xml){
 	xml.popTag(); // pop position
 	
 	groupID = xml.getValue("groupID", -1);
+	shapeName = xml.getValue("shapeName", ofToString(reinterpret_cast<uintptr_t>(this)) );
 #ifdef KM_EDITOR_APP
 	setColorFromGroupID();
 #endif
@@ -194,9 +198,17 @@ bool basicShape::loadFromXML(ofxXmlSettings& xml){
 // SHAPE PROPERTIES
 // - - - - - - -
 // ### GETTERS
-bool basicShape::isReady() const{
+string basicShape::getName() const {
+	return shapeName;
+}
+
+bool basicShape::isReady() const {
 	//ofScopedLock()
 	return initialized && !hasError;
+}
+
+bool basicShape::hasFailed() const {
+	return hasError;
 }
 
 const string basicShape::getShapeType() const {
@@ -216,7 +228,7 @@ int basicShape::getGroupID() const{
 }
 
 vector<string> basicShape::getTypes() const{
-	// todo
+	ofLogError(__FUNCTION__) << "This function has been called but doesnt return anything!";
 }
 
 bool basicShape::isType(const string _type) const {

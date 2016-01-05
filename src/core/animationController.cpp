@@ -19,6 +19,7 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	
 	bMouseHidden = false;
 	bIsFullScreen = false;
+	showShortcuts = false;
 	
 	effects.clear();
 	effects.resize(0);
@@ -29,53 +30,18 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	ofAddListener( ofEvents().keyPressed, this, &animationController::_keyPressed, OF_EVENT_ORDER_APP );
 	
 	// build GUI
-	animationGui.setup("ANIMATION CONTROLLER");
-	
-	// add menu shortcuts
-	shortCutsMenu.setup("Keyboard Shortcuts");
-	shortCutsMenu.add( (new ofxLabel())->setup("Hide mouse", "M") );
-	shortCutsMenu.add( (new ofxLabel())->setup("Toggle Gui", "H") );
-	animationGui.add( &shortCutsMenu );
-	
-	animationGui.add( (new ofxGuiSpacer()) );
-	
-//	textString = "Keyboard shortcuts:";
-//	animationGui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-//	textString = "  H Show/Hide Pointer";
-//	animationGui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-//	textString = "  F Toggle full screen";
-//	animationGui->addTextArea("textarea", textString, OFX_UI_FONT_SMALL);
-	
-	/*gui->addSpacer();
-	gui->addToggle(GUIToggleFullScreen, false);
-	gui->addToggle(GUIToggleMouseCursor, false);
-	gui->addFPSSlider("FPS"); */
-	
-	// Setup Scene info
-	shapesInfoMenu.setup( GUIShapesInfo );
-	
-	guiLoadShapesSceneBtn.setup(GUILoadScene);
-	guiLoadShapesSceneBtn.addListener(this, &animationController::showShapeLoadMenu);
-	shapesInfoMenu.add( &guiLoadShapesSceneBtn );
-	
-	guiLoadedShapesScene.set(GUILoadedScene, scene.getLoadedScene());
-	shapesInfoMenu.add(new ofxLabel(guiLoadedShapesScene) );
-	
-	guiNumShapes.set( GUIShapesNumShapes, "0" );
-	shapesInfoMenu.add( (new ofxLabel(guiNumShapes)) );
-	
-	animationGui.add( &shapesInfoMenu );
-	animationGui.add( (new ofxGuiSpacer()) );
+	gui.setup();
+	ImGui::GetIO().MouseDrawCursor = false;
 	
 	// Setup Effects info
-	effectsMenu.setup( GUIEffectsTitle );
-	guiNumEffects.set( GUIEffectsNumEffects, "0" );
-	effectsMenu.add( new ofxLabel(guiNumEffects) );
-	bGuiShowAnimParams.set(GUIEffectsViewParams, false);
-	bGuiShowAnimParams.addListener(this, &animationController::showAnimationsGui);
-	effectsMenu.add( new ofxMinimalToggle(bGuiShowAnimParams) );
-	
-	animationGui.add( &effectsMenu );
+	//effectsMenu.setup( GUIEffectsTitle );
+	//guiNumEffects.set( GUIEffectsNumEffects, "0" );
+//	effectsMenu.add( new ofxLabel(guiNumEffects) );
+//	bGuiShowAnimParams.set(GUIEffectsViewParams, false);
+//	bGuiShowAnimParams.addListener(this, &animationController::showAnimationsGui);
+//	effectsMenu.add( new ofxMinimalToggle(bGuiShowAnimParams) );
+//	
+//	animationGui.add( &effectsMenu );
 
 	// hide gui
 	bShowGui = false;
@@ -88,7 +54,7 @@ animationController::~animationController(){
 	ofRemoveListener( ofEvents().keyPressed , this, &animationController::_keyPressed );
 	
 	// rm GUI stuff correctly
-	guiLoadShapesSceneBtn.removeListener(this, &animationController::showShapeLoadMenu);
+	//guiLoadShapesSceneBtn.removeListener(this, &animationController::showShapeLoadMenu);
 	bShowGui = false;
 
 }
@@ -297,9 +263,9 @@ bool animationController::stop(){
 //	}
 	
 	{	// SYNC DURATION
-		durationRC rc;
-		rc.setupOSC();
-		rc.stop();
+//		durationRC rc;
+//		rc.setupOSC();
+//		rc.stop();
 	}
 	
 	// delete effect pointers
@@ -328,25 +294,11 @@ bool animationController::isEnabled() const {
 void animationController::update(ofEventArgs &event){
 	if(!isEnabled()) return;
 	
-	// update GUI data
-	// todo: dont do this every frame (after loading scene)
-	if( bShowGui){
-		if(ofToString(effects.size()) != ofToString(guiNumEffects) ){
-			guiNumEffects = ofToString(effects.size()) ;
-		}
-		if( bShowGui && ofToString(scene.getNumShapes()) != ofToString(guiNumShapes) ){
-			guiNumShapes = ofToString(scene.getNumShapes()) ;
-		}
-		if( ofToString(guiLoadedShapesScene) != scene.getLoadedScene() ){
-			guiLoadedShapesScene = scene.getLoadedScene();// ofToString();
-		}
-	}
-	
 	// reset shapes data to original state
+	// every frame, effects can alter this
 	for(auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it){
 		(*it)->resetToScene();
 	}
-	
 	
 	// todo:
 	// update/create animation state (bunch of variables)
@@ -395,8 +347,209 @@ void animationController::draw(ofEventArgs& event){
 	//}
 #endif
 	
-	// draw gui ?
-	if(bShowGui) animationGui.draw();
+	// draw gui stuff
+	gui.begin();
+	if( bShowGui ){
+		ImGui::BeginMainMenuBar();
+		if( ImGui::BeginMenu("karmaMapper :: Animator") ){
+			if (ImGui::MenuItem("Version", "0.2 alpha")) {}
+			if (ImGui::MenuItem("FPS", ofToString( ofGetFrameRate() ).c_str() ) ) {}
+			char buffer[20];
+			snprintf(buffer, 20, "%d x %i", ofGetWidth(), ofGetHeight() );
+					 
+			ImGui::MenuItem("Resolution", buffer );
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Options")){
+			static bool tmp_full_screen = false;
+			if (ImGui::MenuItem("Full screen", NULL, &tmp_full_screen )){
+				setFullScreen( tmp_full_screen );
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Extras")){
+			if (ImGui::MenuItem("Show animation parameters", NULL, &bGuiShowAnimParams )){
+				showAnimationsGui(bGuiShowAnimParams);
+			}
+			ImGui::MenuItem("Keyboard shortcuts...", NULL, &showShortcuts );
+			
+			
+//			if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+//			if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+//			ImGui::Separator();
+			ImGui::EndMenu();
+		}
+		
+//		if( ImGui::BeginMenu("") ){
+//			
+//			ImGui::EndMenu();
+//		}
+		
+		ImGui::EndMainMenuBar();
+		
+		
+		ImGui::Begin("karmaMapper", &bShowGui );
+		
+//		if( ImGui::Button("Hide Gui") ){
+//			bShowGui = !bShowGui;
+//		}
+		
+		if( showShortcuts ) {
+			//ImGui::SetNextWindowSize( ofVec2f(200,200), ImGuiSetCond_FirstUseEver);
+			ImGui::Begin("Keyboard Shortcuts", &showShortcuts);
+			
+			ImGui::TextWrapped("These are some keyboard shortcuts you can use:");
+			ImGui::Columns(2, "kb_shortcuts");
+			ImGui::Separator();
+			ImGui::Text("Description"); ImGui::NextColumn();
+			ImGui::Text("Shortcut"); ImGui::NextColumn();
+			ImGui::Separator();
+			
+			ImGui::Text("Toggle Cursor"); ImGui::NextColumn();
+			ImGui::Text("M"); ImGui::NextColumn();
+			
+			ImGui::Text("Toggle Gui"); ImGui::NextColumn();
+			ImGui::Text("H"); ImGui::NextColumn();
+			
+			
+			ImGui::End();
+			//ImGui::Columns(1);
+		}
+		
+		ImGui::Spacing();
+		if( ImGui::CollapsingHeader( GUIShapesInfo, "GUIShapesInfo", true, true ) ){
+			ImGui::Separator();
+			
+			ImGui::Columns(2);
+			if( ImGui::Button( GUILoadScene ) ){
+				//showShapeLoadMenu();
+				ImGui::OpenPopup("loadShapes");
+				ImGui::SameLine();
+			}
+			if (ImGui::BeginPopup("loadShapes")){
+				ofDirectory dir;
+				dir.listDir( ofToDataPath("saveFiles/scenes/") );
+				dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
+				if( dir.size() <= 0 ){
+					ImGui::Text("No files in /bin/data/");
+					ImGui::Separator();
+				}else {
+					for (int i = 0; i < dir.size(); i++){
+						if( ImGui::Selectable( dir.getPath(i).c_str(), (bool)(scene.getLoadedScene() == dir.getName(i)) ) ){
+							stop();
+							scene.loadScene( dir.getName(i) );
+							start();
+						}
+					}
+				}
+				ImGui::EndPopup();
+			}
+			ImGui::NextColumn();
+			ImGui::Text( "%s", scene.getLoadedScene().c_str() ); ImGui::NextColumn();
+			ImGui::Columns(1);
+			
+			ImGui::Separator();
+			ImGui::Text( "Number of shapes: %u", scene.getNumShapes() );
+			
+			// todo: list specific shape data here (n vertexShapes, etc)
+			if(scene.getNumShapes()>0){
+				if (ImGui::TreeNode("All Shapes")){
+					static ImGuiTextFilter filter;
+					filter.Draw("Filter by name");
+					
+					static int shapeTypeFilter = 0;
+					ImGui::Text("Type: ");
+					ImGui::SameLine();
+					ImGui::RadioButton("All", &shapeTypeFilter, 0);
+					
+					auto shapesByType = scene.getAllShapesByType();
+					int i = 1;
+					for( auto it = shapesByType.begin(); it!=shapesByType.end(); ++it, ++i ){
+						ImGui::SameLine();
+						ImGui::RadioButton((it->first).c_str(), &shapeTypeFilter, i);
+					}
+					
+					ImGui::Separator();
+					
+					ImGui::Columns(4);
+					static bool firstTime = true;
+					if( firstTime ){
+						ImGui::SetColumnOffset(0, 00);
+						ImGui::SetColumnOffset(1, 50);
+						ImGui::SetColumnOffset(2, 230);
+						ImGui::SetColumnOffset(3, 330);
+						firstTime = false;
+					}
+					
+					//ImGui::SameLine(20);
+					ImGui::Text("On"); ImGui::NextColumn();
+					ImGui::Text("Name"); ImGui::NextColumn();
+					ImGui::Text("Type"); ImGui::NextColumn();
+					ImGui::Text("Group"); ImGui::NextColumn();
+					
+					ImGui::Separator();
+					
+					for( auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it ){
+						basicShape* s = *it;
+						
+						if( shapeTypeFilter > 0 ){
+							auto shapeIt = shapesByType.begin();
+							std::advance( shapeIt, shapeTypeFilter );
+							
+							if( s->getShapeType() == shapeIt->first ) continue;
+						}
+						
+						if( filter.PassFilter( s->getName().c_str() ) ){
+						
+							ImVec4 statusColor( !s->isReady()*1.f, s->isReady()*1.f + (!s->isReady() && !s->hasFailed())*.5f, 0.f, 1.f );
+							
+							// todo: let users enable/disable shapes ?
+							ImGui::Checkbox("", &s->isSelected );// Text("-");
+							ImGui::NextColumn();// ImGui::SameLine(60);
+							//ImGui::Text( "%s", s->getName().c_str() );
+							if( ImGui::Selectable(s->getName().c_str(), &s->isSelected ) ){
+								//s->isSelected = !s->isSelected;
+							}
+							ImGui::NextColumn();// ImGui::SameLine(180);
+							ImGui::TextColored( statusColor, "%s", (*it)->getShapeType().c_str() );
+							ImGui::NextColumn();// ImGui::SameLine(100);
+							ImGui::Text( "%i", s->getGroupID() );
+							ImGui::NextColumn(); // next line
+							
+							//ImGui::SameLine(600); ImGui::Text(" 2,345 bytes");
+							// TODO: add shape-specific information line ?
+						}
+					}
+					ImGui::Columns(1);
+					
+					ImGui::TreePop();
+				}
+					
+//				ImGui::Separator();
+//				
+//				if (ImGui::TreeNode("Shape Groups"))
+//				{
+//					static bool selected[3] = { false, false, false };
+//					ImGui::Selectable("main.c", &selected[0]);    ImGui::SameLine(300); ImGui::Text(" 2,345 bytes");
+//					ImGui::Selectable("Hello.cpp", &selected[1]); ImGui::SameLine(300); ImGui::Text("12,345 bytes");
+//					ImGui::Selectable("Hello.h", &selected[2]);   ImGui::SameLine(300); ImGui::Text(" 2,345 bytes");
+//					ImGui::TreePop();
+//				}
+			}
+			
+			ImGui::Spacing();
+			if( ImGui::CollapsingHeader( GUIEffectsTitle, "GUIShapesTitle", true, true ) ){
+				ImGui::Separator();
+				ImGui::Text( "Number of effects : %u", (int) effects.size() );
+			}
+			
+		} // end bShowGui
+		
+		// end karma mapper main gui window
+		ImGui::End();
+	}
+	
+	gui.end();
 }
 
 // - - - - - - - -
@@ -404,7 +557,7 @@ void animationController::draw(ofEventArgs& event){
 // - - - - - - - -
 void animationController::showShapeLoadMenu(){
 	//ofRectangle btn = loadButton.getShape();
-	ofFileDialogResult openFileResult= ofSystemLoadDialog("Select the XML file to load...", false, ofToDataPath("saveFiles/"));
+	ofFileDialogResult openFileResult= ofSystemLoadDialog("Select the XML file to load...", false, ofToDataPath("saveFiles/scenes/"));
 	
 	if(openFileResult.bSuccess){
 		// restrict to saveFiles dir
@@ -469,6 +622,10 @@ void animationController::showAnimationsGui( bool& _b){
 //}
 
 void animationController::_keyPressed(ofKeyEventArgs &e){
+	
+	// ignore keypress if imGui is typing
+	if( ImGui::GetIO().WantTextInput ) return;
+	
 	// ignore case for shortcuts
 	int keyToLower = ofToChar( ofToLower( ofToString((char) e.key )));
 	
@@ -495,4 +652,9 @@ void animationController::_keyPressed(ofKeyEventArgs &e){
 		
 	}
 	
+}
+
+void animationController::_mousePressed( ofMouseEventArgs &e ){
+	// ignore click if imGui intercepted it
+	if( ImGui::GetIO().WantCaptureMouse ) return;
 }

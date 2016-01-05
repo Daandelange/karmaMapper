@@ -6,8 +6,8 @@
 #include "shapesDB.h"
 #include "animationController.h"
 #include "effects.h"
-#include "ofxAbletonLiveSet.h"
-#include "karmaSoundAnalyser.h"
+//#include "ofxAbletonLiveSet.h"
+//#include "karmaSoundAnalyser.h"
 #include "OSCRouter.h"
 
 // note:
@@ -42,7 +42,7 @@ class ofApp : public ofBaseApp{
 		
 	
 private:
-	ofx::AbletonLiveSet::EventHandler liveSetEvents;
+	//ofx::AbletonLiveSet::EventHandler liveSetEvents;
 	shapesDB scene;
 	animationController controller;
 	//karmaSoundAnalyser analyser;

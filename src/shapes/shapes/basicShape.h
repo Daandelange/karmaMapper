@@ -18,7 +18,6 @@
 #include "ofxGui.h"
 #include "ofxGuiExtended.h"
 
-// todo: remove destroy() and spawn() and isReady()
 // todo: move vertexShape stuff to it's own class and keep the bare minimum (points, etc)
 // todo: rename colors (fgColor,bgColor) and give names like groupColor, primaryColor, secondaryColor, etc.
 // todo: add name so we can getShapeByName()
@@ -55,8 +54,11 @@ public:
 	
 	// #########
 	// BASIC SHAPE GETTERS
+	string getName() const;
 	int getGroupID() const;
 	bool isReady() const;
+	bool hasFailed() const;
+	bool isSelected = false;
 	const string getShapeType() const;
 	ofRectangle getBoundingBox() const;
 	vector<string> getTypes() const;

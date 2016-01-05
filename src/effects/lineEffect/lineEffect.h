@@ -16,7 +16,7 @@
 #include "vertexShape.h"
 
 #include "lineEffectLine.h"
-#include "ofxAbletonLiveSet.h"
+//#include "ofxAbletonLiveSet.h"
 #include "mirReceiver.h"
 #include "durationReceiver.h"
 
@@ -35,9 +35,9 @@ public:
 	
 	// listeners
 	void floatListener( durationFloatEventArgs &_args );
-	void noteEventListener(ofx::AbletonLiveSet::LSNoteEvent & noteEvent);
-	void tempoEventListener( mirTempoEventArgs &_args );
-	void onSetEventListener( mirOnSetEventArgs &_args );
+	//void noteEventListener(ofx::AbletonLiveSet::LSNoteEvent & noteEvent);
+	//void tempoEventListener( mirTempoEventArgs &_args );
+	//void onSetEventListener( mirOnSetEventArgs &_args );
 	
 protected:
 	lineEffectLine getRandomLine(const bool onSameShape=false);

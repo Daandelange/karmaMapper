@@ -88,6 +88,21 @@ vector<basicShape*> shapesDB::getShapesByType(string _type){
 	return ret;
 }
 
+map<string, vector<basicShape*> > shapesDB::getAllShapesByType() const {
+	map<string, vector<basicShape*> > ret;
+	for( auto it=shapes.begin(); it!=shapes.end(); ++it ){
+		if( ret.find( (*it)->getShapeType() ) == ret.end() ){
+			ret[ (*it)->getShapeType() ] = vector<basicShape*>();
+		}
+		ret[ (*it)->getShapeType() ].push_back(*it);
+	}
+	return ret;
+}
+
+map<string, vector<basicShape*>> shapesDB::getAllShapesByGroup() const {
+	
+}
+
 basicShape* shapesDB::getRandomShapeByType(string _type){
 	vector<basicShape*> ret = getShapesByType(_type);
 	if(ret.size()<=0) return NULL;
