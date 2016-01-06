@@ -14,7 +14,7 @@
 #include "shapes.h"
 #include "effects.h"
 #include "shapesDB.h"
-#include "ofxGui.h"
+//#include "ofxGui.h"
 #include "ofxImGui.h"
 #include "animationParamsServer.h"
 
@@ -24,12 +24,24 @@
 //#include "fboRecorder.h"
 
 #ifdef TARGET_OS_MAC
-//	#include "ofxSyphon.h"
+	//	#include "ofxSyphon.h"
+	#define KM_CTRL_KEY_NAME "CMD"
+	#define KM_CTRL_KEY_CODE OF_KEY_COMMAND
+#else
+	#define KM_CTRL_KEY_NAME "CTRL"
+	#define KM_CTRL_KEY_CODE OF_KEY_CONTROL
 #endif
 
+
+
 // todo: an overall mask that hides any unwanted projection zones (could be done by an effect too)
+//class ImGui;
+
+//using namespace ImGui;
 
 class animationController {
+	// let ImGui control app variables
+	friend class ofxImGui;
 	
 public:
 	animationController( shapesDB& _scene );
@@ -51,15 +63,16 @@ public:
 	// menu listeners
 	void showShapeLoadMenu( );
 	void showSaveDialog( );
-	void setFullScreen( bool& _fullScreen );
+	void setFullScreen( bool _fullScreen );
+	void setShowMouse( bool _showMouse );
 	void showAnimationsGui( bool& _b );
 	//void enableAnimations( bool & _on );
 	
 protected:
 	// app variables
 	bool bIsFullScreen;
-	bool bMouseHidden;
-	bool showShortcuts;
+	bool bShowMouse;
+	bool bShowGui;
 	
 	// gui
 	ofxImGui gui;
@@ -98,7 +111,6 @@ protected:
 	
 private:
 	bool bEnabled;
-	bool bShowGui;
 	
 #ifdef TARGET_OS_MAC
         //ofxSyphonServer syphonTexture;

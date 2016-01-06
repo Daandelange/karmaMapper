@@ -17,9 +17,9 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	bEnabled = false;
 	bShowGui = false;
 	
-	bMouseHidden = false;
+	bShowMouse = true;
 	bIsFullScreen = false;
-	showShortcuts = false;
+	bGuiShowAnimParams = false;
 	
 	effects.clear();
 	effects.resize(0);
@@ -361,9 +361,15 @@ void animationController::draw(ofEventArgs& event){
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Options")){
-			static bool tmp_full_screen = false;
-			if (ImGui::MenuItem("Full screen", NULL, &tmp_full_screen )){
-				setFullScreen( tmp_full_screen );
+			if (ImGui::MenuItem("Full screen", ofToString(KM_CTRL_KEY_NAME).append( " + F" ).c_str(), &bIsFullScreen )){
+				setFullScreen( bIsFullScreen );
+			}
+			if (ImGui::MenuItem("Show Gui", ofToString(KM_CTRL_KEY_NAME).append( " + G" ).c_str(), &bShowGui )){
+				//bShowGui = !bShowGui;
+				//tmp_show_gui = bShowGui;
+			}
+			if (ImGui::MenuItem("Show Mouse Cursor", ofToString(KM_CTRL_KEY_NAME).append( " + M" ).c_str(), &bShowMouse )){
+				setShowMouse(bShowMouse);
 			}
 			ImGui::EndMenu();
 		}
@@ -371,7 +377,6 @@ void animationController::draw(ofEventArgs& event){
 			if (ImGui::MenuItem("Show animation parameters", NULL, &bGuiShowAnimParams )){
 				showAnimationsGui(bGuiShowAnimParams);
 			}
-			ImGui::MenuItem("Keyboard shortcuts...", NULL, &showShortcuts );
 			
 			
 //			if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
@@ -393,28 +398,6 @@ void animationController::draw(ofEventArgs& event){
 //		if( ImGui::Button("Hide Gui") ){
 //			bShowGui = !bShowGui;
 //		}
-		
-		if( showShortcuts ) {
-			//ImGui::SetNextWindowSize( ofVec2f(200,200), ImGuiSetCond_FirstUseEver);
-			ImGui::Begin("Keyboard Shortcuts", &showShortcuts);
-			
-			ImGui::TextWrapped("These are some keyboard shortcuts you can use:");
-			ImGui::Columns(2, "kb_shortcuts");
-			ImGui::Separator();
-			ImGui::Text("Description"); ImGui::NextColumn();
-			ImGui::Text("Shortcut"); ImGui::NextColumn();
-			ImGui::Separator();
-			
-			ImGui::Text("Toggle Cursor"); ImGui::NextColumn();
-			ImGui::Text("M"); ImGui::NextColumn();
-			
-			ImGui::Text("Toggle Gui"); ImGui::NextColumn();
-			ImGui::Text("H"); ImGui::NextColumn();
-			
-			
-			ImGui::End();
-			//ImGui::Columns(1);
-		}
 		
 		ImGui::Spacing();
 		if( ImGui::CollapsingHeader( GUIShapesInfo, "GUIShapesInfo", true, true ) ){
@@ -516,7 +499,6 @@ void animationController::draw(ofEventArgs& event){
 							ImGui::Text( "%i", s->getGroupID() );
 							ImGui::NextColumn(); // next line
 							
-							//ImGui::SameLine(600); ImGui::Text(" 2,345 bytes");
 							// TODO: add shape-specific information line ?
 						}
 					}
@@ -579,11 +561,14 @@ void animationController::showSaveDialog(){
 	}
 }
 
-void animationController::setFullScreen(bool & _fullScreen){
-	if( bIsFullScreen != _fullScreen ){
-		bIsFullScreen = _fullScreen;
-		ofSetFullscreen( _fullScreen );
-	}
+void animationController::setFullScreen(bool _fullScreen){
+	bIsFullScreen = _fullScreen;
+	ofSetFullscreen( _fullScreen );
+}
+
+void animationController::setShowMouse(bool _showMouse){
+	bIsFullScreen = _showMouse;
+	bShowMouse ? ofShowCursor() : ofHideCursor();
 }
 
 void animationController::showAnimationsGui( bool& _b){
@@ -626,28 +611,23 @@ void animationController::_keyPressed(ofKeyEventArgs &e){
 	// ignore keypress if imGui is typing
 	if( ImGui::GetIO().WantTextInput ) return;
 	
-	// ignore case for shortcuts
-	int keyToLower = ofToChar( ofToLower( ofToString((char) e.key )));
-	
 	// check key combinations
-	if (ofGetKeyPressed(OF_KEY_COMMAND)) {
+	if( ofGetKeyPressed( KM_CTRL_KEY_CODE ) ) {
 		
-		// save ?
-//		if ( 's' == keyToLower ){
-//			
-//		}
-	}
-	
-	else {
+		// ignore case for shortcuts
+		int keyToLower = ofToChar( ofToLower( ofToString((char) e.key )));
 		
 		// toggle gui ?
-		if ( 'h' == keyToLower ){
+		if ( 'g' == keyToLower ){
 			bShowGui = !bShowGui;
 		}
 		
-		if ( 'm' == keyToLower ){
-			bMouseHidden ? ofShowCursor() : ofHideCursor();
-			bMouseHidden = !bMouseHidden;
+		else if ( 'f' == keyToLower ){
+			setFullScreen( ! bIsFullScreen );
+		}
+		
+		else if ( 'm' == keyToLower ){
+			setShowMouse( !bShowMouse );
 		}
 		
 	}
