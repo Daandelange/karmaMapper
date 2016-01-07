@@ -353,7 +353,11 @@ void animationController::draw(ofEventArgs& event){
 		ImGui::BeginMainMenuBar();
 		if( ImGui::BeginMenu("karmaMapper :: Animator") ){
 			if (ImGui::MenuItem("Version", "0.2 alpha")) {}
-			if (ImGui::MenuItem("FPS", ofToString( ofGetFrameRate() ).c_str() ) ) {}
+			
+			ImGui::MenuItem("FPS", ofToString( ofGetFrameRate() ).c_str() );
+			
+			ImGui::MenuItem("Application load", "#todo" );
+			
 			char buffer[20];
 			snprintf(buffer, 20, "%d x %i", ofGetWidth(), ofGetHeight() );
 					 

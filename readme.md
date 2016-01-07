@@ -1,24 +1,45 @@
 # karmaMapper
 ________
 
-karmaMapper is an OpenSource 2D mapping software made for real-time interactions and image generation involving a lot of interconnected madness. Built upon the amazing [OpenFrameworks](http://www.openframeworks.cc/) framework, it runs on Mac and should run on Windows and Linux.
+karmaMapper is an OpenSource 2D mapping software made for real-time interactions and image generation involving a lot of interconnected madness. Built upon the amazing [OpenFrameworks](http://www.openframeworks.cc/) framework, it runs on Mac and Linux and should run on Windows.
 
 __karmaMapper is a work in progress.__  
 _Curently (19-11-2015), there's a scene editor allowing you to configure a set of shapes, a music analyser that streams over the network and the very bare basics of the animator app allowing to instantiate the first effects on shapes._
 
 ![Project Cover](https://raw.githubusercontent.com/Karma-Kusala/karmaMapper/master/karmaMapper.png)
 
-## Dependencies
-#### Required:  
+## SETUP
+#### Required Dependencies:  
 - [OpenFrameworks 9.0](http://www.openframeworks.cc/) with the following addons:  
 	- [ofxImUI](https://github.com/jvcleave/ofxImGui)
 	- [ofxAbletonLiveSet](https://github.com/satoruhiga/ofxAbletonLiveSet)	
 	- Etc. _(see `clone_addons.sh`)_
 	- __Note__: _Some effects may have other dependencies._
  
-#### Install the dependencies
-- Run `./clone_addons.sh` _(Mac & Linux only)_
+#### Install
+- [Install OpenFrameworks](http://openframeworks.cc/setup/) then:
+- `cd OF/apps/karmaApps/`
+- `git clone git@github.com:Karma-Kusala/karmaMapper.git`
+- `cd ./karmaMapper`
+- `./clone_addons.sh` _(Mac & Linux only)_
 
+#### Compile
+- **Makefiles**:  
+`cd OF/apps/karmaApps/karmaMapper`  
+`make Release`  
+`make RunRelease`   
+Select the animator or the editor in `config.make`  
+	- `PROJECT_DEFINES = KM_EDITOR_APP`
+	- `PROJECT_DEFINES = KM_ANIMATOR_APP`
+  
+- **Qt Creator**:  
+Open `karmaMapper.qbs` and compile.  
+See also the [OF Qt setup guide](http://openframeworks.cc/setup/qtcreator/).  
+On Linux I also had to [update gcc to version 4.9](http://askubuntu.com/questions/428198/getting-installing-gcc-g-4-9-on-ubuntu).  
+To select a **target**, edit `karmaMapper.qbs` and look for `of.defines: ['KM_ANIMATOR_APP']`  
+
+- **Xcode**:  
+Open `karmaMapper.xcodeproj` and select either the `karmaMapper Editor` or `karmaMapper Animator` target.
 
 #### Optional:
 - a RaspberryPi + Raspbian _(for real-time sound analysis and video streaming #notyet )_
