@@ -54,7 +54,9 @@ bool basicEffect::initialise(const animationParams& params){
 }
 
 // Usefull ?
-bool basicEffect::initialise(){}
+bool basicEffect::initialise(){
+
+}
 
 // todo: update -(handled by)-> animation
 // returns true if rendering succeeded
@@ -115,6 +117,50 @@ void basicEffect::enable(){
 void basicEffect::disable(){
 	isEnabled=false;
 }
+
+
+// - - - - - - -
+// LAD & SAVE FUNCTIONS
+// - - - - - - -
+
+// writes the effect data to XML. xml's cursor is already pushed into the right <effect> tag.
+bool basicEffect::saveToXML(ofxXmlSettings& xml) const{
+	
+	xml.addValue("effectType", effectType );
+	
+	// remember bound shapes
+	xml.addTag("boundShapes");
+	xml.pushTag("boundShapes");
+	for(auto it=shapes.cbegin(); it!=shapes.cend(); ++it){
+		xml.addValue((*it)->getShapeType(), (*it)->getName());
+	}
+	xml.popTag(); // pop boundShapes
+	
+	
+	//xml.addValue("groupID", getGroupID() );
+	//xml.addValue("shapeName", shapeName );
+	
+	return true;
+}
+
+// load effect settings from xml
+// xml's cursor is pushed to the root of the <effect> tag to load
+bool basicEffect::loadFromXML(ofxXmlSettings& xml){
+	
+//	xml.pushTag("position");
+//	position.x = xml.getValue("X", 0);
+//	position.y = xml.getValue("Y", 0);
+//	xml.popTag(); // pop position
+	
+	//groupID = xml.getValue("groupID", -1);
+	//shapeName = xml.getValue("effectName", ofToString(reinterpret_cast<uintptr_t>(this)) );
+	
+	//initialise(animationParams.params);
+	
+	
+	return true; // todo
+}
+
 
 // - - - - - - -
 // EFFECT PROPERTIES

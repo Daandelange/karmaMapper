@@ -165,7 +165,7 @@ bool basicShape::saveToXML(ofxXmlSettings &xml){
 	xml.addValue("Y", getPositionUnaltered()->y);
 	xml.popTag();
 	
-	xml.addValue("shapeType", "basicShape" );
+	xml.addValue("shapeType", getShapeType() );
 	xml.addValue("groupID", getGroupID() );
 	xml.addValue("shapeName", shapeName );
 	
@@ -173,7 +173,7 @@ bool basicShape::saveToXML(ofxXmlSettings &xml){
 }
 
 // load shape settings from xml
-// xml's cursor is pushed in the shape to load
+// xml's cursor is pushed in the <shape> to load
 bool basicShape::loadFromXML(ofxXmlSettings& xml){
 	
 	xml.pushTag("position");
@@ -187,11 +187,12 @@ bool basicShape::loadFromXML(ofxXmlSettings& xml){
 	
 	groupID = xml.getValue("groupID", -1);
 	shapeName = xml.getValue("shapeName", ofToString(reinterpret_cast<uintptr_t>(this)) );
+	
 #ifdef KM_EDITOR_APP
 	setColorFromGroupID();
 #endif
 	
-	return true; // todo
+	return true;
 }
 
 // - - - - - - -

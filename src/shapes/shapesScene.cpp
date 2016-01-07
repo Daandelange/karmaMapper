@@ -41,20 +41,15 @@ bool shapesScene::isEditorClass() const{
 void shapesScene::loadLastUsedScene() {
 	
 	ofxXmlSettings sceneSettings;
-	ofVec2f pos(0,0);
 	
-	// what are we doing here?!?!
+	// do we have a saveFile containing the last used scene ?
 	if( sceneSettings.loadFile(KM_SCENE_SAVE_FILE) ){
 		sceneSettings.pushTag("shapesScene");
-		pos = ofVec2f(
-			sceneSettings.getValue("posX", 0),
-			sceneSettings.getValue("posY", 0)
-		);
 		
 		// load created shapes
 		loadScene( sceneSettings.getValue("lastLoadedScene", KM_DEFAULT_SCENE) );
 		
-		sceneSettings.popTag(); // pop position
+		sceneSettings.popTag(); // pop shapesScene
 	}
 	sceneSettings.clear();
 	
@@ -150,7 +145,7 @@ bool shapesScene::saveScene(const string _fileName){
 	}
 	else ofSystemAlertDialog("Could not save the current configuration... :(\nSave File: "+fullPath);
 	
-	return true;
+	return true; // todo: this should be conditional
 }
 
 // (re)loads a scene from file
@@ -183,7 +178,7 @@ bool shapesScene::loadScene( const string _fileName ){
 		for(int s=0; s<numShapes; s++){
 			sceneXML.pushTag("shape", s);
 			
-			// todo: make this shape specific
+			// Some code comes from:
 			// --> http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
 			string shapeType = sceneXML.getValue("shapeType", "basicShape");
 			basicShape* shape = shape::create(shapeType);

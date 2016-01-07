@@ -37,6 +37,7 @@ vertexShape::~vertexShape(){
 // - - - - - - -
 // OVER-RULED BASICSHAPE FUNCTIONS
 // - - - - - - -
+// todo: rename this to something less confusing. initialSetup() ( not to confuse with reset() )
 void vertexShape::initialiseVertexVariables(){
 	
 	initialized = false;
@@ -172,23 +173,8 @@ void vertexShape::resetToScene() {
 // return success state
 bool vertexShape::saveToXML(ofxXmlSettings &xml){
 	
-	// create position tag
-	xml.addTag("position");
-	xml.pushTag("position");
-	xml.addValue("X", getPositionUnaltered()->x);
-	xml.addValue("Y", getPositionUnaltered()->y);
-	xml.popTag();
 	
-	/*/ create GUI position tag
-	shapeSettings.addTag("GUIposition");
-	shapeSettings.pushTag("GUIposition");
-	shapeSettings.addValue("X", (*it)->getGuiPosition().x);
-	shapeSettings.addValue("Y", (*it)->getGuiPosition().y);
-	shapeSettings.popTag();
-	 */
-	
-	xml.addValue("shapeType", getShapeType() );
-	xml.addValue("groupID", getGroupID());
+	if(!basicShape::saveToXML(xml)) return false;
 	
 	xml.addTag("vectors");
 	xml.pushTag("vectors");
@@ -235,7 +221,7 @@ bool vertexShape::loadFromXML(ofxXmlSettings& xml){
 		return true;
 	}
 	
-	return false;
+	return true;
 }
 
 // - - - - - - -

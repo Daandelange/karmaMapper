@@ -74,6 +74,11 @@ public:
 	void enable();
 	void disable();
 	
+	// #########
+	// LOAD & SAVE FUNCTIONS
+	virtual bool saveToXML(ofxXmlSettings& xml ) const;
+	virtual bool loadFromXML(ofxXmlSettings& xml);
+	
 	// effect properties
 	bool isReady() const;
 	bool isType(const string _type) const;

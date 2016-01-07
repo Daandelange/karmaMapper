@@ -26,7 +26,7 @@ void ofApp::setup(){
 	// setup scene
 	//scene.loadLastUsedScene();
 	//scene.loadScene("Vendome_1500_1200.xml");
-	scene.loadScene("Vendome_Full_Small.xml");
+	controller.loadLastConfiguration();
 	
 	// enable animation controller
 	controller.start();

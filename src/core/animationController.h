@@ -10,7 +10,9 @@
 
 #pragma once
 
+
 #include "ofMain.h"
+#include "KMSettings.h"
 #include "shapes.h"
 #include "effects.h"
 #include "shapesDB.h"
@@ -23,21 +25,12 @@
 #include "durationReceiver.h"
 //#include "fboRecorder.h"
 
-#ifdef TARGET_OS_MAC
+#ifdef TARGET_OSX
 	//	#include "ofxSyphon.h"
-	#define KM_CTRL_KEY_NAME "CMD"
-	#define KM_CTRL_KEY_CODE OF_KEY_COMMAND
-#else
-	#define KM_CTRL_KEY_NAME "CTRL"
-	#define KM_CTRL_KEY_CODE OF_KEY_CONTROL
 #endif
 
-
-
 // todo: an overall mask that hides any unwanted projection zones (could be done by an effect too)
-//class ImGui;
-
-//using namespace ImGui;
+// Ensure shape names are always UNIQUE
 
 class animationController {
 	// let ImGui control app variables
@@ -54,7 +47,13 @@ public:
 	bool stop();
 	bool isEnabled() const;
 
-	// evet handlers
+	// load & save
+	bool loadConfiguration(const string& _file = "");
+	bool loadLastConfiguration();
+	bool saveConfiguration(const string& _fileName = "");
+	string loadedConfiguration;
+	
+	// event handlers
 	void update( ofEventArgs& event );
 	void draw( ofEventArgs& event );
 	void _keyPressed( ofKeyEventArgs& e );
@@ -73,22 +72,10 @@ protected:
 	bool bIsFullScreen;
 	bool bShowMouse;
 	bool bShowGui;
+	bool bGuiShowAnimParams;
 	
 	// gui
 	ofxImGui gui;
-	//ofxPanelExtended animationGui;
-	//ofParameter<string> guiNumEffects, guiLoadedShapesScene;
-	//ofxGuiGroupExtended shortCutsMenu, shapesInfoMenu, effectsMenu;
-	//ofParameter<bool> bGuiShowAnimParams;
-	//ofxMinimalToggle guiShowAnimParamsToggle;
-	//ofxMinimalButton guiLoadShapesSceneBtn;
-// tmp
-//	ofxMinimalButton loadButton, saveButton;
-//	ofxToggle fullScreenToggle, enableEditingToggle;
-//	ofxGuiMatrix batchModeSelect, simpleMode;
-//	ofParameter<string> menuNumSelectedShapes;
-//	ofxPanelExtended shapeCreationGui;
-	bool bGuiShowAnimParams;
 	
 	// effects stuff
 	bool isEffectsIndex(int i);
@@ -97,9 +84,6 @@ protected:
 	animationParamsServer animationParams;
 	
 	shapesDB& scene;
-	
-	// music
-	ofSoundPlayer music;
 	
 	// OSC
 	OSCRouter oscRouter;
@@ -134,9 +118,8 @@ private:
 
 
 // Effects
-#define GUIEffectsTitle			("Animation Information")
+#define GUIEffectsTitle			("Effects Information")
 #define GUIToggleFullScreen		("Full Screen")
-#define GUIEffectsNumEffects	("# Effects:\t")
-#define GUIEffectsViewParams	("Show Animation Vars")
+#define GUIEffectsViewParams	("Show Animation Parameters")
 
 

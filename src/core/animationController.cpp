@@ -20,6 +20,7 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	bShowMouse = true;
 	bIsFullScreen = false;
 	bGuiShowAnimParams = false;
+	loadedConfiguration = "";
 	
 	effects.clear();
 	effects.resize(0);
@@ -32,19 +33,6 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	// build GUI
 	gui.setup();
 	ImGui::GetIO().MouseDrawCursor = false;
-	
-	// Setup Effects info
-	//effectsMenu.setup( GUIEffectsTitle );
-	//guiNumEffects.set( GUIEffectsNumEffects, "0" );
-//	effectsMenu.add( new ofxLabel(guiNumEffects) );
-//	bGuiShowAnimParams.set(GUIEffectsViewParams, false);
-//	bGuiShowAnimParams.addListener(this, &animationController::showAnimationsGui);
-//	effectsMenu.add( new ofxMinimalToggle(bGuiShowAnimParams) );
-//	
-//	animationGui.add( &effectsMenu );
-
-	// hide gui
-	bShowGui = false;
 }
 
 animationController::~animationController(){
@@ -289,6 +277,111 @@ bool animationController::isEnabled() const {
 }
 
 // - - - - - - - -
+// LOAD & SAVE
+// - - - - - - - -
+bool animationController::loadConfiguration(const string& _file){
+	
+	bool success = false;
+	ofxXmlSettings configXML;
+	
+	if( configXML.loadFile( ofToDataPath( KM_CONFIG_FOLDER +_file ) ) ){
+		if( isEnabled() ) stop();
+		
+		// load shapes
+		if( configXML.pushTag("sceneSettings") ){
+
+			if( scene.loadScene( configXML.getValue("shapesFile", "")) ){
+				loadedConfiguration = _file;
+				start();
+				success = true;
+			}
+			
+			configXML.popTag(); // pop sceneSettings
+		}
+	}
+	
+	if(success){
+		configXML.clear();
+		configXML.setValue("lastLoadedConfiguration", _file );
+		if(configXML.saveFile(ofToDataPath(KM_LAST_CONFIG_FILE)) ){
+			
+		}
+	}
+	
+	return success;
+}
+
+bool animationController::loadLastConfiguration(){
+	
+	
+	ofxXmlSettings prevSettings;
+	bool success = false;
+	
+	// what are we doing here?!?!
+	if( prevSettings.loadFile( ofToDataPath(KM_LAST_CONFIG_FILE) ) ){
+		
+		// load created shapes
+		success = loadConfiguration( prevSettings.getValue("lastLoadedConfiguration", KM_CONFIG_DEFAULT) );
+		
+		prevSettings.clear();
+	}
+	else {
+		ofLogNotice("animationController::")<< __FUNCTION__ << "Previous configuration file not found. Not loading any scene.";
+	}
+	
+	return success;
+}
+
+bool animationController::saveConfiguration( const string& _fileName ){
+	bool success = false;
+	
+	string fullPath;
+	// no save file ?
+	if( _fileName.empty() ){
+		if( loadedConfiguration.empty() ){
+			ofSystemAlertDialog("Please provide a name for the save file!");
+			return false;
+		}
+		else fullPath = KM_CONFIG_FOLDER+loadedConfiguration;
+	}
+	else fullPath = KM_CONFIG_FOLDER+_fileName;
+	
+	ofxXmlSettings sceneXML;
+	sceneXML.addTag("sceneSettings");
+	sceneXML.pushTag("sceneSettings");
+	sceneXML.setValue("shapesFile", scene.getLoadedScene() );
+	sceneXML.popTag();
+	
+	sceneXML.addTag("effects");
+	sceneXML.pushTag("effects");
+	
+	// save all shapes data
+	int e=0;
+	vector<basicEffect*> failed;
+	failed.clear();
+	for(auto it = effects.begin(); it != effects.end(); it++, e++){
+		
+		sceneXML.addTag("effect");
+		sceneXML.pushTag("effect", e);
+		
+		if(!(*it)->saveToXML(sceneXML)) failed.push_back(*it);
+		
+		sceneXML.popTag(); //pop shape
+	}
+	
+	// write down settings to disk
+	if( sceneXML.saveFile(fullPath) ){
+		loadedConfiguration = ofFilePath::getFileName(fullPath);
+		success = true;
+		if(failed.size() == 0 ) ofLogNotice("animationController::saveConfiguration()", "Saved current configuration to `"+fullPath+"`");
+		else ofSystemAlertDialog("The configuration has been saved but "+ ofToString(failed.size()) +" out of "+ ofToString(effects.size()) +" shapes failed to save.");
+	}
+	else ofSystemAlertDialog("Could not save the current configuration... :(\nSave File: "+fullPath);
+	
+	return success;
+}
+
+// - - - - - - - -
 // EVENT LISTENERS
 // - - - - - - - -
 void animationController::update(ofEventArgs &event){
@@ -349,7 +442,9 @@ void animationController::draw(ofEventArgs& event){
 	
 	// draw gui stuff
 	gui.begin();
+	static bool ShowSaveAsModal = false;
 	if( bShowGui ){
+		
 		ImGui::BeginMainMenuBar();
 		if( ImGui::BeginMenu("karmaMapper :: Animator") ){
 			if (ImGui::MenuItem("Version", "0.2 alpha")) {}
@@ -362,6 +457,69 @@ void animationController::draw(ofEventArgs& event){
 			snprintf(buffer, 20, "%d x %i", ofGetWidth(), ofGetHeight() );
 					 
 			ImGui::MenuItem("Resolution", buffer );
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("File")){
+			if (ImGui::BeginMenu("Load configuration..." ) ){
+				
+//				if (ImGui::MenuItem("File browser...", ofToString(KM_CTRL_KEY_NAME).append( " + O" ).c_str() )){
+//				}
+//				ImGui::Separator();
+				
+				ofDirectory dir;
+				dir.listDir( ofToDataPath( KM_CONFIG_FOLDER ) );
+				dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
+				if( dir.size() <= 0 ){
+					ImGui::Text("No files in %s", KM_CONFIG_FOLDER);
+					ImGui::Separator();
+				} else {
+					for (int i = 0; i < dir.size(); i++){
+						if( ImGui::MenuItem( dir.getName(i).c_str(), "", (bool)(scene.getLoadedScene() == dir.getName(i)) ) ){
+							
+							// todo: add error feedback here
+							loadConfiguration(dir.getName(i));
+
+						}
+					}
+				}
+				ImGui::EndMenu();
+			}
+			
+			if ( !loadedConfiguration.empty() && scene.getLoadedScene()!="" && ImGui::MenuItem("Save configuration", ofToString(KM_CTRL_KEY_NAME).append( " + S" ).c_str() )){
+				saveConfiguration();
+			}
+			
+			if (ImGui::MenuItem("Save as...", ofToString(KM_CTRL_KEY_NAME).append( " + SHIFT + S" ).c_str() )){
+				// ImGui::OpenPopup("Save config as...");
+				// tmp workaround: https://github.com/ocornut/imgui/issues/331
+				ShowSaveAsModal = true;
+			}
+			
+			ImGui::MenuItem("", "", false, false);
+			
+			if (ImGui::BeginMenu("Load Scene...")){
+				if (ImGui::MenuItem("File browser...", ofToString(KM_CTRL_KEY_NAME).append( " + O" ).c_str() )){
+					showShapeLoadMenu();
+				}
+				ImGui::Separator();
+				
+				ofDirectory dir;
+				dir.listDir( ofToDataPath( KM_SCENE_SAVE_PATH ) );
+				dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
+				if( dir.size() <= 0 ){
+					ImGui::Text("No files in %s", KM_SCENE_SAVE_PATH);
+					ImGui::Separator();
+				} else {
+					for (int i = 0; i < dir.size(); i++){
+						if( ImGui::MenuItem( dir.getName(i).c_str(), "", (bool)(scene.getLoadedScene() == dir.getName(i)) ) ){
+							stop();
+							scene.loadScene( dir.getName(i) );
+							start();
+						}
+					}
+				}
+				ImGui::EndMenu();
+			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Options")){
@@ -378,7 +536,7 @@ void animationController::draw(ofEventArgs& event){
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Extras")){
-			if (ImGui::MenuItem("Show animation parameters", NULL, &bGuiShowAnimParams )){
+			if (ImGui::MenuItem(GUIEffectsViewParams, NULL, &bGuiShowAnimParams )){
 				showAnimationsGui(bGuiShowAnimParams);
 			}
 			
@@ -393,11 +551,9 @@ void animationController::draw(ofEventArgs& event){
 //			
 //			ImGui::EndMenu();
 //		}
-		
 		ImGui::EndMainMenuBar();
 		
-		
-		ImGui::Begin("karmaMapper", &bShowGui );
+		ImGui::Begin("karmaMapper", &bShowGui, ImVec2(400, ofGetHeight()*.8f) );
 		
 //		if( ImGui::Button("Hide Gui") ){
 //			bShowGui = !bShowGui;
@@ -407,33 +563,7 @@ void animationController::draw(ofEventArgs& event){
 		if( ImGui::CollapsingHeader( GUIShapesInfo, "GUIShapesInfo", true, true ) ){
 			ImGui::Separator();
 			
-			ImGui::Columns(2);
-			if( ImGui::Button( GUILoadScene ) ){
-				//showShapeLoadMenu();
-				ImGui::OpenPopup("loadShapes");
-				ImGui::SameLine();
-			}
-			if (ImGui::BeginPopup("loadShapes")){
-				ofDirectory dir;
-				dir.listDir( ofToDataPath("saveFiles/scenes/") );
-				dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
-				if( dir.size() <= 0 ){
-					ImGui::Text("No files in /bin/data/");
-					ImGui::Separator();
-				}else {
-					for (int i = 0; i < dir.size(); i++){
-						if( ImGui::Selectable( dir.getPath(i).c_str(), (bool)(scene.getLoadedScene() == dir.getName(i)) ) ){
-							stop();
-							scene.loadScene( dir.getName(i) );
-							start();
-						}
-					}
-				}
-				ImGui::EndPopup();
-			}
-			ImGui::NextColumn();
-			ImGui::Text( "%s", scene.getLoadedScene().c_str() ); ImGui::NextColumn();
-			ImGui::Columns(1);
+			ImGui::Text( "Loaded scene: %s", scene.getLoadedScene().c_str() );
 			
 			ImGui::Separator();
 			ImGui::Text( "Number of shapes: %u", scene.getNumShapes() );
@@ -535,6 +665,36 @@ void animationController::draw(ofEventArgs& event){
 		ImGui::End();
 	}
 	
+	if(ShowSaveAsModal) ImGui::OpenPopup("Save config as...");
+	
+	if (ImGui::BeginPopupModal("Save config as...", NULL, ImGuiWindowFlags_AlwaysAutoResize) ){
+		static char tmpName[32] = "";
+		ImGui::TextWrapped("Please enter a file name.\n\n");
+		ImGui::Separator();
+		bool doSaveNow = false;
+		if( ImGui::InputText("File name", tmpName, 32, ImGuiInputTextFlags_EnterReturnsTrue) ){
+			doSaveNow = true;
+		}
+		
+		if( ImGui::Button("Cancel") ){
+			memset(&tmpName[0], '\0', sizeof(tmpName));
+			ShowSaveAsModal = false; // tmp
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if( ImGui::Button("Save") ){
+			doSaveNow = true;
+		}
+		
+		if( doSaveNow && tmpName[0] != '\0'){
+			saveConfiguration(tmpName);
+			memset(&tmpName[0], '\0', sizeof(tmpName));
+			ImGui::CloseCurrentPopup();
+			ShowSaveAsModal = false; // tmp
+		}
+		ImGui::EndPopup();
+	}
+	
 	gui.end();
 }
 
@@ -543,11 +703,11 @@ void animationController::draw(ofEventArgs& event){
 // - - - - - - - -
 void animationController::showShapeLoadMenu(){
 	//ofRectangle btn = loadButton.getShape();
-	ofFileDialogResult openFileResult= ofSystemLoadDialog("Select the XML file to load...", false, ofToDataPath("saveFiles/scenes/"));
+	ofFileDialogResult openFileResult= ofSystemLoadDialog("Select the XML file to load...", false, ofToDataPath(KM_SCENE_SAVE_PATH));
 	
 	if(openFileResult.bSuccess){
 		// restrict to saveFiles dir
-		ofFile file( ofToDataPath("saveFiles/")+openFileResult.getName() );
+		ofFile file( ofToDataPath(KM_SCENE_SAVE_PATH)+openFileResult.getName() );
 		if(file.exists()){
 			stop();
 			scene.loadScene( openFileResult.getName() );
@@ -557,7 +717,7 @@ void animationController::showShapeLoadMenu(){
 }
 
 void animationController::showSaveDialog(){
-	ofFileDialogResult openFileResult= ofSystemSaveDialog(scene. getLoadedScene(), "Where shall I save your scene?");
+	ofFileDialogResult openFileResult= ofSystemSaveDialog(scene.getLoadedScene(), "Where shall I save your scene?");
 	
 	if(openFileResult.bSuccess){
 		// only keep the file name, not the path
@@ -634,6 +794,16 @@ void animationController::_keyPressed(ofKeyEventArgs &e){
 			setShowMouse( !bShowMouse );
 		}
 		
+		else if ( 's' == keyToLower ){
+			if( loadedConfiguration.empty() || ofGetKeyPressed(OF_KEY_SHIFT) ){
+				gui.begin();
+				ImGui::OpenPopup("Save config as...");
+				gui.end();
+			}
+			else {
+				saveConfiguration( loadedConfiguration );
+			}
+		}
 	}
 	
 }

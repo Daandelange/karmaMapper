@@ -44,9 +44,9 @@ OSCRouter::~OSCRouter(){
 	guiNumRoutes = "";
 	
 	// inform nodes to detach listeners
-	for( list<OSCNode*>::iterator it=nodes.begin(); it!=nodes.end(); it++){
+	if(nodes.size() > 0) for( auto it=nodes.rbegin(); it!=nodes.rend(); it++){
 		(*it)->detachNode();
-		nodes.erase(it);
+		nodes.erase( std::next(it).base() );
 	}
 }
 // - - - - - - - -

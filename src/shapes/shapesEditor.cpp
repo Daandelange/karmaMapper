@@ -62,7 +62,7 @@ void shapesEditor::update() {
 	for(auto s = shapes.rbegin(); s!=shapes.rend(); ){
 		if( (*s)->pleaseDeleteMe ){
 			selectShape(NULL); // todo: [later] this is wrong if we (can) delete from batch mode
-			delete *s;
+			delete (*s);
 			s++;
 			s= std::list<basicShape*>::reverse_iterator( shapes.erase(s.base()) );
 		}

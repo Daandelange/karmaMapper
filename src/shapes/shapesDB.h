@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "KMSettings.h"
-
 #include "ofMain.h"
+#include "KMSettings.h"
 #include "shapesScene.h"
 #include "shapes.h"
+
 
 class shapesDB : public shapesScene { // holds the whole shapes "scene"
 
