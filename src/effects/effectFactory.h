@@ -1,11 +1,11 @@
 //
-//  shapeFactory.h
+//  effectFactory.h
 //  karmaMapper
 //
-//  Created by Daan de Lange on 22/3/14.
+//  Created by Daan de Lange on 8/1/16.
 //
-//  Allows a shape to register and thus be instantiated from a string.
-//  This class runs transparently in the background and you just have to add a register line in the Derived Base class to register it then extend this class with the basicShape
+//  Allows a effect to register and thus be instantiated from a string.
+//  This class runs transparently in the background and you just have to add a register line in the Derived Base class to register it then extend this class with the basicEffect
 //
 //	Based on code from: http://gamedev.stackexchange.com/questions/17746/entity-component-systems-in-c-how-do-i-discover-types-and-construct-component/17759#17759
 
@@ -16,23 +16,23 @@
 #include <string>
 #include <utility>
 
-class basicShape;
+class basicEffect;
 
-namespace shape
+namespace effect
 {
 	namespace factory
 	{
-		typedef basicShape* (*CreateShapeFunc)();
-		typedef std::map<std::string, CreateShapeFunc> shapeRegistry;
+		typedef basicEffect* (*CreateEffectFunc)();
+		typedef std::map<std::string, CreateEffectFunc> effectRegistry;
 		
-		inline shapeRegistry& getShapeRegistry()
+		inline effectRegistry& getEffectRegistry()
 		{
-			static shapeRegistry reg;
+			static effectRegistry reg;
 			return reg;
 		}
 		
 		template<class T>
-		basicShape* createShape() {
+		basicEffect* createEffect() {
 			return new T;
 		}
 		
@@ -42,7 +42,7 @@ namespace shape
 		public:
 			static RegistryEntry<T>& Instance(const std::string& name)
 			{
-				// Because I use a singleton here, even though `SHAPE_REGISTER`
+				// Because I use a singleton here, even though `effect_REGISTER`
 				// is expanded in multiple translation units, the constructor
 				// will only be executed once. Only this cheap `Instance` function
 				// (which most likely gets inlined) is executed multiple times.
@@ -54,14 +54,14 @@ namespace shape
 		private:
 			RegistryEntry(const std::string& name)
 			{
-				shapeRegistry& reg = getShapeRegistry();
-				CreateShapeFunc func = createShape<T>;
+				effectRegistry& reg = getEffectRegistry();
+				CreateEffectFunc func = createEffect<T>;
 				
-				std::pair<shapeRegistry::iterator, bool> ret =
-				reg.insert(shapeRegistry::value_type(name, func));
+				std::pair<effectRegistry::iterator, bool> ret =
+				reg.insert(effectRegistry::value_type(name, func));
 				
 				if (ret.second == false) {
-					// This means there already is a shape registered to
+					// This means there already is a effect registered to
 					// this name. You should handle this error as you see fit.
 				}
 			}
@@ -72,4 +72,4 @@ namespace shape
 		
 	} // namespace factory
 	
-} // namespace shape
+} // namespace effect

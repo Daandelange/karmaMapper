@@ -100,7 +100,7 @@ map<string, vector<basicShape*> > shapesDB::getAllShapesByType() const {
 }
 
 map<string, vector<basicShape*>> shapesDB::getAllShapesByGroup() const {
-	
+	// todo
 }
 
 basicShape* shapesDB::getRandomShapeByType(string _type){
@@ -130,3 +130,13 @@ basicShape* shapesDB::getRandomShapeByGroup(int _group){
 	return ret[round(-.49f+(ofRandomuf()*(ret.size()-.011f)))];
 }
 
+basicShape* shapesDB::getShapeByName( string _name ){
+	if( _name.empty() ) return nullptr;
+		
+	for(auto it = shapes.begin(); it != shapes.end(); it++){
+		if( (*it)->getName().compare( _name )==0 ){
+			return (*it);
+		}
+	}
+	return nullptr;
+}

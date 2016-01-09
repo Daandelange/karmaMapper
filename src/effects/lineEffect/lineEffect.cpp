@@ -297,3 +297,5 @@ void lineEffect::floatListener(durationFloatEventArgs &_args){
 //	//else if(_args.source.compare("")==0){}
 //}
 
+// register effect type
+EFFECT_REGISTER( lineEffect , "lineEffect" );

@@ -22,6 +22,12 @@ public:
 	
 	// shape serving functions
 	list<basicShape*>& getShapesRef(){ return shapes; }
+	list<basicShape*>::const_iterator getShapesItConstBegin() const {
+		return shapes.cbegin();
+	}
+	list<basicShape*>::const_iterator getShapesItConstEnd() const {
+		return shapes.cend();
+	}
 	basicShape* getRandomShape();
 	vector<basicShape*> getRandomShapes(int _amount=1, bool _returnExactAmount = true );
 	vector<basicShape*> getShapesByType(string _type);
@@ -32,6 +38,7 @@ public:
 	basicShape* getRandomShapeByType(string _type);
 	vector<basicShape*> getShapesByGroup(int _group);
 	basicShape* getRandomShapeByGroup(int _group);
+	basicShape* getShapeByName( string _name );
 	
 	
 	

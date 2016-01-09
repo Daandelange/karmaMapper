@@ -49,6 +49,8 @@ bool basicEffect::initialise(const animationParams& params){
 	// set this when done
 	isInitialised = true;
 	isLoading = false;
+	bShowGuiWindow = false;
+	effectName = "";
 	
 	return isInitialised;
 }
@@ -87,7 +89,9 @@ void basicEffect::update(const animationParams& params){
 }
 
 // Usefull ?
-void basicEffect::update(){}
+void basicEffect::update(){
+	
+}
 
 // resets all values
 void basicEffect::reset(){
@@ -118,24 +122,98 @@ void basicEffect::disable(){
 	isEnabled=false;
 }
 
+void basicEffect::setShowGuiWindow(const bool &_b){
+	bShowGuiWindow = _b;
+}
+
+void basicEffect::toggleGuiWindow() {
+	setShowGuiWindow( !bShowGuiWindow );
+}
+
+// ImGui is ready to be used, just place your Gui elements.
+bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
+	if( !bShowGuiWindow ) return false;
+	
+	ImGui::Begin( ((string)"Effect Settings: ").append(getName()).c_str() , &bShowGuiWindow );
+	
+	ImGui::LabelText("Type", "%s", getType().c_str() );
+	static char nameBuffer[32] = "";
+	if( ImGui::InputText("Name", nameBuffer, 32) ){
+		effectName = nameBuffer;
+	}
+	else if (!ImGui::IsItemActive()){
+		memcpy(nameBuffer, effectName.c_str(), effectName.size() );
+	}
+	
+	ImGui::Spacing();
+	ImGui::Spacing();
+	
+	if (ImGui::CollapsingHeader( GUIBoundShapesTitle, "GUIBoundShapesTitle", true, true)){
+		
+		ImGui::TextWrapped("Bound to %i shapes", getNumShapes());
+		
+		ImGui::Spacing();
+		
+		if (ImGui::Button("Bind to shape...")){
+			// todo
+		}
+		if (ImGui::IsItemHovered()) ImGui::SetTooltip("todo");
+		ImGui::SameLine();
+		if( ImGui::Button("Bind to shape group...") ){
+			// todo
+			
+		}
+		if (ImGui::IsItemHovered()) ImGui::SetTooltip("todo");
+		
+		// list shapes
+		ImGui::ListBoxHeader("Bound Shapes");
+		if(_scene.getNumShapes()<1) ImGui::Selectable("<None Available>", false);
+		else for (auto s=_scene.getShapesItConstBegin(); s!=_scene.getShapesItConstEnd(); ++s){
+			bool tmpSelected = (bool)(std::find(shapes.cbegin(), shapes.cend(), *s) !=shapes.cend() );
+			
+			if( ImGui::Selectable( (*s)->getName().c_str(), &tmpSelected ) ){
+				if (tmpSelected) bindWithShape( *s );
+				else detachFromShape( *s );
+			};
+		}
+		ImGui::ListBoxFooter();
+		
+		ImGui::Spacing();
+	}
+	
+	ImGui::Spacing();
+	ImGui::Spacing();
+	
+	printCustomEffectGui();
+	
+	ImGui::End();
+	
+	return true;
+}
 
 // - - - - - - -
-// LAD & SAVE FUNCTIONS
+// LOAD & SAVE FUNCTIONS
 // - - - - - - -
 
 // writes the effect data to XML. xml's cursor is already pushed into the right <effect> tag.
 bool basicEffect::saveToXML(ofxXmlSettings& xml) const{
 	
 	xml.addValue("effectType", effectType );
+	xml.addValue("effectName", getName() );
 	
 	// remember bound shapes
 	xml.addTag("boundShapes");
 	xml.pushTag("boundShapes");
+	int s = 0;
 	for(auto it=shapes.cbegin(); it!=shapes.cend(); ++it){
-		xml.addValue((*it)->getShapeType(), (*it)->getName());
+		
+		xml.addValue("shape", (*it)->getName() );
+		xml.addAttribute("shape", "type", (*it)->getShapeType(), s);
+		xml.addAttribute("shape", "name", (*it)->getName(), s);
+		
+		s++;
 	}
 	xml.popTag(); // pop boundShapes
-	
 	
 	//xml.addValue("groupID", getGroupID() );
 	//xml.addValue("shapeName", shapeName );
@@ -147,16 +225,9 @@ bool basicEffect::saveToXML(ofxXmlSettings& xml) const{
 // xml's cursor is pushed to the root of the <effect> tag to load
 bool basicEffect::loadFromXML(ofxXmlSettings& xml){
 	
-//	xml.pushTag("position");
-//	position.x = xml.getValue("X", 0);
-//	position.y = xml.getValue("Y", 0);
-//	xml.popTag(); // pop position
-	
-	//groupID = xml.getValue("groupID", -1);
-	//shapeName = xml.getValue("effectName", ofToString(reinterpret_cast<uintptr_t>(this)) );
+	effectName = xml.getValue("effectName", getType() );
 	
 	//initialise(animationParams.params);
-	
 	
 	return true; // todo
 }
@@ -170,11 +241,15 @@ bool basicEffect::isReady() const{
 	return isInitialised && !hasError && !isLoading;
 }
 
+string basicEffect::getName() const {
+	return effectName;
+}
+
 bool basicEffect::isType(const string _type) const {
 	return _type==effectType;
 }
 
-string basicEffect::getTypes() const{
+string basicEffect::getType() const{
 	return effectType;
 }
 
@@ -225,11 +300,12 @@ bool basicEffect::bindWithShape(basicShape* _shape){
 	if(_shape==NULL) return false;
 	
 	// prevent adding the same shape several times
-	for(vector<basicShape*>::iterator it=shapes.begin(); it!=shapes.end(); ++it){
+	for(auto it=shapes.begin(); it!=shapes.end(); ++it){
 		if( _shape == *it ) return true;  // already exists
 	}
 	
-	shapes.push_back( _shape );
+	//shapes.push_back( _shape );
+	shapes.insert(shapes.end(), _shape);
 	
 	updateBoundingBox();
 	
@@ -241,21 +317,9 @@ bool basicEffect::bindWithShapes(vector<basicShape*> _shapes){
 	if(_shapes.size()==0) return false;
 	
 	bool success = true;
-	for(vector<basicShape*>::iterator _shape=_shapes.begin(); _shape!=_shapes.end();	++_shape){
+	for(auto _shape=_shapes.begin(); _shape!=_shapes.end();	++_shape){
 		
-		if( *_shape == NULL ){
-			success = false;
-			continue;
-		}
-		
-		// prevent adding the same shape several times
-		for(vector<basicShape*>::iterator it=shapes.begin(); it!=shapes.end();	++it){
-			if( *_shape == *it ) continue;  // already exists
-		}
-	
-		//shapes.push_back( *_shape );
-		shapes.insert(shapes.end(), *_shape);
-		
+		success *= bindWithShape(*_shape);
 	}
 
 	updateBoundingBox();
@@ -302,18 +366,22 @@ bool basicEffect::detachFromAllShapes(){
 }
 
 // always returns true, just unbinds
+// todo: rename this to unBindWithShape() ?
 bool basicEffect::detachFromShape(basicShape* _shape){
 	if(shapes.size()==0) return true;
 	
+	if(_shape == nullptr || _shape == NULL) return true;
+	
 	// loop trough shapes
-	for(int i=shapes.size()-1; i>=0; i++){
-		if(_shape == shapes[i] ) shapes.erase(shapes.begin()+i);
+	for(auto it=shapes.begin(); it!=shapes.end(); ++it){
+		if( (*it)!=NULL && _shape == (*it) ){
+			shapes.erase(it);
+			break;
+		}
 	}
 	
 	// no more shapes available for animation ? disable effect!
-	if(shapes.size()==0) disable();
-	
-	// todo: make it request new shapes ? (how?)
+	if (shapes.size()==0) disable();
 	
 	return true;
 }
@@ -322,3 +390,39 @@ int basicEffect::getNumShapes() const{
 	return shapes.size();
 }
 
+
+// Bind with factory
+namespace effect
+{
+	basicEffect* create(const std::string& name){
+		//std::cout << "create() --> " << name << std::endl;
+		factory::effectRegistry& reg = effect::factory::getEffectRegistry();
+		effect::factory::effectRegistry::iterator it = reg.find(name);
+		
+		if (it == reg.end()) {
+			// This happens when there is no effect registered to this name.
+			ofLogError("basicEffect* effect::create") << "Effect type not found: " << name;
+			return nullptr;
+		}
+		
+		factory::CreateEffectFunc func = it->second;
+		return func();
+	}
+	
+	void destroy(const basicEffect* comp){
+		delete comp;
+	}
+	
+	vector< std::string > getAllEffectTypes() {
+		factory::effectRegistry& reg = factory::getEffectRegistry();
+		vector< std::string > ret;
+		ret.clear();
+		for( auto it=reg.begin(); it != reg.end(); ++it){
+			ret.push_back( it->first );
+		}
+		return ret;
+	}
+} // namespace effect
+
+// register effect type
+EFFECT_REGISTER( basicEffect , "basicEffect" );

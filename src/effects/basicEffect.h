@@ -11,6 +11,9 @@
 
 #include "ofMain.h"
 #include "basicShape.h"
+#include "effectFactory.h"
+#include "ofxImGui.h"
+#include "shapesDB.h"
 //#include "shapesServer.h"
 
 // Basic parent class for effects
@@ -75,14 +78,23 @@ public:
 	void disable();
 	
 	// #########
+	// GUI stuff
+	void setShowGuiWindow(const bool& _b);
+	bool showGuiWindow(const shapesDB& _scene);
+	void toggleGuiWindow();
+	virtual bool printCustomEffectGui(){};
+	
+	
+	// #########
 	// LOAD & SAVE FUNCTIONS
 	virtual bool saveToXML(ofxXmlSettings& xml ) const;
 	virtual bool loadFromXML(ofxXmlSettings& xml);
 	
 	// effect properties
 	bool isReady() const;
+	string getName() const;
 	bool isType(const string _type) const;
-	string getTypes() const;
+	string getType() const;
 	
 	// controller functions
 	virtual bool randomizePresets();
@@ -112,12 +124,15 @@ public:
 	
 protected:
 	string effectType;
+	string effectUID;
 	//effectParams params;
 	
 	bool hasError;
 	bool isEnabled;
 	bool isInitialised;
 	bool isLoading;
+	bool bShowGuiWindow;
+	string effectName; // must stay unique
 	
 	// todo:
 	// animation preferences class
@@ -132,3 +147,33 @@ private:
 	
 	
 };
+
+
+namespace effect
+{
+	basicEffect* create(const std::string& name);
+	void destroy(const basicEffect* comp);
+	vector< std::string > getAllEffectTypes();
+}
+
+#define GUIBoundShapesTitle "Bound Shapes"
+
+// allow shape registration
+#define EFFECT_REGISTER(TYPE, NAME)                                        \
+namespace effect {                                                         \
+namespace factory {                                                       \
+namespace                                                                 \
+{                                                                         \
+template<class T>                                                         \
+class effectRegistration;                                                  \
+\
+template<>                                                                \
+class effectRegistration<TYPE>                                             \
+{                                                                         \
+static const ::effect::factory::RegistryEntry<TYPE>& reg;                  \
+};                                                                        \
+\
+const ::effect::factory::RegistryEntry<TYPE>&                              \
+effectRegistration<TYPE>::reg =                                            \
+::effect::factory	::RegistryEntry<TYPE>::Instance(NAME);                \
+}}}

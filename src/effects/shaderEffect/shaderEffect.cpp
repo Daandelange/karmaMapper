@@ -21,6 +21,8 @@ shaderEffect::shaderEffect(){
 	
 	// effect type must match with class
 	effectType = "shaderEffect";
+	vertexShader = "";
+	fragmentShader = "";
 }
 
 shaderEffect::~shaderEffect(){
@@ -158,6 +160,49 @@ void shaderEffect::reset(){
 }
 
 // - - - - - - -
+// GUI STUFF
+// - - - - - - -
+// When called, ImGui is already pushed into a Gui surface
+// Just draw your gui items
+bool shaderEffect::printCustomEffectGui(){
+	
+	if( ImGui::CollapsingHeader( GUIShaderPanel, "GUIShaderPanel", true, true ) ){
+		
+		ImGui::TextWrapped("This effect loads shader files and animates them feeding it parameters.");
+		
+		ImGui::Separator();
+		
+		// todo: make this editable
+		ImGui::LabelText("Vertex Shader", "%s", vertexShader.c_str() );
+		ImGui::LabelText("Fragment Shader", "%s", fragmentShader.c_str() );
+	}
+}
+
+// - - - - - - -
+// LOAD & SAVE FUNCTIONS
+// - - - - - - -
+
+// writes the effect data to XML. xml's cursor is already pushed into the right <effect> tag.
+bool shaderEffect::saveToXML(ofxXmlSettings& xml) const{
+	bool ret = basicEffect::saveToXML(xml);
+	
+	xml.addValue("vertexShader", vertexShader );
+	xml.addValue("fragmentShader", fragmentShader );
+	
+	return ret;
+}
+
+// load effect settings from xml
+// xml's cursor is pushed to the root of the <effect> tag to load
+bool shaderEffect::loadFromXML(ofxXmlSettings& xml){
+	bool ret = basicEffect::loadFromXML(xml);
+	
+	loadShader(xml.getValue("vertexShader",""), xml.getValue("fragmentShader",""));
+	
+	return shader.isLoaded();
+}
+
+// - - - - - - -
 // CONTROLLER FUNCTIONS
 // - - - - - - -
 
@@ -211,10 +256,16 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 	
 	if( shader.load(_vert, _frag) && !shader.isLoaded() ){
 		ofLogNotice("shaderEffect::registerShaderVariables() --> shader not loaded");
+		// todo: trigger shader not found errors here
+		// todo: trigger shader not found errors here
+		fragmentShader = "";
+		vertexShader = "";
 		hasError = true;
 		return true;
 	}
 	else{
+		fragmentShader = _frag;
+		vertexShader = _vert;
 		hasError = false;
 		return false;
 	}
@@ -235,3 +286,7 @@ void shaderEffect::onSetEventListener(mirOnSetEventArgs &_args){
 	
 	//else if(_args.source.compare("")==0){}
 }
+
+
+// register effect type
+EFFECT_REGISTER( shaderEffect , "shaderEffect" );

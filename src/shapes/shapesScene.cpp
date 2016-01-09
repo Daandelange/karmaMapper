@@ -212,14 +212,18 @@ bool shapesScene::loadScene( const string _fileName ){
 	}
 }
 
-// todo: fully implement this function
+
 bool shapesScene::unloadShapes(){
 	
-	
-	for(list<basicShape*>::iterator it = shapes.begin(); it != shapes.end(); it++){
-		delete (*it); // todo: does this call destructor ?
+	// dump'em all! :D
+	while( shapes.size() > 0 ){
+		auto it = shapes.begin();
+		delete (*it);
+		shapes.erase( it );
 	}
 	
+	// file is not loaded anymore
+	loadedConfiguration = "";
 }
 
 // - - - - - - -

@@ -589,8 +589,8 @@ namespace shape
 {
 	basicShape* create(const std::string& name){
 		//std::cout << "create() --> " << name << std::endl;
-		factory::shapeRegistry& reg = factory::getShapeRegistry();
-		factory::shapeRegistry::iterator it = reg.find(name);
+		shape::factory::shapeRegistry& reg = shape::factory::getShapeRegistry();
+		shape::factory::shapeRegistry::iterator it = reg.find(name);
 		
 		if (it == reg.end()) {
 			// This happens when there is no shape registered to this name.
@@ -598,7 +598,7 @@ namespace shape
 			return nullptr;
 		}
 		
-		factory::CreateShapeFunc func = it->second;
+		shape::factory::CreateShapeFunc func = it->second;
 		return func();
 	}
 	
@@ -607,7 +607,7 @@ namespace shape
 	}
 	
 	vector< std::string > getAllShapeTypes() {
-		factory::shapeRegistry& reg = factory::getShapeRegistry();
+		shape::factory::shapeRegistry& reg = factory::getShapeRegistry();
 		vector< std::string > ret;
 		ret.clear();
 		for( auto it=reg.begin(); it != reg.end(); ++it){

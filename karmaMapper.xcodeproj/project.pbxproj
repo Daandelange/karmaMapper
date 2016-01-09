@@ -127,6 +127,7 @@
 		8557B8411BC5B4ED00DAC695 /* lineEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8557B83D1BC5B4ED00DAC695 /* lineEffect.cpp */; };
 		8557B8421BC5B4ED00DAC695 /* lineEffectLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8557B83F1BC5B4ED00DAC695 /* lineEffectLine.cpp */; };
 		8557B8451BC5C15200DAC695 /* distortEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8557B8431BC5C15200DAC695 /* distortEffect.cpp */; };
+		855DEE951C3FCD61000936F8 /* effectFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855DEE941C3FCD61000936F8 /* effectFactory.cpp */; };
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
 		8574FEB01BC13BC20058E916 /* shapeFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */; };
 		8574FEB11BC13BC20058E916 /* shapeFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */; };
@@ -357,6 +358,8 @@
 		8557B8431BC5C15200DAC695 /* distortEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = distortEffect.cpp; path = effects/distortEffect.cpp; sourceTree = "<group>"; };
 		8557B8441BC5C15200DAC695 /* distortEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = distortEffect.h; path = effects/distortEffect.h; sourceTree = "<group>"; };
 		8557B8461BC5C9C600DAC695 /* effects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = effects.h; path = src/effects/effects.h; sourceTree = SOURCE_ROOT; };
+		855DEE931C3FCD61000936F8 /* effectFactory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = effectFactory.hpp; path = effects/effectFactory.hpp; sourceTree = "<group>"; };
+		855DEE941C3FCD61000936F8 /* effectFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = effectFactory.cpp; path = effects/effectFactory.cpp; sourceTree = "<group>"; };
 		8574FEAE1BC131E40058E916 /* shapeFactory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = shapeFactory.hpp; path = shapes/shapeFactory.hpp; sourceTree = "<group>"; };
 		8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shapeFactory.cpp; path = shapes/shapeFactory.cpp; sourceTree = "<group>"; };
 		85884B431C3BC80E004BC99C /* animationParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = animationParams.h; sourceTree = "<group>"; };
@@ -998,6 +1001,8 @@
 			isa = PBXGroup;
 			children = (
 				8557B8461BC5C9C600DAC695 /* effects.h */,
+				855DEE931C3FCD61000936F8 /* effectFactory.hpp */,
+				855DEE941C3FCD61000936F8 /* effectFactory.cpp */,
 				3EA6183E7E925AEF111E8587 /* basicEffect.cpp */,
 				F19E4F7003214B080BB274A0 /* basicEffect.h */,
 				8557B8431BC5C15200DAC695 /* distortEffect.cpp */,
@@ -1325,6 +1330,7 @@
 				837220E80EB56CD44AD27F2A /* ofxSlider.cpp in Sources */,
 				8557B8411BC5B4ED00DAC695 /* lineEffect.cpp in Sources */,
 				853CEC351C3AAD3D0030BF5D /* EngineGLFW.cpp in Sources */,
+				855DEE951C3FCD61000936F8 /* effectFactory.cpp in Sources */,
 				853CEC381C3AAD3D0030BF5D /* imgui_demo.cpp in Sources */,
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
 				858D33491BEBF220003E49C7 /* SyphonNameboundClient.m in Sources */,

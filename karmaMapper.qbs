@@ -60,6 +60,8 @@ Project{
             'src/effects/shaderEffect/shaderEffect.h',
            //'src/effects/musicEffect.cpp',
            //'src/effects/musicEffect.h',
+            'src/effects/effectFactory.cpp',
+            'src/effects/effectFactory.h',
 
            // SHAPES
             'src/shapes/shapeFactory.cpp',

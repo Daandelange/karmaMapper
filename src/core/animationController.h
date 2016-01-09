@@ -16,7 +16,6 @@
 #include "shapes.h"
 #include "effects.h"
 #include "shapesDB.h"
-//#include "ofxGui.h"
 #include "ofxImGui.h"
 #include "animationParamsServer.h"
 
@@ -52,6 +51,14 @@ public:
 	bool loadLastConfiguration();
 	bool saveConfiguration(const string& _fileName = "");
 	string loadedConfiguration;
+	bool unloadAllEffects();
+	void newConfiguration();
+	
+	// getters
+	const unsigned int getNumEffects() const;
+	vector<basicEffect*> getEffectsByType(string _type);
+	
+	map<string, vector<basicEffect*> > getAllEffectsByType() const;
 	
 	// event handlers
 	void update( ofEventArgs& event );
@@ -73,6 +80,7 @@ protected:
 	bool bShowMouse;
 	bool bShowGui;
 	bool bGuiShowAnimParams;
+	bool bGuiShowPlugins;
 	
 	// gui
 	ofxImGui gui;
@@ -112,6 +120,7 @@ private:
 
 // Shapes
 #define GUIShapesInfo		("Scene Information")
+#define GUINewConfiguration	("New configuration")
 #define GUILoadScene		("Load Shapes...")
 #define GUILoadedScene		("") // empty for having more gui space
 #define GUIShapesNumShapes	("# Shapes:\t")
@@ -121,5 +130,7 @@ private:
 #define GUIEffectsTitle			("Effects Information")
 #define GUIToggleFullScreen		("Full Screen")
 #define GUIEffectsViewParams	("Show Animation Parameters")
-
+#define GUIShowPlugins	("Installed plugins...")
+#define GUIShapeTypesInfo "Installed shape types"
+#define GUIEffectTypesInfo "Installed effect types"
 

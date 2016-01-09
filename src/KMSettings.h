@@ -3,6 +3,8 @@
 // needed for using OF constants
 #include "ofMain.h"
 
+#define KM_VERSION "0.2 alpha (master)"
+
 // helpful for debugging
 #define KARMAMAPPER_DEBUG true
 

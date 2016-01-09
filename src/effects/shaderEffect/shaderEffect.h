@@ -34,6 +34,15 @@ public:
 	void update(const animationParams& params);
 	void reset();
 	
+	// #########
+	// GUI STUFF
+	virtual bool printCustomEffectGui();
+	
+	// #########
+	// LOAD & SAVE FUNCTIONS
+	virtual bool saveToXML(ofxXmlSettings& xml ) const;
+	virtual bool loadFromXML(ofxXmlSettings& xml);
+	
 	// controller functions
 	bool randomizePresets();
 	
@@ -42,7 +51,9 @@ public:
 	virtual void onSetEventListener(mirOnSetEventArgs &_args);
 	
 protected:
+	bool setShaderToyVariables; // todo
 	int onSetCalls;
+	string vertexShader, fragmentShader;
 	ofShader shader;
 	ofFbo fbo; // for compatibility issues, we need a specific fbo object
 	
@@ -50,3 +61,5 @@ private:
 	
 	
 };
+
+#define GUIShaderPanel "Shaders"
