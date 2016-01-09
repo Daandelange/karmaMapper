@@ -864,6 +864,7 @@ void animationController::draw(ofEventArgs& event){
 				ImGui::Text( "Number of effects : %u", (int) effects.size() );
 				
 				ImGui::Separator();
+				ImGui::Separator();
 				
 				if(getNumEffects()>0){
 					if (ImGui::TreeNode("All Effects")){
@@ -922,13 +923,15 @@ void animationController::draw(ofEventArgs& event){
 									e->toggleGuiWindow();
 								}
 								if (ImGui::IsItemHovered()){
-									ImGui::SetTooltip("Todo: show effect status here");
+									ImGui::SetTooltip("Click to edit)\nTodo: show effect status here");
 								}
 							
 								ImGui::NextColumn();// ImGui::SameLine(60);
 								//ImGui::Text( "%s", s->getName().c_str() );
 								if( ImGui::Selectable(e->getName().c_str(), false)){//&e->isSelected ) ){
 									//s->isSelected = !s->isSelected;
+									e->toggleGuiWindow();
+									// todo: resolve namespace conflicts here
 								}
 								ImGui::NextColumn();// ImGui::SameLine(180);
 								ImGui::Text("%s", (*it)->getType().c_str() );
@@ -941,6 +944,28 @@ void animationController::draw(ofEventArgs& event){
 							//}
 						}
 						ImGui::Columns(1);
+						
+						ImGui::Spacing();
+						ImGui::Spacing();
+						
+						if( ImGui::Button("Add new...") ){
+							ImGui::OpenPopup("Add new shape...");
+						}
+						ImGui::SameLine();
+						//ImGui::Text(selected_fish == -1 ? "<None>" : names[selected_fish]);
+						if (ImGui::BeginPopup("Add new shape...")){
+							ImGui::Separator();
+							for(auto it = effect::factory::getEffectRegistry().begin(); it!= effect::factory::getEffectRegistry().end(); ++it){
+								if ( ImGui::Selectable( it->first.c_str() )){
+									basicEffect* e = effect::create(it->first);
+									if( e != nullptr ){
+										e->initialise(animationParams.params);
+										effects.push_back( e );
+									}
+								}
+							}
+							ImGui::EndPopup();
+						}
 						
 						ImGui::TreePop();
 					}

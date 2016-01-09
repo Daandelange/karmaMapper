@@ -49,8 +49,6 @@ bool basicEffect::initialise(const animationParams& params){
 	// set this when done
 	isInitialised = true;
 	isLoading = false;
-	bShowGuiWindow = false;
-	effectName = "";
 	
 	return isInitialised;
 }
@@ -97,6 +95,7 @@ void basicEffect::update(){
 void basicEffect::reset(){
 	effectMutex.lock();
 	
+	
 	// todo: do this in _reset() which then calls reset();
 	aliveSince=0;
 	startTime=ofGetSystemTime();
@@ -108,6 +107,8 @@ void basicEffect::reset(){
 	hasError = false;
 	isEnabled = false;
 	isLoading = false;
+	bShowGuiWindow = false;
+	effectName = effectType;
 	
 	overallBoundingBox = ofRectangle(0,0,0,0);
 	
