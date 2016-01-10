@@ -33,16 +33,16 @@ bool shaderEffect::initialise(const animationParams& params){
 	// init values
 	basicEffect::initialise(params);
 	
-	isLoading = true;
-	isInitialised = false;
+	bIsLoading = true;
+	bInitialised = false;
 	onSetCalls = 0;
 	
 	// do stuff
 	ofEnableAlphaBlending();
 	
 	// set this when done
-	isInitialised = true;
-	isLoading = false;
+	bInitialised = true;
+	bIsLoading = false;
 	
 	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
 	fbo.begin();
@@ -51,7 +51,7 @@ bool shaderEffect::initialise(const animationParams& params){
 	
 	ofAddListener(mirReceiver::mirOnSetEvent, this, &shaderEffect::onSetEventListener);
 	
-	return isInitialised;
+	return bInitialised;
 }
 
 bool shaderEffect::render(const animationParams &params){
@@ -155,8 +155,8 @@ void shaderEffect::reset(){
 	
 	// effect type must match with class
 	effectType = "shaderEffect";
-	vertexShader = "";
-	fragmentShader = "";
+	vertexShader = effectFolder(ShaderEffectDefaultVert);
+	fragmentShader = effectFolder(ShaderEffectDefaultFrag);
 }
 
 // - - - - - - -
@@ -260,13 +260,13 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 		// todo: trigger shader not found errors here
 		fragmentShader = "";
 		vertexShader = "";
-		hasError = true;
+		bHasError = true;
 		return true;
 	}
 	else{
 		fragmentShader = _frag;
 		vertexShader = _vert;
-		hasError = false;
+		bHasError = false;
 		return false;
 	}
 	

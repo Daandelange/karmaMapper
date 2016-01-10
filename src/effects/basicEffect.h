@@ -103,6 +103,7 @@ public:
 	//virtual void transitionIn();
 	//virtual void transitionOut();
 	//void updateTransitionState();
+	string effectFolder(string _file) const;
 	
 	//void setShader(ofShader& _shader);
 	void updateBoundingBox();

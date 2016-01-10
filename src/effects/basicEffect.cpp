@@ -270,6 +270,11 @@ bool basicEffect::randomizePresets(){
 	return true;
 }
 
+// formats URLS for getting files within the effect folder itself
+string basicEffect::effectFolder(string _file) const{
+	return ofToDataPath( ((string)"../../effects/").append(getType()).append(_file));
+}
+
 void basicEffect::updateBoundingBox(){
 	// no shapes ?
 	if(shapes.size()==0){

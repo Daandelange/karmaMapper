@@ -16,6 +16,9 @@
 #include "animationParams.h"
 #include "mirReceiver.h"
 
+#define ShaderEffectDefaultFrag "defaultShader.frag"
+#define ShaderEffectDefaultVert "defaultShader.vert"
+
 struct animationParams;
 
 // todo : add statistics to effects. Track their rendering time so we have an overview of their rendering time.
