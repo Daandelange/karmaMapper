@@ -18,11 +18,6 @@
 shaderEffect::shaderEffect(){
 	
 	shaderEffect::reset();
-	
-	// effect type must match with class
-	effectType = "shaderEffect";
-	vertexShader = "";
-	fragmentShader = "";
 }
 
 shaderEffect::~shaderEffect(){
@@ -157,6 +152,11 @@ void shaderEffect::update(const animationParams& params){
 // resets all values
 void shaderEffect::reset(){
 	basicEffect::reset();
+	
+	// effect type must match with class
+	effectType = "shaderEffect";
+	vertexShader = "";
+	fragmentShader = "";
 }
 
 // - - - - - - -

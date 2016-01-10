@@ -40,17 +40,17 @@ bool basicEffect::initialise(const animationParams& params){
 	
 	basicEffect::reset();
 	
-	isLoading = true;
+	bIsLoading = true;
 	
 	// do specific stuff here
 	// eg connect with database, setup a physical device, etc.
 	// could this be multi threaded ?
 	
 	// set this when done
-	isInitialised = true;
-	isLoading = false;
+	bInitialised = true;
+	bIsLoading = false;
 	
-	return isInitialised;
+	return bInitialised;
 }
 
 // Usefull ?
@@ -103,10 +103,10 @@ void basicEffect::reset(){
 	shapes.clear();
 	shapes.resize(0);
 	
-	isInitialised = false;
-	hasError = false;
-	isEnabled = false;
-	isLoading = false;
+	bInitialised = false;
+	bHasError = false;
+	bEnabled = false;
+	bIsLoading = false;
 	bShowGuiWindow = false;
 	effectName = effectType;
 	
@@ -116,11 +116,11 @@ void basicEffect::reset(){
 }
 
 void basicEffect::enable(){
-	isEnabled=true;
+	bEnabled=true;
 }
 
 void basicEffect::disable(){
-	isEnabled=false;
+	bEnabled=false;
 }
 
 void basicEffect::setShowGuiWindow(const bool &_b){
@@ -238,8 +238,12 @@ bool basicEffect::loadFromXML(ofxXmlSettings& xml){
 // EFFECT PROPERTIES
 // - - - - - - -
 	
-bool basicEffect::isReady() const{
-	return isInitialised && !hasError && !isLoading;
+bool basicEffect::isReady() const {
+	return bInitialised && !bHasError && !bIsLoading;
+}
+
+bool basicEffect::isLoading() const {
+	return bInitialised && bIsLoading;
 }
 
 string basicEffect::getName() const {
@@ -252,6 +256,10 @@ bool basicEffect::isType(const string _type) const {
 
 string basicEffect::getType() const{
 	return effectType;
+}
+
+string basicEffect::shortStatus(){
+	return "I'm fine! ;)";
 }
 
 // - - - - - - -

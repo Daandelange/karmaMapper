@@ -39,17 +39,17 @@ bool distortEffect::initialise(const animationParams& params){
 	// init values
 	basicEffect::initialise(params);
 	
-	isLoading = true;
-	isInitialised = false;
+	bIsLoading = true;
+	bInitialised = false;
 	
 	// do stuff
 	ofEnableAlphaBlending();
 	
 	// set this when done
-	isInitialised = true;
-	isLoading = false;
+	bInitialised = true;
+	bIsLoading = false;
 	
-	return isInitialised;
+	return bInitialised;
 }
 
 bool distortEffect::render(const animationParams &params){

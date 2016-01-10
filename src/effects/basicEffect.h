@@ -92,9 +92,11 @@ public:
 	
 	// effect properties
 	bool isReady() const;
+	bool isLoading() const;
 	string getName() const;
 	bool isType(const string _type) const;
 	string getType() const;
+	virtual string shortStatus();
 	
 	// controller functions
 	virtual bool randomizePresets();
@@ -127,10 +129,10 @@ protected:
 	string effectUID;
 	//effectParams params;
 	
-	bool hasError;
-	bool isEnabled;
-	bool isInitialised;
-	bool isLoading;
+	bool bHasError;
+	bool bEnabled;
+	bool bInitialised;
+	bool bIsLoading;
 	bool bShowGuiWindow;
 	string effectName; // must stay unique
 	

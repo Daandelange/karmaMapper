@@ -45,6 +45,8 @@ public:
 	bool start();
 	bool stop();
 	bool isEnabled() const;
+	bool removeEffect( basicEffect* _e);
+	bool addEffect( basicEffect* _e );
 
 	// load & save
 	bool loadConfiguration(const string& _file = "");

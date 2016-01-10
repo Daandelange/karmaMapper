@@ -6,6 +6,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 31</shapeName>
         <vectors>
             <vector>
                 <X>30.000000000</X>
@@ -32,6 +33,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 32</shapeName>
         <vectors>
             <vector>
                 <X>33.000000000</X>
@@ -58,6 +60,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 33</shapeName>
         <vectors>
             <vector>
                 <X>34.000000000</X>
@@ -84,6 +87,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 34</shapeName>
         <vectors>
             <vector>
                 <X>34.000000000</X>
@@ -110,6 +114,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 24</shapeName>
         <vectors>
             <vector>
                 <X>38.000000000</X>
@@ -136,6 +141,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 31</shapeName>
         <vectors>
             <vector>
                 <X>-8.000000000</X>
@@ -186,6 +192,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 32</shapeName>
         <vectors>
             <vector>
                 <X>13.000000000</X>
@@ -236,6 +243,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 33</shapeName>
         <vectors>
             <vector>
                 <X>-8.000000000</X>
@@ -286,6 +294,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 21</shapeName>
         <vectors>
             <vector>
                 <X>12.000000000</X>
@@ -312,6 +321,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 34</shapeName>
         <vectors>
             <vector>
                 <X>14.000000000</X>
@@ -362,6 +372,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 24</shapeName>
         <vectors>
             <vector>
                 <X>10.000000000</X>
@@ -388,6 +399,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>2</groupID>
+        <shapeName>niche 31</shapeName>
         <vectors>
             <vector>
                 <X>11.000000000</X>
@@ -414,6 +426,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>2</groupID>
+        <shapeName>niche 32</shapeName>
         <vectors>
             <vector>
                 <X>13.000000000</X>
@@ -440,6 +453,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>1</groupID>
+        <shapeName>niche 21</shapeName>
         <vectors>
             <vector>
                 <X>15.000000000</X>
@@ -466,6 +480,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>1</groupID>
+        <shapeName>niche 22</shapeName>
         <vectors>
             <vector>
                 <X>13.000000000</X>
@@ -492,6 +507,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 22</shapeName>
         <vectors>
             <vector>
                 <X>-11.000000000</X>
@@ -517,7 +533,8 @@
             <Y>320.000000000</Y>
         </position>
         <shapeType>vertexShape</shapeType>
-        <groupID>3</groupID>
+        <groupID>0</groupID>
+        <shapeName>column 23</shapeName>
         <vectors>
             <vector>
                 <X>-11.000000000</X>
@@ -544,6 +561,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 21</shapeName>
         <vectors>
             <vector>
                 <X>-36.000000000</X>
@@ -570,6 +588,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 22</shapeName>
         <vectors>
             <vector>
                 <X>-34.000000000</X>
@@ -596,6 +615,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 23</shapeName>
         <vectors>
             <vector>
                 <X>-33.000000000</X>
@@ -622,6 +642,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 35</shapeName>
         <vectors>
             <vector>
                 <X>-33.000000000</X>
@@ -648,6 +669,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 25</shapeName>
         <vectors>
             <vector>
                 <X>-34.000000000</X>
@@ -674,6 +696,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 35</shapeName>
         <vectors>
             <vector>
                 <X>-9.000000000</X>
@@ -724,6 +747,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 25</shapeName>
         <vectors>
             <vector>
                 <X>-11.000000000</X>
@@ -750,6 +774,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 26</shapeName>
         <vectors>
             <vector>
                 <X>-13.000000000</X>
@@ -776,6 +801,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 11</shapeName>
         <vectors>
             <vector>
                 <X>-37.000000000</X>
@@ -802,6 +828,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 12</shapeName>
         <vectors>
             <vector>
                 <X>-34.000000000</X>
@@ -828,6 +855,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 13</shapeName>
         <vectors>
             <vector>
                 <X>-33.000000000</X>
@@ -854,6 +882,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>window 14</shapeName>
         <vectors>
             <vector>
                 <X>-32.000000000</X>
@@ -880,6 +909,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>4</groupID>
+        <shapeName>door</shapeName>
         <vectors>
             <vector>
                 <X>-38.000000000</X>
@@ -906,6 +936,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 11</shapeName>
         <vectors>
             <vector>
                 <X>-9.000000000</X>
@@ -932,6 +963,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 12</shapeName>
         <vectors>
             <vector>
                 <X>-10.000000000</X>
@@ -958,6 +990,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 36</shapeName>
         <vectors>
             <vector>
                 <X>-9.000000000</X>
@@ -984,6 +1017,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 13</shapeName>
         <vectors>
             <vector>
                 <X>-12.000000000</X>
@@ -1010,6 +1044,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>column 14</shapeName>
         <vectors>
             <vector>
                 <X>-8.000000000</X>

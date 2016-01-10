@@ -59,9 +59,9 @@ bool lineEffect::initialise(const animationParams& params){
 	//ofEnableSmoothing(); // enables smooth lines (makes no difference)
 	renderer.end();
 	
-	isInitialised = renderer.isAllocated();
+	bInitialised = renderer.isAllocated();
 	
-	return isInitialised;
+	return bInitialised;
 }
 
 // update --> animation

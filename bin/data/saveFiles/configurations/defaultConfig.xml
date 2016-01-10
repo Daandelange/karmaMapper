@@ -1,0 +1,48 @@
+<sceneSettings>
+    <shapesFile>Vendome_Full_Small.xml</shapesFile>
+</sceneSettings>
+<effects>
+    <effect>
+        <effectType>shaderEffect</effectType>
+        <effectName>myShadereffect</effectName>
+        <boundShapes>
+            <shape type="vertexShape" name="window 31">window 31</shape>
+            <shape type="vertexShape" name="window 32">window 32</shape>
+            <shape type="vertexShape" name="window 33">window 33</shape>
+            <shape type="vertexShape" name="window 34">window 34</shape>
+            <shape type="vertexShape" name="window 24">window 24</shape>
+            <shape type="vertexShape" name="column 31">column 31</shape>
+            <shape type="vertexShape" name="column 32">column 32</shape>
+            <shape type="vertexShape" name="column 33">column 33</shape>
+            <shape type="vertexShape" name="column 21">column 21</shape>
+            <shape type="vertexShape" name="column 34">column 34</shape>
+            <shape type="vertexShape" name="column 24">column 24</shape>
+            <shape type="vertexShape" name="niche 31">niche 31</shape>
+            <shape type="vertexShape" name="niche 32">niche 32</shape>
+            <shape type="vertexShape" name="niche 21">niche 21</shape>
+            <shape type="vertexShape" name="niche 22">niche 22</shape>
+            <shape type="vertexShape" name="column 22">column 22</shape>
+            <shape type="vertexShape" name="column 23">column 23</shape>
+            <shape type="vertexShape" name="window 21">window 21</shape>
+            <shape type="vertexShape" name="window 22">window 22</shape>
+            <shape type="vertexShape" name="window 23">window 23</shape>
+            <shape type="vertexShape" name="window 35">window 35</shape>
+            <shape type="vertexShape" name="window 25">window 25</shape>
+            <shape type="vertexShape" name="column 35">column 35</shape>
+            <shape type="vertexShape" name="column 25">column 25</shape>
+            <shape type="vertexShape" name="column 26">column 26</shape>
+            <shape type="vertexShape" name="window 11">window 11</shape>
+            <shape type="vertexShape" name="window 12">window 12</shape>
+            <shape type="vertexShape" name="window 13">window 13</shape>
+            <shape type="vertexShape" name="window 14">window 14</shape>
+            <shape type="vertexShape" name="door">door</shape>
+            <shape type="vertexShape" name="column 11">column 11</shape>
+            <shape type="vertexShape" name="column 12">column 12</shape>
+            <shape type="vertexShape" name="column 36">column 36</shape>
+            <shape type="vertexShape" name="column 13">column 13</shape>
+            <shape type="vertexShape" name="column 14">column 14</shape>
+        </boundShapes>
+        <vertexShader>../../src/effects/shaderEffect/defaultShader.vert</vertexShader>
+        <fragmentShader>../../src/effects/shaderEffect/defaultShader.frag</fragmentShader>
+    </effect>
+</effects>

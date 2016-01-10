@@ -270,6 +270,20 @@ bool animationController::isEnabled() const {
 	return bEnabled;
 }
 
+// warning: if you use it, make sure to update your iterator after this if using one
+bool animationController::removeEffect(basicEffect *_e){
+	if( _e == nullptr) return false;
+	
+	auto it=std::find(effects.cbegin(), effects.cend(), _e);
+	if( it != effects.cend() ){
+		_e->disable();
+		//delete _e;
+		effects.erase( it );
+	}
+	
+	return true;
+}
+
 // - - - - - - - -
 // LOAD & SAVE
 // - - - - - - - -
@@ -863,6 +877,25 @@ void animationController::draw(ofEventArgs& event){
 				ImGui::Separator();
 				ImGui::Text( "Number of effects : %u", (int) effects.size() );
 				
+				if( ImGui::Button("Add new...") ){
+					ImGui::OpenPopup("Add new shape...");
+				}
+				ImGui::SameLine();
+				//ImGui::Text(selected_fish == -1 ? "<None>" : names[selected_fish]);
+				if (ImGui::BeginPopup("Add new shape...")){
+					ImGui::Separator();
+					for(auto it = effect::factory::getEffectRegistry().begin(); it!= effect::factory::getEffectRegistry().end(); ++it){
+						if ( ImGui::Selectable( it->first.c_str() )){
+							basicEffect* e = effect::create(it->first);
+							if( e != nullptr ){
+								e->initialise(animationParams.params);
+								effects.push_back( e );
+							}
+						}
+					}
+					ImGui::EndPopup();
+				}
+				
 				ImGui::Separator();
 				ImGui::Separator();
 				
@@ -885,13 +918,14 @@ void animationController::draw(ofEventArgs& event){
 						
 						ImGui::Separator();
 						
-						ImGui::Columns(4);
+						ImGui::Columns(5);
 						static bool firstTime = true;
 						if( firstTime ){
 							ImGui::SetColumnOffset(0, 00);
-							ImGui::SetColumnOffset(1, 70);
-							ImGui::SetColumnOffset(2, 230);
-							ImGui::SetColumnOffset(3, 330);
+							ImGui::SetColumnOffset(1, 50);
+							ImGui::SetColumnOffset(2, 220);
+							ImGui::SetColumnOffset(3, 300);
+							ImGui::SetColumnOffset(3, 350);
 							firstTime = false;
 						}
 						
@@ -900,12 +934,14 @@ void animationController::draw(ofEventArgs& event){
 						ImGui::Text("Name"); ImGui::NextColumn();
 						ImGui::Text("Type"); ImGui::NextColumn();
 						ImGui::Text("Bound Shapes"); ImGui::NextColumn();
+						ImGui::Text("Rm?"); ImGui::NextColumn();
 						
 						ImGui::Separator();
 						
 						for( auto it=effects.begin(); it!=effects.end(); ++it ){
 							basicEffect* e = *it;
 							
+							// apply filters
 							if( effectTypeFilter > 0 ){
 								auto effectIt = effectsByType.begin();
 								std::advance( effectIt, effectTypeFilter );
@@ -913,59 +949,56 @@ void animationController::draw(ofEventArgs& event){
 								if( e->getType() == effectIt->first ) continue;
 							}
 							
-							//if( filter.PassFilter( e->getName().c_str() ) ){
+							ImGui::PushID(e);
+							
+							ImVec4 statusColor( !e->isReady()*1.f, e->isReady()*1.f + (!e->isReady() && !e->isLoading())*.5f, 0.f, 1.f );
+							ImGui::Text("x");
+							ImGui::NextColumn();// ImGui::SameLine(60);
+							//ImGui::Text( "%s", s->getName().c_str() );
+							
+							if( ImGui::Selectable(e->getName().c_str(), false)){//&e->isSelected ) ){
+								//s->isSelected = !s->isSelected;
+								e->toggleGuiWindow();
+								// todo: resolve namespace conflicts here
+							}
+							if (ImGui::IsItemHovered()){
+								ImGui::SetTooltip( "%s", e->shortStatus().c_str() );
+							}
+
+							ImGui::NextColumn();// ImGui::SameLine(180);
+							ImGui::Text("%s", (*it)->getType().c_str() );
+							ImGui::NextColumn();// ImGui::SameLine(100);
+						
+							ImGui::Text("%i", (*it)->getNumShapes() );
+							ImGui::NextColumn();
+							
+							//ImGui::PushID(e);
+							if(ImGui::Button("x")){
+								ImGui::OpenPopup(e->getName().insert(0, "rm-").c_str());
+							}
+							if( ImGui::BeginPopup(e->getName().insert(0, "rm-").c_str()) ){
+								ImGui::Text("Remove? ");
+								ImGui::SameLine();
+								if(ImGui::Button("Cancel")){
+									ImGui::CloseCurrentPopup();
+								} ImGui::SameLine();
+								if( ImGui::Button("Ok") ){
+									removeEffect(e);
+									it--; // keep valid iterator
+								}
 								
-								//ImVec4 statusColor( !s->isReady()*1.f, s->isReady()*1.f + (!s->isReady() && !e->hasFailed())*.5f, 0.f, 1.f );
-								
-								// todo: let users enable/disable shapes ?
+								ImGui::EndPopup();
+							}
+							//ImGui::PopID();
 							
-								if( ImGui::Button("[i]") ){
-									e->toggleGuiWindow();
-								}
-								if (ImGui::IsItemHovered()){
-									ImGui::SetTooltip("Click to edit)\nTodo: show effect status here");
-								}
+							ImGui::NextColumn();
 							
-								ImGui::NextColumn();// ImGui::SameLine(60);
-								//ImGui::Text( "%s", s->getName().c_str() );
-								if( ImGui::Selectable(e->getName().c_str(), false)){//&e->isSelected ) ){
-									//s->isSelected = !s->isSelected;
-									e->toggleGuiWindow();
-									// todo: resolve namespace conflicts here
-								}
-								ImGui::NextColumn();// ImGui::SameLine(180);
-								ImGui::Text("%s", (*it)->getType().c_str() );
-								ImGui::NextColumn();// ImGui::SameLine(100);
-							
-								ImGui::Text("%i", (*it)->getNumShapes() );
-								ImGui::NextColumn();
-							
-								// TODO: add shape-specific information line ?
-							//}
+							ImGui::PopID();
 						}
 						ImGui::Columns(1);
 						
 						ImGui::Spacing();
 						ImGui::Spacing();
-						
-						if( ImGui::Button("Add new...") ){
-							ImGui::OpenPopup("Add new shape...");
-						}
-						ImGui::SameLine();
-						//ImGui::Text(selected_fish == -1 ? "<None>" : names[selected_fish]);
-						if (ImGui::BeginPopup("Add new shape...")){
-							ImGui::Separator();
-							for(auto it = effect::factory::getEffectRegistry().begin(); it!= effect::factory::getEffectRegistry().end(); ++it){
-								if ( ImGui::Selectable( it->first.c_str() )){
-									basicEffect* e = effect::create(it->first);
-									if( e != nullptr ){
-										e->initialise(animationParams.params);
-										effects.push_back( e );
-									}
-								}
-							}
-							ImGui::EndPopup();
-						}
 						
 						ImGui::TreePop();
 					}
