@@ -40,14 +40,13 @@ public:
 	
 	// listeners
 	void update( ofEventArgs& event );
-	//void guiEvent( ofxUIEventArgs &e );
 	
 protected:
 	// gui
-	ofxGuiGroup gui;
-	ofParameter<string> guiNumRoutes;
-	ofParameter<string> guiStatus;
-	ofParameter<bool> bGuiEnabled;
+	//ofxGuiGroup gui;
+	//ofParameter<string> guiNumRoutes;
+	//ofParameter<string> guiStatus;
+	//ofParameter<bool> bGuiEnabled;
 	list<OSCNode* > nodes;
 	
 private:

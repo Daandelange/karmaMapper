@@ -259,7 +259,7 @@ string basicEffect::getType() const{
 }
 
 string basicEffect::shortStatus(){
-	return "I'm fine! ;)";
+	return "I'm fine! ;)\n That is my status.";
 }
 
 // - - - - - - -

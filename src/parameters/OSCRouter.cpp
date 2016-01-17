@@ -16,32 +16,11 @@ OSCRouter::OSCRouter(  ){
 	// init essential variables
 	bEnabled = false;
 	nodes.clear();
-	
-	// build GUI
-	gui.setup("OSC Router");
-	gui.add( new ofxGuiSpacer());
-	
-	gui.add( (new ofxLabel())->setup("Routing OSC since 2015...","") );
-	gui.add( new ofxGuiSpacer());
-	
-	
-	gui.add( (new ofxLabel())->setup("Stats...","") );
-	guiStatus.set(GUIOSCRouterStatus, "");
-	gui.add( (new ofxLabel(guiStatus)) );
-	guiNumRoutes.set(GUIOSCRouterNumRoutes, "");
-	
-	bGuiEnabled = false;
-	//ofAddListener(gui->newGUIEvent, this, &OSCRouter::guiEvent);
 }
 
 OSCRouter::~OSCRouter(){
 	// remove listeners
 	ofRemoveListener( ofEvents().update , this, &OSCRouter::update );
-	
-	// rm GUI stuff correctly
-	//ofRemoveListener( gui->newGUIEvent, this, &OSCRouter::guiEvent );
-	bGuiEnabled = false;
-	guiNumRoutes = "";
 	
 	// inform nodes to detach listeners
 	if(nodes.size() > 0) for( auto it=nodes.rbegin(); it!=nodes.rend(); it++){
@@ -128,8 +107,6 @@ bool OSCRouter::start(int _port){
 	// listen
 	ofAddListener( ofEvents().update , this, &OSCRouter::update );
 	
-	// gui
-	bGuiEnabled = true;
 	
 	// OSC
 	setup( _port );
@@ -183,30 +160,7 @@ void OSCRouter::update(ofEventArgs &event){
 	if(!isEnabled()) return;
 	
 	// update GUI data
-	guiStatus = ofToString(isEnabled()?"Running":"Down");
-	guiNumRoutes = ofToString(nodes.size());
+	//guiStatus = ofToString(isEnabled()?"Running":"Down");
+	//guiNumRoutes = ofToString(nodes.size());
 	
 }
-
-//void OSCRouter::guiEvent(ofxUIEventArgs &e){
-//	string name = e.getName();
-//	
-//	// scan for open dropdowns
-//	// (dirty) bypass for issue https://github.com/rezaali/ofxUI/issues/68
-//	//ofxUIDropDownList* addShapeDDL = (ofxUIDropDownList*) gui->getWidget("Add Shape");
-//	//bool dropdownOpen = addShapeDDL->isOpen();
-//	//if( selectConfigFileOpen && name != "Configuration File") return;
-//	
-//	
-//	// interface options
-//	// - - - - - - - - -
-//	if(name==GUIOSCRouterNumRoutes){
-//		return;
-//	}
-//	
-//	#ifdef KARMAMAPPER__DEBUG
-//	else {
-//		ofLogNotice("OSCRouter::guiEvent") << "Unknown GUI event: " << name << endl;
-//	}
-//	#endif
-//}

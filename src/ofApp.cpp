@@ -29,7 +29,7 @@ void ofApp::setup(){
 	controller.loadLastConfiguration();
 	
 	// enable animation controller
-	controller.start();
+	//controller.start();
 	
 	// start Ableton Liveset Decoder
 	//ofx::AbletonLiveSet::LiveSet LS;

@@ -41,6 +41,8 @@ public:
 	// basic functions
 	bool start();
 	bool stop();
+	bool enable(const bool& _status);
+	bool isEnabled() const;
 	
 	// listeners
 	//void oscIn();
@@ -48,14 +50,12 @@ public:
 	static ofEvent<mirTempoEventArgs> mirTempoEvent;
 	static ofEvent<mirOnSetEventArgs> mirOnSetEvent;
 	
-	// getters
-	bool isEnabled() const;
-	
 	// mir getter
 	static mirData mirCache;
 	
 protected:
 	
+	bool bInitialised;
 	bool bEnabled;
 	
 	// setting variables

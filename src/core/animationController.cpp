@@ -97,6 +97,7 @@ bool animationController::start(){
 	oscRouter.start();
 	
 	// enable mirOSCReceiver
+	mirOSCReceiver.enable(true);
 	mirOSCReceiver.start();
 	oscRouter.addNode( &mirOSCReceiver );
 	

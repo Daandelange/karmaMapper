@@ -115,8 +115,10 @@ void lineEffect::update(const animationParams& params){
 	if(!isReady()) return;
 	
 	// initial shape setup. Dirty to do it here. // todo
-	if(fromShape==NULL) fromShape = shapes[ round( ofRandom(-0.49f, shapes.size()-0.51f) )];
-	if(toShape==NULL) toShape = shapes[ round( ofRandom(-0.49f, -0.51f+shapes.size()) )];
+	if( shapes.size()>0 ){
+		if(fromShape==NULL) fromShape = shapes[ round( ofRandom(-0.49f, shapes.size()-0.51f) )];
+		if(toShape==NULL) toShape = shapes[ round( ofRandom(-0.49f, -0.51f+shapes.size()) )];
+	}
 	
 	// tmp
 	/*if(lines.size()==0){
