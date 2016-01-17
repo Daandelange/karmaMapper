@@ -46,7 +46,6 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 	string addr = _msg.getAddress();
 	
 	// handle messages coming from karma Sound Analyser
-	cout << addr.substr(0,6) << endl;
 	if( addr.substr(0,6)=="/kmsa/" ){
 		string subAddr = addr.substr(5,addr.npos);
 		
@@ -133,13 +132,11 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 			
 			return true;
 		}
-	}
-//	else if( addr.compare("") == 0 ){
-//		
-//		return true;
-//	}
-	else {
-		//cout << "Not recognized OSC = " << addr << endl;
+		
+		// unrecognized /kmsa/ messge
+		else {
+			return true; // flags the message as 'intercepted'
+		}
 	}
 	
 	// unrecognized messge
