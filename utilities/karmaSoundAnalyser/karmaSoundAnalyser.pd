@@ -1,4 +1,4 @@
-#N canvas 72 23 1254 676 10;
+#N canvas -1219 -10 1254 676 10;
 #X declare -lib mrpeach;
 #X obj 17 272 adc~;
 #X msg 159 566 disconnect;
@@ -34,7 +34,7 @@
 #X obj -1042 471 timer;
 #X floatatom -1041 502 5 0 0 0 - - -;
 #X obj -1041 554 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1
-0 1;
+1 1;
 #X text -1185 339 Attack;
 #X obj -1114 409 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0
 10 -262144 -1 -1 0 256;
@@ -319,7 +319,7 @@ information.;
 #X obj 238 251 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X text 183 249 (on/off);
-#X obj 697 429 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 697 429 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X floatatom 757 428 5 0 0 0 - - -;
 #X obj 842 407 r fiddle_raw_pitch;
@@ -391,13 +391,13 @@ ROUTING;
 #X text 116 269 FFT & MORE ANALYSIS;
 #X obj 61 295 loadbang;
 #X text 25 632 http://en.flossmanuals.net/pure-data/ch065_osc/;
-#N canvas 178 23 997 667 aubio 1;
+#N canvas 178 23 997 667 aubio 0;
 #X obj 41 161 aubioonset~;
 #X obj 41 196 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 462 164 aubiopitch~;
 #X obj 462 211 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
--262144 -1 -1 1 256;
+-262144 -1 -1 0 256;
 #X obj 130 197 bng 15 50 10 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 217 198 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
@@ -495,10 +495,10 @@ ROUTING;
 #X obj 158 544 s aubio_bpm;
 #X obj 716 164 aubiotss~;
 #X obj 716 249 vsl 15 100 0 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 9900 1;
+-1 -1 0 1;
 #X obj 716 188 env~;
 #X obj 767 249 vsl 15 100 0 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 9900 1;
+-1 -1 0 1;
 #X obj 767 189 env~;
 #X obj 716 141 hsl 100 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
 -1 -1 0 0;
@@ -568,9 +568,9 @@ changed. (Sort of flood filter);
 #X restore 577 332 pd clean_signal;
 #X obj 560 378 r aubio_reset;
 #X obj 580 400 hsl 100 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 9900 1;
+-1 -1 0 1;
 #X obj 580 418 hsl 100 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 9900 1;
+-1 -1 0 1;
 #X obj 496 305 hsl 40 15 -0.1 0.1 0 0 empty empty empty -2 -8 0 10
 -262144 -1 -1 0 1;
 #X floatatom 154 68 5 0 0 0 - - -;
@@ -590,7 +590,7 @@ changed. (Sort of flood filter);
 #X obj 716 210 / 127;
 #X obj 722 393 loadbang;
 #X obj 787 251 vsl 15 100 -1 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 5854 1;
+-1 -1 4950 1;
 #X obj 846 324 -;
 #X obj 577 310 * 5;
 #X obj 478 344 -;
@@ -624,7 +624,7 @@ changed. (Sort of flood filter);
 #X obj 291 209 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 291 188 i 1;
-#X obj 716 535 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 716 535 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 716 467 == 0;
 #X text 737 533 isPlaying;
@@ -771,7 +771,7 @@ changed. (Sort of flood filter);
 ;
 #X obj 298 156 r aubio_is_playing;
 #X msg 433 173 send /aubioIsPlaying \$1;
-#X obj 415 173 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 415 173 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 15 368 -~;
 #X floatatom 15 415 5 0 0 0 - - -;

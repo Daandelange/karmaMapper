@@ -1,4 +1,4 @@
-#N canvas 0 22 926 535 10;
+#N canvas 21 40 265 295 10;
 #X obj 17 163 +;
 #X floatatom 169 73 5 0 0 2 numSamples - -, f 5;
 #X obj 17 249 outlet;
