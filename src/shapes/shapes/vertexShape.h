@@ -15,7 +15,7 @@
 class vertexShape : public basicShape {
 	
 public:
-	vertexShape();
+	vertexShape(const basicPoint _pos);
 	~vertexShape();
 	
 	// #########
@@ -49,7 +49,7 @@ public:
 	
 	static list<basicPoint> zeroList;
 	
-private:
+protected:
 	//bool hovered, selected;
 	//unsigned int numPoints;
 	

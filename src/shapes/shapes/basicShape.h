@@ -31,13 +31,13 @@ typedef list<basicPoint>& pointListRef; // without the typedef returning this ca
 class basicShape {
 	
 public:
-	basicShape();
+	basicShape(const basicPoint _pos);
 	virtual ~basicShape();
 	//const bool isShapeRegistered;
 	
 	// #########
 	// MAIN FUNCTIONS
-	void initialiseBasicVariables();
+	void initialiseBasicVariables(const basicPoint _pos);
 	virtual void sendToGPU();
 	
 	// #########
@@ -166,7 +166,7 @@ private:
 
 namespace shape
 {
-	basicShape* create(const std::string& name);
+	basicShape* create(const std::string& name, const basicPoint _pos);
 	void destroy(const basicShape* comp);
 	vector< std::string > getAllShapeTypes();
 }

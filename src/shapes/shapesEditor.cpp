@@ -191,6 +191,8 @@ void shapesEditor::draw() {
 	// only use computing power if in edit mode.
 	if( !isInEditMode() ) return;
 	
+	ofBackground(0,0,0);//
+	
 	ofSetColor(255);
 	background.draw(0,0);
 	
@@ -445,9 +447,8 @@ void shapesEditor::batchGuiEvent(ofxUIEventArgs &e){
 bool shapesEditor::addShape(string _shapeType){
 	
 	// todo: make this shape-specific (check if shape type exists)
-	vertexShape* s = new vertexShape();
 	
-	basicShape* result = insertShape(s);
+	basicShape* result = insertShape( shape::create( _shapeType, basicPoint(ofGetWidth()/2.f,ofGetHeight()/2.f) ) );
 	
 	//cout << "AddShape():: " << &result << "\t :: " << &s << endl;
 	if( result == NULL ) return false;
@@ -640,13 +641,10 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 		float offsetX = shapeCreationGui.getShape().x;
 		float offsetY = shapeCreationGui.getShape().y;
 		
-		for(auto it = shapeCreationGuiElements.begin(); it!=shapeCreationGuiElements.end(); ++it){
+		for(auto it = shapeCreationGuiElements.rbegin(); it!=shapeCreationGuiElements.rend(); ++it){
 			if( (*it)->getShape().inside(e.x, e.y) ){
 				shapeCreationGuiVisible = false;
-				basicShape* newShape = shape::create( (*it)->getName() );
-				
-				// place shape on click position
-				newShape->setPosition(lastRightClickPosition);
+				basicShape* newShape = shape::create( (*it)->getName(), lastRightClickPosition );
 				
 				// use same group ID as first active shape ?
 				if( selectedShapes.size() > 0 ) newShape->setGroupID( (*selectedShapes.begin())->getGroupID() );
@@ -677,8 +675,10 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 			}
 		}
 		// 2nd pass, prevent event propagation to allow no mouse interactions while being handled
-		if( !isInEditModeBatch() ) for(auto it=selectedShapes.begin(); it!=selectedShapes.end(); it++){
+		if( !isInEditModeBatch() && e.button==0 ) for(auto it=selectedShapes.begin(); it!=selectedShapes.end(); it++){
 			if( (*it)->getBoundingBox().inside( e.x, e.y )){
+				// toggle selection
+				selectShape(*it);
 				return;
 			}
 		}
@@ -691,7 +691,7 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 	
 	// let user select multiple shapes by clicking on them
 	if( e.button==0 && isInEditMode()){
-		for(auto it=shapes.begin(); it!=shapes.end(); it++){
+		for(auto it=shapes.rbegin(); it!=shapes.rend(); it++){
 			if( (*it)->isInside( e ) ){
 				bool allowMultiple = ofGetKeyPressed( OF_KEY_SHIFT) || ofGetKeyPressed( OF_KEY_RIGHT_SHIFT) || isInEditModeBatch();
 				

@@ -181,7 +181,7 @@ bool shapesScene::loadScene( const string _fileName ){
 			// Some code comes from:
 			// --> http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
 			string shapeType = sceneXML.getValue("shapeType", "basicShape");
-			basicShape* shape = shape::create(shapeType);
+			basicShape* shape = shape::create(shapeType, basicPoint(0,0) );
 			if( shape != nullptr ){
 				shapes.push_back( shape );
 				shapes.back()->loadFromXML( sceneXML );

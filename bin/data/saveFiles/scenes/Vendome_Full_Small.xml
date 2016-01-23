@@ -1,6 +1,33 @@
 <shapes>
     <shape>
         <position>
+            <X>512.000000000</X>
+            <Y>384.000000000</Y>
+        </position>
+        <shapeType>fullScreenShape</shapeType>
+        <groupID>-1</groupID>
+        <shapeName>4330170880</shapeName>
+        <vectors>
+            <vector>
+                <X>-512.000000000</X>
+                <Y>-384.000000000</Y>
+            </vector>
+            <vector>
+                <X>-512.000000000</X>
+                <Y>384.000000000</Y>
+            </vector>
+            <vector>
+                <X>512.000000000</X>
+                <Y>384.000000000</Y>
+            </vector>
+            <vector>
+                <X>512.000000000</X>
+                <Y>-384.000000000</Y>
+            </vector>
+        </vectors>
+    </shape>
+    <shape>
+        <position>
             <X>132.000000000</X>
             <Y>105.000000000</Y>
         </position>

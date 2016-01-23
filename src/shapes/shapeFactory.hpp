@@ -11,18 +11,21 @@
 
 #pragma once
 
+#include "basicPoint.h"
+class basicShape;
+
 // Standard libraries
 #include <map>
 #include <string>
 #include <utility>
 
-class basicShape;
+class basicPoint	;
 
 namespace shape
 {
 	namespace factory
 	{
-		typedef basicShape* (*CreateShapeFunc)();
+		typedef basicShape* (*CreateShapeFunc)(const basicPoint _pos);
 		typedef std::map<std::string, CreateShapeFunc> shapeRegistry;
 		
 		inline shapeRegistry& getShapeRegistry()
@@ -32,8 +35,8 @@ namespace shape
 		}
 		
 		template<class T>
-		basicShape* createShape() {
-			return new T;
+		basicShape* createShape(const basicPoint _pos) {
+			return new T(_pos);
 		}
 		
 		template<class T>
@@ -62,7 +65,7 @@ namespace shape
 				
 				if (ret.second == false) {
 					// This means there already is a shape registered to
-					// this name. You should handle this error as you see fit.
+					// this name. You should handle this error as you see.
 				}
 			}
 			

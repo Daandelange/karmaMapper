@@ -14,11 +14,11 @@
 // - - - - - -
 // CONSTRUCTORS
 // - - - - - -
-basicShape::basicShape() {
+basicShape::basicShape(const basicPoint _pos) {
 	
 	//if(this == &basicShape::nullShape) return;
 	
-	initialiseBasicVariables();
+	initialiseBasicVariables(_pos);
 	
 #ifdef KM_EDITOR_APP
 	buildBasicMenu();
@@ -48,9 +48,9 @@ basicShape::~basicShape(){
 // - - - - - - -
 // MAIN FUNCTIONS
 // - - - - - - -
-void basicShape::initialiseBasicVariables(){
+void basicShape::initialiseBasicVariables(const basicPoint _pos){
 	// set position
-	position = basicPoint( 0, 0 );
+	position = _pos;
 	boundingBox = ofRectangle(0,0,0,0);
 	groupID = -1;
 	hasError = false;
@@ -587,7 +587,7 @@ void basicShape::groupIDUpdated(int& val){
 // Bind with factory
 namespace shape
 {
-	basicShape* create(const std::string& name){
+	basicShape* create(const std::string& name, const basicPoint _pos){
 		//std::cout << "create() --> " << name << std::endl;
 		shape::factory::shapeRegistry& reg = shape::factory::getShapeRegistry();
 		shape::factory::shapeRegistry::iterator it = reg.find(name);
@@ -599,7 +599,7 @@ namespace shape
 		}
 		
 		shape::factory::CreateShapeFunc func = it->second;
-		return func();
+		return func(_pos);
 	}
 	
 	void destroy(const basicShape* comp){

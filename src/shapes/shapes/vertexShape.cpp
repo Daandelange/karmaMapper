@@ -19,7 +19,7 @@ list<basicPoint> vertexShape::zeroList = list<basicPoint>();
 // - - - - - - -
 // CONSTRUCTORS
 // - - - - - - -
-vertexShape::vertexShape(){
+vertexShape::vertexShape(const basicPoint _pos) : basicShape(_pos){
 	initialiseVertexVariables();
 	
 #ifdef KM_EDITOR_APP
@@ -38,6 +38,7 @@ vertexShape::~vertexShape(){
 // OVER-RULED BASICSHAPE FUNCTIONS
 // - - - - - - -
 // todo: rename this to something less confusing. initialSetup() ( not to confuse with reset() )
+// only to be called from the constructor
 void vertexShape::initialiseVertexVariables(){
 	
 	initialized = false;
