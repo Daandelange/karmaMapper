@@ -144,7 +144,7 @@ void basicShape::onShapeEdited(){
 #ifdef KM_EDITOR_APP
 	// update GUI Toggle ?
 	if( isInEditMode() ){
-		guiToggle.setPosition( boundingBox.getTopRight()+5 );
+		guiToggle.setPosition( boundingBox.getBottomLeft()+ofPoint(-5,5) );
 	}
 #endif
 }
@@ -362,6 +362,10 @@ void basicShape::render(){
 		ofFill();
 		ofDrawRectangle(guiToggle);
 		
+		ofSetColor(0, 200);
+		ofNoFill();
+		ofDrawRectangle(guiToggle);
+		
 		// draw additional shape gui.
 		if( drawShapeGui ) shapeGui.draw();
 	}
@@ -400,6 +404,13 @@ bool basicShape::enableEditMode(){
 	
 	// enable GUI
 	guiToggle = ofRectangle( boundingBox.getTopRight()+5, 10, 10 );
+	// restrict to visible space
+	if( guiToggle.getPosition().x+guiToggle.getWidth() >= ofGetWidth() ){
+		guiToggle.x = guiToggle.getPosition().x-shapeGui.getWidth();
+	}
+	if( guiToggle.getPosition().y+guiToggle.getHeight() >= ofGetWidth() ){
+		guiToggle.y = guiToggle.getPosition().y-shapeGui.getHeight();
+	}
 	//guiToggle
 	//guiTabBar->addLabel("+", OFX_UI_FONT_SMALL);
 	
@@ -514,7 +525,7 @@ bool basicShape::interceptMouseClick(ofMouseEventArgs &e){
 		// toggle GUI ?
 		if( guiToggle.inside(e.x, e.y) ){
 			drawShapeGui = !drawShapeGui;
-			shapeGui.setPosition( boundingBox.getTopRight()+ofVec2f(5,20));
+			shapeGui.setPosition( guiToggle.getTopRight()+ofVec2f(5,20));
 			return true;
 		}
 		

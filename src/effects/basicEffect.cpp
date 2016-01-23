@@ -142,6 +142,9 @@ bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 	if( ImGui::InputText("Name", nameBuffer, 32) ){
 		effectName = nameBuffer;
 	}
+	if( !isReady() ) {
+		ImGui::LabelText("Error", "%s", shortStatus().c_str() );
+	}
 	else if (!ImGui::IsItemActive()){
 		memcpy(nameBuffer, effectName.c_str(), effectName.size() );
 	}
@@ -272,7 +275,7 @@ bool basicEffect::randomizePresets(){
 
 // formats URLS for getting files within the effect folder itself
 string basicEffect::effectFolder(string _file) const{
-	return ofToDataPath( ((string)"../../effects/").append(getType()).append(_file));
+	return ofToDataPath( ((string)"../../src/effects/").append(getType()).append("/").append(_file));
 }
 
 void basicEffect::updateBoundingBox(){

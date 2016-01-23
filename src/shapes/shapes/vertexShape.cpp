@@ -381,6 +381,10 @@ void vertexShape::render(){
 		ofFill();
 		ofDrawRectangle(guiToggle);
 		
+		ofSetColor(0, 200);
+		ofNoFill();
+		ofDrawRectangle(guiToggle);
+		
 		// draw additional shape gui.
 		if( drawShapeGui ) shapeGui.draw();
 		

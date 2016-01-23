@@ -103,11 +103,9 @@ bool shaderEffect::render(const animationParams &params){
 	
 	// draw shape so GPU gets their vertex data
 	for(auto it=shapes.begin(); it!=shapes.end(); ++it){
-		if( (*it)->isType("vertexShape") ){
-			shader.setUniform4f("shapeBoundingBox", (*it)->getBoundingBox().x, (*it)->getBoundingBox().y, (*it)->getBoundingBox().width, (*it)->getBoundingBox().height );
+		shader.setUniform4f("shapeBoundingBox", (*it)->getBoundingBox().x, (*it)->getBoundingBox().y, (*it)->getBoundingBox().width, (*it)->getBoundingBox().height );
 			//cout << (*it)->getBoundingBox().width << endl;
 			(*it)->sendToGPU();
-		}
 	}
 	
 	// flush the pipeline! :D
@@ -172,9 +170,56 @@ bool shaderEffect::printCustomEffectGui(){
 		
 		ImGui::Separator();
 		
-		// todo: make this editable
 		ImGui::LabelText("Vertex Shader", "%s", vertexShader.c_str() );
+		if(ImGui::Button("Load .vert...")){
+			ofFileDialogResult d = ofSystemLoadDialog("Select vertex shader...");
+			if(d.bSuccess){
+				ofFile file( d.getPath() );
+				if(file.exists()){
+					vertexShader = file.getAbsolutePath();
+					//vertBuffer = vertexShader.c_str();
+					loadShader(vertexShader, fragmentShader);
+				}
+				else {
+					// notify 404 ?
+				}
+			}
+		}
+		ImGui::SameLine();
+		if(ImGui::Button("Clear Vertex")){
+			loadShader("", fragmentShader);
+		}
+		
+		ImGui::Separator();
+		
 		ImGui::LabelText("Fragment Shader", "%s", fragmentShader.c_str() );
+		if(ImGui::Button("Load Fragment...")){
+			ofFileDialogResult d = ofSystemLoadDialog("Select fragment shader...");
+			if(d.bSuccess){
+				ofFile file( d.getPath() );
+				if(file.exists()){
+					fragmentShader = file.getAbsolutePath();
+					//vertBuffer = vertexShader.c_str();
+					loadShader(vertexShader, fragmentShader);
+				}
+				else {
+					
+				}
+			}
+		}
+		ImGui::SameLine();
+		if(ImGui::Button("Clear Fragment")){
+			loadShader("", vertexShader);
+		}
+		
+		ImGui::Separator();
+		
+		if( !shader.isLoaded() ){
+			ImGui::TextWrapped("Shader not loaded...");
+		}
+		else {
+			ImGui::TextWrapped("Shader loaded! :)");
+		}
 	}
 }
 
@@ -254,21 +299,31 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 	;
 	//shader.setupShaderFromFile(GL_FRAGMENT_SHADER, _frag);
 	
-	if( shader.load(_vert, _frag) && !shader.isLoaded() ){
-		ofLogNotice("shaderEffect::registerShaderVariables() --> shader not loaded");
-		// todo: trigger shader not found errors here
-		// todo: trigger shader not found errors here
+	if( shader.isLoaded() ){
+		shader.unload();
 		fragmentShader = "";
 		vertexShader = "";
-		bHasError = true;
-		return true;
+	}
+	
+	if( shader.load(_vert, _frag) ){
+		if( shader.isLoaded() ){
+			bHasError = false;
+			fragmentShader = _frag;
+			vertexShader = _vert;
+		}
+		else {
+			bHasError = true;
+		}
 	}
 	else{
-		fragmentShader = _frag;
-		vertexShader = _vert;
-		bHasError = false;
-		return false;
+		ofLogNotice("shaderEffect::loadShader() --> shader not loaded");
+		
+		// todo: trigger shader not found errors here
+		bHasError = true;
 	}
+	
+	return bHasError;
+	
 	
 	//cout << "OK:" << shader.linkProgram() << endl;
 	//cout << shader.isLoaded() << shader.linkProgram() << endl;
