@@ -155,6 +155,7 @@
 		858D334D1BEBF220003E49C7 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 858D333E1BEBF220003E49C7 /* Syphon.framework */; };
 		858D334E1BEBF220003E49C7 /* Syphon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 858D333E1BEBF220003E49C7 /* Syphon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		858D334F1BEBF220003E49C7 /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 858D33411BEBF220003E49C7 /* SyphonNameboundClient.m */; };
+		85E2ABF71C51696200687CE5 /* karmaModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E2ABF51C51696200687CE5 /* karmaModule.cpp */; };
 		85E773091B965980003AF890 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BFFBBF4CC43DEE890B3C3E /* OscTypes.cpp */; };
 		8DED5056525646FA71980866 /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDE55D82BD962DAC0E94B708 /* ofxAssimpModelLoader.cpp */; };
@@ -387,6 +388,8 @@
 		858D333E1BEBF220003E49C7 /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Syphon.framework; sourceTree = "<group>"; };
 		858D33401BEBF220003E49C7 /* SyphonNameboundClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonNameboundClient.h; sourceTree = "<group>"; };
 		858D33411BEBF220003E49C7 /* SyphonNameboundClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonNameboundClient.m; sourceTree = "<group>"; };
+		85E2ABF51C51696200687CE5 /* karmaModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = karmaModule.cpp; path = core/karmaModule.cpp; sourceTree = "<group>"; };
+		85E2ABF61C51696200687CE5 /* karmaModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaModule.h; path = core/karmaModule.h; sourceTree = "<group>"; };
 		87F26B4B24CBD428AD9EEBAA /* ofxBaseGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBaseGui.h; path = ../../../addons/ofxGui/src/ofxBaseGui.h; sourceTree = SOURCE_ROOT; };
 		880F6ACB0496D1B9F4B14150 /* karmaSoundAnalyser.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = karmaSoundAnalyser.h; path = src/core/karmaSoundAnalyser.h; sourceTree = SOURCE_ROOT; };
 		883A95C78655CFEEA37EF9A1 /* ofxVideoRecorder.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxVideoRecorder.cpp; path = ../../../addons/ofxVideoRecorder/src/ofxVideoRecorder.cpp; sourceTree = SOURCE_ROOT; };
@@ -957,6 +960,8 @@
 				33927B796E5A3583FCC457B2 /* fboRecorder.h */,
 				D504AF6E0E3ED937A427FFA5 /* karmaSoundAnalyser.cpp */,
 				880F6ACB0496D1B9F4B14150 /* karmaSoundAnalyser.h */,
+				85E2ABF51C51696200687CE5 /* karmaModule.cpp */,
+				85E2ABF61C51696200687CE5 /* karmaModule.h */,
 			);
 			name = core;
 			sourceTree = "<group>";
@@ -1301,6 +1306,7 @@
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				853CEC341C3AAD3D0030BF5D /* BaseTheme.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
+				85E2ABF71C51696200687CE5 /* karmaModule.cpp in Sources */,
 				855452491B921F8800A36079 /* basicPoint.cpp in Sources */,
 				1C90EB188A21A18AD91F42B2 /* animationController.cpp in Sources */,
 				53729A780BDC2EFFA7FFC3AA /* fboRecorder.cpp in Sources */,

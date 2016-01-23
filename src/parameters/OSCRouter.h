@@ -8,9 +8,6 @@
 #pragma once
 
 #include "ofMain.h"
-//#include "ofxUI.h"
-#include "ofxGui.h"
-#include "ofxGuiExtended.h"
 #include "ofxOsc.h"
 #include "OSCNode.h"
 

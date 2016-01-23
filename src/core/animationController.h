@@ -18,6 +18,7 @@
 #include "shapesDB.h"
 #include "ofxImGui.h"
 #include "animationParamsServer.h"
+#include "karmaModule.h"
 
 #include "OSCRouter.h"
 #include "mirReceiver.h"
@@ -92,6 +93,7 @@ protected:
 	vector<basicEffect*> effects;
 	
 	animationParamsServer animationParams;
+	vector< karmaModule* > modules;
 	
 	shapesDB& scene;
 	
