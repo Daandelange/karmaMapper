@@ -36,7 +36,7 @@ lineEffect::~lineEffect(){
 	ofRemoveListener(durationReceiver::durationFloatEvent, this, &lineEffect::floatListener);
 	//ofRemoveListener(ofx::AbletonLiveSet::EventHandler::noteEvent, this, &lineEffect::noteEventListener);
 	//ofRemoveListener(mirReceiver::mirTempoEvent, this, &lineEffect::tempoEventListener);
-	//ofRemoveListener(mirReceiver::mirOnSetEvent, this, &lineEffect::onSetEventListener);
+	ofRemoveListener(mirReceiver::mirOnSetEvent, this, &lineEffect::onSetEventListener);
 }
 
 bool lineEffect::initialise(const animationParams& params){
@@ -46,7 +46,7 @@ bool lineEffect::initialise(const animationParams& params){
 	// tmp
 	ofAddListener(durationReceiver::durationFloatEvent, this, &lineEffect::floatListener);
 	//ofAddListener(mirReceiver::mirTempoEvent, this, &lineEffect::tempoEventListener);
-	//ofAddListener(mirReceiver::mirOnSetEvent, this, &lineEffect::onSetEventListener);
+	ofAddListener(mirReceiver::mirOnSetEvent, this, &lineEffect::onSetEventListener);
 	//ofAddListener(ofx::AbletonLiveSet::EventHandler::noteEvent, this, &lineEffect::noteEventListener);
 	
 	
@@ -67,7 +67,13 @@ bool lineEffect::initialise(const animationParams& params){
 // update --> animation
 // overrule this function with your own
 bool lineEffect::render(const animationParams& params){
+	
 	effectMutex.lock();
+	
+	if(!isReady()){
+		effectMutex.unlock();
+		return false;
+	}
 	
 	ofFill();
 	//basicEffect::render();
@@ -108,8 +114,9 @@ bool lineEffect::render(const animationParams& params){
 }
 
 void lineEffect::update(const animationParams& params){
-	basicEffect::update(params);
 	
+	
+	basicEffect::update(params);
 	
 	ofScopedLock lock(effectMutex);
 	if(!isReady()) return;
@@ -136,7 +143,7 @@ void lineEffect::update(const animationParams& params){
 	
 	
 	// add lines ?
-	if(lines.size() < shapes.size()*90) lines.push_back( getRandomLine(true) );
+	//if(lines.size() < shapes.size()*90) lines.push_back( getRandomLine(true) );
 	
 	// check for dead lines
 	for(std::list<lineEffectLine>::reverse_iterator it=lines.rbegin(); it!= lines.rend(); it--){
@@ -244,9 +251,13 @@ lineEffectLine lineEffect::getRandomLine(basicShape *_sh1, basicShape *_sh2) {
 }
 
 void lineEffect::floatListener(durationFloatEventArgs &_args){
-	if( _args.track.compare("lineEffectIntensity")!=0 ) return;
 	
 	ofScopedLock lock(effectMutex);
+	
+	if(!isReady()) return;
+	
+	if( _args.track.compare("lineEffectIntensity")!=0 ) return;
+	
 	intensity = _args.value;
 	//lines.push_back();
 }
@@ -278,26 +289,28 @@ void lineEffect::floatListener(durationFloatEventArgs &_args){
 //	}
 //}
 
-//void lineEffect::onSetEventListener(mirOnSetEventArgs &_args){
-//	ofScopedLock lock(effectMutex);
-//	
-//	if(shapes.size()<=0) return;
-//	
-//	if(_args.source.compare("aubioOnSet")==0){
-//		tempoCalls++;
-//		for(int i=0; i<1; i++){
-//			lines.push_back( getRandomLine(fromShape, toShape) );
-//		}
-//		
-//		if(tempoCalls%10==0){
-//			fromShape = toShape;
-//			toShape = shapes[ round( ofRandom(-0.49f, -0.51f+shapes.size()) )];
-//			cout << "onSetChange" << endl;
-//		}
-//	}
-//	
-//	//else if(_args.source.compare("")==0){}
-//}
+void lineEffect::onSetEventListener(mirOnSetEventArgs &_args){
+	
+	ofScopedLock lock(effectMutex);
+	if(!isReady()) return;
+	
+	if(shapes.size()<=0) return;
+	
+	if(_args.source.compare("aubioOnSet")==0){
+		tempoCalls++;
+		for(int i=0; i<1; i++){
+			lines.push_back( getRandomLine(fromShape, toShape) );
+		}
+		
+		if(tempoCalls%10==0){
+			fromShape = toShape;
+			toShape = shapes[ round( ofRandom(-0.49f, -0.51f+shapes.size()) )];
+			cout << "onSetChange" << endl;
+		}
+	}
+	
+	//else if(_args.source.compare("")==0){}
+}
 
 // register effect type
 EFFECT_REGISTER( lineEffect , "lineEffect" );

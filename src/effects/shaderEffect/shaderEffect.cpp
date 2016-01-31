@@ -18,10 +18,15 @@
 shaderEffect::shaderEffect(){
 	
 	shaderEffect::reset();
+	
+	// todo: bind only when bUseShaderVariables is on ?
+	ofAddListener( ofEvents().windowResized , this, &shaderEffect::onResizeListener);
 }
 
 shaderEffect::~shaderEffect(){
 	ofRemoveListener(mirReceiver::mirOnSetEvent, this, &shaderEffect::onSetEventListener);
+	
+	ofRemoveListener( ofEvents().windowResized , this, &shaderEffect::onResizeListener);
 }
 
 // - - - - - - -
@@ -36,6 +41,9 @@ bool shaderEffect::initialise(const animationParams& params){
 	bIsLoading = true;
 	bInitialised = false;
 	onSetCalls = 0;
+	fTimeFactor = 1.0f;
+	bUseShadertoyVariables = false;
+	bUseMirVariables = false;
 	
 	// do stuff
 	ofEnableAlphaBlending();
@@ -49,6 +57,7 @@ bool shaderEffect::initialise(const animationParams& params){
 	ofClear(0,0,0,0); // clear all, including alpha
 	fbo.end();
 	
+	ofRemoveListener(mirReceiver::mirOnSetEvent, this, &shaderEffect::onSetEventListener);
 	ofAddListener(mirReceiver::mirOnSetEvent, this, &shaderEffect::onSetEventListener);
 	
 	return bInitialised;
@@ -123,10 +132,37 @@ void shaderEffect::update(const animationParams& params){
 	
 	// do basic Effect function
 	basicEffect::update( params );
-//	
-//	ofScopedLock lock(effectMutex);
-//	
-//	if(shapes.size()<1) return;
+	
+	ofScopedLock lock(effectMutex);
+	
+	// update shaderToyArgs
+	if(bUseShadertoyVariables){
+		shaderToyArgs.iMouse[0] = ofGetMouseX();
+		shaderToyArgs.iMouse[1] = ofGetMouseY();
+		shaderToyArgs.iMouse[2] = ofGetMousePressed( OF_MOUSE_BUTTON_1 );
+		shaderToyArgs.iMouse[3] = ofGetMousePressed( OF_MOUSE_BUTTON_2 );
+		
+		shaderToyArgs.iFrame = ofGetFrameNum();
+		
+		// todo: should only be updated on change
+		shaderToyArgs.iResolution[0] = ofGetWindowWidth();
+		shaderToyArgs.iResolution[1] = ofGetWindowHeight();
+		shaderToyArgs.iResolution[2] = ofGetWindowMode();
+		
+		shaderToyArgs.iGlobalTime = ofGetElapsedTimef()*shaderToyArgs.iGlobalTimeScale;
+		
+		shaderToyArgs.iDate[0] = ofGetYear();
+		shaderToyArgs.iDate[1] = ofGetMonth();
+		shaderToyArgs.iDate[2] = ofGetDay();
+		shaderToyArgs.iDate[3] = ofGetElapsedTimef();
+	}
+	
+	if(bUseMirVariables){
+		// todo
+	}
+	
+	if( !isReady() ) return;
+	
 //	
 //	for(auto it=shapes.begin(); it!=shapes.end(); it++){
 //		// todo: basicEffect should have a nice downcast getter function like .asType<vertexShape>()
@@ -151,10 +187,16 @@ void shaderEffect::update(const animationParams& params){
 void shaderEffect::reset(){
 	basicEffect::reset();
 	
+	ofScopedLock lock(effectMutex);
+	
 	// effect type must match with class
 	effectType = "shaderEffect";
 	vertexShader = effectFolder(ShaderEffectDefaultVert);
 	fragmentShader = effectFolder(ShaderEffectDefaultFrag);
+	
+	bUseShadertoyVariables = false;
+	bUseMirVariables = false;
+	shaderToyArgs = shaderToyVariables();
 }
 
 // - - - - - - -
@@ -167,6 +209,7 @@ bool shaderEffect::printCustomEffectGui(){
 	if( ImGui::CollapsingHeader( GUIShaderPanel, "GUIShaderPanel", true, true ) ){
 		
 		ImGui::TextWrapped("This effect loads shader files and animates them feeding it parameters.");
+		ImGui::TextWrapped("You can enable some default variables or create your own."); // todo
 		
 		ImGui::Separator();
 		
@@ -177,7 +220,6 @@ bool shaderEffect::printCustomEffectGui(){
 				ofFile file( d.getPath() );
 				if(file.exists()){
 					vertexShader = file.getAbsolutePath();
-					//vertBuffer = vertexShader.c_str();
 					loadShader(vertexShader, fragmentShader);
 				}
 				else {
@@ -199,10 +241,10 @@ bool shaderEffect::printCustomEffectGui(){
 				ofFile file( d.getPath() );
 				if(file.exists()){
 					fragmentShader = file.getAbsolutePath();
-					//vertBuffer = vertexShader.c_str();
 					loadShader(vertexShader, fragmentShader);
 				}
 				else {
+					// notify 404 ?
 					
 				}
 			}
@@ -218,8 +260,60 @@ bool shaderEffect::printCustomEffectGui(){
 			ImGui::TextWrapped("Shader not loaded...");
 		}
 		else {
-			ImGui::TextWrapped("Shader loaded! :)");
+			ImGui::TextWrapped("Shader(s) loaded! :)");
 		}
+		ImGui::SameLine();
+		if(ImGui::Button("Reload Shader(s)")){
+			loadShader(vertexShader, fragmentShader);
+		}
+		
+		ImGui::Separator();
+		
+		if( ImGui::CollapsingHeader( GUIShaderVariablesPanel, "GUIShaderVariablesPanel", true, true ) ){
+			
+			ImGui::TextWrapped("Here, you can enable/disable some standard shader variables, and (soon) create your own ones.");
+			
+			ImGui::Separator();
+			
+			ImGui::Checkbox("Inject shadertoy variables.", &bUseShadertoyVariables );
+			if(bUseShadertoyVariables){
+				ImGui::Indent();
+				ImGui::SliderFloat("Time scale", &shaderToyArgs.iGlobalTimeScale, 0, 10);
+				ImGui::Separator();
+				ImGui::Text("(These are not editable...)");
+				//ImGui::TextDisabled("iResoltion = %ix%ipx (%f)", (int)( shaderToyArgs.iResolution[0] ), (int)(shaderToyArgs.iResolution[1]), shaderToyArgs.iResolution[2] );
+				ImGui::InputFloat3("iResolution", shaderToyArgs.iResolution );
+				ImGui::InputFloat("iGlobalTime", &shaderToyArgs.iGlobalTime );
+				//ImGui::TextDisabled("iGlobalTime = %f", shaderToyArgs.iGlobalTime );
+				ImGui::InputFloat("iTimeDelta", &shaderToyArgs.iTimeDelta );
+				ImGui::InputInt("iFrame", &shaderToyArgs.iFrame );
+				ImGui::InputFloat4("iMouse", shaderToyArgs.iMouse );
+				ImGui::InputFloat4("iDate", shaderToyArgs.iDate );
+				ImGui::Separator();
+				
+				ImGui::Text("Textures (not yet)"); // todo
+				ImGui::InputFloat4("iChannelTime", shaderToyArgs.iChannelTime );
+				
+				ImGui::InputFloat3("iChannelResolution[0]", shaderToyArgs.iChannelResolution[0] );
+				ImGui::InputFloat3("iChannelResolution[1]", shaderToyArgs.iChannelResolution[1] );
+				ImGui::InputFloat3("iChannelResolution[2]", shaderToyArgs.iChannelResolution[2] );
+				ImGui::InputFloat3("iChannelResolution[3]", shaderToyArgs.iChannelResolution[3] );
+				
+				ImGui::Unindent();
+			} // end shadertoy variables
+			
+			ImGui::Checkbox("Inject mir variables.", &bUseMirVariables );
+			if(bUseMirVariables){
+				ImGui::Indent();
+				ImGui::TextWrapped("Forwards karmaSoundAnalyser audio into the shader.");
+				
+				ImGui::Separator();
+				ImGui::Unindent();
+				
+			} // end mir variables
+		}
+		
+		
 	}
 }
 
@@ -229,10 +323,23 @@ bool shaderEffect::printCustomEffectGui(){
 
 // writes the effect data to XML. xml's cursor is already pushed into the right <effect> tag.
 bool shaderEffect::saveToXML(ofxXmlSettings& xml) const{
-	bool ret = basicEffect::saveToXML(xml);
+	
+ 	bool ret = basicEffect::saveToXML(xml);
 	
 	xml.addValue("vertexShader", vertexShader );
 	xml.addValue("fragmentShader", fragmentShader );
+	
+	xml.addValue("useShadertoyVariables", bUseShadertoyVariables );
+	
+	xml.addTag("shadertoyVariables");
+	if( xml.pushTag("shadertoyVariables") ){
+		
+		xml.addValue("iGlobalTimeScale", shaderToyArgs.iGlobalTimeScale );
+		
+		xml.popTag();
+	}
+	
+	xml.addValue("bUseMirVariables", bUseMirVariables );
 	
 	return ret;
 }
@@ -242,7 +349,17 @@ bool shaderEffect::saveToXML(ofxXmlSettings& xml) const{
 bool shaderEffect::loadFromXML(ofxXmlSettings& xml){
 	bool ret = basicEffect::loadFromXML(xml);
 	
-	loadShader(xml.getValue("vertexShader",""), xml.getValue("fragmentShader",""));
+	loadShader( xml.getValue("vertexShader",""), xml.getValue("fragmentShader","") );
+	
+	bUseShadertoyVariables = xml.getValue( "useShadertoyVariables", false );
+	
+	if( xml.pushTag("shadertoyVariables") ){
+		shaderToyArgs.iGlobalTimeScale = xml.getValue("iGlobalTimeScale", 1.0f );
+		
+		xml.popTag();
+	}
+	
+	bUseMirVariables = xml.getValue( "bUseMirVariables", false );
 	
 	return shader.isLoaded();
 }
@@ -264,6 +381,9 @@ bool shaderEffect::randomizePresets(){
 // - - - - -
 void shaderEffect::registerShaderVariables(const animationParams& params){
 	
+	
+	effectMutex.lock();
+	
 	if( !shader.isLoaded() ){
 		ofLogWarning("shaderEffect::registerShaderVariables() --> shader not loaded or linked!");
 		return;
@@ -276,14 +396,41 @@ void shaderEffect::registerShaderVariables(const animationParams& params){
 	
 	shader.setUniform2f("fboCanvas", ofGetWidth(), ofGetHeight() );
 	
-	shader.setUniform3f("iResolution", ofGetWidth(), ofGetHeight(), 0);
-	shader.setUniform4f("iMouse", ofGetMouseX(), ofGetMouseY(), 0, 0 );
-	shader.setUniform1f("iGlobalTime", ofGetElapsedTimef());
 	shader.setUniform1i("tex", 0);
 	
+	effectMutex.unlock();
 	
-	// sound related stuff
-	effectMutex.lock();
+	
+	if( bUseMirVariables ) registerMirVariables();
+	
+	if( bUseShadertoyVariables ) registerShaderToyVariables();
+}
+
+// registers shadertoy variables
+void shaderEffect::registerShaderToyVariables(){
+	ofScopedLock( effectMutex );
+	shader.setUniform1f("iResolution", ofGetElapsedTimef() * fTimeFactor );
+	
+	
+// These variables will be available in your shader :)
+	
+//	uniform vec3      iResolution;           // viewport resolution (in pixels)
+//	uniform float     iGlobalTime;           // shader playback time (in seconds)
+//	uniform float     iTimeDelta;            // render time (in seconds)
+//	uniform int       iFrame;                // shader playback frame
+//	uniform float     iChannelTime[4];       // channel playback time (in seconds)
+//	uniform vec3      iChannelResolution[4]; // channel resolution (in pixels)
+//	uniform vec4      iMouse;                // mouse pixel coords. xy: current (if MLB down), zw: click
+//	uniform samplerXX iChannel0..3;          // input channel. XX = 2D/Cube
+//	uniform vec4      iDate;                 // (year, month, day, time in seconds)
+//	uniform float     iSampleRate;           // sound sample rate (i.e., 44100)
+	
+}
+
+void shaderEffect::registerMirVariables() {
+	
+	ofScopedLock(effectMutex);
+	
 	shader.setUniform1f("mirZeroCrossings", mirReceiver::mirCache.zcr );
 	shader.setUniform1f("mirZcr", mirReceiver::mirCache.zcr);
 	shader.setUniform1f("mirPitch", mirReceiver::mirCache.pitch);
@@ -291,13 +438,13 @@ void shaderEffect::registerShaderVariables(const animationParams& params){
 	shader.setUniform1f("mirBalance", mirReceiver::mirCache.balance);
 	shader.setUniform1f("mirVolume", mirReceiver::mirCache.volumeMono);
 	shader.setUniform1i("mirSilence", mirReceiver::mirCache.silence);
-	effectMutex.unlock();
 	shader.setUniform1f("mirOnSetCalls", onSetCalls );
 }
 
 bool shaderEffect::loadShader(string _vert, string _frag){
 	;
 	//shader.setupShaderFromFile(GL_FRAGMENT_SHADER, _frag);
+	// todo: lock effectMutex here ?
 	
 	if( shader.isLoaded() ){
 		shader.unload();
@@ -313,10 +460,12 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 		}
 		else {
 			bHasError = true;
+			shortStatus = "Shader not loaded (but it compiled)";
 		}
 	}
 	else{
 		ofLogNotice("shaderEffect::loadShader() --> shader not loaded");
+		shortStatus = "Shader not loaded!";
 		
 		// todo: trigger shader not found errors here
 		bHasError = true;
@@ -340,6 +489,15 @@ void shaderEffect::onSetEventListener(mirOnSetEventArgs &_args){
 	}
 	
 	//else if(_args.source.compare("")==0){}
+}
+
+void shaderEffect::onResizeListener(ofResizeEventArgs &resize){
+	
+	if( bUseShadertoyVariables ){
+		shaderToyArgs.iResolution[0] = resize.width;
+		shaderToyArgs.iResolution[1] = resize.height;
+		shaderToyArgs.iResolution[2] = ofGetWindowMode();
+	}
 }
 
 

@@ -96,7 +96,7 @@ public:
 	string getName() const;
 	bool isType(const string _type) const;
 	string getType() const;
-	virtual string shortStatus();
+	virtual const string getShortStatus()const;
 	
 	// controller functions
 	virtual bool randomizePresets();
@@ -136,6 +136,7 @@ protected:
 	bool bIsLoading;
 	bool bShowGuiWindow;
 	string effectName; // must stay unique
+	string shortStatus;
 	
 	// todo:
 	// animation preferences class

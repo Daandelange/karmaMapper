@@ -84,6 +84,7 @@ protected:
 	bool bShowGui;
 	bool bGuiShowAnimParams;
 	bool bGuiShowPlugins;
+	bool bGuiShowModules;
 	
 	// gui
 	ofxImGui gui;
@@ -137,4 +138,5 @@ private:
 #define GUIShowPlugins	("Installed plugins...")
 #define GUIShapeTypesInfo "Installed shape types"
 #define GUIEffectTypesInfo "Installed effect types"
-
+#define GUIShowModules "Show Modules"
+#define GUIModulesPanel "Modules"

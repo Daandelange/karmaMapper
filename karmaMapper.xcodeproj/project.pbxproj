@@ -155,6 +155,8 @@
 		858D334D1BEBF220003E49C7 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 858D333E1BEBF220003E49C7 /* Syphon.framework */; };
 		858D334E1BEBF220003E49C7 /* Syphon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 858D333E1BEBF220003E49C7 /* Syphon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		858D334F1BEBF220003E49C7 /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 858D33411BEBF220003E49C7 /* SyphonNameboundClient.m */; };
+		85999DD41C537F6600786707 /* fullScreenShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85999DD21C537F6600786707 /* fullScreenShape.cpp */; };
+		85999DD51C537F6600786707 /* fullScreenShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85999DD21C537F6600786707 /* fullScreenShape.cpp */; };
 		85E2ABF71C51696200687CE5 /* karmaModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E2ABF51C51696200687CE5 /* karmaModule.cpp */; };
 		85E773091B965980003AF890 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BFFBBF4CC43DEE890B3C3E /* OscTypes.cpp */; };
@@ -316,6 +318,7 @@
 		851FA9A41B9321FD00F94851 /* ofxValuePlotter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxValuePlotter.h; sourceTree = "<group>"; };
 		851FA9A51B9321FD00F94851 /* ofxVerticalSlider.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxVerticalSlider.cpp; sourceTree = "<group>"; };
 		851FA9A61B9321FD00F94851 /* ofxVerticalSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxVerticalSlider.h; sourceTree = "<group>"; };
+		8526F0051C5E84A200D87DEC /* shaderToyVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shaderToyVariables.h; sourceTree = "<group>"; };
 		853CEC1E1C3AAD3D0030BF5D /* BaseEngine.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BaseEngine.cpp; sourceTree = "<group>"; };
 		853CEC1F1C3AAD3D0030BF5D /* BaseEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseEngine.h; sourceTree = "<group>"; };
 		853CEC201C3AAD3D0030BF5D /* BaseTheme.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BaseTheme.cpp; sourceTree = "<group>"; };
@@ -388,6 +391,8 @@
 		858D333E1BEBF220003E49C7 /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Syphon.framework; sourceTree = "<group>"; };
 		858D33401BEBF220003E49C7 /* SyphonNameboundClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonNameboundClient.h; sourceTree = "<group>"; };
 		858D33411BEBF220003E49C7 /* SyphonNameboundClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonNameboundClient.m; sourceTree = "<group>"; };
+		85999DD21C537F6600786707 /* fullScreenShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fullScreenShape.cpp; path = shapes/shapes/fullScreenShape.cpp; sourceTree = "<group>"; };
+		85999DD31C537F6600786707 /* fullScreenShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fullScreenShape.h; path = shapes/shapes/fullScreenShape.h; sourceTree = "<group>"; };
 		85E2ABF51C51696200687CE5 /* karmaModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = karmaModule.cpp; path = core/karmaModule.cpp; sourceTree = "<group>"; };
 		85E2ABF61C51696200687CE5 /* karmaModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaModule.h; path = core/karmaModule.h; sourceTree = "<group>"; };
 		87F26B4B24CBD428AD9EEBAA /* ofxBaseGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBaseGui.h; path = ../../../addons/ofxGui/src/ofxBaseGui.h; sourceTree = SOURCE_ROOT; };
@@ -738,6 +743,7 @@
 		854045ED1BC9643B005C25D2 /* shaderEffect */ = {
 			isa = PBXGroup;
 			children = (
+				8526F0051C5E84A200D87DEC /* shaderToyVariables.h */,
 				854045EE1BC9643B005C25D2 /* shaderEffect.cpp */,
 				854045EF1BC9643B005C25D2 /* shaderEffect.h */,
 			);
@@ -749,10 +755,12 @@
 			isa = PBXGroup;
 			children = (
 				855452441B921F8800A36079 /* shapes.h */,
-				855452401B921F8800A36079 /* basicShape.cpp */,
-				855452411B921F8800A36079 /* basicShape.h */,
 				855452421B921F8800A36079 /* basicPoint.cpp */,
 				855452431B921F8800A36079 /* basicPoint.h */,
+				855452401B921F8800A36079 /* basicShape.cpp */,
+				855452411B921F8800A36079 /* basicShape.h */,
+				85999DD21C537F6600786707 /* fullScreenShape.cpp */,
+				85999DD31C537F6600786707 /* fullScreenShape.h */,
 				855452451B921F8800A36079 /* vertexShape.cpp */,
 				855452461B921F8800A36079 /* vertexShape.h */,
 			);
@@ -1272,6 +1280,7 @@
 				855451F71B91FB4C00A36079 /* NetworkingUtils.cpp in Sources */,
 				858D334B1BEBF220003E49C7 /* ofxSyphonServer.mm in Sources */,
 				853CEC3D1C3AAD3D0030BF5D /* EngineGLFW.cpp in Sources */,
+				85999DD51C537F6600786707 /* fullScreenShape.cpp in Sources */,
 				855451F81B91FB4C00A36079 /* UdpSocket.cpp in Sources */,
 				855451F91B91FB4C00A36079 /* OscOutboundPacketStream.cpp in Sources */,
 				855451FA1B91FB4C00A36079 /* OscPrintReceivedElements.cpp in Sources */,
@@ -1321,6 +1330,7 @@
 				BDC07F74E020CFD64A47D99A /* shapesScene.cpp in Sources */,
 				851FA9AE1B9321FD00F94851 /* ofxLabelExtended.cpp in Sources */,
 				3B8120368B4FCCD80883BAF3 /* ofxAssimpAnimation.cpp in Sources */,
+				85999DD41C537F6600786707 /* fullScreenShape.cpp in Sources */,
 				483FA4F6D5FA6422C559B1F5 /* ofxAssimpMeshHelper.cpp in Sources */,
 				8DED5056525646FA71980866 /* ofxAssimpModelLoader.cpp in Sources */,
 				858D33451BEBF220003E49C7 /* ofxSyphonServer.mm in Sources */,
@@ -1469,12 +1479,15 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				KM_EDITOR_APP = true;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(OF_CORE_LIBS)",
 					../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a,
 				);
 				PRODUCT_NAME = karmaMapperEditor;
+				SDKROOT = macosx10.8;
 				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1545,12 +1558,15 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				KM_EDITOR_APP = true;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(OF_CORE_LIBS)",
 					../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a,
 				);
 				PRODUCT_NAME = karmaMapperEditor;
+				SDKROOT = macosx10.8;
 				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 				baseConfigurationReference = E4EB6923138AFD0F00A09F29;
@@ -1631,7 +1647,7 @@
 					"$(OF_CORE_LIBS)",
 					../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a,
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.8;
 			};
 			name = Debug;
 		};
@@ -1709,7 +1725,7 @@
 					"$(OF_CORE_LIBS)",
 					../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a,
 				);
-				SDKROOT = macosx;
+				SDKROOT = macosx10.8;
 			};
 			name = Release;
 		};
@@ -1779,12 +1795,15 @@
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(OF_CORE_LIBS)",
 					../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
+				SDKROOT = macosx10.8;
 				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1855,12 +1874,15 @@
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(OF_CORE_LIBS)",
 					../../../addons/ofxAssimpModelLoader/libs/assimp/lib/osx/assimp.a,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.8;
 				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 				baseConfigurationReference = E4EB6923138AFD0F00A09F29;

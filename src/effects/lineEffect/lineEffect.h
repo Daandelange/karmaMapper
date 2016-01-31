@@ -37,7 +37,7 @@ public:
 	void floatListener( durationFloatEventArgs &_args );
 	//void noteEventListener(ofx::AbletonLiveSet::LSNoteEvent & noteEvent);
 	//void tempoEventListener( mirTempoEventArgs &_args );
-	//void onSetEventListener( mirOnSetEventArgs &_args );
+	void onSetEventListener( mirOnSetEventArgs &_args );
 	
 protected:
 	lineEffectLine getRandomLine(const bool onSameShape=false);

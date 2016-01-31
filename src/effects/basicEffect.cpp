@@ -42,6 +42,8 @@ bool basicEffect::initialise(const animationParams& params){
 	
 	bIsLoading = true;
 	
+	shortStatus = "I'm fine! ;)\n That is my status.";
+	
 	// do specific stuff here
 	// eg connect with database, setup a physical device, etc.
 	// could this be multi threaded ?
@@ -61,6 +63,7 @@ bool basicEffect::initialise(){
 // todo: update -(handled by)-> animation
 // returns true if rendering succeeded
 bool basicEffect::render(const animationParams& params){
+	ofScopedLock lock(effectMutex);
 	if( !isReady() ) return false;
 	
 	// draw bounding box
@@ -93,8 +96,7 @@ void basicEffect::update(){
 
 // resets all values
 void basicEffect::reset(){
-	effectMutex.lock();
-	
+	ofScopedLock lock(effectMutex);
 	
 	// todo: do this in _reset() which then calls reset();
 	aliveSince=0;
@@ -111,8 +113,6 @@ void basicEffect::reset(){
 	effectName = effectType;
 	
 	overallBoundingBox = ofRectangle(0,0,0,0);
-	
-	effectMutex.unlock();
 }
 
 void basicEffect::enable(){
@@ -135,19 +135,27 @@ void basicEffect::toggleGuiWindow() {
 bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 	if( !bShowGuiWindow ) return false;
 	
-	ImGui::Begin( ((string)"Effect Settings: ").append(getName()).c_str() , &bShowGuiWindow );
+	ImGui::Begin( ((string)"Effect Settings: ").append(getName()).append("###effect-").append( ofToString(this) ).c_str() , &bShowGuiWindow );
 	
 	ImGui::LabelText("Type", "%s", getType().c_str() );
 	static char nameBuffer[32] = "";
 	if( ImGui::InputText("Name", nameBuffer, 32) ){
 		effectName = nameBuffer;
 	}
-	if( !isReady() ) {
-		ImGui::LabelText("Error", "%s", shortStatus().c_str() );
+	ImGui::LabelText("Status", "%s", getShortStatus().c_str() );
+	if( ImGui::Button("Reset effect") ){
+		reset();
 	}
-	else if (!ImGui::IsItemActive()){
+	if (!ImGui::IsItemActive()){
 		memcpy(nameBuffer, effectName.c_str(), effectName.size() );
 	}
+	if( ImGui::Checkbox("Enabled", &bEnabled) ){
+		bEnabled?enable():disable();
+	}
+	ImGui::SameLine(-150);
+	ImGui::LabelText((isLoading()?"(Loading...)":"(Loaded)" ), "");
+	ImGui::SameLine(-50);
+	ImGui::LabelText((bHasError?"(Has Error)":"(No Errors)" ), "");
 	
 	ImGui::Spacing();
 	ImGui::Spacing();
@@ -204,6 +212,7 @@ bool basicEffect::saveToXML(ofxXmlSettings& xml) const{
 	
 	xml.addValue("effectType", effectType );
 	xml.addValue("effectName", getName() );
+	xml.addValue("enabled", bEnabled );
 	
 	// remember bound shapes
 	xml.addTag("boundShapes");
@@ -230,8 +239,11 @@ bool basicEffect::saveToXML(ofxXmlSettings& xml) const{
 bool basicEffect::loadFromXML(ofxXmlSettings& xml){
 	
 	effectName = xml.getValue("effectName", getType() );
+	xml.getValue("enabled", false )?enable():disable();
 	
 	//initialise(animationParams.params);
+	
+	
 	
 	return true; // todo
 }
@@ -242,7 +254,7 @@ bool basicEffect::loadFromXML(ofxXmlSettings& xml){
 // - - - - - - -
 	
 bool basicEffect::isReady() const {
-	return bInitialised && !bHasError && !bIsLoading;
+	return bInitialised && !bHasError && !bIsLoading && bEnabled;
 }
 
 bool basicEffect::isLoading() const {
@@ -257,12 +269,12 @@ bool basicEffect::isType(const string _type) const {
 	return _type==effectType;
 }
 
-string basicEffect::getType() const{
+string basicEffect::getType() const {
 	return effectType;
 }
 
-string basicEffect::shortStatus(){
-	return "I'm fine! ;)\n That is my status.";
+const string basicEffect::getShortStatus() const {
+	return shortStatus;
 }
 
 // - - - - - - -
@@ -275,7 +287,7 @@ bool basicEffect::randomizePresets(){
 
 // formats URLS for getting files within the effect folder itself
 string basicEffect::effectFolder(string _file) const{
-	return ofToDataPath( ((string)"../../src/effects/").append(getType()).append("/").append(_file));
+	return ofToDataPath( ((string)"effects/").append(getType()).append("/").append(_file));
 }
 
 void basicEffect::updateBoundingBox(){

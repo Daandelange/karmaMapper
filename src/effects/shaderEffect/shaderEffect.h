@@ -15,6 +15,7 @@
 #include "basicEffect.h"
 #include "animationParams.h"
 #include "mirReceiver.h"
+#include "shaderToyVariables.h"
 
 #define ShaderEffectDefaultFrag "defaultShader.frag"
 #define ShaderEffectDefaultVert "defaultShader.vert"
@@ -51,7 +52,11 @@ public:
 	
 	bool loadShader(string _vert, string _frag);
 	virtual void registerShaderVariables(const animationParams &params);
+	void registerShaderToyVariables();
+	void registerMirVariables();
+	
 	virtual void onSetEventListener(mirOnSetEventArgs &_args);
+	void onResizeListener( ofResizeEventArgs& resize );
 	
 protected:
 	bool setShaderToyVariables; // todo
@@ -59,6 +64,13 @@ protected:
 	string vertexShader, fragmentShader;
 	ofShader shader;
 	ofFbo fbo; // for compatibility issues, we need a specific fbo object
+	float fTimeFactor;
+	
+	shaderToyVariables shaderToyArgs;
+	bool bUseShadertoyVariables;
+	
+	//shaderToyVariables shaderToyArgs;
+	bool bUseMirVariables;
 	
 private:
 	
@@ -66,3 +78,4 @@ private:
 };
 
 #define GUIShaderPanel "Shaders"
+#define GUIShaderVariablesPanel "Shader Variables..."
