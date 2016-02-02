@@ -10,15 +10,17 @@
 
 #pragma once
 
+// addons
+#include "ofxImGui.h"
 
 #include "ofMain.h"
 #include "KMSettings.h"
 #include "shapes.h"
 #include "effects.h"
 #include "shapesDB.h"
-#include "ofxImGui.h"
 #include "animationParamsServer.h"
 #include "karmaModule.h"
+#include "karmaConsole.h"
 
 #include "OSCRouter.h"
 #include "mirReceiver.h"
@@ -85,6 +87,7 @@ protected:
 	bool bGuiShowAnimParams;
 	bool bGuiShowPlugins;
 	bool bGuiShowModules;
+	bool bGuiShowConsole;
 	
 	// gui
 	ofxImGui gui;
@@ -140,3 +143,5 @@ private:
 #define GUIEffectTypesInfo "Installed effect types"
 #define GUIShowModules "Show Modules"
 #define GUIModulesPanel "Modules"
+#define GUIToggleConsole "Show Console Window"
+#define GUIConsolePanel "Console"

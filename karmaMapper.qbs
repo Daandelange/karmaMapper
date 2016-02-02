@@ -26,6 +26,8 @@ Project{
             'src/core/fboRecorder.h',
             'src/core/karmaSoundAnalyser.cpp',
             'src/core/karmaSoundAnalyser.h',
+            'src/core/karmaModule.cpp',
+            'src/core/karmaModule.h',
 
             // PARAMS
             'src/parameters/animationParams.h',
@@ -73,6 +75,8 @@ Project{
             'src/shapes/shapes/shapes.h',
             'src/shapes/shapes/vertexShape.cpp',
             'src/shapes/shapes/vertexShape.h',
+            'src/shapes/shapes/fullScreenShape.cpp',
+            'src/shapes/shapes/fullScreenShape.h',
             'src/shapes/shapesDB.cpp',
             'src/shapes/shapesDB.h',
             'src/shapes/shapesEditor.cpp',

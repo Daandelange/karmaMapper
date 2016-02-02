@@ -14,6 +14,9 @@
 // CONSTRUCTORS
 // - - - - - - - -
 animationController::animationController( shapesDB& _scene ): scene(_scene){
+	
+	ofSetLoggerChannel( karmaConsoleChannel::getLogger() );
+	
 	bEnabled = false;
 	bShowGui = false;
 	
@@ -22,7 +25,7 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	bGuiShowAnimParams = false;
 	bGuiShowPlugins = false;
 	loadedConfiguration = "";
-	
+	bGuiShowConsole = false;
 	bGuiShowModules = false;
 	
 	effects.clear();
@@ -746,6 +749,8 @@ void animationController::draw(ofEventArgs& event){
 				showAnimationsGui(bGuiShowAnimParams);
 			}
 			
+			ImGui::MenuItem(GUIToggleConsole, NULL, &bGuiShowConsole);
+			
 			ImGui::MenuItem(GUIShowModules, NULL, &bGuiShowModules );
 			
 			ImGui::MenuItem(GUIShowPlugins, NULL, &bGuiShowPlugins );
@@ -1026,20 +1031,27 @@ void animationController::draw(ofEventArgs& event){
 				modules[i]->drawMenu();
 			}
 			
-		} // end bShowGui
-		
-		
-		if(bGuiShowModules && bShowGui){
-			ImGui::Begin( GUIModulesPanel, &bGuiShowModules, ImVec2(400, ofGetHeight()*.8f) );
-		
+			if(bGuiShowModules){
+				ImGui::Begin( GUIModulesPanel, &bGuiShowModules, ImVec2(400, ofGetHeight()*.8f) );
+				
+				ImGui::End();
+			} // end karma mapper modules gui window
 			
+			// show console ?
+			if( bGuiShowConsole ){
+				karmaConsoleChannel::getLogger()->drawImGui (GUIConsolePanel, bGuiShowConsole );
+			}
 			
-			ImGui::End();
-		} // end karma mapper modules gui window
-		
+			// show effect gui
+			for(int i=0; i<effects.size(); i++){
+				effects[i]->showGuiWindow( scene );
+			}
+			
+		}  // end bShowGui
 		
 		// end karma mapper main gui window
 		ImGui::End();
+		
 	}
 	
 	if(ShowSaveAsModal) ImGui::OpenPopup("Save config as...");
@@ -1070,11 +1082,6 @@ void animationController::draw(ofEventArgs& event){
 			ShowSaveAsModal = false; // tmp
 		}
 		ImGui::EndPopup();
-	}
-	
-	// show effect gui
-	if( bShowGui ) for(int i=0; i<effects.size(); i++){
-		effects[i]->showGuiWindow( scene );
 	}
 	
 	gui.end();
