@@ -361,6 +361,7 @@ bool shaderEffect::loadFromXML(ofxXmlSettings& xml){
 	
 	bUseMirVariables = xml.getValue( "bUseMirVariables", false );
 	
+	
 	return shader.isLoaded();
 }
 
@@ -448,6 +449,7 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 	
 	if( shader.isLoaded() ){
 		shader.unload();
+		bIsLoading = true;
 		fragmentShader = "";
 		vertexShader = "";
 	}
@@ -457,6 +459,55 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 			bHasError = false;
 			fragmentShader = _frag;
 			vertexShader = _vert;
+			
+			// analyse source files and check for special variable requests
+			
+			// todo: apply this to vertex shader too
+			{
+				string fragSource = shader.getShaderSource(GL_FRAGMENT_SHADER);
+				
+				//if( std::regex_match( fragSource.begin(), fragSource.end(), e ) ){
+				string needle = "// ### karmaMapper request";
+				std::size_t pos = fragSource.find( needle );
+				while( pos != std::string::npos ){
+					//cout << "pos=" << pos << "/" << fragSource.length() << endl;
+					string request = fragSource.substr(pos+needle.length(), fragSource.find("\n", pos) - (pos + needle.length()) );
+					
+					if( request.compare(" mirValues")==0 ){
+						bUseMirVariables = true;
+					}
+					else if( request.compare(" shaderToyVariables") ) {
+						bUseShadertoyVariables = true;
+					}
+					pos = fragSource.find( needle, pos+needle.length() );
+				}
+				
+				
+				needle = "//*km slider(";
+				pos = fragSource.find( needle );
+				while( pos != std::string::npos ){
+					string slider = fragSource.substr(pos+needle.length(), fragSource.find(")\n", pos) - (pos + needle.length()) );
+					vector<float> sliderData;
+					sliderData.clear();
+					
+					for(int from=0, to=0; to<=slider.length(); ){
+						to++;
+						
+						if( to==slider.length() || slider.substr(to, 1).compare(",")==0 ){
+							sliderData.push_back( ofToFloat(slider.substr(from, to-from)) );
+							to++;
+							from = to;
+						}
+						cout << "Found a slider in source code! :)" << endl;
+					}
+					
+					// store param // todo
+					
+					
+					pos = fragSource.find( needle, pos+needle.length() );
+				}
+			}
+			
 		}
 		else {
 			bHasError = true;
@@ -470,6 +521,8 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 		// todo: trigger shader not found errors here
 		bHasError = true;
 	}
+	
+	bIsLoading = false;
 	
 	return bHasError;
 	

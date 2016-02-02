@@ -51,6 +51,7 @@ bool basicEffect::initialise(const animationParams& params){
 	// set this when done
 	bInitialised = true;
 	bIsLoading = false;
+	bHasError = false;
 	
 	return bInitialised;
 }
@@ -105,7 +106,7 @@ void basicEffect::reset(){
 	shapes.clear();
 	shapes.resize(0);
 	
-	bInitialised = false;
+	bInitialised = true;
 	bHasError = false;
 	bEnabled = false;
 	bIsLoading = false;
@@ -135,6 +136,7 @@ void basicEffect::toggleGuiWindow() {
 bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 	if( !bShowGuiWindow ) return false;
 	
+	ImGui::SetNextWindowSize(ImVec2(400,ofGetHeight()*0.8));
 	ImGui::Begin( ((string)"Effect Settings: ").append(getName()).append("###effect-").append( ofToString(this) ).c_str() , &bShowGuiWindow );
 	
 	ImGui::LabelText("Type", "%s", getType().c_str() );
@@ -162,23 +164,56 @@ bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 	
 	if (ImGui::CollapsingHeader( GUIBoundShapesTitle, "GUIBoundShapesTitle", true, true)){
 		
+		ImGui::PushID("shapeBindings");
+		
 		ImGui::TextWrapped("Bound to %i shapes", getNumShapes());
 		
 		ImGui::Spacing();
 		
-		if (ImGui::Button("Bind to shape...")){
-			// todo
-		}
-		if (ImGui::IsItemHovered()) ImGui::SetTooltip("todo");
 		ImGui::SameLine();
 		if( ImGui::Button("Bind to shape group...") ){
-			// todo
-			
+				ImGui::OpenPopup("batchBindShapes");
 		}
-		if (ImGui::IsItemHovered()) ImGui::SetTooltip("todo");
+		if( ImGui::BeginPopup("batchBindShapes") ){
+			ImGui::SameLine();
+			
+			//ImGui::Text( "" );
+			//ImGui::Separator();
+			
+			if( ImGui::Selectable( "All shapes", false) ){
+				int newBoundShapes = 0;
+				for(auto s=_scene.getShapesItConstBegin(); s!=_scene.getShapesItConstEnd(); ++s){
+					if( !isBoundWithShape(*s) ){
+						if( bindWithShape(*s) ) newBoundShapes++;
+					}
+				}
+				// toggle selection ?
+				if( newBoundShapes==0 ){
+					detachFromAllShapes();
+				}
+			}
+			
+			else {
+				auto groups = _scene.getAllShapesByGroup();
+				for (auto g=groups.cbegin(); g!=groups.cend(); ++g){
+					if( ImGui::Selectable( ofToString(g->first).c_str(), false) ){
+						for( auto s=g->second.cbegin(); s!=g->second.cend(); ++s ){
+								bindWithShape(*s);
+						}
+					}
+				}
+			}
+		
+			ImGui::EndPopup();
+		}
+		
+		ImGui::SameLine();
+		if (ImGui::Button("Unbind All")){
+			detachFromAllShapes();
+		}
 		
 		// list shapes
-		ImGui::ListBoxHeader("Bound Shapes");
+		ImGui::ListBoxHeader("shapeBindings");
 		if(_scene.getNumShapes()<1) ImGui::Selectable("<None Available>", false);
 		else for (auto s=_scene.getShapesItConstBegin(); s!=_scene.getShapesItConstEnd(); ++s){
 			bool tmpSelected = (bool)(std::find(shapes.cbegin(), shapes.cend(), *s) !=shapes.cend() );
@@ -190,6 +225,8 @@ bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 		}
 		ImGui::ListBoxFooter();
 		
+		ImGui::PopID(); // pop boundShapes
+		
 		ImGui::Spacing();
 	}
 	
@@ -197,6 +234,9 @@ bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 	ImGui::Spacing();
 	
 	printCustomEffectGui();
+	
+	// spacing
+	ImGui::Text(" ");
 	
 	ImGui::End();
 	
@@ -381,6 +421,10 @@ bool basicEffect::bindWithShapes(list<basicShape *>& _shapes){
 	updateBoundingBox();
 	
 	return success;
+}
+
+bool basicEffect::isBoundWithShape(basicShape *_shape) const {
+	return (std::find(shapes.cbegin(), shapes.cend(), _shape) != shapes.cend() );
 }
 
 bool basicEffect::detachFromAllShapes(){

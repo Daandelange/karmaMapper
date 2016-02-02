@@ -20,9 +20,13 @@ uniform vec4 shapeBoundingBox; // x,y,w,h
 uniform int fitMode; // 0=fit to screen, 1=fit-to-shape, 2=crop-to-shape
 uniform float opacity;
 uniform float timeValX;
+
+// ### karmaMapper request shaderToyValues
+
+// the following line requests
+// ### karmaMapper request mirValues
 uniform float mirZeroCrossings;
 uniform float mirOnSetCalls;
-
 uniform float mirZcr; // [0.0]
 uniform float mirPitch; // [0.0 to 100.0+]
 uniform float mirBpm; // [ 0 to 200+ ]
@@ -30,12 +34,18 @@ uniform float mirBalance; // [-1.0 to +1.0]
 uniform float mirVolume; // [0.0 to 1.0+] // not yet
 uniform int mirSilence; // 0 or 1
 
+uniform vec2 zoom; //*km slider(0.1,3.3,0.5679)
+
 // this comes from the vertex shader
 in vec2 texCoordVarying;
 //in vec4 texColor;
 
 // this is the output of the fragment shader
 out vec4 outputColor;
+
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
 void main(){
 
@@ -71,7 +81,7 @@ void main(){
 	
 
 	//outputColor *= 0.1*mod( dot(gl_FragCoord.xy*2*( offset/2 ),gl_FragCoord.xy*offset),16.1+offset/3*2);
-	vec2 zoom = vec2(100.f);
+	zoom = vec2(10);
 	vec2 xy = 100+ (gl_FragCoord.xy/zoom) + .5*timeValX + mirBpm/2.0;///fboCanvas.xy;
 
 	// (xy.yx*vec2(timeValX/80.0+xy.y,timeValX*90.0)*10.0
@@ -85,6 +95,11 @@ void main(){
 			,
 			3.0
 		);
+	//vec2 expression2 = vec2(
+	//	mod( sin(xy.x+tan(xy.y-xy.x)*50)+1, sin(timeValX+xy.y)+1),
+	//	mod( cos(xy.y+sin(xy.x)*100)+1, cos(timeValX+xy.x)+1)
+	//);
+	float expression3 = sin( dot(tan(xy.x/1000)-(xy.y), mod(sin(xy.y)+cos((xy.x+xy.y/1000)), tan(xy.x/1000)) ) ) +1;
 	//outputColor.rg = (cornerDistance+1)/2.0;//cornerDistance;
 
 	// gl_FragCoord.xy is in pixels
@@ -92,7 +107,7 @@ void main(){
 	//outputColor.b = outputColor.b * mod( ,1.0);
 	//outputColor.b = 0;
 
-	outputColor.rgb = vec3(expression)/vec3(3);
+	outputColor.rgb = vec3( expression3 )/vec3(2.0);
 	//outputColor.r = mod(expression+1,3.0)/3.0;
 	//outputColor.g = mod(expression+2,3.0)/3.0;
 	//outputColor.b = mod(expression+0,3.0)/3.0;

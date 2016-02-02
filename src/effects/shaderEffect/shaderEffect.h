@@ -72,6 +72,8 @@ protected:
 	//shaderToyVariables shaderToyArgs;
 	bool bUseMirVariables;
 	
+	
+	
 private:
 	
 	

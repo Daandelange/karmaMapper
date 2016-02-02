@@ -112,6 +112,7 @@ public:
 	bool bindWithShape(basicShape* _shape);
 	bool bindWithShapes(vector<basicShape*> _shapes);
 	bool bindWithShapes(list<basicShape*>& _shapes);
+	bool isBoundWithShape(basicShape* _shape) const;
 	/*virtual void bindWithShapes(vector<basicShape*>& _shapesRef);*/
 	bool detachFromAllShapes();
 	bool detachFromShape(basicShape* _shape);

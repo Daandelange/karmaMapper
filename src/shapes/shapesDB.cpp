@@ -99,8 +99,16 @@ map<string, vector<basicShape*> > shapesDB::getAllShapesByType() const {
 	return ret;
 }
 
-map<string, vector<basicShape*>> shapesDB::getAllShapesByGroup() const {
-	// todo
+map<int, vector<basicShape*>> shapesDB::getAllShapesByGroup() const {
+	
+	map<int, vector<basicShape*> > ret;
+	for( auto it=shapes.begin(); it!=shapes.end(); ++it ){
+		if( ret.find( (*it)->getGroupID() ) == ret.end() ){
+			ret[ (*it)->getGroupID() ] = vector<basicShape*>();
+		}
+		ret[ (*it)->getGroupID() ].push_back(*it);
+	}
+	return ret;
 }
 
 basicShape* shapesDB::getRandomShapeByType(string _type){
