@@ -61,6 +61,10 @@
 		851FA9C41B9321FD00F94851 /* ofxTabbedPages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851FA9A11B9321FD00F94851 /* ofxTabbedPages.cpp */; };
 		851FA9C51B9321FD00F94851 /* ofxValuePlotter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851FA9A31B9321FD00F94851 /* ofxValuePlotter.cpp */; };
 		851FA9C61B9321FD00F94851 /* ofxVerticalSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851FA9A51B9321FD00F94851 /* ofxVerticalSlider.cpp */; };
+		8529F1F11C611A7D00949E5B /* karmaConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1EF1C611A7D00949E5B /* karmaConsole.cpp */; };
+		8529F1F21C611A7D00949E5B /* karmaConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1EF1C611A7D00949E5B /* karmaConsole.cpp */; };
+		8529F1F81C6139D200949E5B /* lineDrawEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1F41C6139D200949E5B /* lineDrawEffect.cpp */; };
+		8529F1F91C6139D200949E5B /* lineDrawEffectLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1F61C6139D200949E5B /* lineDrawEffectLine.cpp */; };
 		853CEC331C3AAD3D0030BF5D /* BaseEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853CEC1E1C3AAD3D0030BF5D /* BaseEngine.cpp */; };
 		853CEC341C3AAD3D0030BF5D /* BaseTheme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853CEC201C3AAD3D0030BF5D /* BaseTheme.cpp */; };
 		853CEC351C3AAD3D0030BF5D /* EngineGLFW.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853CEC221C3AAD3D0030BF5D /* EngineGLFW.cpp */; };
@@ -126,7 +130,7 @@
 		855452501B921FB000A36079 /* shapesEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8554524D1B921FB000A36079 /* shapesEditor.cpp */; };
 		8557B8411BC5B4ED00DAC695 /* lineEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8557B83D1BC5B4ED00DAC695 /* lineEffect.cpp */; };
 		8557B8421BC5B4ED00DAC695 /* lineEffectLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8557B83F1BC5B4ED00DAC695 /* lineEffectLine.cpp */; };
-		8557B8451BC5C15200DAC695 /* distortEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8557B8431BC5C15200DAC695 /* distortEffect.cpp */; };
+		855DCFA01C6211EE00F9D804 /* distortEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855DCF9E1C6211EE00F9D804 /* distortEffect.cpp */; };
 		855DEE951C3FCD61000936F8 /* effectFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855DEE941C3FCD61000936F8 /* effectFactory.cpp */; };
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
 		8574FEB01BC13BC20058E916 /* shapeFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */; };
@@ -319,6 +323,12 @@
 		851FA9A51B9321FD00F94851 /* ofxVerticalSlider.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxVerticalSlider.cpp; sourceTree = "<group>"; };
 		851FA9A61B9321FD00F94851 /* ofxVerticalSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxVerticalSlider.h; sourceTree = "<group>"; };
 		8526F0051C5E84A200D87DEC /* shaderToyVariables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shaderToyVariables.h; sourceTree = "<group>"; };
+		8529F1EF1C611A7D00949E5B /* karmaConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = karmaConsole.cpp; path = core/karmaConsole.cpp; sourceTree = "<group>"; };
+		8529F1F01C611A7D00949E5B /* karmaConsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaConsole.h; path = core/karmaConsole.h; sourceTree = "<group>"; };
+		8529F1F41C6139D200949E5B /* lineDrawEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineDrawEffect.cpp; sourceTree = "<group>"; };
+		8529F1F51C6139D200949E5B /* lineDrawEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineDrawEffect.h; sourceTree = "<group>"; };
+		8529F1F61C6139D200949E5B /* lineDrawEffectLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineDrawEffectLine.cpp; sourceTree = "<group>"; };
+		8529F1F71C6139D200949E5B /* lineDrawEffectLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineDrawEffectLine.h; sourceTree = "<group>"; };
 		853CEC1E1C3AAD3D0030BF5D /* BaseEngine.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BaseEngine.cpp; sourceTree = "<group>"; };
 		853CEC1F1C3AAD3D0030BF5D /* BaseEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseEngine.h; sourceTree = "<group>"; };
 		853CEC201C3AAD3D0030BF5D /* BaseTheme.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BaseTheme.cpp; sourceTree = "<group>"; };
@@ -359,9 +369,9 @@
 		8557B83E1BC5B4ED00DAC695 /* lineEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineEffect.h; sourceTree = "<group>"; };
 		8557B83F1BC5B4ED00DAC695 /* lineEffectLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineEffectLine.cpp; sourceTree = "<group>"; };
 		8557B8401BC5B4ED00DAC695 /* lineEffectLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineEffectLine.h; sourceTree = "<group>"; };
-		8557B8431BC5C15200DAC695 /* distortEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = distortEffect.cpp; path = effects/distortEffect.cpp; sourceTree = "<group>"; };
-		8557B8441BC5C15200DAC695 /* distortEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = distortEffect.h; path = effects/distortEffect.h; sourceTree = "<group>"; };
 		8557B8461BC5C9C600DAC695 /* effects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = effects.h; path = src/effects/effects.h; sourceTree = SOURCE_ROOT; };
+		855DCF9E1C6211EE00F9D804 /* distortEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = distortEffect.cpp; sourceTree = "<group>"; };
+		855DCF9F1C6211EE00F9D804 /* distortEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = distortEffect.h; sourceTree = "<group>"; };
 		855DEE931C3FCD61000936F8 /* effectFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = effectFactory.h; path = effects/effectFactory.h; sourceTree = "<group>"; };
 		855DEE941C3FCD61000936F8 /* effectFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = effectFactory.cpp; path = effects/effectFactory.cpp; sourceTree = "<group>"; };
 		8574FEAE1BC131E40058E916 /* shapeFactory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = shapeFactory.hpp; path = shapes/shapeFactory.hpp; sourceTree = "<group>"; };
@@ -703,6 +713,18 @@
 			path = ../../../addons/ofxGuiExtended/src;
 			sourceTree = "<group>";
 		};
+		8529F1F31C6139D200949E5B /* lineDrawEffect */ = {
+			isa = PBXGroup;
+			children = (
+				8529F1F41C6139D200949E5B /* lineDrawEffect.cpp */,
+				8529F1F51C6139D200949E5B /* lineDrawEffect.h */,
+				8529F1F61C6139D200949E5B /* lineDrawEffectLine.cpp */,
+				8529F1F71C6139D200949E5B /* lineDrawEffectLine.h */,
+			);
+			name = lineDrawEffect;
+			path = effects/lineDrawEffect;
+			sourceTree = "<group>";
+		};
 		853CEC1C1C3AAD3D0030BF5D /* ofxImGui */ = {
 			isa = PBXGroup;
 			children = (
@@ -777,6 +799,16 @@
 			);
 			name = lineEffect;
 			path = effects/lineEffect;
+			sourceTree = "<group>";
+		};
+		855DCF9D1C6211EE00F9D804 /* distortEffect */ = {
+			isa = PBXGroup;
+			children = (
+				855DCF9E1C6211EE00F9D804 /* distortEffect.cpp */,
+				855DCF9F1C6211EE00F9D804 /* distortEffect.h */,
+			);
+			name = distortEffect;
+			path = effects/distortEffect;
 			sourceTree = "<group>";
 		};
 		85884B421C3BC80E004BC99C /* parameters */ = {
@@ -966,6 +998,8 @@
 				34D803D358752130FC44817F /* animationController.h */,
 				7EBAFC2FA45D0D1D6109E3A4 /* fboRecorder.cpp */,
 				33927B796E5A3583FCC457B2 /* fboRecorder.h */,
+				8529F1EF1C611A7D00949E5B /* karmaConsole.cpp */,
+				8529F1F01C611A7D00949E5B /* karmaConsole.h */,
 				D504AF6E0E3ED937A427FFA5 /* karmaSoundAnalyser.cpp */,
 				880F6ACB0496D1B9F4B14150 /* karmaSoundAnalyser.h */,
 				85E2ABF51C51696200687CE5 /* karmaModule.cpp */,
@@ -1018,8 +1052,8 @@
 				855DEE931C3FCD61000936F8 /* effectFactory.h */,
 				3EA6183E7E925AEF111E8587 /* basicEffect.cpp */,
 				F19E4F7003214B080BB274A0 /* basicEffect.h */,
-				8557B8431BC5C15200DAC695 /* distortEffect.cpp */,
-				8557B8441BC5C15200DAC695 /* distortEffect.h */,
+				855DCF9D1C6211EE00F9D804 /* distortEffect */,
+				8529F1F31C6139D200949E5B /* lineDrawEffect */,
 				8557B83C1BC5B4ED00DAC695 /* lineEffect */,
 				854045ED1BC9643B005C25D2 /* shaderEffect */,
 			);
@@ -1248,6 +1282,7 @@
 				851FA9C61B9321FD00F94851 /* ofxVerticalSlider.cpp in Sources */,
 				855451DD1B91FB4C00A36079 /* shapesDB.cpp in Sources */,
 				855451DE1B91FB4C00A36079 /* shapesScene.cpp in Sources */,
+				8529F1F21C611A7D00949E5B /* karmaConsole.cpp in Sources */,
 				8554523D1B921A1400A36079 /* ofAppEditor.cpp in Sources */,
 				855451E51B91FB4C00A36079 /* ofxAssimpAnimation.cpp in Sources */,
 				855451E61B91FB4C00A36079 /* ofxAssimpMeshHelper.cpp in Sources */,
@@ -1331,12 +1366,15 @@
 				851FA9AE1B9321FD00F94851 /* ofxLabelExtended.cpp in Sources */,
 				3B8120368B4FCCD80883BAF3 /* ofxAssimpAnimation.cpp in Sources */,
 				85999DD41C537F6600786707 /* fullScreenShape.cpp in Sources */,
+				8529F1F81C6139D200949E5B /* lineDrawEffect.cpp in Sources */,
 				483FA4F6D5FA6422C559B1F5 /* ofxAssimpMeshHelper.cpp in Sources */,
 				8DED5056525646FA71980866 /* ofxAssimpModelLoader.cpp in Sources */,
 				858D33451BEBF220003E49C7 /* ofxSyphonServer.mm in Sources */,
 				B8846EF8E504895A4A9EFEC0 /* ofxAssimpTexture.cpp in Sources */,
+				8529F1F11C611A7D00949E5B /* karmaConsole.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				85884B541C3BC80E004BC99C /* durationRC.cpp in Sources */,
+				855DCFA01C6211EE00F9D804 /* distortEffect.cpp in Sources */,
 				853CEC361C3AAD3D0030BF5D /* EngineOpenGLES.cpp in Sources */,
 				5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */,
 				B266578FC55D23BFEBC042E7 /* ofxGuiGroup.cpp in Sources */,
@@ -1359,8 +1397,8 @@
 				8557B8421BC5B4ED00DAC695 /* lineEffectLine.cpp in Sources */,
 				4ADB88E2FB52E76A471065DE /* ofxOscParameterSync.cpp in Sources */,
 				858D33461BEBF220003E49C7 /* ofxSyphonServerDirectory.mm in Sources */,
+				8529F1F91C6139D200949E5B /* lineDrawEffectLine.cpp in Sources */,
 				640279EE111671BD026CB013 /* ofxOscReceiver.cpp in Sources */,
-				8557B8451BC5C15200DAC695 /* distortEffect.cpp in Sources */,
 				858D33441BEBF220003E49C7 /* ofxSyphonClient.mm in Sources */,
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
 				851FA9B11B9321FD00F94851 /* ofxMinimalToggle.cpp in Sources */,
@@ -1417,6 +1455,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1480,7 +1519,7 @@
 				KM_EDITOR_APP = true;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(OF_CORE_LIBS)",
@@ -1497,6 +1536,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1559,7 +1599,7 @@
 				KM_EDITOR_APP = true;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(OF_CORE_LIBS)",
@@ -1577,6 +1617,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
@@ -1655,6 +1696,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -1733,6 +1775,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1796,7 +1839,7 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(OF_CORE_LIBS)",
@@ -1813,6 +1856,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4EB6923138AFD0F00A09F29 /* Project.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1875,7 +1919,7 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(OF_CORE_FRAMEWORKS)",
 					"$(OF_CORE_LIBS)",

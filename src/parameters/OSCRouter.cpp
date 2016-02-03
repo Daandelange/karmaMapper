@@ -107,9 +107,10 @@ bool OSCRouter::start(int _port){
 	// listen
 	ofAddListener( ofEvents().update , this, &OSCRouter::update );
 	
-	
 	// OSC
 	setup( _port );
+	
+	reconnectKMSA();
 	
 	bEnabled = true;
 	return isEnabled()==true;
@@ -118,8 +119,6 @@ bool OSCRouter::start(int _port){
 bool OSCRouter::stop(){
 	bEnabled = false;
 	ofRemoveListener( ofEvents().update , this, &OSCRouter::update );
-	
-	
 	
 	return isEnabled()==false;
 }
@@ -163,4 +162,14 @@ void OSCRouter::update(ofEventArgs &event){
 	//guiStatus = ofToString(isEnabled()?"Running":"Down");
 	//guiNumRoutes = ofToString(nodes.size());
 	
+}
+
+// tries to let the KMSA know we're live now
+void OSCRouter::reconnectKMSA(){
+	ofxOscSender sender;
+	sender.setup("localhost", KM_SA_OSC_PORT_IN);
+	ofxOscMessage m;
+	m.setAddress("/km/reconnectKMSA");
+	m.addTriggerArg();
+	sender.sendMessage(m);
 }

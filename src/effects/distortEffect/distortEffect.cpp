@@ -57,8 +57,6 @@ bool distortEffect::render(const animationParams &params){
 	//return;
 	
 	// tmp
-	ofSetColor(255);
-	ofFill();
 	for(std::vector<basicShape*>::iterator it=shapes.begin(); it!=shapes.end(); ++it){
 		// todo: basicEffect should have a nice downcast function like .asType<vertexShape>()
 		if( (*it)->isType("vertexShape") ){
@@ -130,3 +128,6 @@ bool distortEffect::randomizePresets(){
 	
 	return true;
 }
+
+// register effect type
+EFFECT_REGISTER( distortEffect , "distortEffect" );
