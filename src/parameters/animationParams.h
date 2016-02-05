@@ -12,6 +12,37 @@ struct seasonsYear{
 	seasonsYear(): winter(0), spring(0), summer(0), autumn(0){};
 	
 	float winter, spring, summer, autumn;
+	
+	inline float& operator[](const int i) {
+		switch (i){
+			case 0 :
+				return winter;
+				break;
+			case 1 :
+				return spring;
+				break;
+			case 2 :
+				return summer;
+			default:
+				return autumn;
+				break;
+		}
+	}
+	inline float operator[](const int i) const {
+		switch (i){
+			case 0 :
+				return winter;
+				break;
+			case 1 :
+				return spring;
+				break;
+			case 2 :
+				return summer;
+			default:
+				return autumn;
+				break;
+		}
+	}
 };
 
 struct colorSet {

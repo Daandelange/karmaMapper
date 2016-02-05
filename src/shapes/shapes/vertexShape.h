@@ -22,6 +22,7 @@ public:
 	// MAIN FUNCTIONS
 	void initialiseVertexVariables();
 	virtual void sendToGPU();
+	vertexShape* getUpcasted();
 	
 	// #########
 	// LOAD & SAVE FUNCTIONS

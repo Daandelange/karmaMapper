@@ -35,21 +35,7 @@ bool lineDrawEffect::initialise(const animationParams& params){
 	bIsLoading = true;
 	bInitialised = false;
 	
-	// do stuff
-	ofEnableAlphaBlending();
-	
-	// set this when done
-	bInitialised = true;
-	bIsLoading = false;
-	
-	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
-	fbo.begin();
-	ofClear(0,0,0,0); // clear all, including alpha
-	fbo.end();
-	
-	lines.clear();
-	
-	ofAddListener(mirReceiver::mirTempoEvent, this, &lineDrawEffect::tempoEventListener);
+	reset();
 	
 	return bInitialised;
 }
@@ -119,10 +105,24 @@ void lineDrawEffect::reset(){
 	// effect type must match with class
 	effectType = "lineDrawEffect";
 	
+	fLineBeatDuration = 1.0;
+	
+	// do stuff
+	ofEnableAlphaBlending();
+	
 	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
 	fbo.begin();
 	ofClear(0,0,0,0); // clear all, including alpha
 	fbo.end();
+	
+	lines.clear();
+	
+	ofRemoveListener(mirReceiver::mirTempoEvent, this, &lineDrawEffect::tempoEventListener);
+	ofAddListener(mirReceiver::mirTempoEvent, this, &lineDrawEffect::tempoEventListener);
+	
+	// set this when done
+	bInitialised = true;
+	bIsLoading = false;
 }
 
 // - - - - - - -
@@ -139,8 +139,9 @@ bool lineDrawEffect::printCustomEffectGui(){
 		ImGui::Separator();
 		
 		ImGui::LabelText("Number of lines", "%u", 0 );
-		ImGui::ColorEdit4("test", linesColor, true);
+		ImGui::ColorEdit4("Color", linesColor, true);
 		//ImGui::Checkbox("React to mirTempoEvents");
+		ImGui::SliderFloat("Line Duration (in beats)", &fLineBeatDuration, 1, 4);
 		
 		ImGui::Separator();
 	}
@@ -162,6 +163,7 @@ bool lineDrawEffect::saveToXML(ofxXmlSettings& xml) const{
 		xml.addValue("a", linesColor[3] );
 		xml.popTag();
 	}
+	xml.addValue("LineDuration", fLineBeatDuration);
 	
 	return ret;
 }
@@ -178,6 +180,7 @@ bool lineDrawEffect::loadFromXML(ofxXmlSettings& xml){
 		linesColor[3] = xml.getValue("a", 1.0f );
 		xml.popTag();
 	}
+	fLineBeatDuration = xml.getValue("LineDuration", 1.0f);
 	
 	return ret;
 }
@@ -204,7 +207,7 @@ void lineDrawEffect::tempoEventListener(mirTempoEventArgs &_args){
 	
 	if(_args.isTempoBis) for(auto s=shapes.begin(); s!=shapes.end(); ++s){
 		if( (*s)->isType("vertexShape") ){
-			lines.push_back( lineDrawEffectLine( (vertexShape*)*s, (1.0f/(mirReceiver::mirCache.bpm/60.0f) )*4.0f ) );
+			lines.push_back( lineDrawEffectLine( (vertexShape*)*s, (1.0f/(mirReceiver::mirCache.bpm/60.0f) )*fLineBeatDuration ) );
 		}
 	}
 }

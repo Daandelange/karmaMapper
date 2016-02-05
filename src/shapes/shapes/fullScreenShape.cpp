@@ -48,6 +48,10 @@ void fullScreenShape::initialiseFullScreenVariables(){
 	setPointsToScreenRes();
 }
 
+fullScreenShape* fullScreenShape::getUpcasted(){
+	return this;
+}
+
 // ### LOAD & SAVE
 // writes the shape data to XML. xml's cursor is already pushed into the right <shape> tag.
 // return success state
@@ -60,11 +64,6 @@ bool fullScreenShape::saveToXML(ofxXmlSettings &xml){
 bool fullScreenShape::loadFromXML(ofxXmlSettings& xml){
 	return vertexShape::loadFromXML(xml);
 }
-
-// - - - - - - -
-// VERTEX SHAPE FUNCTIONS
-// - - - - - - -
-
 
 // - - - - - - -
 // FULLSCREEN SHAPE FUNCTIONS

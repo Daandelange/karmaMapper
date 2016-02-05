@@ -34,7 +34,7 @@ uniform float mirBalance; // [-1.0 to +1.0]
 uniform float mirVolume; // [0.0 to 1.0+] // not yet
 uniform int mirSilence; // 0 or 1
 
-uniform vec2 zoom; //*km slider(0.1,3.3,0.5679)
+uniform vec2 manualZoom; //*km slider(0.1,3.3,0.5679)
 
 // this comes from the vertex shader
 in vec2 texCoordVarying;
@@ -81,7 +81,8 @@ void main(){
 	
 
 	//outputColor *= 0.1*mod( dot(gl_FragCoord.xy*2*( offset/2 ),gl_FragCoord.xy*offset),16.1+offset/3*2);
-	zoom = vec2(10);
+	vec2 zoom = vec2(10,10);
+
 	vec2 xy = 100+ (gl_FragCoord.xy/zoom) + .5*timeValX + mirBpm/2.0;///fboCanvas.xy;
 
 	// (xy.yx*vec2(timeValX/80.0+xy.y,timeValX*90.0)*10.0

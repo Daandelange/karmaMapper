@@ -54,6 +54,7 @@ public:
 	
 	// #########
 	// BASIC SHAPE GETTERS
+	virtual basicShape* getUpcasted();
 	string getName() const;
 	int getGroupID() const;
 	bool isReady() const;

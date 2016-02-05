@@ -18,7 +18,7 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	ofSetLoggerChannel( karmaConsoleChannel::getLogger() );
 	
 	bEnabled = false;
-	bShowGui = false;
+	bShowGui = true;
 	
 	bShowMouse = true;
 	bIsFullScreen = false;

@@ -26,10 +26,11 @@ void ofApp::setup(){
 	// setup scene
 	//scene.loadLastUsedScene();
 	//scene.loadScene("Vendome_1500_1200.xml");
-	controller.loadLastConfiguration();
+	
 	
 	// enable animation controller
-	//controller.start();
+	controller.start();
+	controller.loadLastConfiguration();
 	
 	// start Ableton Liveset Decoder
 	//ofx::AbletonLiveSet::LiveSet LS;

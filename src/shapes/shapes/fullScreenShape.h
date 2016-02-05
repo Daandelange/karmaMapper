@@ -19,9 +19,11 @@ public:
 	fullScreenShape(const basicPoint _pos/*=basicPoint::nullPoint*/);
 	~fullScreenShape();
 	
+	
 	// #########
 	// MAIN FUNCTIONS
-	void initialiseFullScreenVariables();
+	virtual void initialiseFullScreenVariables();
+	fullScreenShape* getUpcasted();
 	
 	// #########
 	// LOAD & SAVE FUNCTIONS

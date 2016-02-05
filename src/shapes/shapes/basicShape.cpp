@@ -199,6 +199,10 @@ bool basicShape::loadFromXML(ofxXmlSettings& xml){
 // SHAPE PROPERTIES
 // - - - - - - -
 // ### GETTERS
+basicShape* basicShape::getUpcasted(){
+	return this;
+}
+
 string basicShape::getName() const {
 	return shapeName;
 }

@@ -104,6 +104,11 @@ void vertexShape::sendToGPU(){
 	ofPopMatrix();
 }
 
+// todo: check if this is useful... ?
+vertexShape* vertexShape::getUpcasted(){
+	return this;
+}
+
 // simply (re)computes shape data so that it fits in the boundingbox
 void vertexShape::calculateBoundingBox(){
 	// reset

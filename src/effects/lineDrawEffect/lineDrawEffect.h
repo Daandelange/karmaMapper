@@ -53,6 +53,8 @@ protected:
 	float linesColor[4];
 	list<lineDrawEffectLine> lines;
 	
+	float fLineBeatDuration;
+	
 private:
 	
 	
