@@ -10,6 +10,9 @@
 //  Implements some standard methods for overall usage.
 //
 
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
 #include "musicEffect.h"
 
 // - - - - - - -
@@ -109,4 +112,5 @@ void musicEffect::renderVariables(){
 	
 }
 
-
+// END KM_PLEASESKIPME
+#endif

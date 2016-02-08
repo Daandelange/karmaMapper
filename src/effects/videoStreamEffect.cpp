@@ -9,6 +9,9 @@
 //  Bla bla bla
 //
 
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
 #include "videoStreamEffect.h"
 
 videoStreamEffect::videoStreamEffect(){
@@ -138,3 +141,5 @@ void videoStreamEffect::noteEventListener(ofx::AbletonLiveSet::LSNoteEvent &note
 	cout << "ok!" << endl;
 }
 
+// END KM_PLEASESKIPME
+#endif

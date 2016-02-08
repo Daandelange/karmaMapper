@@ -9,6 +9,9 @@
 //  Bla bla bla
 //
 
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
 #include "meshRenderer3D.h"
 
 MeshRenderer3D::MeshRenderer3D(){
@@ -202,3 +205,5 @@ void MeshRenderer3D::noteEventListener(ofx::AbletonLiveSet::LSNoteEvent &noteEve
 	cout << "ok!" << endl;
 }
 
+// END KM_PLEASESKIPME
+#endif

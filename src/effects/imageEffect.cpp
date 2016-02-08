@@ -10,6 +10,9 @@
 //  Implements some standard methods for overall usage.
 //
 
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
 #include "imageEffect.h"
 
 imageEffect::imageEffect(){
@@ -221,3 +224,6 @@ void imageEffect::floatListener(durationFloatEventArgs &_args){
 	
 	//else if(_args.source.compare("")==0){}
 }*/
+
+// END KM_PLEASESKIPME
+#endif

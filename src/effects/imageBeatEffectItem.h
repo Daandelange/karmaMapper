@@ -6,6 +6,9 @@
 //  Copyright (c) 2014 __MyCompanyName__. All rights reserved.
 //
 
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
 #pragma once
 
 #include "ofMain.h"
@@ -34,3 +37,6 @@ protected:
 private:
 	
 };
+
+// END KM_PLEASESKIPME
+#endif

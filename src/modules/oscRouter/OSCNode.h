@@ -33,7 +33,7 @@ public:
 	
 protected:
 	//ofMutex ooscMutex;
-	
+	vector<string> moduleDependencies;
 	
 private:
 	

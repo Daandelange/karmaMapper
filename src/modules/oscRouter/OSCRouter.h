@@ -10,6 +10,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "OSCNode.h"
+#include "karmaModule.h"
 
 #define KM_OSC_PORT_IN 12000
 #define KM_SA_OSC_PORT_IN 12001
@@ -17,7 +18,7 @@
 // based upon this model to register an OSC router
 // http://gamedev.stackexchange.com/a/17759
 
-class OSCRouter : public ofxOscReceiver {
+class OSCRouter : public ofxOscReceiver, public karmaModule {
 	
 public:
 	OSCRouter( );
@@ -48,6 +49,7 @@ protected:
 	//ofParameter<string> guiStatus;
 	//ofParameter<bool> bGuiEnabled;
 	list<OSCNode* > nodes;
+	ofMutex OSCMutex;
 	
 private:
 	bool bEnabled;

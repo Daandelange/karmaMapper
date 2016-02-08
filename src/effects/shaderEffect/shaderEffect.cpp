@@ -48,17 +48,11 @@ bool shaderEffect::initialise(const animationParams& params){
 	// do stuff
 	ofEnableAlphaBlending();
 	
+	shaderEffect::reset();
+	
 	// set this when done
 	bInitialised = true;
 	bIsLoading = false;
-	
-	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
-	fbo.begin();
-	ofClear(0,0,0,0); // clear all, including alpha
-	fbo.end();
-	
-	ofRemoveListener(mirReceiver::mirOnSetEvent, this, &shaderEffect::onSetEventListener);
-	ofAddListener(mirReceiver::mirOnSetEvent, this, &shaderEffect::onSetEventListener);
 	
 	return bInitialised;
 }
@@ -66,7 +60,12 @@ bool shaderEffect::initialise(const animationParams& params){
 bool shaderEffect::render(const animationParams &params){
 	if(!isReady() || !shader.isLoaded()) return false;
 	
-	fbo.begin();
+	if(bUseCustomFbo){
+		fbo.begin();
+	}
+	else {
+		ofPushStyle();
+	}
 	// fade out
 	//ofClear(ofFloatColor(0,0,0, 30);
 	
@@ -93,7 +92,12 @@ bool shaderEffect::render(const animationParams &params){
 
 	ofSetColor(0.0f, 5.0f*params.seasons.spring + 5.0f*params.seasons.autumn);
 	ofFill();
-	ofDrawRectangle(0,0, fbo.getWidth(), fbo.getHeight());
+	if (bUseCustomFbo) {
+		ofDrawRectangle(0,0, fbo.getWidth(), fbo.getHeight());
+	}
+	else {
+		ofDrawRectangle(0,0, ofGetWidth(), ofGetHeight());
+	}
 	
 	glDisable(GL_BLEND);
 	
@@ -113,16 +117,23 @@ bool shaderEffect::render(const animationParams &params){
 	// draw shape so GPU gets their vertex data
 	for(auto it=shapes.begin(); it!=shapes.end(); ++it){
 		shader.setUniform4f("shapeBoundingBox", (*it)->getBoundingBox().x, (*it)->getBoundingBox().y, (*it)->getBoundingBox().width, (*it)->getBoundingBox().height );
-			//cout << (*it)->getBoundingBox().width << endl;
-			(*it)->sendToGPU();
+		shader.setUniform2f("shapeCenter", (*it)->getPositionPtr()->x, (*it)->getPositionPtr()->y );
+		//cout << (*it)->getBoundingBox().width << endl;
+		(*it)->sendToGPU();
 	}
 	
 	// flush the pipeline! :D
 	shader.end();
-	fbo.end();
 	
-	// draw fbo
-	fbo.draw(0,0);
+	if( bUseCustomFbo ){
+		fbo.end();
+		
+		// draw fbo
+		fbo.draw(0,0);
+	}
+	else {
+		ofPopStyle();
+	}
 	
 	return true;
 }
@@ -194,8 +205,20 @@ void shaderEffect::reset(){
 	vertexShader = effectFolder(ShaderEffectDefaultVert);
 	fragmentShader = effectFolder(ShaderEffectDefaultFrag);
 	
+	ofRemoveListener(mirReceiver::mirOnSetEvent, this, &shaderEffect::onSetEventListener);
+	ofAddListener(mirReceiver::mirOnSetEvent, this, &shaderEffect::onSetEventListener);
+	
+	setUseCustomFbo(false);
 	bUseShadertoyVariables = false;
 	bUseMirVariables = false;
+	bUseTextures = false;
+	textureMode = 0;
+	textures.clear();
+	textureTransform[0]=0;
+	textureTransform[1]=0;
+	textureTransform[2]=1;
+	textureTransform[3]=1;
+	//texturesTime.clear();
 	shaderToyArgs = shaderToyVariables();
 }
 
@@ -208,10 +231,14 @@ bool shaderEffect::printCustomEffectGui(){
 	
 	if( ImGui::CollapsingHeader( GUIShaderPanel, "GUIShaderPanel", true, true ) ){
 		
-		ImGui::TextWrapped("This effect loads shader files and animates them feeding it parameters.");
+		ImGui::TextWrapped("This effect loads shader files and animates them by feeding it parameters.");
 		ImGui::TextWrapped("You can enable some default variables or create your own."); // todo
 		
 		ImGui::Separator();
+		
+		if(ImGui::Checkbox("Use dedicated FBO", &bUseCustomFbo )){
+			setUseCustomFbo(bUseCustomFbo);
+		}
 		
 		ImGui::LabelText("Vertex Shader", "%s", vertexShader.c_str() );
 		if(ImGui::Button("Load .vert...")){
@@ -229,7 +256,8 @@ bool shaderEffect::printCustomEffectGui(){
 		}
 		ImGui::SameLine();
 		if(ImGui::Button("Clear Vertex")){
-			loadShader("", fragmentShader);
+			vertexShader = "";
+			loadShader(fragmentShader, vertexShader);
 		}
 		
 		ImGui::Separator();
@@ -251,7 +279,8 @@ bool shaderEffect::printCustomEffectGui(){
 		}
 		ImGui::SameLine();
 		if(ImGui::Button("Clear Fragment")){
-			loadShader("", vertexShader);
+			fragmentShader = "";
+			loadShader(fragmentShader, vertexShader);
 		}
 		
 		ImGui::Separator();
@@ -275,7 +304,7 @@ bool shaderEffect::printCustomEffectGui(){
 			
 			ImGui::Separator();
 			
-			ImGui::Checkbox("Inject shadertoy variables.", &bUseShadertoyVariables );
+			ImGui::Checkbox("Set shadertoy variables.", &bUseShadertoyVariables );
 			if(bUseShadertoyVariables){
 				ImGui::Indent();
 				ImGui::SliderFloat("Time scale", &shaderToyArgs.iGlobalTimeScale, 0, 10);
@@ -302,15 +331,32 @@ bool shaderEffect::printCustomEffectGui(){
 				ImGui::Unindent();
 			} // end shadertoy variables
 			
-			ImGui::Checkbox("Inject mir variables.", &bUseMirVariables );
+			ImGui::Checkbox("Set mir variables.", &bUseMirVariables );
 			if(bUseMirVariables){
 				ImGui::Indent();
-				ImGui::TextWrapped("Forwards karmaSoundAnalyser audio into the shader.");
+				ImGui::TextWrapped("Forwards karmaSoundAnalyser audio (received trough OSC) into the shader.");
 				
 				ImGui::Separator();
 				ImGui::Unindent();
 				
 			} // end mir variables
+			
+			ImGui::Checkbox("Set Textures.", &bUseTextures );
+			if(bUseTextures){
+				ImGui::Indent();
+				ImGui::TextWrapped("Lets you upload textures to the GPU.");
+				ImGui::TextWrapped("Note: Shares the same textures with shadertoy.");
+				
+				ImGui::DragFloat2("Global Texture Position", &textureTransform[0]);
+				if( ImGui::SliderFloat("GlobalTextureScale", &textureTransform[2], -2.0f,8.0f) ){
+					// lock ratio
+					textureTransform[3] = textureTransform[2];
+				}
+				
+				ImGui::Separator();
+				ImGui::Unindent();
+				
+			} // end textures
 		}
 		
 		
@@ -339,7 +385,18 @@ bool shaderEffect::saveToXML(ofxXmlSettings& xml) const{
 		xml.popTag();
 	}
 	
-	xml.addValue("bUseMirVariables", bUseMirVariables );
+	xml.addValue( "bUseMirVariables", bUseMirVariables );
+	xml.addValue( "bUseCustomFbo", bUseCustomFbo );
+	xml.addValue( "textureMode", textureMode);
+	
+	xml.addTag("textureTransform");
+	if(xml.pushTag("textureTransform")){
+		xml.addValue("TranslateX", textureTransform[0]);
+		xml.addValue("TranslateY", textureTransform[1]);
+		xml.addValue("ScaleX", textureTransform[2]);
+		xml.addValue("ScaleY", textureTransform[3]);
+		xml.popTag();
+	}
 	
 	return ret;
 }
@@ -360,7 +417,16 @@ bool shaderEffect::loadFromXML(ofxXmlSettings& xml){
 	}
 	
 	bUseMirVariables = xml.getValue( "bUseMirVariables", false );
+	setUseCustomFbo( xml.getValue( "bUseCustomFbo", false ) );
+	setTextureMode( xml.getValue("textureMode", 0) );
 	
+	if(xml.pushTag("textureTransform")){
+		textureTransform[0] = xml.getValue("TranslateX", 0.0f);
+		textureTransform[1] = xml.getValue("TranslateY", 0.0f);
+		textureTransform[2] = xml.getValue("ScaleX", 1.0f);
+		textureTransform[3] = xml.getValue("ScaleY", 1.0f);
+		xml.popTag();
+	}
 	
 	return shader.isLoaded();
 }
@@ -405,6 +471,7 @@ void shaderEffect::registerShaderVariables(const animationParams& params){
 	if( bUseMirVariables ) registerMirVariables();
 	
 	if( bUseShadertoyVariables ) registerShaderToyVariables();
+	
 }
 
 // registers shadertoy variables
@@ -412,7 +479,34 @@ void shaderEffect::registerShaderToyVariables(){
 	ofScopedLock( effectMutex );
 	shader.setUniform1f("iResolution", ofGetElapsedTimef() * fTimeFactor );
 	
-	
+	// set textures
+	if( bUseTextures ){
+		
+		float iChannelTime[(textures.size())];
+		//float iChannelResolution[(textures.size()*3)];
+		
+		int i=0;
+		for(auto t=textures.begin(); t!=textures.end(); ++t, ++i){
+			// todo: this probably causes a bug in texture ID/data
+			if(!t->isAllocated()) continue;
+			
+			//iChannelResolution[(3*i+0)] = t->getWidth();
+			//iChannelResolution[(3*i+1)] = t->getHeight();
+			//iChannelResolution[(3*i+2)] = t->getWidth() / t->getHeight();
+			if(i<4) iChannelTime[i] = shaderToyArgs.iChannelTime[i];
+			
+			//t->setTextureWrap(GL_REPEAT, GL_REPEAT );
+			//glTexParameterf(t->getTextureData().textureID, GL_REPEAT, GL_REPEAT);
+			//t->setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+			shader.setUniformTexture(((string)"iChannel").append( ofToString(i) ), *t, t->getTextureData().textureID );
+			//cout << t->getTextureData().wrapModeHorizontal << " - "<< GL_CLAMP_TO_EDGE << endl;
+		}
+		//cout << iChannelResolution[0] << endl;
+		shader.setUniform1fv("iChannelTime", iChannelTime);
+		shader.setUniform3fv("iChannelResolution", *shaderToyArgs.iChannelResolution );
+		shader.setUniform1i("textureMode", textureMode);
+		shader.setUniform4f("globalTextureTransform", textureTransform[0], textureTransform[1], textureTransform[2], textureTransform[3]);
+	}
 // These variables will be available in your shader :)
 	
 //	uniform vec3      iResolution;           // viewport resolution (in pixels)
@@ -440,6 +534,26 @@ void shaderEffect::registerMirVariables() {
 	shader.setUniform1f("mirVolume", mirReceiver::mirCache.volumeMono);
 	shader.setUniform1i("mirSilence", mirReceiver::mirCache.silence);
 	shader.setUniform1f("mirOnSetCalls", onSetCalls );
+}
+
+void shaderEffect::setUseCustomFbo(const bool &_useCustomFbo){
+	
+	//if( bUseCustomFbo == _useCustomFbo ) return;
+	   
+	bUseCustomFbo = _useCustomFbo;
+	if(bUseCustomFbo){
+		fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
+		fbo.begin();
+		ofClear(0,0,0,0); // clear all, including alpha
+		fbo.end();
+	}
+	else {
+		fbo.clear(); // frees GPU memory
+	}
+}
+
+void shaderEffect::setTextureMode(const int& _mode) {
+	textureMode = _mode;
 }
 
 bool shaderEffect::loadShader(string _vert, string _frag){
@@ -552,6 +666,7 @@ void shaderEffect::onResizeListener(ofResizeEventArgs &resize){
 		shaderToyArgs.iResolution[2] = ofGetWindowMode();
 	}
 }
+
 
 
 // register effect type

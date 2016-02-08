@@ -22,7 +22,6 @@
 
 struct animationParams;
 
-// todo : add statistics to effects. Track their rendering time so we have an overview of their rendering time.
 // todo: add a GPU memory extraction feature for stats and handling no more GPU allocatable errors.
 
 class shaderEffect : public basicEffect {
@@ -54,16 +53,17 @@ public:
 	virtual void registerShaderVariables(const animationParams &params);
 	void registerShaderToyVariables();
 	void registerMirVariables();
+	void setUseCustomFbo(const bool& _useCustomFbo);
+	void setTextureMode( const int& _mode);
 	
 	virtual void onSetEventListener(mirOnSetEventArgs &_args);
 	void onResizeListener( ofResizeEventArgs& resize );
 	
 protected:
-	bool setShaderToyVariables; // todo
 	int onSetCalls;
 	string vertexShader, fragmentShader;
 	ofShader shader;
-	ofFbo fbo; // for compatibility issues, we need a specific fbo object
+	ofFbo fbo; // tmp, until there's a layering system
 	float fTimeFactor;
 	
 	shaderToyVariables shaderToyArgs;
@@ -71,8 +71,13 @@ protected:
 	
 	//shaderToyVariables shaderToyArgs;
 	bool bUseMirVariables;
+	bool bUseCustomFbo;
+	bool bUseTextures;
+	int textureMode; // note: nothing to do with GL texture modes
+	float textureTransform[4]; // offset(x,y) scale(w,h)
 	
-	
+	vector<ofTexture> textures;
+	//vector<float> texturesTime;
 	
 private:
 	

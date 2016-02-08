@@ -105,6 +105,8 @@ PROJECT_DEFINES = KM_EDITOR_APP
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
 PROJECT_CFLAGS = -fpermissive
+# enable valgrind debugging
+# PROJECT_CFLAGS += -g -O0
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS

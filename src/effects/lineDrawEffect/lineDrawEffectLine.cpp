@@ -65,7 +65,7 @@ void lineDrawEffectLine::render(float state) {
 	
 	
 	//float opacity = abs( (state*2)-1 );
-	float opacity = 1-abs( (state-0.5f)*2 );
+	float opacity = 1-(state);
 		
 	ofPushStyle();
 	ofPushMatrix();

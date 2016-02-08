@@ -10,6 +10,9 @@
 //  Implements some standard methods for overall usage.
 //
 
+// tmp disabled
+#ifdef PLEASESKIPME
+
 #include "imageMeltingEffect.h"
 
 // - - - - - - -
@@ -203,3 +206,6 @@ void imageMeltingPoint::update(){
 	
 	else if( position.x < 0 || position.x > ofGetWidth() || position.y < 0 || position.y > ofGetHeight() ) isDead = true;
 }
+
+// END KM_PLEASESKIPME
+#endif

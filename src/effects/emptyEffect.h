@@ -7,6 +7,11 @@
 //	Use this blank effect as a model to start a new effect.
 //
 
+
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
+
 #pragma once
 
 #include "ofMain.h"
@@ -39,3 +44,6 @@ private:
 	
 	
 };
+
+// END KM_PLEASESKIPME
+#endif

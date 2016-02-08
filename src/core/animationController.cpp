@@ -1026,13 +1026,40 @@ void animationController::draw(ofEventArgs& event){
 				}
 			} // end effectsPanel
 			
-			// show modules GUIs
-			for(int i=0; i<modules.size(); i++){
-				modules[i]->drawMenu();
-			}
-			
 			if(bGuiShowModules){
 				ImGui::Begin( GUIModulesPanel, &bGuiShowModules, ImVec2(400, ofGetHeight()*.8f) );
+				
+				if (ImGui::CollapsingHeader( GUIModuleInfoTitle, "GUIModuleInfoTitle", true, true)){
+					ImGui::TextWrapped("Here's some information about currently running modules.");
+					ImGui::Text("Loaded modules: %lu", modules.size() );
+				}
+				
+				if (ImGui::CollapsingHeader( GUIModulesList, "GUIModulesList", true, true)){
+					
+					if( ImGui::Button("Add new...") ){
+						ImGui::OpenPopup("Add new module...");
+					}
+					ImGui::SameLine();
+					//ImGui::Text(selected_fish == -1 ? "<None>" : names[selected_fish]);
+					if (ImGui::BeginPopup("Add new module...")){
+						ImGui::Separator();
+						for(auto it = module::factory::getModuleRegistry().begin(); it!= module::factory::getModuleRegistry().end(); ++it){
+							if ( ImGui::Selectable( it->first.c_str() )){
+								karmaModule* m = module::create(it->first);
+								if( m != nullptr ){
+									//m->initialise(animationParams.params);
+									// effects.push_back( e );
+								}
+							}
+						}
+						ImGui::EndPopup();
+					}
+				}
+				
+				// show modules GUIs
+				for(int i=0; i<modules.size(); i++){
+					modules[i]->drawMenuEntry();
+				}
 				
 				ImGui::End();
 			} // end karma mapper modules gui window

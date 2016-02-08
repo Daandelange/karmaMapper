@@ -20,6 +20,10 @@
 
 // todo: make a better hasError collection + notification system
 
+// todo : add statistics to effects. Track their rendering time so we have an overview of their rendering time.
+
+// todo: do some serious multihreading handling and check source for race conditions. Eg use Valgrind / Helpgrind
+
 // Orgnise all functions of class in a way that you CAN do whatever, but if you don't, it must stay optimized for performence. Encourage interaction with other classes.
 
 // (specific topic)(questionnings)

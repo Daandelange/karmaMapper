@@ -7,6 +7,9 @@
 //
 //
 
+// tmp disabled
+#ifdef PLEASESKIPME
+
 #pragma once
 
 #include "ofMain.h"
@@ -61,3 +64,6 @@ public:
 	ofPoint velocity;
 	bool isDead;
 };
+
+// END KM_PLEASESKIPME
+#endif

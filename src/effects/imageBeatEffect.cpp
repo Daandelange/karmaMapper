@@ -10,6 +10,9 @@
 //  Implements some standard methods for overall usage.
 //
 
+// tmp disabled
+#ifdef PLEASESKIPME
+
 #include "imageBeatEffect.h"
 
 imageBeatEffect::imageBeatEffect(){
@@ -228,3 +231,6 @@ void imageBeatEffect::onSetEventListener(mirOnSetEventArgs &_args){
 	//else if(_args.source.compare("")==0){}
 	
 }*/
+	
+// END KM_PLEASESKIPME
+#endif

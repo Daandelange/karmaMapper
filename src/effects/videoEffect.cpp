@@ -10,6 +10,9 @@
 //  Implements some standard methods for overall usage.
 //
 
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
 #include "videoEffect.h"
 
 videoEffect::videoEffect(){
@@ -218,3 +221,5 @@ bool videoEffect::loadVideo(string _videoName){
 		return false;
 	}
 }
+// END KM_PLEASESKIPME
+#endif

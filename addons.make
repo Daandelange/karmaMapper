@@ -6,3 +6,4 @@ ofxOsc
 ofxVideoRecorder
 ofxXmlSettings
 ofxVLCRemote
+ofxImGui

@@ -105,7 +105,7 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 				return true;
 			}
 			else if( subAddr.compare("/playing") == 0 ){
-				if(_msg.getNumArgs()>0) mirCache.isPlaying = (_msg.getArgAsInt32(0)==0)?true:false;
+				if(_msg.getNumArgs()>0) mirCache.isPlaying = (_msg.getArgAsFloat(0)==0)?true:false;
 				return true;
 			}
 			else if( subAddr.compare("/zcr") == 0 ){

@@ -6,12 +6,15 @@
 //
 //
 
+// tmp disabled
+#ifdef PLEASESKIPME
+
 #pragma once
 
 #include "ofMain.h"
 #include "basicEffect.h"
 #include "imageBeatEffectItem.h"
-#include "ofxAbletonLiveSet.h"
+//#include "ofxAbletonLiveSet.h"
 #include "mirReceiver.h"
 #include "durationReceiver.h"
 
@@ -53,3 +56,5 @@ private:
 	float intensity=1;
 	int totalbeatItemsNb;
 };
+// END KM_PLEASESKIPME
+#endif

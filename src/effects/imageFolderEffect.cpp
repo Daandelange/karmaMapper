@@ -10,6 +10,10 @@
 //  Implements some standard methods for overall usage.
 //
 
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
+
 #include "imageFolderEffect.h"
 
 imageFolderEffect::imageFolderEffect(){
@@ -262,3 +266,5 @@ bool imageFolderEffect::grabSomeShapes(){
 	}
 	
 }
+// END KM_PLEASESKIPME
+#endif

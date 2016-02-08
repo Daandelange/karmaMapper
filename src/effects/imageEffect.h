@@ -6,6 +6,9 @@
 //
 //
 
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
 #pragma once
 
 #include "ofMain.h"
@@ -51,3 +54,6 @@ protected:
 private:
 	
 };
+
+// END KM_PLEASESKIPME
+#endif

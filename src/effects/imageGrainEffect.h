@@ -7,6 +7,9 @@
 //
 //
 
+// tmp disabled
+#ifdef PLEASESKIPME
+
 #pragma once
 
 #include "ofMain.h"
@@ -55,3 +58,6 @@ public:
 	bool isDead;
 	vector<ofPoint> distorsions;
 };
+
+// END KM_PLEASESKIPME
+#endif

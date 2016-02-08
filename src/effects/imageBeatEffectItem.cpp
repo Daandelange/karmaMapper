@@ -6,6 +6,9 @@
 //  Copyright (c) 2014 __MyCompanyName__. All rights reserved.
 //
 
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
 #include "imageBeatEffectItem.h"
 
 imageBeatEffectItem::imageBeatEffectItem(basicShape* _shape) {
@@ -122,3 +125,6 @@ void imageBeatEffectItem::render(float state) {
 bool imageBeatEffectItem::isAlive() const{
 	return bAlive;
 }
+
+// END KM_PLEASESKIPME
+#endif

@@ -19,6 +19,9 @@ OSCRouter::OSCRouter(  ){
 }
 
 OSCRouter::~OSCRouter(){
+	
+	ofScopedLock( oscMutex );
+	
 	// remove listeners
 	ofRemoveListener( ofEvents().update , this, &OSCRouter::update );
 	
@@ -66,14 +69,18 @@ void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const osc::IpEndpo
 			ofBuffer buffer(dataPtr, len);
 			ofMsg.addBlobArg( buffer );
 		}
-		else ofLogError("ofxOscReceiver") << "ProcessMessage: argument in message " << m.AddressPattern() << " is not an int, float, or string";
+		else ofLogError("OSCRouter") << "ProcessMessage: argument in message " << m.AddressPattern() << " is not an int, float, or string";
 	}
 	
 	bool handled = false;
-	if( !nodes.empty() ) for(list<OSCNode*>::iterator it=nodes.begin(); it!=nodes.end(); it++){
-		if((*it)->canHandle(ofMsg)){
-			handled = (*it)->handle(ofMsg);
-			//if(handled==true) return;
+	if( !nodes.empty() ){
+		
+		
+		for(list<OSCNode*>::iterator it=nodes.begin(); it!=nodes.end(); it++){
+			if((*it)->canHandle(ofMsg)){
+				handled = (*it)->handle(ofMsg);
+				//if(handled==true) return;
+			}
 		}
 	}
 	

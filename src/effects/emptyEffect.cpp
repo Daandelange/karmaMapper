@@ -9,6 +9,9 @@
 //  blank template for starting myGeniusNewEffect
 //
 
+// tmp disabled
+#ifdef KM_PLEASESKIPME
+
 #include "emptyEffect.h"
 
 // - - - - - - -
@@ -75,4 +78,5 @@ bool emptyEffect::randomizePresets(){
 	return true;
 }
 
-
+// END KM_PLEASESKIPME
+#endif
