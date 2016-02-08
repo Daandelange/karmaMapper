@@ -17,10 +17,12 @@ uniform vec4 globalColor;
 uniform vec2 	fboCanvas; // w,h
 uniform vec4 	shapeBoundingBox; // x,y,w,h
 uniform vec2 	shapeCenter; // x,y
-uniform int 	textureMode;
+uniform int 	textureMode; // 0=scale to shape, 1=cover, 2=fill (clamed edge), 3=fill (repeat)
 uniform vec4 	globalTextureTransform; // position(x,y) scale(z, w)
 
+
 // shadertoy variables
+// ### karmaMapper request shaderToyValues
 uniform vec3      		iResolution;           // viewport resolution (in pixels)
 uniform float     		iGlobalTime;           // shader playback time (in seconds)
 uniform float     		iTimeDelta;            // render time (in seconds)

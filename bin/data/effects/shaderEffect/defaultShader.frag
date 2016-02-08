@@ -12,18 +12,25 @@ layout(origin_upper_left) in vec4 gl_FragCoord;// <-- pixel position (layout fix
 // in float gl_FragDepth;// <-- gl_FragCoord.z, if DEPTH enabled
 
 // these are our textures from OF
+// depreciated for now #toberemoved
 uniform vec4 globalColor;
 uniform sampler2DRect tex0;
 uniform vec2 tex0Resolution; // w,h
-uniform vec2 fboCanvas; // w,h
-uniform vec4 shapeBoundingBox; // x,y,w,h
-uniform int fitMode; // 0=fit to screen, 1=fit-to-shape, 2=crop-to-shape
+
 uniform float opacity;
 uniform float timeValX;
 
+// the line below asks karmaMapper::animator to send shaderToy variables
 // ### karmaMapper request shaderToyValues
 
-// the following line requests
+// set by karmaMapper
+uniform vec2 	fboCanvas; // w,h
+uniform vec4 	shapeBoundingBox; // x,y,w,h
+uniform vec2 	shapeCenter; // x,y
+uniform int 	textureMode; // 0=scale to shape, 1=cover, 2=fill (clamed edge), 3=fill (repeat)
+uniform vec4 	globalTextureTransform; // position(x,y) scale(z, w)
+
+// the following line requests mir Data from karmaMapper::animator
 // ### karmaMapper request mirValues
 uniform float mirZeroCrossings;
 uniform float mirOnSetCalls;
@@ -34,11 +41,10 @@ uniform float mirBalance; // [-1.0 to +1.0]
 uniform float mirVolume; // [0.0 to 1.0+] // not yet
 uniform int mirSilence; // 0 or 1
 
-uniform vec2 manualZoom; //*km slider(0.1,3.3,0.5679)
+//uniform vec2 manualZoom; //*km slider(0.1,3.3,0.5679)
 
 // this comes from the vertex shader
 in vec2 texCoordVarying;
-//in vec4 texColor;
 
 // this is the output of the fragment shader
 out vec4 outputColor;

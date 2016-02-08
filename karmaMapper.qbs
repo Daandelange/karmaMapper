@@ -22,48 +22,62 @@ Project{
             // CORE
             'src/core/animationController.cpp',
             'src/core/animationController.h',
-            'src/core/fboRecorder.cpp',
-            'src/core/fboRecorder.h',
-            'src/core/karmaSoundAnalyser.cpp',
-            'src/core/karmaSoundAnalyser.h',
-            'src/core/karmaModule.cpp',
-            'src/core/karmaModule.h',
+            'src/core/karmaConsole.cpp',
+            'src/core/karmaConsole.h',
+
+            // MODULES (CORE)
+            'src/modules/karmaModule.cpp',
+            'src/modules/karmaModule.h',
+            'src/modules/moduleFactory.cpp',
+            'src/modules/moduleFactory.h',
+
+            // MODULES
+            'src/modules/fboRecorder/fboRecorder.cpp',
+            'src/modules/fboRecorder/fboRecorder.h',
+            'src/modules/soundAnalyser/karmaSoundAnalyser.cpp',
+            'src/modules/soundAnalyser/karmaSoundAnalyser.h',
+            'src/modules/mirOSC/mirEvents.h',
+            'src/modules/mirOSC/mirReceiver.cpp',
+            'src/modules/mirOSC/mirReceiver.h',
+            'src/modules/durationOSC/durationEvents.h',
+            'src/modules/durationOSC/durationReceiver.cpp',
+            'src/modules/durationOSC/durationReceiver.h',
+            'src/modules/durationOSC/durationRC.cpp',
+            'src/modules/durationOSC/durationRC.h',
+            'src/modules/oscRouter/OSCNode.cpp',
+            'src/modules/oscRouter/OSCNode.h',
+            'src/modules/oscRouter/OSCRouter.cpp',
+            'src/modules/oscRouter/OSCRouter.h',
 
             // PARAMS
             'src/parameters/animationParams.h',
             'src/parameters/animationParamsServer.cpp',
             'src/parameters/animationParamsServer.h',
-            'src/parameters/durationEvents.h',
-            'src/parameters/durationRC.cpp',
-            'src/parameters/durationRC.h',
-            'src/parameters/durationReceiver.cpp',
-            'src/parameters/durationReceiver.h',
-            'src/parameters/mirEvents.h',
-            'src/parameters/mirReceiver.cpp',
-            'src/parameters/mirReceiver.h',
-            'src/parameters/OSCNode.cpp',
-            'src/parameters/OSCNode.h',
-            'src/parameters/OSCRouter.cpp',
-            'src/parameters/OSCRouter.h',
 
             // EFFECTS
             'src/effects/effects.h',
+            'src/effects/effectFactory.cpp',
+            'src/effects/effectFactory.h',
+
             'src/effects/basicEffect.cpp',
             'src/effects/basicEffect.h',
-            'src/effects/distortEffect.cpp',
-            'src/effects/distortEffect.h',
-            //'src/effects/emptyEffect.cpp',
-            //'src/effects/emptyEffect.h',
+            'src/effects/distortEffect/distortEffect.cpp',
+            'src/effects/distortEffect/distortEffect.h',
+            'src/effects/imageShader/imageShader.cpp',
+            'src/effects/imageShader/imageShader.h',
             'src/effects/lineEffect/lineEffect.cpp',
             'src/effects/lineEffect/lineEffect.h',
             'src/effects/lineEffect/lineEffectLine.cpp',
             'src/effects/lineEffect/lineEffectLine.h',
+            'src/effects/lineDrawEffect/lineDrawEffect.cpp',
+            'src/effects/lineDrawEffect/lineDrawEffect.h',
+            'src/effects/lineDrawEffect/lineDrawEffectLine.cpp',
+            'src/effects/lineDrawEffect/lineDrawEffectLine.h',
             'src/effects/shaderEffect/shaderEffect.cpp',
             'src/effects/shaderEffect/shaderEffect.h',
-           //'src/effects/musicEffect.cpp',
-           //'src/effects/musicEffect.h',
-            'src/effects/effectFactory.cpp',
-            'src/effects/effectFactory.h',
+            'src/effects/videoShader/videoShader.cpp',
+            'src/effects/videoShader/videoShader.h',
+
 
            // SHAPES
             'src/shapes/shapeFactory.cpp',
@@ -95,13 +109,13 @@ Project{
         //
         of.addons: [
              'ofxGui',
-             'ofxOpenCv',
-             'ofxAbletonLiveSet',
-             'ofxAssimpModelLoader',
+             //'ofxOpenCv',
+             //'ofxAbletonLiveSet',
+             //'ofxAssimpModelLoader',
              'ofxGuiExtended',
              'ofxOsc',
              'ofxTextBox',
-             'ofxTrueTypeFontUC',
+             //'ofxTrueTypeFontUC',
              'ofxVLCRemote',
              'ofxVideoRecorder',
              'ofxXmlSettings',
@@ -113,7 +127,29 @@ Project{
         // flags by default to add the core libraries, search paths...
         // this flags can be augmented through the following properties:
         of.pkgConfigs: []       // list of additional system pkgs to include
-        of.includePaths: ['src/shapes/shapes/', 'src/shapes/', 'src', 'src/core', 'src/effects', 'src/parameters']     // include search paths
+
+        // unfortunately you have to enter all these manually... :'(
+        of.includePaths: [
+            'src/shapes/shapes/',
+            'src/shapes/',
+            'src',
+            'src/core',
+            'src/effects',
+                'src/effects/distortEffect',
+                'src/effects/imageShader',
+                'src/effects/lineDrawEffect',
+                'src/effects/lineEffect',
+                'src/effects/shaderEffect',
+                'src/effects/videoShader',
+            'src/parameters',
+            'src/modules',
+                'src/modules/mirOSC',
+                'src/modules/oscRouter',
+                'src/modules/fboRecorder',
+                'src/modules/soundAnalyser',
+                'src/modules/mirOSC',
+                'src/modules/durationOSC'
+        ] // include search paths
         of.cFlags: ['-fpermissive']  // flags passed to the c compiler
         of.cxxFlags: []         // flags passed to the c++ compiler
         of.linkerFlags: []      // flags passed to the linker
