@@ -88,6 +88,7 @@ protected:
 	bool bIsFullScreen;
 	bool bShowMouse;
 	bool bShowGui;
+	bool bGuiShowMainWindow;
 	bool bGuiShowAnimParams;
 	bool bGuiShowPlugins;
 	bool bGuiShowModules;

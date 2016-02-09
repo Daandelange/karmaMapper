@@ -21,6 +21,9 @@ public:
 	~karmaModule();
 	
 	// MAIN FUNCTIONALITY
+	bool setEnabled(const bool& _enabled);
+	virtual bool enable();
+	virtual bool disable();
 	virtual void update(const animationParams& params);
 	virtual void draw(const animationParams& params);
 	
@@ -28,6 +31,7 @@ public:
 	string getName() const;
 	bool isType(const string _type) const;
 	string getType() const;
+	bool isEnabled() const;
 	
 	virtual void showGuiWindow();
 	virtual void drawMenuEntry();

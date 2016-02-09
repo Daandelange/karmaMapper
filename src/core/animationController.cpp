@@ -27,6 +27,7 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	loadedConfiguration = "";
 	bGuiShowConsole = false;
 	bGuiShowModules = false;
+	bGuiShowMainWindow = true;
 	
 	effects.clear();
 	effects.resize(0);
@@ -99,7 +100,7 @@ bool animationController::start(){
 	
 	
 	// setup the OSC Router
-	oscRouter.start();
+	//oscRouter.start();
 	
 	// enable mirOSCReceiver
 	mirOSCReceiver.enable(true);
@@ -246,7 +247,7 @@ bool animationController::stop(){
 	//durationOSCReceiver.stop();
 	//oscRouter.removeNode( &durationOSCReceiver );
 	
-	oscRouter.stop();
+	oscRouter.setEnabled(false);
 	
 	bShowGui = false;
 	
@@ -327,6 +328,16 @@ bool animationController::loadConfiguration(const string& _file){
 			ofLogNotice("animationController::loadConfiguration") << "The config file has no shapes scene file. Loading effects without shapes.";
 		}
 		
+		if( configXML.pushTag("guiSettings") ){
+			bShowGui = configXML.getValue("bShowGui", bShowGui );
+			bGuiShowMainWindow = configXML.getValue("bGuiShowMainWindow", bGuiShowMainWindow );
+			bGuiShowAnimParams = configXML.getValue("bGuiShowAnimParams", bGuiShowAnimParams );
+			bGuiShowPlugins = configXML.getValue("bGuiShowPlugins", bGuiShowPlugins );
+			bGuiShowModules = configXML.getValue("bGuiShowModules", bGuiShowModules );
+			bGuiShowConsole = configXML.getValue("bGuiShowConsole", bGuiShowConsole );
+			configXML.popTag();
+		}
+		
 		// load effects
 		if(	configXML.pushTag("effects") ){
 			
@@ -386,7 +397,7 @@ bool animationController::loadConfiguration(const string& _file){
 							// todo: make this GUI message and show details
 							if(failedShapes.size() > 0) ofLogWarning("animationController::loadConfiguration") << " Effect '" << effectType << "' loaded but failed to bind with " << failedShapes.size() << " out of " << numShapes << " shapes... (ignoring, but re-saving the configuration will erase this information).";
 							
-							configXML.popTag();
+							configXML.popTag(); // pop bound shapes
 						}
 					}
 					else {
@@ -399,20 +410,65 @@ bool animationController::loadConfiguration(const string& _file){
 				}
 			}
 			
-			ofLogNotice("animationController::loadConfiguration") << "Loaded configuration from " << _file << " [" << numEffects << " effects] ( " << failedEffects.size() << "failed )";
+			ofLogNotice("animationController::loadConfiguration") << "Loaded effects from " << _file << " [" << numEffects << " effects] ( " << failedEffects.size() << "failed )";
 			
-			success = true;
+			if (failedEffects.size()>0) {
+				success = false;
+			}
 			
 			configXML.popTag(); // pop effects
 		}
 		else {
-			if( !success ){
-				// todo: make this a GUI message
-				ofLogError("animationController::loadConfiguration") << "The config file has effects file. Loading effects without shapes.";
+			ofLogNotice("animationController::loadConfiguration") << "No effects in file, skipping effects!";
+		}
+			
+		// load modules
+		if(	configXML.pushTag("modules") ){
+				
+			// loop for each effect
+			int numModules = configXML.getNumTags("module");
+			vector<int> failedModules;
+			failedModules.clear();
+			
+			for(int m=0; m<numModules; m++){
+				if( configXML.pushTag("module", m) ){
+					
+					// Some code comes from:
+					// --> http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
+					string moduleType = configXML.getValue("moduleType", "karmaModule");
+					karmaModule* module = module::create(moduleType);
+					if( module != nullptr ){
+						modules.push_back( module );
+						// tmp modules.back()->initialise(animationParams.params);
+						modules.back()->loadFromXML( configXML );
+						
+						
+					}
+					else {
+						failedModules.push_back(m);
+						// unknow effect type
+						ofLogError("module::create") << "Module type not found: " << moduleType;
+					}
+					
+					configXML.popTag(); // pop module
+				}
+			ofLogNotice("animationController::loadConfiguration") << "Loaded modules from " << _file << " [" << numModules << " modules] ( " << failedModules.size() << "failed )";
 			}
-			else {
-				ofLogNotice("animationController::loadConfiguration") << "The config file has no effects file but it's shapes have been loaded.";
+			
+			if (failedModules.size()>0) {
+				success = false;
 			}
+			configXML.popTag(); // pop modules
+		}
+		else {
+			ofLogNotice("animationController::loadConfiguration") << "No modules in file, skipping modules!";
+		}
+		
+		if( !success ){
+			ofLogError("animationController::loadConfiguration") << "There were errors loading the configuration file...";
+		}
+		else {
+			ofLogNotice("animationController::loadConfiguration") << "The config file was loaded !";
 		}
 	}
 	else {
@@ -471,34 +527,74 @@ bool animationController::saveConfiguration( const string& _fileName ){
 	else fullPath = KM_CONFIG_FOLDER+_fileName;
 	
 	ofxXmlSettings sceneXML;
-	sceneXML.addTag("sceneSettings");
-	sceneXML.pushTag("sceneSettings");
-	sceneXML.setValue("shapesFile", scene.getLoadedScene() );
-	sceneXML.popTag();
 	
-	sceneXML.addTag("effects");
-	sceneXML.pushTag("effects");
+	sceneXML.addTag("sceneSettings");
+	if( sceneXML.pushTag("sceneSettings") ){
+		sceneXML.setValue("shapesFile", scene.getLoadedScene() );
+		sceneXML.popTag();
+	}
+	
+	sceneXML.addTag("guiSettings");
+	if( sceneXML.pushTag("guiSettings") ){
+		sceneXML.setValue("bShowGui", bShowGui );
+		sceneXML.setValue("bGuiShowMainWindow", bGuiShowMainWindow );
+		sceneXML.setValue("bGuiShowAnimParams", bGuiShowAnimParams );
+		sceneXML.setValue("bGuiShowPlugins", bGuiShowPlugins );
+		sceneXML.setValue("bGuiShowModules", bGuiShowModules );
+		sceneXML.setValue("bGuiShowConsole", bGuiShowConsole );
+		sceneXML.popTag();
+	}
 	
 	// save all shapes data
-	int e=0;
-	vector<basicEffect*> failed;
-	failed.clear();
-	for(auto it = effects.begin(); it != effects.end(); it++, e++){
+	sceneXML.addTag("effects");
+	vector<basicEffect*> failedEffects;
+	if (sceneXML.pushTag("effects")) {
 		
-		sceneXML.addTag("effect");
-		sceneXML.pushTag("effect", e);
+		int e=0;
+		failedEffects.clear();
+		for(auto it = effects.begin(); it != effects.end(); it++, e++){
+			
+			sceneXML.addTag("effect");
+			sceneXML.pushTag("effect", e);
+			
+			if(!(*it)->saveToXML(sceneXML)) failedEffects.push_back(*it);
+			
+			sceneXML.popTag(); //pop shape
+		}
+		sceneXML.popTag();
+	}
+	
+	// save all modules data
+	sceneXML.addTag("modules");
+	vector<karmaModule*> failedModules;
+	if (sceneXML.pushTag("modules")) {
+	
+		int m=0;
+		failedModules.clear();
+		for(auto it = modules.begin(); it != modules.end(); it++, m++){
+			
+			sceneXML.addTag("module");
+			sceneXML.pushTag("module", m);
+			
+			if(!(*it)->saveToXML(sceneXML)) failedModules.push_back(*it);
+			
+			
+			sceneXML.popTag(); //pop module
+		}
 		
-		if(!(*it)->saveToXML(sceneXML)) failed.push_back(*it);
-		
-		sceneXML.popTag(); //pop shape
+		sceneXML.popTag(); // pop modules
 	}
 	
 	// write down settings to disk
 	if( sceneXML.saveFile(fullPath) ){
 		loadedConfiguration = ofFilePath::getFileName(fullPath);
 		success = true;
-		if(failed.size() == 0 ) ofLogNotice("animationController::saveConfiguration()", "Saved current configuration to `"+fullPath+"`");
-		else ofSystemAlertDialog("The configuration has been saved but "+ ofToString(failed.size()) +" out of "+ ofToString(effects.size()) +" shapes failed to save.");
+		if(failedEffects.size() == 0 && failedModules.size() ==0 ){
+			ofLogNotice("animationController::saveConfiguration()", "Saved current configuration to `"+fullPath+"`");
+		}
+		else{
+			ofSystemAlertDialog("The configuration has been saved but "+ ofToString(failedEffects.size()) +" out of "+ ofToString(effects.size()) +" shapes and "+ ofToString(failedModules.size()) +" out of "+ofToString(modules.size())+" modules failed to save.");
+		}
 	}
 	else ofSystemAlertDialog("Could not save the current configuration... :(\nSave File: "+fullPath);
 	
@@ -749,6 +845,8 @@ void animationController::draw(ofEventArgs& event){
 				showAnimationsGui(bGuiShowAnimParams);
 			}
 			
+			ImGui::MenuItem("Show Main Window", NULL, &bGuiShowMainWindow);
+			
 			ImGui::MenuItem(GUIToggleConsole, NULL, &bGuiShowConsole);
 			
 			ImGui::MenuItem(GUIShowModules, NULL, &bGuiShowModules );
@@ -790,296 +888,305 @@ void animationController::draw(ofEventArgs& event){
 			ImGui::End();
 		}
 		
-		ImGui::Begin("karmaMapper", &bShowGui, ImVec2(400, ofGetHeight()*.8f) );
-		
-//		if( ImGui::Button("Hide Gui") ){
-//			bShowGui = !bShowGui;
-//		}
-		
-		ImGui::Spacing();
-		if( ImGui::CollapsingHeader( GUIShapesInfo, "GUIShapesInfo", true, true ) ){
-			ImGui::Separator();
+		if (bGuiShowMainWindow){
 			
-			ImGui::Text( "Loaded scene: %s", scene.getLoadedScene().c_str() );
+			ImGui::Begin("karmaMapper", &bGuiShowMainWindow, ImVec2(400, ofGetHeight()*.8f) );
 			
-			ImGui::Separator();
-			ImGui::Text( "Number of shapes: %u", scene.getNumShapes() );
+	//		if( ImGui::Button("Hide Gui") ){
+	//			bShowGui = !bShowGui;
+	//		}
 			
-			// todo: list specific shape data here (n vertexShapes, etc)
-			if(scene.getNumShapes()>0){
-				if (ImGui::TreeNode("All Shapes")){
-					static ImGuiTextFilter filter;
-					filter.Draw("Filter by name");
-					
-					static int shapeTypeFilter = 0;
-					ImGui::Text("Type: ");
-					ImGui::SameLine();
-					ImGui::RadioButton("All", &shapeTypeFilter, 0);
-					
-					auto shapesByType = scene.getAllShapesByType();
-					int i = 1;
-					for( auto it = shapesByType.begin(); it!=shapesByType.end(); ++it, ++i ){
-						ImGui::SameLine();
-						ImGui::RadioButton((it->first).c_str(), &shapeTypeFilter, i);
-					}
-					
-					ImGui::Separator();
-					
-					ImGui::Columns(4);
-					static bool firstTime = true;
-					if( firstTime ){
-						ImGui::SetColumnOffset(0, 00);
-						ImGui::SetColumnOffset(1, 50);
-						ImGui::SetColumnOffset(2, 230);
-						ImGui::SetColumnOffset(3, 330);
-						firstTime = false;
-					}
-					
-					//ImGui::SameLine(20);
-					ImGui::Text("On"); ImGui::NextColumn();
-					ImGui::Text("Name"); ImGui::NextColumn();
-					ImGui::Text("Type"); ImGui::NextColumn();
-					ImGui::Text("Group"); ImGui::NextColumn();
-					
-					ImGui::Separator();
-					
-					for( auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it ){
-						basicShape* s = *it;
+			ImGui::Spacing();
+			if( ImGui::CollapsingHeader( GUIShapesInfo, "GUIShapesInfo", true, true ) ){
+				ImGui::Separator();
+				
+				ImGui::Text( "Loaded scene: %s", scene.getLoadedScene().c_str() );
+				
+				ImGui::Separator();
+				ImGui::Text( "Number of shapes: %u", scene.getNumShapes() );
+				
+				// todo: list specific shape data here (n vertexShapes, etc)
+				if(scene.getNumShapes()>0){
+					if (ImGui::TreeNode("All Shapes")){
+						static ImGuiTextFilter filter;
+						filter.Draw("Filter by name");
 						
-						if( shapeTypeFilter > 0 ){
-							auto shapeIt = shapesByType.begin();
-							std::advance( shapeIt, shapeTypeFilter );
-							
-							if( s->getShapeType() == shapeIt->first ) continue;
+						static int shapeTypeFilter = 0;
+						ImGui::Text("Type: ");
+						ImGui::SameLine();
+						ImGui::RadioButton("All", &shapeTypeFilter, 0);
+						
+						auto shapesByType = scene.getAllShapesByType();
+						int i = 1;
+						for( auto it = shapesByType.begin(); it!=shapesByType.end(); ++it, ++i ){
+							ImGui::SameLine();
+							ImGui::RadioButton((it->first).c_str(), &shapeTypeFilter, i);
 						}
 						
-						if( filter.PassFilter( s->getName().c_str() ) ){
+						ImGui::Separator();
 						
-							ImVec4 statusColor( !s->isReady()*1.f, s->isReady()*1.f + (!s->isReady() && !s->hasFailed())*.5f, 0.f, 1.f );
+						ImGui::Columns(4);
+						static bool firstTime = true;
+						if( firstTime ){
+							ImGui::SetColumnOffset(0, 00);
+							ImGui::SetColumnOffset(1, 50);
+							ImGui::SetColumnOffset(2, 230);
+							ImGui::SetColumnOffset(3, 330);
+							firstTime = false;
+						}
+						
+						//ImGui::SameLine(20);
+						ImGui::Text("On"); ImGui::NextColumn();
+						ImGui::Text("Name"); ImGui::NextColumn();
+						ImGui::Text("Type"); ImGui::NextColumn();
+						ImGui::Text("Group"); ImGui::NextColumn();
+						
+						ImGui::Separator();
+						
+						for( auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it ){
+							basicShape* s = *it;
 							
-							// todo: let users enable/disable shapes ?
-							ImGui::Checkbox("", &s->isSelected );// Text("-");
+							if( shapeTypeFilter > 0 ){
+								auto shapeIt = shapesByType.begin();
+								std::advance( shapeIt, shapeTypeFilter );
+								
+								if( s->getShapeType() == shapeIt->first ) continue;
+							}
+							
+							if( filter.PassFilter( s->getName().c_str() ) ){
+							
+								ImVec4 statusColor( !s->isReady()*1.f, s->isReady()*1.f + (!s->isReady() && !s->hasFailed())*.5f, 0.f, 1.f );
+								
+								// todo: let users enable/disable shapes ?
+								ImGui::Checkbox("", &s->isSelected );// Text("-");
+								ImGui::NextColumn();// ImGui::SameLine(60);
+								//ImGui::Text( "%s", s->getName().c_str() );
+								if( ImGui::Selectable(s->getName().c_str(), &s->isSelected ) ){
+									//s->isSelected = !s->isSelected;
+								}
+								ImGui::NextColumn();// ImGui::SameLine(180);
+								ImGui::TextColored( statusColor, "%s", (*it)->getShapeType().c_str() );
+								ImGui::NextColumn();// ImGui::SameLine(100);
+								ImGui::Text( "%i", s->getGroupID() );
+								ImGui::NextColumn(); // next line
+								
+								// TODO: add shape-specific information line ?
+							}
+						}
+						ImGui::Columns(1);
+						
+						ImGui::TreePop();
+					}
+						
+	//				ImGui::Separator();
+	//				
+	//				if (ImGui::TreeNode("Shape Groups"))
+	//				{
+	//					static bool selected[3] = { false, false, false };
+	//					ImGui::Selectable("main.c", &selected[0]);    ImGui::SameLine(300); ImGui::Text(" 2,345 bytes");
+	//					ImGui::Selectable("Hello.cpp", &selected[1]); ImGui::SameLine(300); ImGui::Text("12,345 bytes");
+	//					ImGui::Selectable("Hello.h", &selected[2]);   ImGui::SameLine(300); ImGui::Text(" 2,345 bytes");
+	//					ImGui::TreePop();
+	//				}
+				}
+			} // end shapes section
+			
+			ImGui::Spacing();
+			if( ImGui::CollapsingHeader( GUIEffectsTitle, "GUIEffectsPanel", true, true ) ){
+				
+				ImGui::Text( "Loaded configuration: %s", loadedConfiguration.c_str() );
+				
+				ImGui::Separator();
+				ImGui::Text( "Number of effects : %u", (int) effects.size() );
+				
+				if( ImGui::Button("Add new...") ){
+					ImGui::OpenPopup("Add new shape...");
+				}
+				ImGui::SameLine();
+				//ImGui::Text(selected_fish == -1 ? "<None>" : names[selected_fish]);
+				if (ImGui::BeginPopup("Add new shape...")){
+					ImGui::Separator();
+					for(auto it = effect::factory::getEffectRegistry().begin(); it!= effect::factory::getEffectRegistry().end(); ++it){
+						if ( ImGui::Selectable( it->first.c_str() )){
+							basicEffect* e = effect::create(it->first);
+							if( e != nullptr ){
+								e->initialise(animationParams.params);
+								effects.push_back( e );
+							}
+						}
+					}
+					ImGui::EndPopup();
+				}
+				
+				ImGui::Separator();
+				ImGui::Separator();
+				
+				if(getNumEffects()>0){
+					if (ImGui::TreeNode("All Effects")){
+						//static ImGuiTextFilter filter;
+						//filter.Draw("Filter by name");
+						
+						static int effectTypeFilter = 0;
+						ImGui::Text("Type: ");
+						ImGui::SameLine();
+						ImGui::RadioButton("All", &effectTypeFilter, 0);
+						
+						auto effectsByType = getAllEffectsByType();
+						int i = 1;
+						for( auto it = effectsByType.begin(); it!=effectsByType.end(); ++it, ++i ){
+							ImGui::SameLine();
+							ImGui::RadioButton((it->first).c_str(), &effectTypeFilter, i);
+						}
+						
+						ImGui::Separator();
+						
+						ImGui::Columns(5);
+						static bool firstTime = true;
+						if( firstTime ){
+							ImGui::SetColumnOffset(0, 00);
+							ImGui::SetColumnOffset(1, 50);
+							ImGui::SetColumnOffset(2, 220);
+							ImGui::SetColumnOffset(3, 300);
+							ImGui::SetColumnOffset(3, 350);
+							firstTime = false;
+						}
+						
+						//ImGui::SameLine(20);
+						ImGui::Text("On"); ImGui::NextColumn();
+						ImGui::Text("Name"); ImGui::NextColumn();
+						ImGui::Text("Type"); ImGui::NextColumn();
+						ImGui::Text("Bound Shapes"); ImGui::NextColumn();
+						ImGui::Text("Rm?"); ImGui::NextColumn();
+						
+						ImGui::Separator();
+						
+						for( auto it=effects.begin(); it!=effects.end(); ++it ){
+							basicEffect* e = *it;
+							
+							// apply filters
+							if( effectTypeFilter > 0 ){
+								auto effectIt = effectsByType.begin();
+								std::advance( effectIt, effectTypeFilter );
+								
+								if( e->getType() == effectIt->first ) continue;
+							}
+							
+							ImGui::PushID(e);
+							
+							ImVec4 statusColor( !e->isReady()*1.f, e->isReady()*1.f + (!e->isReady() && !e->isLoading())*.5f, 0.f, 1.f );
+							ImGui::Text("x");
 							ImGui::NextColumn();// ImGui::SameLine(60);
 							//ImGui::Text( "%s", s->getName().c_str() );
-							if( ImGui::Selectable(s->getName().c_str(), &s->isSelected ) ){
+							
+							if( ImGui::Selectable(e->getName().c_str(), false)){//&e->isSelected ) ){
 								//s->isSelected = !s->isSelected;
+								e->toggleGuiWindow();
+								// todo: resolve namespace conflicts here
 							}
-							ImGui::NextColumn();// ImGui::SameLine(180);
-							ImGui::TextColored( statusColor, "%s", (*it)->getShapeType().c_str() );
-							ImGui::NextColumn();// ImGui::SameLine(100);
-							ImGui::Text( "%i", s->getGroupID() );
-							ImGui::NextColumn(); // next line
-							
-							// TODO: add shape-specific information line ?
-						}
-					}
-					ImGui::Columns(1);
-					
-					ImGui::TreePop();
-				}
-					
-//				ImGui::Separator();
-//				
-//				if (ImGui::TreeNode("Shape Groups"))
-//				{
-//					static bool selected[3] = { false, false, false };
-//					ImGui::Selectable("main.c", &selected[0]);    ImGui::SameLine(300); ImGui::Text(" 2,345 bytes");
-//					ImGui::Selectable("Hello.cpp", &selected[1]); ImGui::SameLine(300); ImGui::Text("12,345 bytes");
-//					ImGui::Selectable("Hello.h", &selected[2]);   ImGui::SameLine(300); ImGui::Text(" 2,345 bytes");
-//					ImGui::TreePop();
-//				}
-			}
-		} // end shapes section
-		
-		ImGui::Spacing();
-		if( ImGui::CollapsingHeader( GUIEffectsTitle, "GUIEffectsPanel", true, true ) ){
-			
-			ImGui::Text( "Loaded configuration: %s", loadedConfiguration.c_str() );
-			
-			ImGui::Separator();
-			ImGui::Text( "Number of effects : %u", (int) effects.size() );
-			
-			if( ImGui::Button("Add new...") ){
-				ImGui::OpenPopup("Add new shape...");
-			}
-			ImGui::SameLine();
-			//ImGui::Text(selected_fish == -1 ? "<None>" : names[selected_fish]);
-			if (ImGui::BeginPopup("Add new shape...")){
-				ImGui::Separator();
-				for(auto it = effect::factory::getEffectRegistry().begin(); it!= effect::factory::getEffectRegistry().end(); ++it){
-					if ( ImGui::Selectable( it->first.c_str() )){
-						basicEffect* e = effect::create(it->first);
-						if( e != nullptr ){
-							e->initialise(animationParams.params);
-							effects.push_back( e );
-						}
-					}
-				}
-				ImGui::EndPopup();
-			}
-			
-			ImGui::Separator();
-			ImGui::Separator();
-			
-			if(getNumEffects()>0){
-				if (ImGui::TreeNode("All Effects")){
-					//static ImGuiTextFilter filter;
-					//filter.Draw("Filter by name");
-					
-					static int effectTypeFilter = 0;
-					ImGui::Text("Type: ");
-					ImGui::SameLine();
-					ImGui::RadioButton("All", &effectTypeFilter, 0);
-					
-					auto effectsByType = getAllEffectsByType();
-					int i = 1;
-					for( auto it = effectsByType.begin(); it!=effectsByType.end(); ++it, ++i ){
-						ImGui::SameLine();
-						ImGui::RadioButton((it->first).c_str(), &effectTypeFilter, i);
-					}
-					
-					ImGui::Separator();
-					
-					ImGui::Columns(5);
-					static bool firstTime = true;
-					if( firstTime ){
-						ImGui::SetColumnOffset(0, 00);
-						ImGui::SetColumnOffset(1, 50);
-						ImGui::SetColumnOffset(2, 220);
-						ImGui::SetColumnOffset(3, 300);
-						ImGui::SetColumnOffset(3, 350);
-						firstTime = false;
-					}
-					
-					//ImGui::SameLine(20);
-					ImGui::Text("On"); ImGui::NextColumn();
-					ImGui::Text("Name"); ImGui::NextColumn();
-					ImGui::Text("Type"); ImGui::NextColumn();
-					ImGui::Text("Bound Shapes"); ImGui::NextColumn();
-					ImGui::Text("Rm?"); ImGui::NextColumn();
-					
-					ImGui::Separator();
-					
-					for( auto it=effects.begin(); it!=effects.end(); ++it ){
-						basicEffect* e = *it;
-						
-						// apply filters
-						if( effectTypeFilter > 0 ){
-							auto effectIt = effectsByType.begin();
-							std::advance( effectIt, effectTypeFilter );
-							
-							if( e->getType() == effectIt->first ) continue;
-						}
-						
-						ImGui::PushID(e);
-						
-						ImVec4 statusColor( !e->isReady()*1.f, e->isReady()*1.f + (!e->isReady() && !e->isLoading())*.5f, 0.f, 1.f );
-						ImGui::Text("x");
-						ImGui::NextColumn();// ImGui::SameLine(60);
-						//ImGui::Text( "%s", s->getName().c_str() );
-						
-						if( ImGui::Selectable(e->getName().c_str(), false)){//&e->isSelected ) ){
-							//s->isSelected = !s->isSelected;
-							e->toggleGuiWindow();
-							// todo: resolve namespace conflicts here
-						}
-						if (ImGui::IsItemHovered()){
-							ImGui::SetTooltip( "%s", e->getShortStatus().c_str() );
-						}
+							if (ImGui::IsItemHovered()){
+								ImGui::SetTooltip( "%s", e->getShortStatus().c_str() );
+							}
 
-						ImGui::NextColumn();// ImGui::SameLine(180);
-						ImGui::Text("%s", (*it)->getType().c_str() );
-						ImGui::NextColumn();// ImGui::SameLine(100);
-					
-						ImGui::Text("%i", (*it)->getNumShapes() );
-						ImGui::NextColumn();
+							ImGui::NextColumn();// ImGui::SameLine(180);
+							ImGui::Text("%s", (*it)->getType().c_str() );
+							ImGui::NextColumn();// ImGui::SameLine(100);
 						
-						//ImGui::PushID(e);
-						if(ImGui::Button("x")){
-							ImGui::OpenPopup(e->getName().insert(0, "rm-").c_str());
-						}
-						if( ImGui::BeginPopup(e->getName().insert(0, "rm-").c_str()) ){
-							ImGui::Text("Remove? ");
-							ImGui::SameLine();
-							if(ImGui::Button("Cancel")){
-								ImGui::CloseCurrentPopup();
-							} ImGui::SameLine();
-							if( ImGui::Button("Ok") ){
-								removeEffect(e);
-								it--; // keep valid iterator
-							}
+							ImGui::Text("%i", (*it)->getNumShapes() );
+							ImGui::NextColumn();
 							
-							ImGui::EndPopup();
-						}
-						//ImGui::PopID();
-						
-						ImGui::NextColumn();
-						
-						ImGui::PopID();
-					}
-					ImGui::Columns(1);
-					
-					ImGui::Spacing();
-					ImGui::Spacing();
-					
-					ImGui::TreePop();
-				}
-			} // end effectsPanel
-			
-			if(bGuiShowModules){
-				ImGui::Begin( GUIModulesPanel, &bGuiShowModules, ImVec2(400, ofGetHeight()*.8f) );
-				
-				if (ImGui::CollapsingHeader( GUIModuleInfoTitle, "GUIModuleInfoTitle", true, true)){
-					ImGui::TextWrapped("Here's some information about currently running modules.");
-					ImGui::Text("Loaded modules: %lu", modules.size() );
-				}
-				
-				if (ImGui::CollapsingHeader( GUIModulesList, "GUIModulesList", true, true)){
-					
-					if( ImGui::Button("Add new...") ){
-						ImGui::OpenPopup("Add new module...");
-					}
-					ImGui::SameLine();
-					//ImGui::Text(selected_fish == -1 ? "<None>" : names[selected_fish]);
-					if (ImGui::BeginPopup("Add new module...")){
-						ImGui::Separator();
-						for(auto it = module::factory::getModuleRegistry().begin(); it!= module::factory::getModuleRegistry().end(); ++it){
-							if ( ImGui::Selectable( it->first.c_str() )){
-								karmaModule* m = module::create(it->first);
-								if( m != nullptr ){
-									//m->initialise(animationParams.params);
-									// modules.push_back( e );
+							//ImGui::PushID(e);
+							if(ImGui::Button("x")){
+								ImGui::OpenPopup(e->getName().insert(0, "rm-").c_str());
+							}
+							if( ImGui::BeginPopup(e->getName().insert(0, "rm-").c_str()) ){
+								ImGui::Text("Remove? ");
+								ImGui::SameLine();
+								if(ImGui::Button("Cancel")){
+									ImGui::CloseCurrentPopup();
+								} ImGui::SameLine();
+								if( ImGui::Button("Ok") ){
+									removeEffect(e);
+									it--; // keep valid iterator
 								}
+								
+								ImGui::EndPopup();
+							}
+							//ImGui::PopID();
+							
+							ImGui::NextColumn();
+							
+							ImGui::PopID();
+						}
+						ImGui::Columns(1);
+						
+						ImGui::Spacing();
+						ImGui::Spacing();
+						
+						ImGui::TreePop();
+					}
+				} // end effectsPanel
+
+			}
+			
+			// end karma mapper main gui window
+			ImGui::End();
+		} // end bGuiShowMainWindow
+		
+		if(bGuiShowModules){
+			ImGui::Begin( GUIModulesPanel, &bGuiShowModules, ImVec2(400, ofGetHeight()*.8f) );
+			
+			if (ImGui::CollapsingHeader( GUIModuleInfoTitle, "GUIModuleInfoTitle", true, true)){
+				ImGui::TextWrapped("Here's some information about currently running modules.");
+				ImGui::Text("Loaded modules: %lu", modules.size() );
+			}
+			
+			if (ImGui::CollapsingHeader( GUIModulesList, "GUIModulesList", true, true)){
+				
+				if( ImGui::Button("Add new...") ){
+					ImGui::OpenPopup("Add new module...");
+				}
+				ImGui::SameLine();
+				//ImGui::Text(selected_fish == -1 ? "<None>" : names[selected_fish]);
+				if (ImGui::BeginPopup("Add new module...")){
+					ImGui::Separator();
+					for(auto it = module::factory::getModuleRegistry().begin(); it!= module::factory::getModuleRegistry().end(); ++it){
+						if ( ImGui::Selectable( it->first.c_str() )){
+							karmaModule* m = module::create(it->first);
+							if( m != nullptr ){
+								//m->initialise(animationParams.params);
+								modules.push_back( m );
 							}
 						}
-						ImGui::EndPopup();
 					}
+					ImGui::EndPopup();
 				}
-				
-				// show modules GUIs
-				for(int i=0; i<modules.size(); i++){
-					modules[i]->drawMenuEntry();
-				}
-				
-				ImGui::End();
-			} // end karma mapper modules gui window
-			
-			// show console ?
-			if( bGuiShowConsole ){
-				karmaConsoleChannel::getLogger()->drawImGui (GUIConsolePanel, bGuiShowConsole );
+				ImGui::Separator();
 			}
 			
-			// show effect gui
-			for(int i=0; i<effects.size(); i++){
-				effects[i]->showGuiWindow( scene );
+			// show modules GUIs
+			for(int i=0; i<modules.size(); i++){
+				modules[i]->drawMenuEntry();
 			}
 			
-		}  // end bShowGui
+			ImGui::End();
+		} // end karma mapper modules gui window
 		
-		// end karma mapper main gui window
-		ImGui::End();
+		// show console ?
+		if( bGuiShowConsole ){
+			karmaConsoleChannel::getLogger()->drawImGui (GUIConsolePanel, bGuiShowConsole );
+		}
 		
-	}
+		// show effects gui
+		for(int i=0; i<effects.size(); i++){
+			effects[i]->showGuiWindow( scene );
+		}
+		
+		// show modules gui
+		for(int i=0; i<modules.size(); i++){
+			modules[i]->showGuiWindow( );
+		}
+		
+	} // end bShowGui
 	
 	if(ShowSaveAsModal) ImGui::OpenPopup("Save config as...");
 	

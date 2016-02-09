@@ -19,6 +19,7 @@
 // http://gamedev.stackexchange.com/a/17759
 
 class OSCRouter : public ofxOscReceiver, public karmaModule {
+	friend class ofxImGui;
 	
 public:
 	OSCRouter( );
@@ -26,20 +27,25 @@ public:
 	// fix for no default constructor
 	OSCRouter& operator=( const OSCRouter& crap ) { return *this; }
 	
-	// virtual (over-rided) functions
+	
+	// virtual methods from karmaModule
+	virtual bool enable();
+	virtual bool disable();
+	virtual void update(const animationParams& params);
+	virtual void draw(const animationParams& params);
+	virtual bool reset();
+	virtual void showGuiWindow();
+	virtual void drawMenuEntry();
+	virtual bool saveToXML(ofxXmlSettings& xml) const;
+	virtual bool loadFromXML(ofxXmlSettings& xml);
+	
+	// virtual methods from ofxOscReceiver
 	void ProcessMessage( const osc::ReceivedMessage &m, const osc::IpEndpointName& remoteEndpoint );
 	
-	// basic functions
-	bool start( int _port = KM_OSC_PORT_IN );
-	bool stop();
-	bool reset();
+	// OSC Router methods
 	bool addNode( OSCNode* _node );
 	bool removeNode( OSCNode* _node );
-	bool isEnabled() const;
-	
-	// listeners
-	void update( ofEventArgs& event );
-	
+	bool startOSC( int _port = KM_OSC_PORT_IN );
 	void reconnectKMSA();
 	
 protected:
@@ -50,9 +56,9 @@ protected:
 	//ofParameter<bool> bGuiEnabled;
 	list<OSCNode* > nodes;
 	ofMutex OSCMutex;
+	int OSCListeningPort;
 	
 private:
-	bool bEnabled;
 	
 };
 

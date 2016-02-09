@@ -14,7 +14,8 @@
 // - - - - - - - -
 OSCRouter::OSCRouter(  ){
 	// init essential variables
-	bEnabled = false;
+	moduleType = "OSCRouter";
+	moduleName = "OSCRouter";
 	nodes.clear();
 }
 
@@ -22,15 +23,85 @@ OSCRouter::~OSCRouter(){
 	
 	ofScopedLock( oscMutex );
 	
-	// remove listeners
-	ofRemoveListener( ofEvents().update , this, &OSCRouter::update );
-	
 	// inform nodes to detach listeners
 	if(nodes.size() > 0) for( auto it=nodes.rbegin(); it!=nodes.rend(); it++){
 		(*it)->detachNode();
 		nodes.erase( std::next(it).base() );
 	}
 }
+
+// - - - - - - - -
+// karmaModule methods
+// - - - - - - - -
+bool OSCRouter::enable(){
+	bool ret = karmaModule::enable();
+	
+	// OSC
+	startOSC();
+	
+	return ret;
+}
+
+bool OSCRouter::disable(){
+	bool ret = karmaModule::disable();
+	
+	// how dirty is this ?
+	ofxOscReceiver::~ofxOscReceiver();
+	
+	return ret;
+}
+
+void OSCRouter::draw(const animationParams &params){
+	
+}
+
+void OSCRouter::update(const animationParams &params){
+	
+}
+
+bool OSCRouter::reset(){
+	disable();
+	
+}
+
+void OSCRouter::showGuiWindow(){
+	if(!bShowGuiWindow) return;
+	
+	ImGui::SetNextWindowSize(ImVec2(400,ofGetHeight()*0.8));
+	ImGui::Begin( ((string)"Module: ").append(getName()).append("###module-").append( ofToString(this) ).c_str() , &bShowGuiWindow );
+	if( ImGui::InputInt("OSC Listening port", &OSCListeningPort , 1, 10, ImGuiInputTextFlags_EnterReturnsTrue)){
+		startOSC(OSCListeningPort);
+	}
+	ImGui::End();
+}
+
+void OSCRouter::drawMenuEntry() {
+	karmaModule::drawMenuEntry();
+}
+
+// writes the module data to XML. xml's cursor is already pushed into the right <module> tag.
+bool OSCRouter::saveToXML(ofxXmlSettings& xml) const{
+	bool ret = karmaModule::saveToXML(xml);
+	
+	xml.addValue("OSCListeningPort", OSCListeningPort);
+	
+	return ret;
+}
+
+// load module settings from xml
+// xml's cursor is pushed to the root of the <module> tag to load
+bool OSCRouter::loadFromXML(ofxXmlSettings& xml){
+	bool ret=karmaModule::loadFromXML(xml);
+	
+	moduleName = xml.getValue("moduleName", getType() );
+	
+	OSCListeningPort = xml.getValue("OSCListeningPort", KM_OSC_PORT_IN );
+	
+	//initialise(animationParams.params);
+	
+	return ret; // todo
+}
+
 // - - - - - - - -
 // PARENT FUNCTION (ofxOscReceiver)
 // - - - - - - - -
@@ -85,57 +156,31 @@ void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const osc::IpEndpo
 	}
 	
 	/* cycle trough arguments:
-	for(int i = 0; i < m.getNumArgs(); i++){
+	 for(int i = 0; i < m.getNumArgs(); i++){
 		// get the argument type
 		msg_string += m.getArgTypeName(i);
 		msg_string += ":";
 		// display the argument - make sure we get the right type
 		if(m.getArgType(i) == OFXOSC_TYPE_INT32){
-			msg_string += ofToString(m.getArgAsInt32(i));
+	 msg_string += ofToString(m.getArgAsInt32(i));
 		}
 		else if(m.getArgType(i) == OFXOSC_TYPE_FLOAT){
-			msg_string += ofToString(m.getArgAsFloat(i));
+	 msg_string += ofToString(m.getArgAsFloat(i));
 		}
 		else if(m.getArgType(i) == OFXOSC_TYPE_STRING){
-			msg_string += m.getArgAsString(i);
+	 msg_string += m.getArgAsString(i);
 		}
 		else{
-			msg_string += "unknown";
+	 msg_string += "unknown";
 		}
-	}*/
+	 }*/
 	// notify all matching routes
 	//ofLogNotice("OSCRouter") << "ProcessMessage: massage [" << ofMsg.getAddress() << "] with "<< ofMsg.getNumArgs() << "args."; //ofMessage.getArgName(0);
 }
 
 // - - - - - - - -
-// BASIC FUNCTIONS
+// OSCRouter FUNCTIONS
 // - - - - - - - -
-bool OSCRouter::start(int _port){
-	// listen
-	ofAddListener( ofEvents().update , this, &OSCRouter::update );
-	
-	// OSC
-	setup( _port );
-	
-	reconnectKMSA();
-	
-	bEnabled = true;
-	return isEnabled()==true;
-}
-
-bool OSCRouter::stop(){
-	bEnabled = false;
-	ofRemoveListener( ofEvents().update , this, &OSCRouter::update );
-	
-	return isEnabled()==false;
-}
-
-bool OSCRouter::reset(){
-	// how dirty is this ? :p
-	this->~OSCRouter();
-	OSCRouter();
-}
-
 bool OSCRouter::addNode(OSCNode* _node){
 	if( _node==NULL ) return false;
 	
@@ -155,22 +200,6 @@ bool OSCRouter::removeNode(OSCNode* _node){
 	return true; // guarantees the node doesnt exist
 }
 
-bool OSCRouter::isEnabled() const {
-	return bEnabled;
-}
-
-// - - - - - - - -
-// EVENT LISTENERS
-// - - - - - - - -
-void OSCRouter::update(ofEventArgs &event){
-	if(!isEnabled()) return;
-	
-	// update GUI data
-	//guiStatus = ofToString(isEnabled()?"Running":"Down");
-	//guiNumRoutes = ofToString(nodes.size());
-	
-}
-
 // tries to let the KMSA know we're live now
 void OSCRouter::reconnectKMSA(){
 	ofxOscSender sender;
@@ -179,6 +208,20 @@ void OSCRouter::reconnectKMSA(){
 	m.setAddress("/km/reconnectKMSA");
 	m.addTriggerArg();
 	sender.sendMessage(m);
+}
+
+bool OSCRouter::startOSC(int _port){
+	
+	if(!isEnabled()) return;
+	
+	// OSC
+	ofxOscReceiver::setup( _port );
+	
+	OSCListeningPort = _port;
+	
+	reconnectKMSA();
+	
+	return true;
 }
 
 // register module type

@@ -13,16 +13,43 @@
 // CONSTRUCTORS
 // - - - - - - - -
 karmaModule::karmaModule( ){
-	
+	moduleType = "karmaModule";
+	moduleName = "karmaModule";
+	bInitialised = true;
+	bEnabled = true;
+	bIsLoading = false;
+	bShowGuiWindow = false;
 }
 
 karmaModule::~karmaModule(){
-	
+	bInitialised = false;
 }
 
 // - - - - - - - -
 // MAIN FUNCTIONALITY
 // - - - - - - - -
+bool karmaModule::setEnabled(const bool &_enabled) {
+	if (!bInitialised){
+		return false;
+	}
+	
+	else {
+		_enabled?enable():disable();
+		return _enabled==bEnabled;
+	}
+	return false;
+}
+
+bool karmaModule::enable() {
+	bEnabled = true;
+	return bEnabled==true;
+}
+
+bool karmaModule::disable() {
+	bEnabled = false;
+	return bEnabled==false;
+}
+
 void karmaModule::draw(const animationParams& params){
 	
 }
@@ -46,6 +73,10 @@ string karmaModule::getType() const{
 	return moduleType;
 }
 
+bool karmaModule::isEnabled() const {
+	return &bEnabled;
+}
+
 void karmaModule::showGuiWindow(){
 	if(!bShowGuiWindow) return;
 	
@@ -58,6 +89,12 @@ void karmaModule::showGuiWindow(){
 void karmaModule::drawMenuEntry() {
 	if (ImGui::CollapsingHeader( getName().c_str(), ofToString(this).c_str(), true, true)){
 		ImGui::TextWrapped("This is a standard module.");
+		if (ImGui::Checkbox("Enabled", &bEnabled)) {
+			setEnabled(bEnabled);
+		}
+		ImGui::SameLine();
+
+		ImGui::Selectable("Show Gui Window...", &bShowGuiWindow);
 	}
 }
 
@@ -66,6 +103,8 @@ bool karmaModule::saveToXML(ofxXmlSettings& xml) const{
 	
 	xml.addValue("moduleType", moduleType );
 	xml.addValue("moduleName", getName() );
+	xml.addValue("enabled", bEnabled );
+	xml.addValue("bShowGuiWindow", bShowGuiWindow );
 	
 	return true;
 }
@@ -75,7 +114,8 @@ bool karmaModule::saveToXML(ofxXmlSettings& xml) const{
 bool karmaModule::loadFromXML(ofxXmlSettings& xml){
 	
 	moduleName = xml.getValue("moduleName", getType() );
-	
+	xml.getValue("enabled", false) ? enable() : disable();
+	bShowGuiWindow = xml.getValue("bShowGuiWindow", false);
 	//initialise(animationParams.params);
 	
 	return true; // todo
