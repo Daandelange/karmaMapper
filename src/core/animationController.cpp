@@ -1048,7 +1048,7 @@ void animationController::draw(ofEventArgs& event){
 								karmaModule* m = module::create(it->first);
 								if( m != nullptr ){
 									//m->initialise(animationParams.params);
-									// effects.push_back( e );
+									// modules.push_back( e );
 								}
 							}
 						}

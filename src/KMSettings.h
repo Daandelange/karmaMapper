@@ -3,9 +3,20 @@
 // needed for using OF constants
 #include "ofMain.h"
 
-#define KM_VERSION "0.2 alpha (master)"
+#define KM_VERSION "0.2+ alpha (master)"
 
+// - - - - - -
+// ENABLE / DISABLE some features on compilation time ?
+// - - - - - -
+#ifdef TARGET_OSX
+	// comment line to force-disable
+	#define KM_ENABLE_SYPHON
+#endif
+
+
+// - - - - - -
 // helpful for debugging
+// - - - - - -
 #define KARMAMAPPER_DEBUG true
 
 // define to see debug instantiation order
@@ -32,3 +43,5 @@
 #define KM_LAST_CONFIG_FILE "saveFiles/lastUsedConfiguration.xml"
 #define KM_CONFIG_FOLDER "saveFiles/configurations/"
 #define KM_CONFIG_DEFAULT "defaultConfig.xml"
+
+

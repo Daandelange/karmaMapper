@@ -113,7 +113,7 @@ vertexShape* vertexShape::getUpcasted(){
 void vertexShape::calculateBoundingBox(){
 	// reset
 	int minX=0, minY=0, maxX=0, maxY=0;
-	for(auto it = points.begin(); it != points.end(); it++){
+	for(auto it = changingPoints.begin(); it != changingPoints.end(); it++){
 		if((*it).x > maxX) maxX = (*it).x;
 		if((*it).x < minX) minX = (*it).x;
 		
@@ -139,7 +139,7 @@ void vertexShape::onShapeModified(){
 	}
 	
 	// todo: update centerPos & more
-	
+	calculateBoundingBox();
 }
 
 // called when the shape has been edited so it can update some ot if't other variables

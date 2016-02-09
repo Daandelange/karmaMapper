@@ -180,3 +180,6 @@ void OSCRouter::reconnectKMSA(){
 	m.addTriggerArg();
 	sender.sendMessage(m);
 }
+
+// register module type
+MODULE_REGISTER( OSCRouter , "OSCRouter" );

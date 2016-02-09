@@ -15,6 +15,14 @@
 #include "animationParams.h"
 #include "mirReceiver.h"
 
+#ifdef TARGET_OSX
+	#ifdef KM_ENABLE_SYPHON
+
+		#include "ofxSyphon.h"
+
+	#endif
+#endif
+
 struct animationParams;
 
 // todo: make video decoding threaded
@@ -55,6 +63,9 @@ public:
 	// videoEffect FUNCTIONS
 	void setVideoMode(const enum videoMode& mode);
 	bool loadVideoFile( const string &_path);
+#ifdef KM_ENABLE_SYPHON
+	bool connectToSyphonServer( const ofxSyphonServerDescription& _addr );
+#endif
 	void setUseThread( const bool& _useThread );
 	
 protected:
@@ -68,6 +79,17 @@ protected:
 	virtual void threadedFunction();
 	
 	ofVideoPlayer player;
+#ifdef TARGET_OSX
+	
+	#ifdef KM_ENABLE_SYPHON
+		ofxSyphonClient syphonSource;
+		ofxSyphonServerDescription syphonAddr;
+		ofxSyphonServerDirectory dir;
+//	void syphonServerAnnounced(ofxSyphonServerDirectoryEventArgs &arg);
+//	void syphonServerRetired(ofxSyphonServerDirectoryEventArgs &arg);
+	#endif
+	
+#endif
 	
 private:
 	

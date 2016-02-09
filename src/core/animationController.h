@@ -27,9 +27,13 @@
 #include "durationReceiver.h"
 //#include "fboRecorder.h"
 
-#ifdef TARGET_OSX
-	//	#include "ofxSyphon.h"
-#endif
+//#ifdef TARGET_OSX
+//
+//	#ifdef KM_ENABLE_SYPHON
+//		#include "ofxSyphon.h"
+//	#endif
+//
+//#endif
 
 // todo: an overall mask that hides any unwanted projection zones (could be done by an effect too)
 // Ensure shape names are always UNIQUE
@@ -112,9 +116,13 @@ protected:
 private:
 	bool bEnabled;
 	
-#ifdef TARGET_OS_MAC
-        //ofxSyphonServer syphonTexture;
-#endif
+//#ifdef TARGET_OSX
+//	
+//	#ifdef KM_ENABLE_SYPHON
+//		ofxSyphonServer syphonTexture;
+//	#endif
+//	
+//#endif
 };
 
 

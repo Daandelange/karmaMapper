@@ -20,6 +20,11 @@ videoShader::videoShader(){
 
 videoShader::~videoShader(){
 	stopThread();
+	
+//	ofRemoveListener(dir.events.serverAnnounced, this, &videoShader::syphonServerAnnounced);
+//	// not yet implemented
+//	//ofRemoveListener(dir.events.serverUpdated, this, &ofApp::serverUpdated);
+//	ofRemoveListener(dir.events.serverRetired, this, &videoShader::syphonServerRetired);
 }
 
 // - - - - - - -
@@ -61,26 +66,47 @@ void videoShader::update(const animationParams& params){
 	// do basic Effect function
 	shaderEffect::update( params );
 	
-	if(videoMode==VIDEO_MODE_FILE && textures.size()>0 ){
-		if ( lock() ){
-			shaderToyArgs.iChannelTime[0]=player.getPosition();
+	if( textures.size()>0 ){
+		if(videoMode==VIDEO_MODE_FILE ){
+			if ( lock() ){
+				shaderToyArgs.iChannelTime[0]=player.getPosition();
 			
-			if( bUseThreadedFileDecoding){
-				unlock();
-				ofPixels pix;
-				if( images_to_update.tryReceive(pix)){
-					textures[0].loadData(pix.getData(), pix.getWidth(), pix.getHeight(), GL_RGB);
+				if( bUseThreadedFileDecoding){
+					unlock();
+					ofPixels pix;
+					if( images_to_update.tryReceive(pix)){
+						textures[0].loadData(pix.getData(), pix.getWidth(), pix.getHeight(), GL_RGB);
+					}
 				}
-			}
-			else {
-				unlock(); // no threading = no locking
-				if( player.isLoaded() && textures.size()>0){
-					player.setUseTexture(true);
-					player.update();
-					textures[0] = player.getTexture();
+				else {
+					unlock(); // no threading = no locking
+					if( player.isLoaded() && textures.size()>0){
+						player.setUseTexture(true);
+						player.update();
+						textures[0] = player.getTexture();
+					}
 				}
 			}
 		}
+#ifdef KM_ENABLE_SYPHON
+		else if(videoMode==VIDEO_MODE_SYPHON && textures.size() > 0){
+			
+			// todo: set REAL channel time
+			shaderToyArgs.iChannelTime[0]=ofGetElapsedTimef();
+			
+			// todo (should not be done here)
+			shaderToyArgs.iChannelResolution[0][0] = syphonSource.getWidth();
+			shaderToyArgs.iChannelResolution[0][1] = syphonSource.getHeight();
+			shaderToyArgs.iChannelResolution[0][2] = syphonSource.getWidth() / syphonSource.getHeight();
+			
+			if (syphonSource.isSetup()) {
+				// need to bind it so it updates....
+				syphonSource.bind();// .draw(0,0);
+				syphonSource.unbind();
+				textures[0] = syphonSource.getTexture();
+			}
+		}
+#endif
 	}
 }
 
@@ -103,6 +129,9 @@ void videoShader::reset(){
 		player.closeMovie();
 	}
 	loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
+	
+	syphonAddr.appName = "Simple Server";
+	syphonAddr.serverName = "";
 	
 	// set this when done
 	bInitialised = true;
@@ -151,9 +180,11 @@ bool videoShader::printCustomEffectGui(){
 			if ( ImGui::Selectable("VIDEO_MODE_FILE", videoMode==VIDEO_MODE_FILE)) {
 				setVideoMode(VIDEO_MODE_FILE);
 			}
+#ifdef KM_ENABLE_SYPHON
 			if ( ImGui::Selectable("VIDEO_MODE_SYPHON", videoMode==VIDEO_MODE_SYPHON)) {
 				setVideoMode(VIDEO_MODE_SYPHON);
 			}
+#endif
 			ImGui::ListBoxFooter();
 		}
 		
@@ -218,9 +249,31 @@ bool videoShader::printCustomEffectGui(){
 			}
 			
 		}
+#ifdef KM_ENABLE_SYPHON
 		else if(videoMode==VIDEO_MODE_SYPHON){
 			ImGui::TextWrapped("This mode reads a video from a syphon server.");
+			ImGui::LabelText("Syphon Running & Connected:", "%i", syphonSource.isSetup());
+			ImGui::LabelText("Syphon Source: ", "%s - %s", syphonSource.getServerName().c_str(), syphonSource.getApplicationName().c_str() );
+			ImGui::LabelText("Dimensions: ", "%fpx x %fpx", syphonSource.getWidth(), syphonSource.getHeight() );
+			
+			if( ImGui::Button("Connect to...") ){
+				ImGui::OpenPopup("Syphon Server Menu");
+			}
+			ImGui::SameLine();
+			if(ImGui::BeginPopup("Syphon Server Menu")){
+				if( dir.size()==0 ){
+					ImGui::Text("It seems like you have no syphon server running...");
+				}
+				else for( ofxSyphonServerDescription& server : dir.getServerList() ){
+					if( ImGui::Selectable( (server.serverName + " - " + server.appName ).c_str() ) ){
+						connectToSyphonServer(server);
+					}
+				}
+				ImGui::EndPopup();
+			}
+			
 		}
+#endif
 		
 		ImGui::Separator();
 	}
@@ -245,6 +298,8 @@ bool videoShader::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("playBackSpeed", playBackSpeed);
 	xml.addValue("videoMode", static_cast<int>(videoMode) );
 	xml.addValue("videoFile", videoFile );
+	xml.addValue("syphonServer", syphonAddr.serverName);
+	xml.addValue("syphonApp", syphonAddr.appName);
 	
 	//if( lock() ){
 		xml.addValue("bUseThreadedFileDecoding", bUseThreadedFileDecoding);
@@ -259,13 +314,18 @@ bool videoShader::saveToXML(ofxXmlSettings& xml) const{
 bool videoShader::loadFromXML(ofxXmlSettings& xml){
 	bool ret = shaderEffect::loadFromXML(xml);
 	
-	loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
+	ret *= loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
+	
 	bUseShadertoyVariables = true;
 	bUseTextures = true;
 	playBackSpeed = xml.getValue("playBackSpeed", 1);
-	videoMode = static_cast<enum videoMode>(xml.getValue("videoMode", VIDEO_MODE_FILE ));
+	setVideoMode( static_cast<enum videoMode>(xml.getValue("videoMode", VIDEO_MODE_FILE )) );
 	loadVideoFile( xml.getValue("videoFile", "") );
 	setUseThread( xml.getValue("bUseThreadedFileDecoding", true) );
+	connectToSyphonServer( ofxSyphonServerDescription(
+		xml.getValue("syphonServer", syphonAddr.serverName),
+		xml.getValue("syphonApp", syphonAddr.appName)
+	));
 	
 	
 	return ret;
@@ -290,14 +350,18 @@ void videoShader::setVideoMode(const enum videoMode& mode){
 	videoMode = mode;
 	
 	if (videoMode == VIDEO_MODE_FILE) {
-		bHasError = true;
-		shortStatus = "Please select a source video.";
+		bHasError = player.isLoaded();
+		if (bHasError) shortStatus = "Please select a source video.";
 	}
 	
+#ifdef KM_ENABLE_SYPHON
 	else if (videoMode == VIDEO_MODE_SYPHON) {
-		bHasError = true;
-		shortStatus = "Please select a source video.";
+		// start Syphon server tracker
+		dir.setup();
+
+		connectToSyphonServer( syphonAddr );
 	}
+#endif
 	else {
 		bHasError = true;
 		shortStatus = "Unsupported video mode in videoShader.";
@@ -310,48 +374,93 @@ bool videoShader::loadVideoFile(const string &_path) {
 	if( file.exists() && file ){
 		videoFile = file.getAbsolutePath();
 		
-		// start playback
-		if( lock() ){
-			player.setUseTexture( !bUseThreadedFileDecoding );
-			player.load(videoFile);
-			player.setVolume(0);
-			player.setSpeed(playBackSpeed);
-			player.setLoopState(OF_LOOP_NORMAL);
-			//player.getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);
-			//player.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
-			shaderToyArgs.iChannelResolution[0][0] = player.getWidth();
-			shaderToyArgs.iChannelResolution[0][1] = player.getHeight();
-			shaderToyArgs.iChannelResolution[0][2] = player.getWidth() / player.getHeight();
-			player.play();
-			unlock();
+		if (videoMode==VIDEO_MODE_FILE) {
+			
+			// start playback
+			if( lock() ){
+				player.setUseTexture( !bUseThreadedFileDecoding );
+				player.load(videoFile);
+				player.setVolume(0);
+				player.setSpeed(playBackSpeed);
+				player.setLoopState(OF_LOOP_NORMAL);
+				//player.getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);
+				//player.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+				shaderToyArgs.iChannelResolution[0][0] = player.getWidth();
+				shaderToyArgs.iChannelResolution[0][1] = player.getHeight();
+				shaderToyArgs.iChannelResolution[0][2] = player.getWidth() / player.getHeight();
+				player.play();
+				unlock();
+			}
+			if (bUseThreadedFileDecoding && !isThreadRunning()){
+				startThread();
+			}
+			
+			textures.clear();
+			textures.push_back( ofTexture() );
+			textures.back().allocate(player.getWidth(), player.getHeight(), GL_RGB);
+			shaderToyArgs.iChannelTime[0]=0.f;
+			//texturesTime.push_back(0.f);
+			
+			ofLogNotice("videoShader::loadVideoFile") << "Loaded "<< videoFile << ".";
 		}
-		if (bUseThreadedFileDecoding && !isThreadRunning()){
-			startThread();
+		else {
+			// not in video mode
 		}
-		
-		textures.clear();
-		textures.push_back( ofTexture() );
-		textures.back().allocate(player.getWidth(), player.getHeight(), GL_RGB);
-		shaderToyArgs.iChannelTime[0]=0.f;
-		//texturesTime.push_back(0.f);
-		
-		ofLogNotice("videoShader::loadVideoFile") << "Loaded "<< videoFile << ".";
+		return true;
 	}
 	else {
 		ofLogNotice("videoShader::loadVideoFile") << "Invalid movie file. Not loading...";
 	}
+	return false;
 }
 
+#ifdef KM_ENABLE_SYPHON
+bool videoShader::connectToSyphonServer( const ofxSyphonServerDescription& _addr ){
+	
+	if( videoMode == VIDEO_MODE_SYPHON ){
+	
+		if (!syphonSource.isSetup()) syphonSource.setup();
+		syphonSource.set(_addr.serverName,_addr.appName);
+		
+		bHasError = !syphonSource.isSetup();
+		if (bHasError){
+			shortStatus = "Please select a Syphon source.";
+			return false;
+		}
+		else {
+			if(textures.size()==0) textures.push_back( syphonSource.getTexture() );
+			
+			shaderToyArgs.iChannelResolution[0][0] = syphonSource.getWidth();
+			shaderToyArgs.iChannelResolution[0][1] = syphonSource.getHeight();
+			shaderToyArgs.iChannelResolution[0][2] = syphonSource.getWidth() / syphonSource.getHeight();
+			return true;
+		}
+	}
+	else {
+		// not in syphon mode, simply remember the address for later
+		syphonAddr = _addr;
+		return true;
+	}
+	return false;
+}
+#endif
+
 void videoShader::setUseThread(const bool& _useThread){
-	if(lock()){
+	if (videoMode == VIDEO_MODE_FILE) {
+		if (lock()) {
+			bUseThreadedFileDecoding = _useThread;
+			if (!bUseThreadedFileDecoding) {
+				if(isThreadRunning()) stopThread();
+			}
+			else if (!isThreadRunning()) {
+				startThread();
+			}
+			unlock();
+		}
+	}
+	else {
+		stopThread();
 		bUseThreadedFileDecoding = _useThread;
-		if (!bUseThreadedFileDecoding) {
-			if(isThreadRunning()) stopThread();
-		}
-		else if (!isThreadRunning() ) {
-			startThread();
-		}
-		unlock();
 	}
 }
 
