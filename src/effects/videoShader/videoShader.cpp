@@ -467,7 +467,7 @@ void videoShader::setUseThread(const bool& _useThread){
 void videoShader::threadedFunction(){
 
 #ifdef KARMAMAPPER_DEBUG
-	thread.setName("videoShader::threadedFunction() " + thread.name());
+	ofThread::setThreadName("videoShader::threadedFunction() " + ofToString(ofThread::getThreadId()) );
 #endif
 	
 	while (isThreadRunning()) {
