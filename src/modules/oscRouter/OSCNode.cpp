@@ -12,8 +12,8 @@
 // - - - - - - - -
 // CONSTRUCTORS
 // - - - - - - - -
-OSCNode::OSCNode(  ){
-	
+OSCNode::OSCNode( ) : nodeName("OSCNode") {
+	moduleDependencies.clear();
 }
 
 OSCNode::~OSCNode(){

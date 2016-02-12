@@ -62,6 +62,9 @@ public:
 	string loadedConfiguration;
 	bool unloadAllEffects();
 	void newConfiguration();
+	bool unloadAllModules();
+	karmaModule* tryLoadModule(const string& _moduleType);
+	karmaModule* getModule(const string& _moduleType);
 	
 	// getters
 	const unsigned int getNumEffects() const;
@@ -107,8 +110,8 @@ protected:
 	shapesDB& scene;
 	
 	// OSC
-	OSCRouter oscRouter;
-	mirReceiver mirOSCReceiver;
+	//OSCRouter oscRouter;
+	//mirReceiver mirOSCReceiver;
 	//durationReceiver durationOSCReceiver;
 	
 	// Video recording

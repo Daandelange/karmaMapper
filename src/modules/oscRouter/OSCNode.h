@@ -31,8 +31,10 @@ public:
 	virtual bool handle( const ofxOscMessage &_msg ) = 0;
 	virtual void detachNode() = 0;
 	
+	
 protected:
-	//ofMutex ooscMutex;
+	string nodeName;
+	ofMutex oscMutex;
 	vector<string> moduleDependencies;
 	
 private:

@@ -27,6 +27,7 @@
 		72A929D3561B8232A182ABFC /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65EEFA3DA3526E9CDD9C21F9 /* ofxOscBundle.cpp */; };
 		837220E80EB56CD44AD27F2A /* ofxSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 15F2C6477A769C03A56D1401 /* ofxSlider.cpp */; };
 		850D6F071B9E10370047DB3D /* shapesTransformator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 850D6F051B9E10370047DB3D /* shapesTransformator.cpp */; };
+		851562D11C6DE235006AE43F /* singletonModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851562CF1C6DE235006AE43F /* singletonModule.cpp */; };
 		851FA9A71B9321FD00F94851 /* ofxFpsPlotter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851FA9861B9321FD00F94851 /* ofxFpsPlotter.cpp */; };
 		851FA9A81B9321FD00F94851 /* ofxGuiBaseDraws.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851FA9881B9321FD00F94851 /* ofxGuiBaseDraws.cpp */; };
 		851FA9A91B9321FD00F94851 /* ofxGuiGroupExtended.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 851FA98B1B9321FD00F94851 /* ofxGuiGroupExtended.cpp */; };
@@ -282,6 +283,8 @@
 		832BDC407620CDBA568B713D /* tinyxmlerror.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = tinyxmlerror.cpp; path = ../../../addons/ofxXmlSettings/libs/tinyxmlerror.cpp; sourceTree = SOURCE_ROOT; };
 		850D6F051B9E10370047DB3D /* shapesTransformator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shapesTransformator.cpp; path = shapes/shapesTransformator.cpp; sourceTree = "<group>"; };
 		850D6F061B9E10370047DB3D /* shapesTransformator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shapesTransformator.h; path = shapes/shapesTransformator.h; sourceTree = "<group>"; };
+		851562CF1C6DE235006AE43F /* singletonModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = singletonModule.cpp; sourceTree = "<group>"; };
+		851562D01C6DE235006AE43F /* singletonModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = singletonModule.h; sourceTree = "<group>"; };
 		851FA9801B92F10300F94851 /* KMSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KMSettings.h; sourceTree = "<group>"; };
 		851FA9861B9321FD00F94851 /* ofxFpsPlotter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFpsPlotter.cpp; sourceTree = "<group>"; };
 		851FA9871B9321FD00F94851 /* ofxFpsPlotter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxFpsPlotter.h; sourceTree = "<group>"; };
@@ -814,6 +817,8 @@
 		85557B351C64E58B0091052C /* modules */ = {
 			isa = PBXGroup;
 			children = (
+				851562CF1C6DE235006AE43F /* singletonModule.cpp */,
+				851562D01C6DE235006AE43F /* singletonModule.h */,
 				85557B571C650A6C0091052C /* karmaModule.cpp */,
 				85557B581C650A6C0091052C /* karmaModule.h */,
 				85557B4E1C64FDBB0091052C /* moduleFactory.cpp */,
@@ -1453,6 +1458,7 @@
 				855DEE951C3FCD61000936F8 /* effectFactory.cpp in Sources */,
 				853CEC381C3AAD3D0030BF5D /* imgui_demo.cpp in Sources */,
 				854EA7B01C6771EF009A99DB /* videoShader.cpp in Sources */,
+				851562D11C6DE235006AE43F /* singletonModule.cpp in Sources */,
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
 				858D33491BEBF220003E49C7 /* SyphonNameboundClient.m in Sources */,
 				85884B521C3BC80E004BC99C /* animationParamsServer.cpp in Sources */,

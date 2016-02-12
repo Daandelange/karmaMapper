@@ -10,14 +10,16 @@
 #pragma once
 
 #include "ofMain.h"
-#include "OSCNode.h"
+#include "OSCRouter.h"
+//#include "OSCNode.h"
 #include "ofEvents.h"
 #include "mirEvents.h"
+#include "karmaModule.h"
 
 // this class handles OSC events comming from mirReceiver.pd, caches the data and calculate some more with it.
 // also fires MIR events
 
-class mirReceiver : public OSCNode {
+class mirReceiver : public OSCNode, public karmaModule {
 	
 public:
 	mirReceiver( );
@@ -38,11 +40,16 @@ public:
 	bool handle( const ofxOscMessage &_msg );
 	void detachNode();
 	
+	// VIRTUALS FROM karmaModule
+	virtual bool enable();
+	virtual bool disable();
+	virtual void update(const animationParams& params);
+	virtual void draw(const animationParams& params);
+	
 	// basic functions
-	bool start();
-	bool stop();
-	bool enable(const bool& _status);
-	bool isEnabled() const;
+	//bool startListening();
+	//bool stopListening();
+	bool connectToOSCRouter(){};
 	
 	// listeners
 	//void oscIn();
@@ -54,9 +61,6 @@ public:
 	static mirData mirCache;
 	
 protected:
-	
-	bool bInitialised;
-	bool bEnabled;
 	
 	// setting variables
 	

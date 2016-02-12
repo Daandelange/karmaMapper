@@ -100,12 +100,14 @@ bool animationController::start(){
 	
 	
 	// setup the OSC Router
-	//oscRouter.start();
+	//oscRouter.enable();
 	
 	// enable mirOSCReceiver
-	mirOSCReceiver.enable(true);
-	mirOSCReceiver.start();
-	oscRouter.addNode( &mirOSCReceiver );
+	//mirReceiver* mirOSCReceiver = new mirReceiver();
+	//mirOSCReceiver->enable(true);
+	//mirOSCReceiver->start();
+	//OSCRouter::getInstance().clearAllNodes();
+	//OSCRouter::getInstance().addNode( mirOSCReceiver );
 	
 	// enable durationOSCReceiver
 	//durationOSCReceiver.start();
@@ -240,14 +242,14 @@ bool animationController::start(){
 bool animationController::stop(){
 	
 	// disable mirOSCReceiver
-	mirOSCReceiver.stop();
-	oscRouter.removeNode( &mirOSCReceiver );
+	//mirOSCReceiver.stop();
+	//oscRouter.removeNode( &mirOSCReceiver );
 	
 	// disable durationOSCReceiver
 	//durationOSCReceiver.stop();
 	//oscRouter.removeNode( &durationOSCReceiver );
 	
-	oscRouter.setEnabled(false);
+	//oscRouter.setEnabled(false);
 	
 	bShowGui = false;
 	
@@ -265,6 +267,7 @@ bool animationController::stop(){
 	}
 	
 	unloadAllEffects();
+	unloadAllModules();
 	
 	// save recorded file ?
 	//recorder.stopRecording();
@@ -436,18 +439,23 @@ bool animationController::loadConfiguration(const string& _file){
 					// Some code comes from:
 					// --> http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
 					string moduleType = configXML.getValue("moduleType", "karmaModule");
-					karmaModule* module = module::create(moduleType);
-					if( module != nullptr ){
-						modules.push_back( module );
-						// tmp modules.back()->initialise(animationParams.params);
-						modules.back()->loadFromXML( configXML );
-						
-						
+					
+					//
+					karmaModule* newModule = tryLoadModule(moduleType);
+					if ( newModule != nullptr) {
+						// (do nothing )
+						if(! newModule->loadFromXML( configXML ) ){
+							ofLogError("animationController::loadConfiguration");
+							failedModules.push_back(m);
+						}
+						else {
+							newModule->enable();
+						}
 					}
 					else {
 						failedModules.push_back(m);
 						// unknow effect type
-						ofLogError("module::create") << "Module type not found: " << moduleType;
+						ofLogError("module::create") << "Module type not found, or error while instantiating it: " << moduleType;
 					}
 					
 					configXML.popTag(); // pop module
@@ -616,9 +624,85 @@ bool animationController::unloadAllEffects(){
 	return true;
 }
 
+bool animationController::unloadAllModules(){
+	
+	for( auto it = modules.rbegin(); it != modules.rend(); ++it){
+		//delete (*it); // todo: does this call destructor ?
+		modules.erase( std::next(it).base() );
+	}
+	
+	modules.resize(0);
+	
+	return true;
+}
+
 void animationController::newConfiguration(){
 	unloadAllEffects();
 	scene.unloadShapes();
+}
+
+karmaModule* animationController::tryLoadModule(const string &_moduleType){
+	
+	if(_moduleType.empty()){
+		ofLogVerbose();
+		return nullptr;
+	}
+	
+	{
+		// only allow 1 instance of each type
+		karmaModule* existing = getModule(_moduleType);
+		if ( existing != nullptr) {
+			ofLogNotice("animationController::tryLoadModule()") << "Module already loaded: "<< _moduleType << " (not reloading it)";
+			return existing;
+		}
+	}
+	
+	// check for dependencies
+	auto deps = module::getModuleDependencies(_moduleType);
+	if(int numDeps = deps.size()>0){
+		ofLogVerbose("animationController::tryLoadModule") << "Loading additional modules for module: " << _moduleType << " (" << numDeps <<" dependencies).";
+		for(auto dep=deps.begin(); dep!=deps.end(); ++dep){
+			if( tryLoadModule(*dep) == nullptr ){
+				ofLogError("animationController::tryLoadModule()") << "Dependency " << *dep << " for module " << _moduleType << " not found. (Not loading "<< *dep << ")";
+				return nullptr;
+			}
+		}
+		ofLogVerbose("animationController::tryLoadModule()") << "Successfully loaded "<< numDeps << " additional modules for module: " << _moduleType << ".";
+	}
+	else {
+		// no dependencies entry.
+		// Should we handle this ?
+		ofLogNotice("animationController::tryLoadModule()") << "No dependencies found. Please make sure your effect is correctly implemented to prevent this message.";
+	}
+	
+	// spawn module
+	karmaModule* module = module::create(_moduleType);
+	if( module != nullptr ){
+		module->enable();
+		modules.push_back( module );
+		return module;
+	}
+	else {
+		// unknow effect type
+		ofLogError("animationController::tryLoadModule") << "Module type not found: " << _moduleType;
+		
+		return nullptr;
+	}
+}
+
+// todo: add an alternative const method for this ? (or implement moduleExists() )
+karmaModule* animationController::getModule(const string &_moduleType){
+	if (_moduleType.empty()) {
+		return nullptr;
+	}
+	
+	for (auto m=modules.begin(); m!=modules.end(); ++m) {
+		if ( _moduleType.compare((*m)->getType()) == 0 ){
+			return *m;
+		}
+	}
+	
+	return nullptr;
 }
 
 // - - - - - - - -
@@ -1151,10 +1235,13 @@ void animationController::draw(ofEventArgs& event){
 					ImGui::Separator();
 					for(auto it = module::factory::getModuleRegistry().begin(); it!= module::factory::getModuleRegistry().end(); ++it){
 						if ( ImGui::Selectable( it->first.c_str() )){
-							karmaModule* m = module::create(it->first);
+							karmaModule* m = tryLoadModule(it->first);
 							if( m != nullptr ){
 								//m->initialise(animationParams.params);
-								modules.push_back( m );
+							}
+							else {
+								// todo: make this a gui message ?
+								ofLogError("animationController:: ofx ImGui interaction") << "Could not create module. Maybe it already exists, or is not implemented in your configuration.";
 							}
 						}
 					}

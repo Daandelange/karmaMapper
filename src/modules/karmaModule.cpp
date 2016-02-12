@@ -12,13 +12,17 @@
 // - - - - - - - -
 // CONSTRUCTORS
 // - - - - - - - -
-karmaModule::karmaModule( ){
+//karmaModule::dependencies.push_back( oscRouter );
+//vector< karmaModule* > karmaModule::dependencies = vector<karmaModule*>();
+
+karmaModule::karmaModule(bool _isSingleton) : isSingleton(_isSingleton) {
 	moduleType = "karmaModule";
 	moduleName = "karmaModule";
 	bInitialised = true;
 	bEnabled = true;
 	bIsLoading = false;
 	bShowGuiWindow = false;
+	
 }
 
 karmaModule::~karmaModule(){
@@ -143,6 +147,33 @@ namespace module
 		delete comp;
 	}
 	
+	factory::moduleDependencies getModuleDependencies(const std::string& moduleType) {
+		
+//		factory::moduleRegistry& reg = factory::getModuleRegistry();
+//		factory::moduleRegistry::iterator it = reg.find(moduleType);
+//		
+//		if (it == reg.end()) {
+//			
+//		}
+		
+		
+		//::module::factory moduleRegistration<karmaMapper>
+		
+		factory::dependenciesRegistry& depsReg = factory::getModuleDependenciesRegistry();
+		factory::dependenciesRegistry::iterator it = depsReg.find(moduleType);
+		
+		factory::moduleDependencies deps;
+		if (it == depsReg.end()) {
+			// This happens when there is no effect registered to this name.
+			ofLogWarning("module::getModuleDependencies()") << "Invalid module type:" << moduleType;
+			deps = module::factory::getModuleDependenciesRegistry().begin()->second ;
+		}
+		else {
+			deps = it->second;
+		}
+		return deps;
+	}
+	
 	vector< std::string > getAllModuleTypes() {
 		factory::moduleRegistry& reg = factory::getModuleRegistry();
 		vector< std::string > ret;
@@ -155,4 +186,5 @@ namespace module
 } // namespace effect
 
 // register module type
-MODULE_REGISTER( karmaModule , "karmaModule" );
+const static ::module::factory::moduleDependencies karmaModuleDependencies({});
+MODULE_REGISTER( karmaModule , "karmaModule", karmaModuleDependencies );

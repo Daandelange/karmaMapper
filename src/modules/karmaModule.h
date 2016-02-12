@@ -17,7 +17,7 @@
 class karmaModule {
 	
 public:
-	karmaModule( );
+	karmaModule(bool _isSingleton=false);
 	~karmaModule();
 	
 	// MAIN FUNCTIONALITY
@@ -38,6 +38,8 @@ public:
 	virtual bool saveToXML(ofxXmlSettings& xml) const;
 	virtual bool loadFromXML(ofxXmlSettings& xml);
 	
+	const bool isSingleton;
+	
 protected:
 	string moduleType;
 	string moduleUID;
@@ -49,7 +51,7 @@ protected:
 	bool bInitialised;
 	bool bIsLoading;
 	bool bShowGuiWindow;
-	
+	//bool isSingleton;
 	
 private:
 	
@@ -64,11 +66,12 @@ namespace module
 {
 	karmaModule* create(const std::string& name);
 	void destroy(const karmaModule* comp);
+	factory::moduleDependencies getModuleDependencies(const std::string& moduleType);
 	vector< std::string > getAllModuleTypes();
 }
 
 // allow module registration
-#define MODULE_REGISTER(TYPE, NAME)                                        \
+#define MODULE_REGISTER(TYPE, NAME, DEPENDENCIES)                                        \
 namespace module {                                                         \
 namespace factory {                                                       \
 namespace                                                                 \
@@ -79,11 +82,14 @@ class moduleRegistration;                                                  \
 template<>                                                                \
 class moduleRegistration<TYPE>                                             \
 {                                                                         \
-static const ::module::factory::RegistryEntry<TYPE>& reg;                  \
+static const ::module::factory::RegistryEntry<TYPE>& reg;\
+static const ::module::factory::moduleDependencies deps;\
 };                                                                        \
 \
 const ::module::factory::RegistryEntry<TYPE>&                              \
 moduleRegistration<TYPE>::reg =                                            \
-::module::factory	::RegistryEntry<TYPE>::Instance(NAME);                \
+::module::factory	::RegistryEntry<TYPE>::Instance(NAME, DEPENDENCIES);                \
+\
+\
 }}}
 

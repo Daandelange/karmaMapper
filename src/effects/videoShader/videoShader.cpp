@@ -20,6 +20,7 @@ videoShader::videoShader(){
 
 videoShader::~videoShader(){
 	stopThread();
+	waitForThread();
 	
 //	ofRemoveListener(dir.events.serverAnnounced, this, &videoShader::syphonServerAnnounced);
 //	// not yet implemented
@@ -80,7 +81,7 @@ void videoShader::update(const animationParams& params){
 				}
 				else {
 					unlock(); // no threading = no locking
-					if( player.isLoaded() && textures.size()>0){
+					if( player.isLoaded() && (player.isFrameNew() || player.getPosition()<0) && textures.size()>0){
 						player.setUseTexture(true);
 						player.update();
 						textures[0] = player.getTexture();
@@ -125,8 +126,8 @@ void videoShader::reset(){
 	videoMode = VIDEO_MODE_FILE;
 	if(lock()){
 		bUseThreadedFileDecoding = true;
-		unlock();
 		player.closeMovie();
+		unlock();
 	}
 	loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
 	
@@ -139,7 +140,6 @@ void videoShader::reset(){
 	
 	// set error (no video file)
 	bHasError = true;
-	
 }
 
 // - - - - - - -
@@ -204,15 +204,10 @@ bool videoShader::printCustomEffectGui(){
 			if( ImGui::Button("Reload") ){
 				loadVideoFile( videoFile );
 			}
-			if (lock()) {
-				if(ImGui::Checkbox("Use threaded video decoding", &bUseThreadedFileDecoding)) {
-					bool tmp = bUseThreadedFileDecoding;
-					unlock();
-					setUseThread(tmp);
-				}
-				else {
-					unlock();
-				}
+			static bool tmpThreading = bUseThreadedFileDecoding;
+			if(ImGui::Checkbox("Use threaded video decoding", &tmpThreading)) {
+				setUseThread(tmpThreading);
+				tmpThreading = bUseThreadedFileDecoding;
 			}
 			
 			if( ImGui::DragFloat("playBackSpeed", &playBackSpeed, 0.05, 0.1) ){
@@ -449,13 +444,14 @@ void videoShader::setUseThread(const bool& _useThread){
 	if (videoMode == VIDEO_MODE_FILE) {
 		if (lock()) {
 			bUseThreadedFileDecoding = _useThread;
-			if (!bUseThreadedFileDecoding) {
+			unlock();
+			if (!_useThread) {
 				if(isThreadRunning()) stopThread();
 			}
 			else if (!isThreadRunning()) {
 				startThread();
 			}
-			unlock();
+			
 		}
 	}
 	else {
@@ -474,7 +470,7 @@ void videoShader::threadedFunction(){
 		if(lock()){
 			if (!bUseThreadedFileDecoding){
 				unlock();
-				return;
+				stopThread();
 			}
 			
 			if ( images_to_update.empty()  && videoMode==VIDEO_MODE_FILE) {
@@ -483,7 +479,8 @@ void videoShader::threadedFunction(){
 					player.setUseTexture(false);
 					player.update();
 		
-					if( player.isFrameNew() ){
+					if( player.isFrameNew() || player.getPosition()<0 || images_to_update.empty() ){
+						//images_to_update.empty()
 						//ofPixels pix = player.getPixels();
 						images_to_update.send (std::move (player.getPixels()));
 					}

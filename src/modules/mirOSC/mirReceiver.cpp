@@ -16,15 +16,17 @@ ofEvent<mirBangEventArgs> mirReceiver::mirBangEvent;
 // - - - - - - - -
 // CONSTRUCTORS
 // - - - - - - - -
-mirReceiver::mirReceiver( ){
+mirReceiver::mirReceiver() {
 	
 	//
-	bInitialised = false;
+	bInitialised = true;
 	bEnabled = false;
+	
+	nodeName = "mirReceiver";
 }
 
 mirReceiver::~mirReceiver(){
-	stop();
+	disable();
 }
 
 // - - - - - - - -
@@ -145,46 +147,41 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 
 // informs that the nose id gonna be unbound with the node server
 void mirReceiver::detachNode() {
-	stop();
+	disable();
 	// detach events ?
 }
 
 // - - - - - - - -
-// BASIC FUNCTIONS
+// VIRTUALS FROM karmaModule
 // - - - - - - - -
-bool mirReceiver::start(){
-	bInitialised = true;
+bool mirReceiver::enable(){
+	bool ret = karmaModule::enable();
 	
-	// bind events
-	//ofAddListener(, mirReceiver:: *listener, )
+	// try connect
+	ret *= OSCRouter::getInstance().addNode(this);
 	
-	return isEnabled()==true;
+	return ret;
 }
 
-bool mirReceiver::stop(){
-	bInitialised = false;
+bool mirReceiver::disable(){
+	bool ret = karmaModule::disable();
 	
-	// todo: unbind events ?
+	// try connect
+	ret *= OSCRouter::getInstance().removeNode(this);
 	
-	return isEnabled()==false;
+	return ret;
 }
 
-bool mirReceiver::enable(const bool& _status){
-	bEnabled=_status;
+void mirReceiver::update(const animationParams &params){
+	karmaModule::update(params);
 }
 
-bool mirReceiver::isEnabled() const {
-	return bInitialised && bEnabled;
+void mirReceiver::draw(const animationParams &params){
+	karmaModule::draw(params);
 }
 
-
-
-// - - - - - - - -
-// EVENT LISTENERS
-/*/ - - - - - - - -
-void mirReceiver::oscIn(){
-	// todo
-}//*/
 
 mirData mirReceiver::mirCache;// = mirData();
 
+const static ::module::factory::moduleDependencies  mirReceiverDependencies({"OSCRouter"});
+MODULE_REGISTER( mirReceiver , "mirReceiver", mirReceiverDependencies );

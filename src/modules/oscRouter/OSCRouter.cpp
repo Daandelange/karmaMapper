@@ -12,22 +12,26 @@
 // - - - - - - - -
 // CONSTRUCTORS
 // - - - - - - - -
-OSCRouter::OSCRouter(  ){
+OSCRouter::OSCRouter() : singletonModule<OSCRouter>() {
+	
+	//if(!isSingleton) getInstance() = this;
+	
 	// init essential variables
 	moduleType = "OSCRouter";
 	moduleName = "OSCRouter";
 	nodes.clear();
+	bIsListening = false;
+	
 }
 
-OSCRouter::~OSCRouter(){
+OSCRouter::~OSCRouter() {
 	
-	ofScopedLock( oscMutex );
+	//ofScopedLock( oscMutex );
+	bIsListening = false;
 	
-	// inform nodes to detach listeners
-	if(nodes.size() > 0) for( auto it=nodes.rbegin(); it!=nodes.rend(); it++){
-		(*it)->detachNode();
-		nodes.erase( std::next(it).base() );
-	}
+	disable();
+	
+	clearAllNodes();
 }
 
 // - - - - - - - -
@@ -37,7 +41,7 @@ bool OSCRouter::enable(){
 	bool ret = karmaModule::enable();
 	
 	// OSC
-	startOSC();
+	ret *= startOSC();
 	
 	return ret;
 }
@@ -45,8 +49,7 @@ bool OSCRouter::enable(){
 bool OSCRouter::disable(){
 	bool ret = karmaModule::disable();
 	
-	// how dirty is this ?
-	ofxOscReceiver::~ofxOscReceiver();
+	ret *= stopOSC();
 	
 	return ret;
 }
@@ -72,6 +75,13 @@ void OSCRouter::showGuiWindow(){
 	if( ImGui::InputInt("OSC Listening port", &OSCListeningPort , 1, 10, ImGuiInputTextFlags_EnterReturnsTrue)){
 		startOSC(OSCListeningPort);
 	}
+	if( ImGui::Checkbox("OSC Listening", &bIsListening)){
+		if (bIsListening) startOSC(OSCListeningPort);
+		else stopOSC();
+	}
+	
+	ImGui::Text("Number of nodes: %lu", nodes.size() );
+	
 	ImGui::End();
 }
 
@@ -91,8 +101,10 @@ bool OSCRouter::saveToXML(ofxXmlSettings& xml) const{
 // load module settings from xml
 // xml's cursor is pushed to the root of the <module> tag to load
 bool OSCRouter::loadFromXML(ofxXmlSettings& xml){
+	
 	bool ret=karmaModule::loadFromXML(xml);
 	
+	clearAllNodes();
 	moduleName = xml.getValue("moduleName", getType() );
 	
 	OSCListeningPort = xml.getValue("OSCListeningPort", KM_OSC_PORT_IN );
@@ -184,12 +196,24 @@ void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const osc::IpEndpo
 bool OSCRouter::addNode(OSCNode* _node){
 	if( _node==NULL ) return false;
 	
+	ofScopedLock( oscMutex );
+	if(!bInitialised) return false;
+	
+	// no duplicates
+	if( std::find(nodes.begin(), nodes.end(), _node)!=nodes.end()){
+		ofLogNotice("OSCRouter::addNode("+ ofToString(&*_node) +")") << "Node already exists, not adding.";
+		return true;
+	}
+	
 	nodes.push_back( _node );
+	
+	return true;
 }
 
 bool OSCRouter::removeNode(OSCNode* _node){
 	if( _node==NULL ) return false;
 	
+	ofScopedLock( oscMutex );
 	for(list<OSCNode* >::iterator it=nodes.begin(); it!=nodes.end(); it++){
 		if( _node == *it ){
 			(*it)->detachNode();
@@ -198,6 +222,29 @@ bool OSCRouter::removeNode(OSCNode* _node){
 		}
 	}
 	return true; // guarantees the node doesnt exist
+}
+
+bool OSCRouter::clearAllNodes(){
+	
+	ofScopedLock( oscMutex );
+
+	// inform nodes to detach listeners
+//	if(nodes.size() > 0){
+//		for( auto it=nodes.rbegin(); it!=nodes.rend(); ++it){
+//			cout << &*it << endl;
+//			(*it)->detachNode();
+//			nodes.erase( std::next(it).base() );
+//		}
+//	}
+	if(nodes.size() > 0){
+		while(nodes.size() > 0){
+			auto n = nodes.begin();
+			(*n)->detachNode();
+			nodes.erase( n );
+		}
+	}
+	
+	return nodes.size()==0;
 }
 
 // tries to let the KMSA know we're live now
@@ -215,14 +262,36 @@ bool OSCRouter::startOSC(int _port){
 	if(!isEnabled()) return;
 	
 	// OSC
-	ofxOscReceiver::setup( _port );
-	
+	try {
+		ofxOscReceiver::setup( _port );
+		bIsListening = true;
+	} catch(const std::exception& e) {
+		ofLogWarning("OSCRouter::startOSC") << "Could not connect: " << e.what() << endl;
+		bIsListening = false;
+	}
 	OSCListeningPort = _port;
 	
 	reconnectKMSA();
 	
-	return true;
+	return bIsListening;
+}
+
+bool OSCRouter::stopOSC(){
+	
+	if(!isEnabled()) return;
+	
+	// OSC
+	try {
+		ofxOscReceiver::setup( -1 );
+		bIsListening = false;
+	} catch(const std::exception& e) {
+		ofLogNotice("OSCRouter::stopOSC") << "Disconnect failed somehow... : " << e.what() << endl;
+		bIsListening = false;
+	}
+	
+	return !bIsListening;
 }
 
 // register module type
-MODULE_REGISTER( OSCRouter , "OSCRouter" );
+const static ::module::factory::moduleDependencies  OSCRouterDependencies({});
+MODULE_REGISTER( OSCRouter , "OSCRouter", OSCRouterDependencies );

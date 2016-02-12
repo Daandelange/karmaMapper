@@ -8,9 +8,9 @@
 #pragma once
 
 #include "ofMain.h"
+#include "singletonModule.h"
 #include "ofxOsc.h"
 #include "OSCNode.h"
-#include "karmaModule.h"
 
 #define KM_OSC_PORT_IN 12000
 #define KM_SA_OSC_PORT_IN 12001
@@ -18,14 +18,24 @@
 // based upon this model to register an OSC router
 // http://gamedev.stackexchange.com/a/17759
 
-class OSCRouter : public ofxOscReceiver, public karmaModule {
+class OSCRouter : public singletonModule<OSCRouter>, public ofxOscReceiver {
 	friend class ofxImGui;
 	
 public:
-	OSCRouter( );
+	OSCRouter();
 	~OSCRouter();
+	
 	// fix for no default constructor
-	OSCRouter& operator=( const OSCRouter& crap ) { return *this; }
+	//OSCRouter& operator=( const OSCRouter& crap ) { return *this; }
+	
+	// singleton stuff
+//	static OSCRouter& getInstance(){
+//		static OSCRouter instance(true); // Guaranteed to be destroyed and instantiated on first use
+//		return instance;
+//	}
+	// prevents accidentally creating copies of your singleton
+	//OSCRouter(OSCRouter const&)     = delete;
+	//void operator=(OSCRouter const&)  = delete;
 	
 	
 	// virtual methods from karmaModule
@@ -45,7 +55,9 @@ public:
 	// OSC Router methods
 	bool addNode( OSCNode* _node );
 	bool removeNode( OSCNode* _node );
+	bool clearAllNodes();
 	bool startOSC( int _port = KM_OSC_PORT_IN );
+	bool stopOSC();
 	void reconnectKMSA();
 	
 protected:
@@ -55,11 +67,26 @@ protected:
 	//ofParameter<string> guiStatus;
 	//ofParameter<bool> bGuiEnabled;
 	list<OSCNode* > nodes;
-	ofMutex OSCMutex;
+	ofMutex oscMutex;
 	int OSCListeningPort;
+	bool bIsListening;
 	
 private:
 	
+	// prevents accidentally creating copies of your singleton
+	OSCRouter(OSCRouter const&)     = delete;
+	void operator=(OSCRouter const&)  = delete;
+//	OSCRouter& operator=(const OSCRouter& other){
+//		// always keep the singleton version
+//		// todo: could be a better condition...
+//		if (isSingleton ||  other.isSingleton) {
+//			return getInstance();
+//		}
+//		else return *this;
+//	}
+	
+	// called by getInstance()
+	OSCRouter(bool _isSingleton);
 };
 
 
