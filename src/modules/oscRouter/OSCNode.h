@@ -30,12 +30,16 @@ public:
 	virtual bool canHandle( const ofxOscMessage &_msg ) const = 0;
 	virtual bool handle( const ofxOscMessage &_msg ) = 0;
 	virtual void detachNode() = 0;
+	virtual void notifyDetached(){};
+	
+	//bool isEnabled() const;
+	string getName() const;
 	
 	
 protected:
+	//bool bLoaded;
 	string nodeName;
 	ofMutex oscMutex;
-	vector<string> moduleDependencies;
 	
 private:
 	

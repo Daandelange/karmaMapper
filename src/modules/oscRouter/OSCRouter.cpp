@@ -64,7 +64,7 @@ void OSCRouter::update(const animationParams &params){
 
 bool OSCRouter::reset(){
 	disable();
-	
+        return true;
 }
 
 void OSCRouter::showGuiWindow(){
@@ -80,7 +80,26 @@ void OSCRouter::showGuiWindow(){
 		else stopOSC();
 	}
 	
+	ImGui::Separator();
 	ImGui::Text("Number of nodes: %lu", nodes.size() );
+	
+	if(nodes.size()>0){
+		ImGui::Separator();
+		ImGui::Separator();
+		ImGui::TextWrapped("Connected OSC Nodes:");
+		ImGui::Indent();
+		
+		for(auto n=nodes.begin(); n!=nodes.end(); ++n){
+			if(ImGui::Button( ((string)("Unbind###node-"+ ofToString(&*n))).c_str())) {
+				(*n)->detachNode();
+				removeNode(*n);
+				break;
+			}
+			ImGui::SameLine();
+			ImGui::TextWrapped("%s (%s)", (*n)->getName().c_str(), ofToString(&*n).c_str());
+		}
+		ImGui::Unindent();
+	}
 	
 	ImGui::End();
 }
@@ -216,7 +235,7 @@ bool OSCRouter::removeNode(OSCNode* _node){
 	ofScopedLock( oscMutex );
 	for(list<OSCNode* >::iterator it=nodes.begin(); it!=nodes.end(); it++){
 		if( _node == *it ){
-			(*it)->detachNode();
+			(*it)->notifyDetached();
 			nodes.erase( it );
 			return true;
 		}
@@ -259,7 +278,7 @@ void OSCRouter::reconnectKMSA(){
 
 bool OSCRouter::startOSC(int _port){
 	
-	if(!isEnabled()) return;
+	if(!isEnabled()) return false;
 	
 	// OSC
 	try {
@@ -268,6 +287,8 @@ bool OSCRouter::startOSC(int _port){
 	} catch(const std::exception& e) {
 		ofLogWarning("OSCRouter::startOSC") << "Could not connect: " << e.what() << endl;
 		bIsListening = false;
+		
+		return false;
 	}
 	OSCListeningPort = _port;
 	
@@ -278,7 +299,7 @@ bool OSCRouter::startOSC(int _port){
 
 bool OSCRouter::stopOSC(){
 	
-	if(!isEnabled()) return;
+	if(!isEnabled()) return false;
 	
 	// OSC
 	try {
@@ -287,6 +308,7 @@ bool OSCRouter::stopOSC(){
 	} catch(const std::exception& e) {
 		ofLogNotice("OSCRouter::stopOSC") << "Disconnect failed somehow... : " << e.what() << endl;
 		bIsListening = false;
+		return true;
 	}
 	
 	return !bIsListening;

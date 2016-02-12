@@ -13,13 +13,26 @@
 // CONSTRUCTORS
 // - - - - - - - -
 OSCNode::OSCNode( ) : nodeName("OSCNode") {
-	moduleDependencies.clear();
+	nodeName = "OSCNode";
+	//bLoaded = true;
 }
 
 OSCNode::~OSCNode(){
 	
 }
 
+////
+//bool OSCNode::isEnabled() const {
+//	return bLoaded;
+//}
+
+string OSCNode::getName() const {
+	return nodeName;
+}
+
+//void OSCNode::notifyDetached(){
+//	
+//}
 
 // - - - - - - - -
 // EVENT LISTENERS

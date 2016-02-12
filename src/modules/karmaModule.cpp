@@ -78,7 +78,7 @@ string karmaModule::getType() const{
 }
 
 bool karmaModule::isEnabled() const {
-	return &bEnabled;
+        return bEnabled;
 }
 
 void karmaModule::showGuiWindow(){
@@ -92,6 +92,7 @@ void karmaModule::showGuiWindow(){
 
 void karmaModule::drawMenuEntry() {
 	if (ImGui::CollapsingHeader( getName().c_str(), ofToString(this).c_str(), true, true)){
+		ImGui::PushID(ofToString(this).c_str());
 		ImGui::TextWrapped("This is a standard module.");
 		if (ImGui::Checkbox("Enabled", &bEnabled)) {
 			setEnabled(bEnabled);
@@ -99,6 +100,7 @@ void karmaModule::drawMenuEntry() {
 		ImGui::SameLine();
 
 		ImGui::Selectable("Show Gui Window...", &bShowGuiWindow);
+		ImGui::PopID();
 	}
 }
 

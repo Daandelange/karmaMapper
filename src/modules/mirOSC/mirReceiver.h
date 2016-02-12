@@ -14,12 +14,12 @@
 //#include "OSCNode.h"
 #include "ofEvents.h"
 #include "mirEvents.h"
-#include "karmaModule.h"
+#include "singletonModule.h"
 
 // this class handles OSC events comming from mirReceiver.pd, caches the data and calculate some more with it.
 // also fires MIR events
 
-class mirReceiver : public OSCNode, public karmaModule {
+class mirReceiver : public OSCNode, public singletonModule<mirReceiver> {
 	
 public:
 	mirReceiver( );
@@ -35,10 +35,11 @@ public:
 	mirReceiver(mirReceiver const&)     = delete;
 	void operator=(mirReceiver const&)  = delete;
 	
-	// Parent functions
+	// Parent functions from OSCNode
 	bool canHandle( const ofxOscMessage &_msg ) const;
 	bool handle( const ofxOscMessage &_msg );
 	void detachNode();
+	void notifyDetached();
 	
 	// VIRTUALS FROM karmaModule
 	virtual bool enable();

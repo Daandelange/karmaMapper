@@ -28,6 +28,8 @@ Project{
             // MODULES (CORE)
             'src/modules/karmaModule.cpp',
             'src/modules/karmaModule.h',
+            'src/modules/singletonModule.cpp',
+            'src/modules/singletonModule.h',
             'src/modules/moduleFactory.cpp',
             'src/modules/moduleFactory.h',
 
@@ -119,8 +121,8 @@ Project{
              'ofxVLCRemote',
              'ofxVideoRecorder',
              'ofxXmlSettings',
-             'ofxImGui'
-            //'ofxSyphon'
+             'ofxImGui',
+             'ofxSyphon'
         ]
 
         // additional flags for the project. the of module sets some
@@ -148,15 +150,22 @@ Project{
                 'src/modules/fboRecorder',
                 'src/modules/soundAnalyser',
                 'src/modules/mirOSC',
-                'src/modules/durationOSC'
+                'src/modules/durationOSC',
+            '../../../addons/ofxSyphon/libs',
+            '../../../addons/ofxSyphon/libs/Syphon',
+            '../../../addons/ofxSyphon/libs/Syphon/lib',
+            '../../../addons/ofxSyphon/libs/Syphon/lib/osx',
+            '../../../addons/ofxSyphon/libs/Syphon/src',
+            '../../../addons/ofxSyphon/src'
         ] // include search paths
-        of.cFlags: ['-fpermissive']  // flags passed to the c compiler
+        of.cFlags: ['-fpermissive', '-v']  // flags passed to the c compiler
         of.cxxFlags: []         // flags passed to the c++ compiler
-        of.linkerFlags: []      // flags passed to the linker
+        of.linkerFlags: ['-v']      // flags passed to the linker
         //of.defines: ['KM_EDITOR_APP']          // defines are passed as -D to the compiler
         of.defines: ['KM_ANIMATOR_APP']
         // and can be checked with #ifdef or #if in the code
         of.frameworks: []       // osx only, additional frameworks to link with the project
+        //of.frameworks: ['Qtkit', 'Syphon']
 
         // other flags can be set through the cpp module: http://doc.qt.io/qbs/cpp-module.html
         // eg: this will enable ccache when compiling

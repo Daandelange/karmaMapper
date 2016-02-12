@@ -18,11 +18,14 @@ ofEvent<mirBangEventArgs> mirReceiver::mirBangEvent;
 // - - - - - - - -
 mirReceiver::mirReceiver() {
 	
-	//
+	// OSCNode setup
+	nodeName = "mirReceiver";
+	
+	// karmaModule setup
 	bInitialised = true;
 	bEnabled = false;
-	
-	nodeName = "mirReceiver";
+	moduleName = "mirReceiver";
+	moduleType = "mirReceiver";
 }
 
 mirReceiver::~mirReceiver(){
@@ -149,6 +152,10 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 void mirReceiver::detachNode() {
 	disable();
 	// detach events ?
+}
+
+void mirReceiver::notifyDetached(){
+	ofScopedLock(oscMutex);
 }
 
 // - - - - - - - -

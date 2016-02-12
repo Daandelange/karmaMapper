@@ -24,6 +24,7 @@ bool durationRC::setupOSC(){
 	setup("localhost", 12346);
 	bConnected = true;
 	// (shuts down automatically)
+        return bConnected;
 }
 
 // - - - - - - - -
@@ -49,12 +50,14 @@ bool durationRC::play(){
 	ofxOscMessage m;
 	m.setAddress("/duration/play");
 	sendMessage(m);
+        return true;
 }
 
 bool durationRC::stop(){
 	ofxOscMessage m;
 	m.setAddress("/duration/stop");
 	sendMessage(m);
+        return true;
 }
 
 // GETTERS

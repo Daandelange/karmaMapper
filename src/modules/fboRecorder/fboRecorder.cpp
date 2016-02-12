@@ -74,6 +74,7 @@ bool fboRecorder::stopRecording(){
 	ofxVideoRecorder::close();
 	//ofxVideoRecorder::~ofxVideoRecorder();
 	bRecording=false;
+        return true;
 }
 
 ofTexture& fboRecorder::getTexture(){
