@@ -81,9 +81,10 @@ bool shapesScene::removeShape(basicShape *_shape){
 	for(list<basicShape*>::iterator it = shapes.begin(); it != shapes.end(); it++){
 		if(_shape==*it){
 			shapes.erase(it);
-			break;
+                        return true;
 		}
 	}
+        return true;
 }
 
 // - - - - - - - -
@@ -224,6 +225,8 @@ bool shapesScene::unloadShapes(){
 	
 	// file is not loaded anymore
 	loadedConfiguration = "";
+
+        return true;
 }
 
 // - - - - - - -

@@ -95,6 +95,7 @@ bool imageShader::printCustomEffectGui(){
 		
 		ImGui::Separator();
 	}
+        return true;
 }
 
 // - - - - - - -

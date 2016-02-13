@@ -151,20 +151,21 @@ Project{
                 'src/modules/soundAnalyser',
                 'src/modules/mirOSC',
                 'src/modules/durationOSC',
-            '../../../addons/ofxSyphon/libs',
-            '../../../addons/ofxSyphon/libs/Syphon',
-            '../../../addons/ofxSyphon/libs/Syphon/lib',
-            '../../../addons/ofxSyphon/libs/Syphon/lib/osx',
-            '../../../addons/ofxSyphon/libs/Syphon/src',
-            '../../../addons/ofxSyphon/src'
+//            '../../../addons/ofxSyphon/libs',
+//            '../../../addons/ofxSyphon/libs/Syphon',
+//            '../../../addons/ofxSyphon/libs/Syphon/lib',
+//            '../../../addons/ofxSyphon/libs/Syphon/lib/osx',
+//            '../../../addons/ofxSyphon/libs/Syphon/src',
+//            '../../../addons/ofxSyphon/src',
+//            '/Library/Frameworks/'
         ] // include search paths
-        of.cFlags: ['-fpermissive', '-v']  // flags passed to the c compiler
+        of.cFlags: ['-fpermissive']  // flags passed to the c compiler
         of.cxxFlags: []         // flags passed to the c++ compiler
-        of.linkerFlags: ['-v']      // flags passed to the linker
-        //of.defines: ['KM_EDITOR_APP']          // defines are passed as -D to the compiler
-        of.defines: ['KM_ANIMATOR_APP']
+        of.linkerFlags: ['-v']//, '-F/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx']      // flags passed to the linker
+        //of.defines: ['KM_EDITOR_APP', 'KM_QT_CREATOR'] // defines are passed as -D to the compiler
+        of.defines: ['KM_ANIMATOR_APP', 'KM_QT_CREATOR']
         // and can be checked with #ifdef or #if in the code
-        of.frameworks: []       // osx only, additional frameworks to link with the project
+        //of.frameworks: ['Syphon']  // osx only, additional frameworks to link with the project
         //of.frameworks: ['Qtkit', 'Syphon']
 
         // other flags can be set through the cpp module: http://doc.qt.io/qbs/cpp-module.html
@@ -185,6 +186,10 @@ Project{
         Depends{
             name: "openFrameworks"
         }
+
+//        Depends{
+//            name: "Syphon.framework"
+//        }
     }
 
     references: [FileInfo.joinPaths(of_root, "/libs/openFrameworksCompiled/project/qtcreator/openFrameworks.qbs")]

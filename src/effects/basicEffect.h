@@ -86,7 +86,7 @@ public:
 	void setShowGuiWindow(const bool& _b);
 	bool showGuiWindow(const shapesDB& _scene);
 	void toggleGuiWindow();
-	virtual bool printCustomEffectGui(){};
+        virtual bool printCustomEffectGui(){return true;};
 	
 	
 	// #########

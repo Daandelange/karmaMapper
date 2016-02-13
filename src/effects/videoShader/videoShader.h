@@ -15,12 +15,8 @@
 #include "animationParams.h"
 #include "mirReceiver.h"
 
-#ifdef TARGET_OSX
-	#ifdef KM_ENABLE_SYPHON
-
-		#include "ofxSyphon.h"
-
-	#endif
+#ifdef KM_ENABLE_SYPHON
+	#include "ofxSyphon.h"
 #endif
 
 struct animationParams;

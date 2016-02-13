@@ -50,7 +50,7 @@ public:
 	// basic functions
 	//bool startListening();
 	//bool stopListening();
-	bool connectToOSCRouter(){};
+        bool connectToOSCRouter(){return false;};
 	
 	// listeners
 	//void oscIn();

@@ -131,8 +131,10 @@ void videoShader::reset(){
 	}
 	loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
 	
+#ifdef KM_ENABLE_SYPHON
 	syphonAddr.appName = "Simple Server";
 	syphonAddr.serverName = "";
+#endif
 	
 	// set this when done
 	bInitialised = true;
@@ -293,9 +295,12 @@ bool videoShader::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("playBackSpeed", playBackSpeed);
 	xml.addValue("videoMode", static_cast<int>(videoMode) );
 	xml.addValue("videoFile", videoFile );
+
+#ifdef KM_ENABLE_SYPHON
 	xml.addValue("syphonServer", syphonAddr.serverName);
 	xml.addValue("syphonApp", syphonAddr.appName);
-	
+#endif
+
 	//if( lock() ){
 		xml.addValue("bUseThreadedFileDecoding", bUseThreadedFileDecoding);
 		//unlock();
@@ -317,10 +322,13 @@ bool videoShader::loadFromXML(ofxXmlSettings& xml){
 	setVideoMode( static_cast<enum videoMode>(xml.getValue("videoMode", VIDEO_MODE_FILE )) );
 	loadVideoFile( xml.getValue("videoFile", "") );
 	setUseThread( xml.getValue("bUseThreadedFileDecoding", true) );
+	
+#ifdef KM_ENABLE_SYPHON
 	connectToSyphonServer( ofxSyphonServerDescription(
 		xml.getValue("syphonServer", syphonAddr.serverName),
 		xml.getValue("syphonApp", syphonAddr.appName)
 	));
+#endif
 	
 	
 	return ret;

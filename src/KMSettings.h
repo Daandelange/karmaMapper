@@ -9,8 +9,15 @@
 // ENABLE / DISABLE some features on compilation time ?
 // - - - - - -
 #ifdef TARGET_OSX
+
+        // for the moment Syphon only compiles on XCODE....
+#ifdef KM_XCODE_COMPILER
+
 	// comment line to force-disable
 	#define KM_ENABLE_SYPHON
+	#pragma message "Enabling Syphon. Make sure you use OSX + XCode to compile."
+
+#endif
 #endif
 
 
