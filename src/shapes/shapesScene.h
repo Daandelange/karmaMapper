@@ -41,8 +41,8 @@ public:
 	basicShape* insertShape(basicShape* _shape);
 	bool removeShape(basicShape* _shape);
 	bool shapeExists(const basicShape* i) const;
-	bool saveScene( const string _fileName = "" );
-	bool loadScene( const string _fileName = "" );
+	bool saveScene( const string& _fileName = "" );
+	bool loadScene( const string& _fileName = "" );
 	bool unloadShapes();
 	
 	// utilities

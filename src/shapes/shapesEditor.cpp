@@ -729,24 +729,27 @@ void shapesEditor::_keyPressed(ofKeyEventArgs &e){
 // - - - - - - - -
 void shapesEditor::showLoadMenu(){
 	//ofRectangle btn = loadButton.getShape();
-	ofFileDialogResult openFileResult= ofSystemLoadDialog("Select the XML file to load...", false, ofToDataPath("saveFiles/"));
+	ofFileDialogResult openFileResult= ofSystemLoadDialog("Select the XML file to load...", false, ofToDataPath(KM_SCENE_SAVE_PATH));
 	
 	if(openFileResult.bSuccess){
 		// restrict to saveFiles dir
-		ofFile file( ofToDataPath("saveFiles/")+openFileResult.getName() );
+		ofFile file( openFileResult.getPath() );
 		if(file.exists()){
-			loadScene( openFileResult.getName() );
+			loadScene( openFileResult.getPath() );
+		}
+		else {
+			ofLogWarning("shapesEditor::showLoadMenu()") << "Shapes files not found, or unreadable. Not loading...";
 		}
 	}
 }
 
 void shapesEditor::showSaveDialog(){
 	//ofRectangle btn = loadButton.getShape();
-	ofFileDialogResult openFileResult= ofSystemSaveDialog(loadedConfiguration,"Where shall I save your scene?");
+	ofFileDialogResult openFileResult= ofSystemSaveDialog(ofToDataPath(KM_SCENE_SAVE_PATH + loadedConfiguration),"Where shall I save your scene?");
 	
 	if(openFileResult.bSuccess){
 		// only keep the file name, not the path
-		saveScene( openFileResult.getName() );
+		saveScene( openFileResult.getPath() );
 	}
 }
 

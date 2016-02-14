@@ -108,7 +108,7 @@ bool shapesScene::shapeExists(const basicShape* i) const{
 
 
 // todo: move save functionalities to shape object
-bool shapesScene::saveScene(const string _fileName){
+bool shapesScene::saveScene(const string& _fileName){
 	string fullPath;
 	// no save file ?
 	if( _fileName.empty() ){
@@ -116,10 +116,10 @@ bool shapesScene::saveScene(const string _fileName){
 			ofSystemAlertDialog("Please provide a name for the save file!");
 			return false;
 		}
-		else fullPath = KM_SCENE_SAVE_PATH+loadedConfiguration;
+		else fullPath = loadedConfiguration;
 		
 	}
-	else fullPath = KM_SCENE_SAVE_PATH+_fileName;
+	else fullPath = _fileName;
 	
 	ofxXmlSettings sceneXML;
 	sceneXML.addTag("shapes");
@@ -144,29 +144,28 @@ bool shapesScene::saveScene(const string _fileName){
 		if(failed.size() == 0 ) ofLogNotice("shapesScene::saveScene()", "Saved current configuration to `"+fullPath+"`");
 		else ofSystemAlertDialog("The scene has been saved but "+ ofToString(failed.size()) +" out of "+ ofToString(shapes.size()) +" shapes failed to save.");
 	}
-	else ofSystemAlertDialog("Could not save the current configuration... :(\nSave File: "+fullPath);
+	else ofSystemAlertDialog("Could not save the current configuration...\nSave File: "+fullPath);
 	
 	return true; // todo: this should be conditional
 }
 
 // (re)loads a scene from file
-bool shapesScene::loadScene( const string _fileName ){
+bool shapesScene::loadScene( const string& _fileName ){
 	
 	string fullPath;
 	
 	// use default config ?
 	if( _fileName.empty() ){
 		if( loadedConfiguration.empty() ) return false; // we have no input file
-		else fullPath = KM_SCENE_SAVE_PATH+loadedConfiguration;
+		else fullPath = loadedConfiguration;
 	}
-	else fullPath = KM_SCENE_SAVE_PATH+_fileName;
+	else fullPath = ofToDataPath( _fileName );
 	
 	ofxXmlSettings sceneXML;
 	
 	// can we read the file ?
 	if( sceneXML.loadFile(fullPath) ){
 		
-		// unload scene
 		unloadShapes();
 		
 		sceneXML.pushTag("shapes");

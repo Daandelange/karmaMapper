@@ -307,7 +307,7 @@ bool animationController::loadConfiguration(const string& _file){
 	bool success = false;
 	ofxXmlSettings configXML;
 	
-	if( configXML.loadFile( ofToDataPath( KM_CONFIG_FOLDER +_file ) ) ){
+	if( configXML.loadFile( _file ) ){
 		
 		stop();
 		
@@ -319,15 +319,16 @@ bool animationController::loadConfiguration(const string& _file){
 				success = true;
 			}
 			else {
-				scene.unloadShapes();
-				
+				newConfiguration();
+				start(); // start anyways
 				// todo: make this a GUI warning modal ?
 				ofLogWarning("animationController::loadConfiguration") << "The config file is loading but it's associated shapes scene file was not found. ( continuing... )";
 			}
 			configXML.popTag(); // pop sceneSettings
 		}
 		else {
-			scene.unloadShapes();
+			newConfiguration();
+			start();
 			ofLogNotice("animationController::loadConfiguration") << "The config file has no shapes scene file. Loading effects without shapes.";
 		}
 		
@@ -482,6 +483,7 @@ bool animationController::loadConfiguration(const string& _file){
 	else {
 		// todo: make this a GUI message
 		ofLogError("animationController::loadConfiguration") << "404 - The config file `"<< _file << "` does not exist or is not readable.";
+		success = false;
 	}
 	
 	if(success){
@@ -509,7 +511,7 @@ bool animationController::loadLastConfiguration(){
 	if( prevSettings.loadFile( ofToDataPath(KM_LAST_CONFIG_FILE) ) ){
 		
 		// load created shapes
-		success = loadConfiguration( prevSettings.getValue("lastLoadedConfiguration", KM_CONFIG_DEFAULT) );
+		success = loadConfiguration( prevSettings.getValue("lastLoadedConfiguration", ofToDataPath( KM_CONFIG_FOLDER ) + KM_CONFIG_DEFAULT ) );
 		
 		prevSettings.clear();
 	}
@@ -520,19 +522,19 @@ bool animationController::loadLastConfiguration(){
 	return success;
 }
 
-bool animationController::saveConfiguration( const string& _fileName ){
+bool animationController::saveConfiguration( const string& _filePath ){
 	bool success = false;
 	
 	string fullPath;
 	// no save file ?
-	if( _fileName.empty() ){
+	if( _filePath.empty() ){
 		if( loadedConfiguration.empty() ){
 			ofSystemAlertDialog("Please provide a name for the save file!");
 			return false;
 		}
-		else fullPath = KM_CONFIG_FOLDER+loadedConfiguration;
+		else fullPath = loadedConfiguration;
 	}
-	else fullPath = KM_CONFIG_FOLDER+_fileName;
+	else fullPath = ofToDataPath(_filePath);
 	
 	ofxXmlSettings sceneXML;
 	
@@ -595,7 +597,8 @@ bool animationController::saveConfiguration( const string& _fileName ){
 	
 	// write down settings to disk
 	if( sceneXML.saveFile(fullPath) ){
-		loadedConfiguration = ofFilePath::getFileName(fullPath);
+		//loadedConfiguration = ofFilePath::getFileName(fullPath);
+		loadedConfiguration = fullPath;
 		success = true;
 		if(failedEffects.size() == 0 && failedModules.size() ==0 ){
 			ofLogNotice("animationController::saveConfiguration()", "Saved current configuration to `"+fullPath+"`");
@@ -607,6 +610,15 @@ bool animationController::saveConfiguration( const string& _fileName ){
 	else ofSystemAlertDialog("Could not save the current configuration... :(\nSave File: "+fullPath);
 	
 	return success;
+}
+
+// keeps them loaded but ensures they're unbound from any shape
+bool animationController::unbindAllShapes(){
+	bool success = true;
+	for( auto it = effects.begin(); it != effects.end(); ++it){
+		success *= (*it)->detachFromAllShapes();
+	}
+	return true;
 }
 
 bool animationController::unloadAllEffects(){
@@ -862,10 +874,10 @@ void animationController::draw(ofEventArgs& event){
 					ImGui::Separator();
 				} else {
 					for (int i = 0; i < dir.size(); i++){
-						if( ImGui::MenuItem( dir.getName(i).c_str(), "", (bool)(scene.getLoadedScene() == dir.getName(i)) ) ){
+						if( ImGui::MenuItem( dir.getName(i).c_str(), "", (bool)(scene.getLoadedScene() == dir.getPath(i)) ) ){
 							
 							// todo: add error feedback here
-							loadConfiguration(dir.getName(i));
+							loadConfiguration(dir.getPath(i));
 
 						}
 					}
@@ -873,7 +885,7 @@ void animationController::draw(ofEventArgs& event){
 				ImGui::EndMenu();
 			}
 			
-			if ( !loadedConfiguration.empty() && scene.getLoadedScene()!="" && ImGui::MenuItem("Save configuration", ofToString(KM_CTRL_KEY_NAME).append( " + S" ).c_str() )){
+			if ( !loadedConfiguration.empty() && ImGui::MenuItem("Save configuration", ofToString(KM_CTRL_KEY_NAME).append( " + S" ).c_str() )){
 				saveConfiguration();
 			}
 			
@@ -895,13 +907,17 @@ void animationController::draw(ofEventArgs& event){
 				dir.listDir( ofToDataPath( KM_SCENE_SAVE_PATH ) );
 				dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
 				if( dir.size() <= 0 ){
-					ImGui::Text("No files in %s", KM_SCENE_SAVE_PATH);
+					ImGui::Text("No files in %s", ofToDataPath( KM_SCENE_SAVE_PATH).c_str());
 					ImGui::Separator();
 				} else {
 					for (int i = 0; i < dir.size(); i++){
-						if( ImGui::MenuItem( dir.getName(i).c_str(), "", (bool)(scene.getLoadedScene() == dir.getName(i)) ) ){
-							stop();
-							if( scene.loadScene( dir.getName(i) ) ){
+						if( ImGui::MenuItem( dir.getName(i).c_str(), "", (bool)(scene.getLoadedScene() == dir.getPath(i)) ) ){
+							unbindAllShapes();
+							if( scene.loadScene( ofToDataPath(dir.getPath(i)) ) ){
+								start();
+							}
+							else {
+								newConfiguration();
 								start();
 							}
 						}
@@ -1297,7 +1313,7 @@ void animationController::draw(ofEventArgs& event){
 		}
 		
 		if( doSaveNow && tmpName[0] != '\0'){
-			saveConfiguration(tmpName);
+			saveConfiguration( ofToString(KM_CONFIG_FOLDER) + tmpName + ".xml");
 			memset(&tmpName[0], '\0', sizeof(tmpName));
 			ImGui::CloseCurrentPopup();
 			ShowSaveAsModal = false; // tmp
@@ -1317,10 +1333,17 @@ void animationController::showShapeLoadMenu(){
 	
 	if(openFileResult.bSuccess){
 		// restrict to saveFiles dir
-		ofFile file( ofToDataPath(KM_SCENE_SAVE_PATH)+openFileResult.getName() );
+		ofFile file( ofToDataPath( openFileResult.getPath()) );
 		if(file.exists()){
-			stop();
-			if( scene.loadScene( openFileResult.getName() )){
+			
+			unbindAllShapes();
+			
+			if( scene.loadScene( ofToDataPath( openFileResult.getPath()) )){
+				start();
+			}
+			else {
+				ofLogError("animationController::showShapeLoadMenu()") << "Failed loading " << openFileResult.getPath();
+				newConfiguration();
 				start();
 			}
 		}

@@ -58,10 +58,11 @@ public:
 	// load & save
 	bool loadConfiguration(const string& _file = "");
 	bool loadLastConfiguration();
-	bool saveConfiguration(const string& _fileName = "");
+	bool saveConfiguration(const string& _filePath = "");
 	string loadedConfiguration;
 	bool unloadAllEffects();
 	void newConfiguration();
+	bool unbindAllShapes();
 	bool unloadAllModules();
 	karmaModule* tryLoadModule(const string& _moduleType);
 	karmaModule* getModule(const string& _moduleType);
