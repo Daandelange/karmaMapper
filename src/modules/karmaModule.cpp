@@ -78,7 +78,7 @@ string karmaModule::getType() const{
 }
 
 bool karmaModule::isEnabled() const {
-        return bEnabled;
+	return bEnabled;
 }
 
 void karmaModule::showGuiWindow(){
@@ -91,17 +91,10 @@ void karmaModule::showGuiWindow(){
 }
 
 void karmaModule::drawMenuEntry() {
-	if (ImGui::CollapsingHeader( getName().c_str(), ofToString(this).c_str(), true, true)){
-		ImGui::PushID(ofToString(this).c_str());
-		ImGui::TextWrapped("This is a standard module.");
-		if (ImGui::Checkbox("Enabled", &bEnabled)) {
-			setEnabled(bEnabled);
-		}
-		ImGui::SameLine();
+		
+	ImGui::TextWrapped("This is a standard module.");
 
-		ImGui::Selectable("Show Gui Window...", &bShowGuiWindow);
-		ImGui::PopID();
-	}
+	ImGui::Selectable("Show Gui Window...", &bShowGuiWindow);
 }
 
 // writes the module data to XML. xml's cursor is already pushed into the right <module> tag.

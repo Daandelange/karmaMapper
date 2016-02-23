@@ -8,17 +8,155 @@
 
 #include "fboRecorder.h"
 
+// forward declarations are needed for event listening
+//class animationController;
+//ofEvent<karmaControllerDrawEventArgs> animationController::karmaControllerBeforeDraw;
+//ofEvent<karmaControllerDrawEventArgs> animationController::karmaControllerAfterDraw;
 
 // - - - - - - - -
 // CONSTRUCTORS
 // - - - - - - - -
 fboRecorder::fboRecorder( ){
+	
+	// karmaModule setup
+	bInitialised = true;
+	bEnabled = false;
+	moduleName = "fboRecorder";
+	moduleType = "fboRecorder";
+	
 	bRecording = false;
 	bFrameStarted = false;
+	
+	videoRecBitRate = KM_FBOREC_DEFAULT_BITRATE;
+	videoRecAA = KM_FBOREC_DEFAULT_AA;
+	videoRecFPS = KM_FBOREC_DEFAULT_FPS;
+	videoRecShowOutput = true;
+	fboRecMode = VIDEOREC_MODE_FILE_H264;
 }
 
 fboRecorder::~fboRecorder(){
+	disable();
+}
+
+// - - - - - - - -
+// VIRTUALS FROM karmaModule
+// - - - - - - - -
+bool fboRecorder::enable() {
+	return karmaModule::enable();
+}
+
+bool fboRecorder::disable() {
 	stopRecording();
+	
+	return karmaModule::disable();
+}
+
+void fboRecorder::update(const animationParams &params) {
+	karmaModule::update(params);
+}
+
+void fboRecorder::draw(const animationParams &params) {
+	karmaModule::draw(params);
+}
+
+void fboRecorder::showGuiWindow(){
+	// this module has no GUI window
+	return;
+	//karmaModule::showGuiWindow();
+}
+
+void fboRecorder::drawMenuEntry(){
+	ImGui::TextWrapped("Records the video output and saves it to a video file using a separate thread.");
+	
+	//ImGui::Selectable("Show Gui Window...", &bShowGuiWindow);
+	
+	if (ImGui::ListBoxHeader("Video Recording Mode", 3)){
+		
+		// manually add new modes here
+		if ( ImGui::Selectable("VIDEOREC_MODE_FILE_H264", fboRecMode==VIDEOREC_MODE_FILE_H264)) {
+			setRecordMode(VIDEOREC_MODE_FILE_H264);
+		}
+		if ( ImGui::Selectable("VIDEOREC_MODE_FILE_PNG", fboRecMode==VIDEOREC_MODE_FILE_PNG)) {
+			setRecordMode(VIDEOREC_MODE_FILE_PNG);
+		}
+#ifdef KM_ENABLE_SYPHON
+		if ( ImGui::Selectable("VIDEOREC_MODE_SYPHON", fboRecMode==VIDEOREC_MODE_SYPHON)) {
+			setRecordMode(VIDEOREC_MODE_SYPHON);
+		}
+#endif
+		ImGui::ListBoxFooter();
+	}
+	ImGui::Separator();
+	
+	if( isEnabled() ){
+		if(!isRecording()){
+			if(ImGui::Button("Start Recording")){
+				startRecording();
+			}
+		}
+		else {
+			if(ImGui::Button("Stop Recording")){
+				stopRecording();
+			}
+			if(fbo.isAllocated()){
+				ImGui::TextWrapped("Recorded resolution: %gx%gpx", fbo.getWidth(), fbo.getHeight());
+			}
+		}
+	}
+	
+	switch (fboRecMode) {
+		case VIDEOREC_MODE_FILE_H264 :
+		case VIDEOREC_MODE_FILE_PNG :
+			ImGui::TextWrapped("Video File Settings");
+			ImGui::InputInt("Bitrate", &videoRecBitRate);
+			ImGui::InputInt("AA quality", &videoRecAA);
+			ImGui::InputInt("Target video FPS", &videoRecFPS);
+			ImGui::Checkbox("Show output", &videoRecShowOutput);
+			break;
+#ifdef KM_ENABLE_SYPHON
+		case VIDEOREC_MODE_SYPHON :
+			ImGui::TextWrapped("Syphon Settings");
+			break;
+#endif
+		default:
+			break;
+	}
+	
+	
+}
+
+// writes the module data to XML. xml's cursor is already pushed into the right <module> tag.
+bool fboRecorder::saveToXML(ofxXmlSettings& xml) const{
+	bool ret = karmaModule::saveToXML(xml);
+	
+	if(!ret) return false;
+	
+	xml.addValue("fboRecMode", static_cast<int>(fboRecMode));
+	xml.addValue("videoRecFPS", (int) videoRecFPS);
+	xml.addValue("videoRecAA", (int) videoRecAA);
+	xml.addValue("videoRecBitRate", (int) videoRecBitRate);
+	xml.addValue("videoRecShowOutput", videoRecShowOutput);
+	
+	return ret;
+}
+
+// load module settings from xml
+// xml's cursor is pushed to the root of the <module> tag to load
+bool fboRecorder::loadFromXML(ofxXmlSettings& xml){
+	
+	bool ret=karmaModule::loadFromXML(xml);
+	if(!ret) return false;
+	
+	//OSCListeningPort = xml.getValue("OSCListeningPort", KM_OSC_PORT_IN );
+	setRecordMode (static_cast<enum videoRecMode>(xml.getValue("fboRecMode", VIDEOREC_MODE_FILE_H264)));
+	videoRecFPS = xml.getValue("videoRecFPS", KM_FBOREC_DEFAULT_FPS);
+	videoRecAA = xml.getValue("videoRecAA", KM_FBOREC_DEFAULT_AA);
+	videoRecBitRate = xml.getValue("videoRecBitRate", KM_FBOREC_DEFAULT_BITRATE);
+	videoRecShowOutput = xml.getValue("videoRecShowOutput", true);
+	
+	//initialise(animationParams.params);
+	
+	return ret; // todo
 }
 
 // - - - - - - - -
@@ -30,13 +168,15 @@ fboRecorder::~fboRecorder(){
 bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 	if(isRecording()) return true;
 	
+	
+	// prepare FBO
 	if( _w==0 || _h==0 ){
 		_w = ofGetWindowWidth();
-		_h - ofGetWindowHeight();
+		_h = ofGetWindowHeight();
 	}
+	fbo.allocate(_w, _h, GL_RGBA, videoRecAA);
+	//ofSetWindowShape(_w, _h);
 	
-	fbo.allocate(_w, _h, GL_RGB, 4); // 4 = anti-aliasing
-	ofSetWindowShape(_w, _h);
 	//fbo.getTexture().setTextureWrap( GL_WRAP_BORDER, GL_WRAP_BORDER);
 	fbo.getTexture().getTextureData().bFlipTexture = true;
 	
@@ -45,40 +185,102 @@ bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 	//ofEnableSmoothing(); // makes no difference
 	fbo.end();
 	
-	// videoRecorder(ofFilePath::getAbsolutePath("ffmpeg")); // use this is you have ffmpeg installed in your data folder
+	if(!fbo.isAllocated()){
+		ofLogWarning("fboRecorder::startRecording()") << "Could not allocate FBO. Maybe your GPU can't handle any more.";
+		return false;
+	}
 	
-	// run 'ffmpeg -codecs' to find out what your implementation supports (or -formats on some older versions)
-	//ofxVideoRecorder::setVideoCodec("mpeg4");
-	//ofxVideoRecorder::setVideoCodec("png"); // heavy but very good results
-	ofxVideoRecorder::setVideoCodec("h264"); // good size, acceptable quality
-	ofxVideoRecorder::setVideoBitrate("40000k");
+	// video mode dependent
+	switch ( fboRecMode ){
+		case VIDEOREC_MODE_FILE_H264 :
+		case VIDEOREC_MODE_FILE_PNG : {
+			// videoRecorder(ofFilePath::getAbsolutePath("ffmpeg")); // use this is you have ffmpeg installed in your data folder
+			
+			// run 'ffmpeg -codecs' to find out what your implementation supports (or -formats on some older versions)
+			//ofxVideoRecorder::setVideoCodec("mpeg4");
+			
+			if(fboRecMode==VIDEOREC_MODE_FILE_PNG) {
+				ofxVideoRecorder::setVideoCodec("png"); // heavy but very good results
+			}
+			else {
+				ofxVideoRecorder::setVideoCodec("h264"); // good size, acceptable quality
+			}
+			ofxVideoRecorder::setVideoBitrate(ofToString(videoRecBitRate)+"k");
+			
+			//videoRecorder.setAudioCodec("mp3");
+			//videoRecorder.setAudioBitrate("192k");
+			
+			string file(_fileName);
+			if (file.compare("")==0){
+				file = "videoRecorder"+ofGetTimestampString()+".mov";
+			}
+			
+			ofxVideoRecorder::setup( ofToDataPath( file ), fbo.getWidth(), fbo.getHeight(), KM_FBOREC_DEFAULT_FPS);
+			ofxVideoRecorder::start();
+			
+			bRecording = ofxVideoRecorder::isRecording();
+			
+			if( bRecording ) {
+				ofLogNotice("fboRecorder::startRecording()") << "Started recording to file «" << file << "»";
+			}
+			
+			break;
+		}
+#ifdef KM_ENABLE_SYPHON
+		case VIDEOREC_MODE_SYPHON : {
+			syphonServer.setName("fboRecorder Output");
+			bRecording = true;
+			break;
+		}
+#endif
+		default: {
+			return false;
+			break;
+		}
+	}
 	
-	//videoRecorder.setAudioCodec("mp3");
-	//videoRecorder.setAudioBitrate("192k");
-	
-	
-	// tmp
-	string file(_fileName);
-	if(file.compare("")==0) file = "videoRecorder"+ofGetTimestampString()+".mov";
-	ofxVideoRecorder::setup(file, fbo.getWidth(), fbo.getHeight(), 60);
-	ofxVideoRecorder::start();
 
-	bRecording = fbo.isAllocated();
+	ofAddListener( animationController::karmaControllerBeforeDraw, this, &fboRecorder::beforeDraw );
+	ofAddListener( animationController::karmaControllerAfterDraw, this, &fboRecorder::afterDraw );
 	
-	ofLogNotice("fboRecorder") << "Started recording to file «" << file << "»" << endl;
-	
-	 return bRecording;
+	return bRecording;
 }
 
 bool fboRecorder::stopRecording(){
 	ofxVideoRecorder::close();
 	//ofxVideoRecorder::~ofxVideoRecorder();
+	fbo.allocate(0, 0); // free memory
 	bRecording=false;
-        return true;
+	return true;
 }
 
 ofTexture& fboRecorder::getTexture(){
 	return fbo.getTexture();
+}
+
+bool fboRecorder::setRecordMode(enum videoRecMode _mode){
+	if(fboRecMode == _mode){
+		return true;
+	}
+	switch ( _mode ){
+		case VIDEOREC_MODE_FILE_H264 :
+			fboRecMode = VIDEOREC_MODE_FILE_H264;
+			break;
+			
+		case VIDEOREC_MODE_FILE_PNG :
+			fboRecMode = VIDEOREC_MODE_FILE_PNG;
+			break;
+#ifdef KM_ENABLE_SYPHON
+		case VIDEOREC_MODE_SYPHON :
+			fboRecMode = VIDEOREC_MODE_SYPHON;
+			break;
+#endif
+		default:
+			return false;
+			break;
+	}
+	
+	return (fboRecMode == _mode);
 }
 
 // - - - - - - - -
@@ -113,19 +315,57 @@ bool fboRecorder::endFrame(bool _showBuffer){
 	fbo.end();
 	//fbo.getTexture().getTextureData().bFlipTexture = false;
 	bFrameStarted=false;
-	if(_showBuffer) fbo.draw(0,0,fbo.getWidth(), fbo.getHeight()); // show recorded image
 	
-	ofPixels pix;
-	pix.allocate(fbo.getWidth(),fbo.getHeight(), ofGetImageTypeFromGLType(GL_RGB));
-	fbo.readToPixels(pix);
 	
-	//ofSaveImage(pix, "mahSupahRecoring.png", OF_IMAGE_QUALITY_BEST);
-	ofxVideoRecorder::addFrame(pix);
+	switch(fboRecMode){
+		case VIDEOREC_MODE_FILE_H264 :
+		case VIDEOREC_MODE_FILE_PNG : {
+			ofPixels pix;
+			pix.allocate(fbo.getWidth(),fbo.getHeight(), ofGetImageTypeFromGLType(GL_RGB));
+			fbo.readToPixels(pix);
+			
+			ofxVideoRecorder::addFrame(pix);
+			break;
+		}
+			
+#ifdef KM_ENABLE_SYPHON
+		case VIDEOREC_MODE_SYPHON: {
+			//fbo.getTexture().bind();
+			syphonServer.publishTexture( &fbo.getTexture() );
+			//fbo.getTexture().unbind();
+			//fbo.getTexture().
+			break;
+		}
+#endif
+			
+		default:
+			return false;
+			break;
+	}
+	
+	if(_showBuffer){
+		//fbo.draw(0, fbo.getHeight(),fbo.getWidth(), -fbo.getHeight()); // show recorded image
+	}
 	
 	return true;
+}
+
+// LISTENERS
+void fboRecorder::beforeDraw(  karmaControllerDrawEventArgs& _args ){
+	
+	beginFrame();
+}
+
+void fboRecorder::afterDraw(  karmaControllerDrawEventArgs& _args ){
+	
+	endFrame(videoRecShowOutput);
 }
 
 // GETTERS
 bool fboRecorder::isRecording() const {
 	return bRecording;
 }
+
+// REGISTER MODULE
+const static ::module::factory::moduleDependencies  fboRecorderDependencies({});
+MODULE_REGISTER( fboRecorder , "fboRecorder", fboRecorderDependencies );

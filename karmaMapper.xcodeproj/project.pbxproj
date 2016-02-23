@@ -326,6 +326,7 @@
 		8529F1F51C6139D200949E5B /* lineDrawEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineDrawEffect.h; sourceTree = "<group>"; };
 		8529F1F61C6139D200949E5B /* lineDrawEffectLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineDrawEffectLine.cpp; sourceTree = "<group>"; };
 		8529F1F71C6139D200949E5B /* lineDrawEffectLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineDrawEffectLine.h; sourceTree = "<group>"; };
+		852F59551C7CDF0D00EB0192 /* animationControllerEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = animationControllerEvents.h; path = core/animationControllerEvents.h; sourceTree = "<group>"; };
 		853CEC1E1C3AAD3D0030BF5D /* BaseEngine.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BaseEngine.cpp; sourceTree = "<group>"; };
 		853CEC1F1C3AAD3D0030BF5D /* BaseEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseEngine.h; sourceTree = "<group>"; };
 		853CEC201C3AAD3D0030BF5D /* BaseTheme.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BaseTheme.cpp; sourceTree = "<group>"; };
@@ -1079,6 +1080,7 @@
 			children = (
 				EB15C2F981CCE54007D5DE40 /* animationController.cpp */,
 				34D803D358752130FC44817F /* animationController.h */,
+				852F59551C7CDF0D00EB0192 /* animationControllerEvents.h */,
 				8529F1EF1C611A7D00949E5B /* karmaConsole.cpp */,
 				8529F1F01C611A7D00949E5B /* karmaConsole.h */,
 			);

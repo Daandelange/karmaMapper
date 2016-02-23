@@ -438,7 +438,7 @@ bool basicEffect::detachFromAllShapes(){
 	return (shapes.size()==0); // should always be true
 }
 
-// always returns true, just unbinds
+// always returns true, simply unbinds 
 // todo: rename this to unBindWithShape() ?
 bool basicEffect::detachFromShape(basicShape* _shape){
 	if(shapes.size()==0) return true;

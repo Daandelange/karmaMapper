@@ -15,7 +15,7 @@
 //========================================================================
 int main( ){
 	// Useful for debugging shaders and other inner-OF things
-	//ofSetLogLevel(OF_LOG_VERBOSE);
+	ofSetLogLevel(OF_LOG_VERBOSE);
 	
 	#ifdef TARGET_OPENGLES
 	ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);

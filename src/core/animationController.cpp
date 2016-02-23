@@ -7,8 +7,13 @@
 //
 
 #include "animationController.h"
+
 #include "ofxVLCRemote.h"
 #include "durationRC.h"
+
+// forward declarations are needed for event listening
+ofEvent<karmaControllerDrawEventArgs> animationController::karmaControllerBeforeDraw;//(animationParams& _p);
+ofEvent<karmaControllerDrawEventArgs> animationController::karmaControllerAfterDraw;
 
 // - - - - - - - -
 // CONSTRUCTORS
@@ -62,11 +67,6 @@ bool animationController::start(){
 	// all black! xD
 	ofSetBackgroundAuto(false);
 	ofClear(0,0,0,255);
-	
-	// syphon
-#ifdef TARGET_OS_MAC
-//	syphonTexture.setName("Texture Output");
-#endif
 	
 	// play music
 	//sound.loadSound("TEST MIX V0.1.wav");
@@ -776,6 +776,11 @@ void animationController::update(ofEventArgs &event){
 
 void animationController::draw(ofEventArgs& event){
 	if(!isEnabled()) return;
+	//karmaControllerDrawEventArgs tmp;
+	static karmaControllerDrawEventArgs drawEventArgs(animationParams.params);
+	drawEventArgs.params = animationParams.params;
+	drawEventArgs.stage = DRAW_EVENT_BEFORE_DRAW;
+	ofNotifyEvent(animationController::karmaControllerBeforeDraw, drawEventArgs, this);
 	
 	//ofScale(0.5, 0.5); // tmp
 	
@@ -804,17 +809,13 @@ void animationController::draw(ofEventArgs& event){
 		effects[i]->render(animationParams.params);
 	}
 	
+	// notify end draw (before GUI)
+	drawEventArgs.params = animationParams.params;
+	drawEventArgs.stage = DRAW_EVENT_AFTER_DRAW;
+	ofNotifyEvent(animationController::karmaControllerAfterDraw, drawEventArgs, this);
+	
 	//recorder.endFrame(true);
 	
-	// syphon
-#ifdef TARGET_OS_MAC
-	//if(recorder.isRecording()){
-//		syphonTexture.publishTexture( &recorder.getTexture() );
-	//}
-	//else {
-//		syphonTexture.publishScreen();
-	//}
-#endif
 	
 	// draw gui stuff
 	gui.begin();
@@ -1262,14 +1263,47 @@ void animationController::draw(ofEventArgs& event){
 						}
 					}
 					ImGui::EndPopup();
-				}
+				} // end popup
+				
+				// show loaded modules
 				ImGui::Separator();
-			}
-			
-			// show modules GUIs
-			for(int i=0; i<modules.size(); i++){
-				modules[i]->drawMenuEntry();
-			}
+				for(int i=0; i<modules.size(); i++){
+					ImGui::PushID(ofToString(modules[i]).c_str());
+					
+					if (ImGui::Button("x")) {
+						modules.erase(modules.begin()+i);
+						i--;
+						ImGui::PopID();
+						continue;
+					}
+					
+					ImGui::SameLine();
+					ImGui::Spacing();
+					ImGui::SameLine();
+					
+					if (ImGui::Checkbox("On", &modules[i]->bEnabled)) {
+						modules[i]->setEnabled(modules[i]->bEnabled);
+					}
+					ImGui::SameLine();
+					
+					if (ImGui::CollapsingHeader( modules[i]->getName().c_str(), ofToString(modules[i]).c_str(), true, true)){
+						
+						ImGui::Indent();ImGui::Indent();
+						modules[i]->drawMenuEntry();
+						ImGui::Separator();
+						ImGui::Unindent();ImGui::Unindent();
+						
+					}
+					
+					
+					ImGui::PopID();
+					ImGui::Separator();
+					ImGui::Separator();
+					
+				} // end modules iteration
+				
+				ImGui::Separator();
+			} // end collapsingHeader
 			
 			ImGui::End();
 		} // end karma mapper modules gui window

@@ -124,7 +124,6 @@ bool OSCRouter::loadFromXML(ofxXmlSettings& xml){
 	bool ret=karmaModule::loadFromXML(xml);
 	
 	clearAllNodes();
-	moduleName = xml.getValue("moduleName", getType() );
 	
 	OSCListeningPort = xml.getValue("OSCListeningPort", KM_OSC_PORT_IN );
 	
@@ -140,7 +139,7 @@ void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const osc::IpEndpo
 	// first part is the same as parent class
 	// convert the message to an ofxOscMessage
 	
-	if(!bEnabled) return;
+	if (!isEnabled()) return;
 	// todo: we need a mutex here....
 	
 	// set the address
@@ -278,7 +277,7 @@ void OSCRouter::reconnectKMSA(){
 
 bool OSCRouter::startOSC(int _port){
 	
-	if(!isEnabled()) return false;
+	if( !isEnabled() ) return false;
 	
 	// OSC
 	try {

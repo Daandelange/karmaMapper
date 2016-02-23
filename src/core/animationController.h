@@ -14,6 +14,7 @@
 #include "ofxImGui.h"
 
 #include "ofMain.h"
+#include "ofEvents.h"
 #include "KMSettings.h"
 #include "shapes.h"
 #include "effects.h"
@@ -21,6 +22,7 @@
 #include "animationParamsServer.h"
 #include "karmaModule.h"
 #include "karmaConsole.h"
+#include "animationControllerEvents.h"
 
 #include "OSCRouter.h"
 #include "mirReceiver.h"
@@ -78,6 +80,9 @@ public:
 	void draw( ofEventArgs& event );
 	void _keyPressed( ofKeyEventArgs& e );
 	void _mousePressed( ofMouseEventArgs& e );
+	
+	static ofEvent<karmaControllerDrawEventArgs> karmaControllerBeforeDraw;
+	static ofEvent<karmaControllerDrawEventArgs> karmaControllerAfterDraw;
 	
 	// menu listeners
 	void showShapeLoadMenu( );

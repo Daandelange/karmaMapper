@@ -36,8 +36,15 @@ protected:
 		moduleType = "singletonModule";
 		moduleName = "singletonModule";
 		
-		assert(singletonModule::typedSingletonInstance == 0);
-		singletonModule::typedSingletonInstance = static_cast<T*>(this);
+		if( singletonModule::typedSingletonInstance == 0 ){
+			//assert(singletonModule::typedSingletonInstance == 0);
+			singletonModule::typedSingletonInstance = static_cast<T*>(this);
+		}
+		else {
+			ofLogNotice("inline explicit singletonModule()") << "Singleton already loaded, not re-instantiating...";
+		};
+		
+		
 	}
 	
 private:

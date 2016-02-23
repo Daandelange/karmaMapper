@@ -16,6 +16,8 @@
 
 class karmaModule {
 	
+	friend class animationController;
+	
 public:
 	karmaModule(bool _isSingleton=false);
 	~karmaModule();

@@ -148,7 +148,7 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 	return false;
 }
 
-// informs that the nose id gonna be unbound with the node server
+// informs that the node id gonna be unbound with the node server
 void mirReceiver::detachNode() {
 	disable();
 	// detach events ?
@@ -173,7 +173,7 @@ bool mirReceiver::enable(){
 bool mirReceiver::disable(){
 	bool ret = karmaModule::disable();
 	
-	// try connect
+	// disconnect
 	ret *= OSCRouter::getInstance().removeNode(this);
 	
 	return ret;
