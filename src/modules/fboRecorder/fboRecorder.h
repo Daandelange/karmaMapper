@@ -87,6 +87,7 @@ protected:
 	int videoRecAA;
 	bool videoRecShowOutput;
 	enum videoRecMode fboRecMode;
+	bool useGrabScreen;
 	
 	//string fboRecSyphonServerName;
 	ofxSyphonServer syphonServer;

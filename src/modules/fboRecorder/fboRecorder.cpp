@@ -32,6 +32,7 @@ fboRecorder::fboRecorder( ){
 	videoRecFPS = KM_FBOREC_DEFAULT_FPS;
 	videoRecShowOutput = true;
 	fboRecMode = VIDEOREC_MODE_FILE_H264;
+	useGrabScreen = false;
 }
 
 fboRecorder::~fboRecorder(){
@@ -86,6 +87,8 @@ void fboRecorder::drawMenuEntry(){
 #endif
 		ImGui::ListBoxFooter();
 	}
+	ImGui::Checkbox("Use grab screen instead of fbo", &useGrabScreen);
+	ImGui::Checkbox("Show recorded output", &videoRecShowOutput);
 	ImGui::Separator();
 	
 	if( isEnabled() ){
@@ -136,6 +139,7 @@ bool fboRecorder::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("videoRecAA", (int) videoRecAA);
 	xml.addValue("videoRecBitRate", (int) videoRecBitRate);
 	xml.addValue("videoRecShowOutput", videoRecShowOutput);
+	xml.addValue("useGrabScreen", useGrabScreen);
 	
 	return ret;
 }
@@ -148,11 +152,12 @@ bool fboRecorder::loadFromXML(ofxXmlSettings& xml){
 	if(!ret) return false;
 	
 	//OSCListeningPort = xml.getValue("OSCListeningPort", KM_OSC_PORT_IN );
-	setRecordMode (static_cast<enum videoRecMode>(xml.getValue("fboRecMode", VIDEOREC_MODE_FILE_H264)));
 	videoRecFPS = xml.getValue("videoRecFPS", KM_FBOREC_DEFAULT_FPS);
 	videoRecAA = xml.getValue("videoRecAA", KM_FBOREC_DEFAULT_AA);
 	videoRecBitRate = xml.getValue("videoRecBitRate", KM_FBOREC_DEFAULT_BITRATE);
 	videoRecShowOutput = xml.getValue("videoRecShowOutput", true);
+	useGrabScreen = xml.getValue("useGrabScreen", false);
+	setRecordMode (static_cast<enum videoRecMode>(xml.getValue("fboRecMode", VIDEOREC_MODE_FILE_H264)));
 	
 	//initialise(animationParams.params);
 	
@@ -178,9 +183,8 @@ bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 	//ofSetWindowShape(_w, _h);
 	
 	//fbo.getTexture().setTextureWrap( GL_WRAP_BORDER, GL_WRAP_BORDER);
-	fbo.getTexture().getTextureData().bFlipTexture = true;
 	
-	fbo.begin();
+	fbo.begin(false);
 	ofClear(0,0,0);
 	//ofEnableSmoothing(); // makes no difference
 	fbo.end();
@@ -194,6 +198,7 @@ bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 	switch ( fboRecMode ){
 		case VIDEOREC_MODE_FILE_H264 :
 		case VIDEOREC_MODE_FILE_PNG : {
+			fbo.getTexture().getTextureData().bFlipTexture = true;
 			// videoRecorder(ofFilePath::getAbsolutePath("ffmpeg")); // use this is you have ffmpeg installed in your data folder
 			
 			// run 'ffmpeg -codecs' to find out what your implementation supports (or -formats on some older versions)
@@ -228,6 +233,10 @@ bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 		}
 #ifdef KM_ENABLE_SYPHON
 		case VIDEOREC_MODE_SYPHON : {
+			fbo.getTexture().getTextureData().bFlipTexture = false;
+			fbo.begin();
+			//ofDisableArbTex();
+			fbo.end();
 			syphonServer.setName("fboRecorder Output");
 			bRecording = true;
 			break;
@@ -247,7 +256,26 @@ bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 }
 
 bool fboRecorder::stopRecording(){
-	ofxVideoRecorder::close();
+	
+	// video mode dependent
+	switch ( fboRecMode ){
+		case VIDEOREC_MODE_FILE_H264 :
+		case VIDEOREC_MODE_FILE_PNG : {
+			ofxVideoRecorder::close();
+			break;
+		}
+#ifdef KM_ENABLE_SYPHON
+		case VIDEOREC_MODE_SYPHON : {
+
+			break;
+		}
+#endif
+		default: {
+			return false;
+			break;
+		}
+	}
+	
 	//ofxVideoRecorder::~ofxVideoRecorder();
 	fbo.allocate(0, 0); // free memory
 	bRecording=false;
@@ -289,10 +317,10 @@ bool fboRecorder::setRecordMode(enum videoRecMode _mode){
 bool fboRecorder::beginFrame(){
 	if(!isRecording()) return false;
 	
-	if(!bFrameStarted){
+	if( !useGrabScreen && !bFrameStarted){
 		bFrameStarted=true;
 		//ofGLProgrammableRenderer
-		fbo.begin(false);
+		fbo.begin(true);
 		//ofClear(0);
 		
 		/*/ tmp
@@ -309,31 +337,56 @@ bool fboRecorder::beginFrame(){
 
 bool fboRecorder::endFrame(bool _showBuffer){
 	if(!isRecording()) return false;
-
-	else if(!bFrameStarted) return false;
 	
-	fbo.end();
-	//fbo.getTexture().getTextureData().bFlipTexture = false;
-	bFrameStarted=false;
+	if(!useGrabScreen){
+		if(!bFrameStarted) return false;
+		fbo.end();
+		//fbo.getTexture().getTextureData().bFlipTexture = false;
+		bFrameStarted=false;
+	}
 	
+	static ofTexture tmpTex;
+	if(!tmpTex.isAllocated()){
+		tmpTex.allocate( fbo.getTexture().texData );
+	}
 	
 	switch(fboRecMode){
 		case VIDEOREC_MODE_FILE_H264 :
 		case VIDEOREC_MODE_FILE_PNG : {
 			ofPixels pix;
 			pix.allocate(fbo.getWidth(),fbo.getHeight(), ofGetImageTypeFromGLType(GL_RGB));
-			fbo.readToPixels(pix);
 			
+			if(useGrabScreen){
+				int w = ofGetWidth();
+				int h = ofGetHeight();
+				
+//				ofTexture tex;
+//				tex.allocate(w, h, GL_RGBA);
+				tmpTex.loadScreenData(0, 0, w, h);
+				tmpTex.readToPixels(pix);
+			}
+			else {
+				fbo.readToPixels(pix);
+			}
 			ofxVideoRecorder::addFrame(pix);
+			
 			break;
 		}
 			
 #ifdef KM_ENABLE_SYPHON
 		case VIDEOREC_MODE_SYPHON: {
-			//fbo.getTexture().bind();
-			syphonServer.publishTexture( &fbo.getTexture() );
-			//fbo.getTexture().unbind();
-			//fbo.getTexture().
+			//fbo.updateTexture( fbo.getTexture().texData.textureID );
+			if( useGrabScreen ){
+				//syphonServer.publishScreen();
+				tmpTex.loadScreenData(0, 0, ofGetWidth(), ofGetHeight());
+				//tmpTex = fbo.getTexture();
+				syphonServer.publishTexture( &tmpTex );
+			}
+			else {
+				//tmpTex = fbo.getTexture();
+				syphonServer.publishTexture( &fbo.getTexture() );
+			}
+			
 			break;
 		}
 #endif
@@ -344,7 +397,14 @@ bool fboRecorder::endFrame(bool _showBuffer){
 	}
 	
 	if(_showBuffer){
-		//fbo.draw(0, fbo.getHeight(),fbo.getWidth(), -fbo.getHeight()); // show recorded image
+		if(!useGrabScreen){
+			if( fboRecMode==VIDEOREC_MODE_SYPHON ){
+				fbo.draw(0, 0, fbo.getWidth(), fbo.getHeight()); // show recorded image
+			}
+			else {
+				fbo.draw(0, fbo.getHeight(),fbo.getWidth(), -fbo.getHeight()); // show recorded image
+			}
+		}
 	}
 	
 	return true;

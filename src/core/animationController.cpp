@@ -796,7 +796,7 @@ void animationController::draw(ofEventArgs& event){
 	}
 	
 	// render a scene without effects (tmp?)
-	if(effects.size()==0 || ofGetKeyPressed(OF_KEY_LEFT_SHIFT)){
+	if(effects.size()==0){
 		ofSetColor( ofFloatColor(1.f, 1));//params.seasons.summer));
 		ofFill();
 		for(auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it){
@@ -818,6 +818,8 @@ void animationController::draw(ofEventArgs& event){
 	
 	
 	// draw gui stuff
+	ofPushStyle();
+	//ofNoFill();
 	gui.begin();
 	static bool ShowSaveAsModal = false;
 	if( bShowGui ){
@@ -1356,6 +1358,7 @@ void animationController::draw(ofEventArgs& event){
 	}
 	
 	gui.end();
+	ofPopStyle();
 }
 
 // - - - - - - - -
