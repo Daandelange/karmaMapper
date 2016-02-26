@@ -43,19 +43,24 @@ bool lineDrawEffect::initialise(const animationParams& params){
 bool lineDrawEffect::render(const animationParams &params){
 	if(!isReady()) return false;
 	
-	fbo.begin();
+//	GLint prevFbo = 0;
+//	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevFbo);
+	//	cout << result << endl;
 	
-	{	// erase BG ?
-		glEnable(GL_BLEND);
-		glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-		glBlendFunc(GL_ONE, GL_ONE);
-
-		ofSetColor(0.0f, 3.0f* 1-(ofClamp( mirReceiver::mirCache.zcr-0.2f, 0, 1.0f )) );
-		ofFill();
-		ofDrawRectangle(0,0, fbo.getWidth(), fbo.getHeight());
-		
-		glDisable(GL_BLEND);
-	}
+	
+	fbo.begin(false);
+	
+//	{	// erase BG ?
+//		glEnable(GL_BLEND);
+//		glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+//		glBlendFunc(GL_ONE, GL_ONE);
+//
+//		ofSetColor(0.0f, 3.0f* 1-(ofClamp( mirReceiver::mirCache.zcr-0.2f, 0, 1.0f )) );
+//		ofFill();
+//		ofDrawRectangle(0,0, fbo.getWidth(), fbo.getHeight());
+//		
+//		glDisable(GL_BLEND);
+//	}
 	
 	ofPushStyle();
 	// set drawing environment
@@ -73,6 +78,15 @@ bool lineDrawEffect::render(const animationParams &params){
 	
 	// flush the pipeline! :D
 	fbo.end();
+	
+	// reset to previous fbo
+	//glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
+	
+	// dirty fix for flipped texture when using double FBO
+	//fbo.getTexture().texData.bFlipTexture = true;
+	//fbo.getTexture().setTextureWrap( 1, -1);
+	//ofGetCurrentRenderer().get()->isVFlipped() << endl;
+	//ofGetCurrentRenderer().get()->setupGraphicDefaults();
 	
 	// draw fbo
 	fbo.draw(0,0);

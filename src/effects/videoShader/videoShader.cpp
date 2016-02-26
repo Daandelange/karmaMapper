@@ -418,6 +418,7 @@ bool videoShader::loadVideoFile(const string &_path) {
 }
 
 #ifdef KM_ENABLE_SYPHON
+// returns true if server is set (doesn't ensure it's connected)
 bool videoShader::connectToSyphonServer( const ofxSyphonServerDescription& _addr ){
 	
 	if( videoMode == VIDEO_MODE_SYPHON ){
@@ -485,6 +486,7 @@ void videoShader::threadedFunction(){
 				
 				if (player.isLoaded() ){
 					player.setUseTexture(false);
+					//try {
 					player.update();
 		
 					if( player.isFrameNew() || player.getPosition()<0 || images_to_update.empty() ){

@@ -277,7 +277,8 @@ bool fboRecorder::stopRecording(){
 	}
 	
 	//ofxVideoRecorder::~ofxVideoRecorder();
-	fbo.allocate(0, 0); // free memory
+	fbo.clear(); // free memory
+
 	bRecording=false;
 	return true;
 }
@@ -346,9 +347,11 @@ bool fboRecorder::endFrame(bool _showBuffer){
 	}
 	
 	static ofTexture tmpTex;
-	if(!tmpTex.isAllocated()){
-		tmpTex.allocate( fbo.getTexture().texData );
-	}
+	int w = ofGetWidth();
+	int h = ofGetHeight();
+	//if(!tmpTex.isAllocated()){
+		tmpTex.allocate( w, h, GL_RGBA );
+	//}
 	
 	switch(fboRecMode){
 		case VIDEOREC_MODE_FILE_H264 :
@@ -357,11 +360,6 @@ bool fboRecorder::endFrame(bool _showBuffer){
 			pix.allocate(fbo.getWidth(),fbo.getHeight(), ofGetImageTypeFromGLType(GL_RGB));
 			
 			if(useGrabScreen){
-				int w = ofGetWidth();
-				int h = ofGetHeight();
-				
-//				ofTexture tex;
-//				tex.allocate(w, h, GL_RGBA);
 				tmpTex.loadScreenData(0, 0, w, h);
 				tmpTex.readToPixels(pix);
 			}
@@ -395,6 +393,9 @@ bool fboRecorder::endFrame(bool _showBuffer){
 			return false;
 			break;
 	}
+	
+	// flush
+	tmpTex.clear();
 	
 	if(_showBuffer){
 		if(!useGrabScreen){

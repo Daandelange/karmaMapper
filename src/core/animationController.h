@@ -108,10 +108,10 @@ protected:
 	
 	// effects stuff
 	bool isEffectsIndex(int i);
-	vector<basicEffect*> effects;
+	list<basicEffect*> effects;
 	
 	animationParamsServer animationParams;
-	vector< karmaModule* > modules;
+	list< karmaModule* > modules;
 	
 	shapesDB& scene;
 	

@@ -349,6 +349,8 @@ bool animationController::loadConfiguration(const string& _file){
 			int numEffects = configXML.getNumTags("effect");
 			vector<int> failedEffects;
 			failedEffects.clear();
+			vector<int> effectIndexes;
+			effectIndexes.clear();
 			
 			for(int e=0; e<numEffects; e++){
 				if( configXML.pushTag("effect", e) ){
@@ -362,6 +364,20 @@ bool animationController::loadConfiguration(const string& _file){
 						effects.back()->initialise(animationParams.params);
 						effects.back()->loadFromXML( configXML );
 						
+						// check index
+						int tmpIndex = effect->getIndex();
+						if(std::find(effectIndexes.begin(), effectIndexes.end(), tmpIndex) == effectIndexes.end() ){
+							// index is OK to have
+							
+						}
+						else {
+							while( std::find(effectIndexes.begin(), effectIndexes.end(), tmpIndex) != effectIndexes.end() ){
+								tmpIndex++;
+							}
+							effect->setIndex(tmpIndex);
+						}
+						effectIndexes.push_back(tmpIndex);
+						cout << tmpIndex << endl;
 						if( configXML.pushTag("boundShapes") ){
 						
 							// bind with previous shapes
@@ -395,7 +411,7 @@ bool animationController::loadConfiguration(const string& _file){
 									//configXML.popTag();
 								}
 								
-								// todo: (important) adapt this structure in save process
+								// todo: (important) adapt this structure in the basicShape save process
 							}
 							
 							// todo: make this GUI message and show details
@@ -764,13 +780,13 @@ void animationController::update(ofEventArgs &event){
 	// update/create animation state (bunch of variables)
 	
 	// update effects (run mode)
-	for(int i=0; i<effects.size(); i++){
-		effects[i]->update(animationParams.params);
+	for(auto e=effects.begin(); e!=effects.end(); ++e){
+		(*e)->update(animationParams.params);
 	}
 	
 	// update modules
-	for(int i=0; i<modules.size(); i++){
-		modules[i]->update( animationParams.params );
+	for(auto m=modules.begin(); m!=modules.end(); ++m){
+		(*m)->update( animationParams.params );
 	}
 }
 
@@ -791,8 +807,8 @@ void animationController::draw(ofEventArgs& event){
 	//ofBackground(255,0,0);
 	
 	// draw modules
-	for(int i=0; i<modules.size(); i++){
-		modules[i]->draw(animationParams.params);
+	for(auto m=modules.begin(); m!=modules.end(); ++m){
+		(*m)->draw(animationParams.params);
 	}
 	
 	// render a scene without effects (tmp?)
@@ -805,8 +821,8 @@ void animationController::draw(ofEventArgs& event){
 	}
 	
 	// draw effects
-	else for(int i=0; i<effects.size(); i++){
-		effects[i]->render(animationParams.params);
+	else for(auto e=effects.begin(); e!=effects.end(); ++e){
+		(*e)->render(animationParams.params);
 	}
 	
 	// notify end draw (before GUI)
@@ -1125,12 +1141,13 @@ void animationController::draw(ofEventArgs& event){
 				ImGui::Separator();
 				
 				if(getNumEffects()>0){
+					ImGui::SetNextTreeNodeOpened(true, ImGuiSetCond_Once );
 					if (ImGui::TreeNode("All Effects")){
 						//static ImGuiTextFilter filter;
 						//filter.Draw("Filter by name");
 						
 						static int effectTypeFilter = 0;
-						ImGui::Text("Type: ");
+						ImGui::Text("Filter: ");
 						ImGui::SameLine();
 						ImGui::RadioButton("All", &effectTypeFilter, 0);
 						
@@ -1143,14 +1160,15 @@ void animationController::draw(ofEventArgs& event){
 						
 						ImGui::Separator();
 						
-						ImGui::Columns(5);
+						ImGui::Columns(6);
 						static bool firstTime = true;
 						if( firstTime ){
 							ImGui::SetColumnOffset(0, 00);
 							ImGui::SetColumnOffset(1, 50);
 							ImGui::SetColumnOffset(2, 220);
 							ImGui::SetColumnOffset(3, 300);
-							ImGui::SetColumnOffset(3, 350);
+							ImGui::SetColumnOffset(4, 350);
+							ImGui::SetColumnOffset(5, 400);
 							firstTime = false;
 						}
 						
@@ -1158,7 +1176,8 @@ void animationController::draw(ofEventArgs& event){
 						ImGui::Text("On"); ImGui::NextColumn();
 						ImGui::Text("Name"); ImGui::NextColumn();
 						ImGui::Text("Type"); ImGui::NextColumn();
-						ImGui::Text("Bound Shapes"); ImGui::NextColumn();
+						ImGui::Text("Shapes"); ImGui::NextColumn();
+						ImGui::Text("Order"); ImGui::NextColumn();
 						ImGui::Text("Rm?"); ImGui::NextColumn();
 						
 						ImGui::Separator();
@@ -1195,6 +1214,28 @@ void animationController::draw(ofEventArgs& event){
 							ImGui::NextColumn();// ImGui::SameLine(100);
 						
 							ImGui::Text("%i", (*it)->getNumShapes() );
+							ImGui::NextColumn();
+							
+							if(ImGui::Button("^")){ // up
+								if(it!=effects.begin()){
+									auto prevIt = std::prev(it);
+									int prevEffectCurIndex = (*prevIt)->getIndex();
+									(*prevIt)->setIndex(e->getIndex());
+									e->setIndex(prevEffectCurIndex);
+									effects.sort(basicEffect::orderByIndex);
+								}
+							}
+							ImGui::SameLine();
+							if(ImGui::Button("v")){ // up
+								if(it!=effects.end()){
+									auto nextIt = std::next(it);
+									int nextEffectCurIndex = (*nextIt)->getIndex();
+									(*nextIt)->setIndex(e->getIndex());
+									e->setIndex(nextEffectCurIndex);
+									effects.sort(basicEffect::orderByIndex);
+								}
+							}
+							
 							ImGui::NextColumn();
 							
 							//ImGui::PushID(e);
@@ -1269,12 +1310,14 @@ void animationController::draw(ofEventArgs& event){
 				
 				// show loaded modules
 				ImGui::Separator();
-				for(int i=0; i<modules.size(); i++){
-					ImGui::PushID(ofToString(modules[i]).c_str());
+				for(auto m=modules.cbegin(); m!=modules.cend(); ++m){
+					ImGui::PushID(ofToString(*m).c_str());
 					
 					if (ImGui::Button("x")) {
-						modules.erase(modules.begin()+i);
-						i--;
+						//auto it = sdt::find(modules.begin(), modules.end(), *m);
+						//if(
+						modules.erase(m);
+						--m;
 						ImGui::PopID();
 						continue;
 					}
@@ -1283,15 +1326,15 @@ void animationController::draw(ofEventArgs& event){
 					ImGui::Spacing();
 					ImGui::SameLine();
 					
-					if (ImGui::Checkbox("On", &modules[i]->bEnabled)) {
-						modules[i]->setEnabled(modules[i]->bEnabled);
+					if (ImGui::Checkbox("On", &(*m)->bEnabled)) {
+						(*m)->setEnabled((*m)->bEnabled);
 					}
 					ImGui::SameLine();
 					
-					if (ImGui::CollapsingHeader( modules[i]->getName().c_str(), ofToString(modules[i]).c_str(), true, true)){
+					if (ImGui::CollapsingHeader( (*m)->getName().c_str(), ofToString(*m).c_str(), true, true)){
 						
 						ImGui::Indent();ImGui::Indent();
-						modules[i]->drawMenuEntry();
+						(*m)->drawMenuEntry();
 						ImGui::Separator();
 						ImGui::Unindent();ImGui::Unindent();
 						
@@ -1316,13 +1359,13 @@ void animationController::draw(ofEventArgs& event){
 		}
 		
 		// show effects gui
-		for(int i=0; i<effects.size(); i++){
-			effects[i]->showGuiWindow( scene );
+		for(auto e=effects.cbegin(); e!=effects.cend(); ++e){
+			(*e)->showGuiWindow( scene );
 		}
 		
 		// show modules gui
-		for(int i=0; i<modules.size(); i++){
-			modules[i]->showGuiWindow( );
+		for(auto m=modules.cbegin(); m!=modules.cend(); ++m){
+			(*m)->showGuiWindow( );
 		}
 		
 	} // end bShowGui

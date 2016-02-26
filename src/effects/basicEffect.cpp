@@ -253,6 +253,7 @@ bool basicEffect::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("effectType", effectType );
 	xml.addValue("effectName", getName() );
 	xml.addValue("enabled", bEnabled );
+	xml.addValue("effectIndex", effectIndex);
 	
 	// remember bound shapes
 	xml.addTag("boundShapes");
@@ -280,6 +281,7 @@ bool basicEffect::loadFromXML(ofxXmlSettings& xml){
 	
 	effectName = xml.getValue("effectName", getType() );
 	xml.getValue("enabled", false )?enable():disable();
+	effectIndex = xml.getValue("effectIndex", 0);
 	
 	//initialise(animationParams.params);
 	
@@ -315,6 +317,15 @@ string basicEffect::getType() const {
 
 const string basicEffect::getShortStatus() const {
 	return shortStatus;
+}
+
+bool basicEffect::setIndex(const int &_index){
+	effectIndex = _index;
+	return true;
+}
+
+const int& basicEffect::getIndex() const {
+	return effectIndex;
 }
 
 // - - - - - - -

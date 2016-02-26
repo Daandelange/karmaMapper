@@ -86,6 +86,8 @@ bool distortEffect::render(const animationParams &params){
 // updates shape data
 void distortEffect::update(const animationParams& params){
 	
+	if(!isReady()) return;
+	
 	// do basic Effect function
 	basicEffect::update( params );
 	

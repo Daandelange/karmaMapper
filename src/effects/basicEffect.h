@@ -103,6 +103,8 @@ public:
 	bool isType(const string _type) const;
 	string getType() const;
 	virtual const string getShortStatus()const;
+	bool setIndex(const int& _index);
+	const int& getIndex() const;
 	
 	// controller functions
 	virtual bool randomizePresets();
@@ -131,10 +133,14 @@ public:
 	unsigned int aliveSince;
 	unsigned long long startTime; // to compare against ofGetSystemTime();
 	
+	static bool orderByIndex (const basicEffect* first, const basicEffect* second){
+		return ( first->getIndex() < second->getIndex() );
+	}
 	
 protected:
 	string effectType;
 	string effectUID;
+	int effectIndex; // for ordering
 	//effectParams params;
 	
 	bool bHasError;

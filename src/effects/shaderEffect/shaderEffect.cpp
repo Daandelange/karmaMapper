@@ -198,7 +198,8 @@ void shaderEffect::update(const animationParams& params){
 void shaderEffect::reset(){
 	basicEffect::reset();
 	
-	ofScopedLock lock(effectMutex);
+	//ofScopedLock lock(effectMutex);
+	effectMutex.lock();
 	
 	// effect type must match with class
 	effectType = "shaderEffect";
@@ -220,6 +221,8 @@ void shaderEffect::reset(){
 	textureTransform[3]=1;
 	//texturesTime.clear();
 	shaderToyArgs = shaderToyVariables();
+	
+	effectMutex.unlock();
 }
 
 // - - - - - - -

@@ -72,6 +72,7 @@ protected:
 	
 	bool bUseThreadedFileDecoding;
 	ofThreadChannel<ofPixels> images_to_update;
+	
 	virtual void threadedFunction();
 	
 	ofVideoPlayer player;
