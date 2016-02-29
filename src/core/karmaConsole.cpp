@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 __MyCompanyName__. All rights reserved.
 //
 
-// This class is based on Omar Cornut's imgui_demo.cpp console struct
-// https://github.com/ocornut/imgui/blob/bf6f6ba858170c321c622856d645ccfe84b7bc36/imgui_demo.cpp
+//	This class is based on Omar Cornut's imgui_demo.cpp console struct
+//	https://github.com/ocornut/imgui/blob/bf6f6ba858170c321c622856d645ccfe84b7bc36/imgui_demo.cpp
 
 #include "karmaConsole.h"
 
@@ -171,7 +171,7 @@ karmaConsoleChannel::~karmaConsoleChannel() {
 	
 }
 
-void karmaConsoleChannel::log(ofLogLevel level, const string & module, const string & message) {
+void karmaConsoleChannel::log(ofLogLevel level, const string & module, const string& message) {
 	
 	if(bLogToConsole) consoleLogger.log(level, module, message);
 	

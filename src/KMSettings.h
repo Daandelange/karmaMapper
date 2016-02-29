@@ -26,11 +26,13 @@
 // - - - - - -
 #define KARMAMAPPER_DEBUG true
 
-// define to see debug instantiation order
-//#define KM_LOG_INSTANCIATIONS true
+#ifdef KARMAMAPPER_DEBUG
+	// compiles some additional warnings that might help you locate code problems
+	#define KM_LOCATE_PROBLEMS true
 
-// compiles some additional warnings that might help you locate code problems
-#define KM_LOCATE_PROBLEMS true
+	// define to see debug instantiation order
+	//#define KM_LOG_INSTANCIATIONS true
+#endif
 
 #ifdef TARGET_OSX
 	#define KM_CTRL_KEY_NAME "CMD"

@@ -34,13 +34,12 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	bGuiShowModules = false;
 	bGuiShowMainWindow = true;
 	
-	effects.clear();
-	effects.resize(0);
-	
 	ofAddListener( ofEvents().draw , this, &animationController::draw, OF_EVENT_ORDER_APP );
 	ofAddListener( ofEvents().update , this, &animationController::update, OF_EVENT_ORDER_APP );
 	
 	ofAddListener( ofEvents().keyPressed, this, &animationController::_keyPressed, OF_EVENT_ORDER_APP );
+	
+	newConfiguration();
 	
 	// build GUI
 	gui.setup();
@@ -57,6 +56,9 @@ animationController::~animationController(){
 	//guiLoadShapesSceneBtn.removeListener(this, &animationController::showShapeLoadMenu);
 	bShowGui = false;
 
+	unloadAllLayers();
+	unloadAllModules();
+	
 }
 
 // - - - - - - - -
@@ -266,7 +268,7 @@ bool animationController::stop(){
 //		rc.stop();
 	}
 	
-	unloadAllEffects();
+	unloadAllLayers();
 	unloadAllModules();
 	
 	// save recorded file ?
@@ -284,11 +286,41 @@ bool animationController::isEnabled() const {
 bool animationController::removeEffect(basicEffect *_e){
 	if( _e == nullptr) return false;
 	
-	auto it=std::find(effects.cbegin(), effects.cend(), _e);
-	if( it != effects.cend() ){
-		_e->disable();
-		//delete _e;
-		effects.erase( it );
+	for(auto layer=layers.begin(); layer!=layers.end(); ++layer){
+		
+		auto it=std::find(layer->second.begin(), layer->second.end(), _e);
+		if( it != layer->second.end() ){
+			_e->disable();
+			layer->second.erase( it );
+			delete _e;
+			break;
+		}
+	}
+	
+	return true;
+}
+
+bool animationController::removeLayer(  karmaFboLayer& _layer  ){
+	//if( _layer == nullptr) return false;
+	
+	for(auto layer=layers.rbegin(); layer!=layers.rend(); ++layer){
+		
+		if( &layer->first == &_layer ){
+			// destroy effects
+			if(layer->second.size()>0){
+				for(auto e=layer->second.rbegin(); e != layer->second.rend(); ++e){
+					basicEffect* tmpE (*e);
+					tmpE->disable();
+					layer->second.erase( std::next(e).base() );
+					delete tmpE;
+					break;
+				}
+			}
+			// rm layer entry
+			layers.erase( std::next(layer).base() );
+			break;
+		}
+		
 	}
 	
 	return true;
@@ -342,104 +374,184 @@ bool animationController::loadConfiguration(const string& _file){
 			configXML.popTag();
 		}
 		
+		// fix (import (old)savefiles which don't have layers
+		bool bypass = false;
+		if (configXML.tagExists("effects")){
+			//configXML.doc.
+			//configXML.addTag("layers");
+			// push directly into effect
+			//if(configXML.pushTag("effects")){
+			ofLogWarning("animationController::loadConfiguration") << "LOADING OLD SAVE FILE WITHOUT LAYERS... (should automatically convert by re-saving it once loaded)";
+			bypass=true;
+			//}
+		}
+		
 		// load effects
-		if(	configXML.pushTag("effects") ){
+		if(	bypass || configXML.pushTag("layers") ){
+			layers.clear(); // should be done in resetLayers()
+			int numLayers = configXML.getNumTags("layer");
 			
-			// loop for each effect
-			int numEffects = configXML.getNumTags("effect");
-			vector<int> failedEffects;
-			failedEffects.clear();
-			vector<int> effectIndexes;
-			effectIndexes.clear();
+			if(bypass || numLayers==0){
+				numLayers = 1;
+			}
 			
-			for(int e=0; e<numEffects; e++){
-				if( configXML.pushTag("effect", e) ){
+			// load layers from save file
+			for(int l=0; l<numLayers; ++l){
 				
-					// Some code comes from:
-					// --> http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
-					string effectType = configXML.getValue("effectType", "basicEffect");
-					basicEffect* effect = effect::create(effectType);
-					if( effect != nullptr ){
-						effects.push_back( effect );
-						effects.back()->initialise(animationParams.params);
-						effects.back()->loadFromXML( configXML );
-						
-						// check index
-						int tmpIndex = effect->getIndex();
-						if(std::find(effectIndexes.begin(), effectIndexes.end(), tmpIndex) == effectIndexes.end() ){
-							// index is OK to have
-							
-						}
-						else {
-							while( std::find(effectIndexes.begin(), effectIndexes.end(), tmpIndex) != effectIndexes.end() ){
-								tmpIndex++;
-							}
-							effect->setIndex(tmpIndex);
-						}
-						effectIndexes.push_back(tmpIndex);
-						cout << tmpIndex << endl;
-						if( configXML.pushTag("boundShapes") ){
-						
-							// bind with previous shapes
-							int numShapes = configXML.getNumTags("shape");
-							vector<string> failedShapes;
-							failedShapes.clear();
-							
-							for(int s=0; s<numShapes; s++){
-								
-								if( configXML.tagExists("shape", s) ){
-									
-									// get shape instance
-									string tmpName = configXML.getAttribute("shape", "name", "", s);
-									basicShape* tmpShape = scene.getShapeByName( tmpName );
-									
-									if(tmpShape != nullptr){
-										if( !effects.back()->bindWithShape(tmpShape) ){
-											tmpName += "(failed binding with ";
-											tmpName += configXML.getAttribute("shape", "type", "undefined type", s);
-											tmpName += ")";
-											failedShapes.push_back( (tmpName) );
-										}
-									}
-									else {
-										tmpName += "(";
-										tmpName += configXML.getAttribute("shape", "type", "undefined type", s);
-										tmpName += " = not found)";
-										failedShapes.push_back( (tmpName) );
-									}
-									
-									//configXML.popTag();
-								}
-								
-								// todo: (important) adapt this structure in the basicShape save process
-							}
-							
-							// todo: make this GUI message and show details
-							if(failedShapes.size() > 0) ofLogWarning("animationController::loadConfiguration") << " Effect '" << effectType << "' loaded but failed to bind with " << failedShapes.size() << " out of " << numShapes << " shapes... (ignoring, but re-saving the configuration will erase this information).";
-							
-							configXML.popTag(); // pop bound shapes
-						}
+				if( bypass || configXML.pushTag("layer",l) ){
+					
+					layers.emplace_back(
+						karmaFboLayer(ofGetWidth(),ofGetHeight()),
+						list<basicEffect*>()
+					);
+					
+					karmaFboLayer& curFbo = layers.back().first;
+					list<basicEffect*>& curLayerEffects = layers.back().second;
+					
+					// setup karmaFboLayer
+					curLayerEffects.clear();
+					if(bypass){
+						ofLogVerbose("animationController::loadConfiguration") << "Created initial layer";
+						curFbo.set("Initial Layer", 0);
 					}
 					else {
-						failedEffects.push_back(e);
-						// unknow effect type
-						ofLogError("effect::create") << "Effect type not found: " << effectType;
+						curFbo.set( configXML.getValue("layerName", "Layer "+ofToString(l)), l);
 					}
 					
-					configXML.popTag(); // pop effect
+					// setup it's effects
+					vector<int> failedEffects;
+					failedEffects.clear();
+					vector<int> effectIndexes;
+					effectIndexes.clear();
+					int numEffects = 0;
+					
+					// push into effects
+					if( configXML.pushTag("effects") ){
+						
+						// loop for each effect
+						numEffects = configXML.getNumTags("effect");
+						for(int e=0; e<numEffects; e++){
+							if( configXML.pushTag("effect", e) ){
+								
+								// Some code comes from:
+								// --> http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
+								string effectType = configXML.getValue("effectType", "basicEffect");
+								basicEffect* effect = effect::create(effectType);
+								if( effect != nullptr ){
+									curLayerEffects.push_back( effect );
+									effect->initialise(animationParams.params);
+									effect->loadFromXML( configXML );
+									
+									// check index
+									int tmpIndex = effect->getIndex();
+									if(std::find(effectIndexes.begin(), effectIndexes.end(), tmpIndex) == effectIndexes.end() ){
+										// index is OK to have
+										
+									}
+									else {
+										while( std::find(effectIndexes.begin(), effectIndexes.end(), tmpIndex) != effectIndexes.end() ){
+											tmpIndex++;
+										}
+										effect->setIndex(tmpIndex);
+									}
+									effectIndexes.push_back(tmpIndex);
+									
+									if( configXML.pushTag("boundShapes") ){
+										
+										// bind with previous shapes
+										int numShapes = configXML.getNumTags("shape");
+										vector<string> failedShapes;
+										failedShapes.clear();
+										
+										for(int s=0; s<numShapes; s++){
+											
+											if( configXML.tagExists("shape", s) ){
+												
+												// get shape instance
+												string tmpName = configXML.getAttribute("shape", "name", "", s);
+												basicShape* tmpShape = scene.getShapeByName( tmpName );
+												
+												if(tmpShape != nullptr){
+													if( !curLayerEffects.back()->bindWithShape(tmpShape) ){
+														tmpName += "(failed binding with ";
+														tmpName += configXML.getAttribute("shape", "type", "undefined type", s);
+														tmpName += ")";
+														failedShapes.push_back( (tmpName) );
+													}
+												}
+												else {
+													tmpName += "(";
+													tmpName += configXML.getAttribute("shape", "type", "undefined type", s);
+													tmpName += " = not found)";
+													failedShapes.push_back( (tmpName) );
+												}
+												
+												//configXML.popTag();
+											}
+											
+											// todo: (important) adapt this structure in the basicShape save process
+										}
+										
+										// todo: make this GUI message and show details
+										if(failedShapes.size() > 0) ofLogWarning("animationController::loadConfiguration") << " Effect '" << effectType << "' loaded but failed to bind with " << failedShapes.size() << " out of " << numShapes << " shapes... (ignoring, but re-saving the configuration will erase this information).";
+										
+										configXML.popTag(); // pop bound shapes
+									}
+									
+									
+								}
+								else {
+									failedEffects.push_back(e);
+									// unknow effect type
+									ofLogError("effect::create") << "Effect type not found: " << effectType;
+								}
+								
+								configXML.popTag(); // pop effect
+							}
+							else {
+								
+								ofLogWarning("animationController::loadConfiguration") << "Weird situation... Can't push into effect #" << e;
+							}
+						} // end for(effects)
+						ofLogVerbose("animationController::loadConfiguration") << "Successfully loaded " <<  curLayerEffects.size() << "effects on layer " << l;
+						
+						configXML.popTag(); // pop effects
+					}
+					else {
+						if(bypass){
+							ofLogError("animationController::loadConfiguration") << "Couldn't import OLD CONFIG FILE, sorry...";
+						}
+						else {
+							ofLogNotice("animationController::loadConfiguration") << "No effects in layer #"<< l << ", skipping effects on this layer!";
+						}
+					}
+					
+					if (failedEffects.size()>0) {
+						success = false;
+						ofLogError("animationController::loadConfiguration") << "Failed loading " << failedEffects.size()<< " effects on layer #" << l;
+					}
+					
+					ofLogVerbose("animationController::loadConfiguration") << "Loaded layer #"<< l << "/"<< numLayers <<" ("<< curFbo.getName() << ") from file [" << _file << "] with [" << numEffects << " effects] ( " << failedEffects.size() << "failed )";
+					
+					configXML.popTag(); // pop effects
+					
+					ofLogVerbose("animationController::loadConfiguration") << "Created layer "<< l <<" ("<< curFbo.getName() << ")";
+
+//					else {
+//						ofLogError("animationController::loadConfiguration") << "Layer " << l << " couldn't be loaded! Continueing with other layers...";
+//					}
+					
+					// pop layer
+					configXML.popTag();
 				}
-			}
-			
-			ofLogNotice("animationController::loadConfiguration") << "Loaded effects from " << _file << " [" << numEffects << " effects] ( " << failedEffects.size() << "failed )";
-			
-			if (failedEffects.size()>0) {
-				success = false;
-			}
-			
-			configXML.popTag(); // pop effects
+				else {
+					ofLogWarning("animationController::loadConfiguration") << "Can't load layer #" << l;
+				}
+				
+			} // end for(layer)
 		}
 		else {
-			ofLogNotice("animationController::loadConfiguration") << "No effects in file, skipping effects!";
+			ofLogError("animationController::loadConfiguration") << "Weird situation... Can't push into layers section.";
 		}
 			
 		// load modules
@@ -571,23 +683,62 @@ bool animationController::saveConfiguration( const string& _filePath ){
 		sceneXML.popTag();
 	}
 	
-	// save all shapes data
-	sceneXML.addTag("effects");
-	vector<basicEffect*> failedEffects;
-	if (sceneXML.pushTag("effects")) {
-		
-		int e=0;
-		failedEffects.clear();
-		for(auto it = effects.begin(); it != effects.end(); it++, e++){
+	// save all effect & layer data
+	sceneXML.addTag("layers");
+	vector<int> failedLayers;
+	vector<basicEffect*> totalFailedEffects;
+	if(sceneXML.pushTag("layers")){
+		int l=0;
+		failedLayers.clear();
+		for(auto layer = layers.begin(); layer!=layers.end(); ++layer, ++l){
 			
-			sceneXML.addTag("effect");
-			sceneXML.pushTag("effect", e);
+			karmaFboLayer& layerFbo = layer->first;
+			list<basicEffect*>& layerEffects = layer->second;
 			
-			if(!(*it)->saveToXML(sceneXML)) failedEffects.push_back(*it);
-			
-			sceneXML.popTag(); //pop shape
+			sceneXML.addTag("layer");
+			if( sceneXML.pushTag("layer",l) ){
+				
+				// layer settings
+				sceneXML.addValue("layerName", layerFbo.getName());
+				sceneXML.addValue("layerIndex", layerFbo.getIndex());
+				
+				// layer effects
+				sceneXML.addTag("effects");
+				vector<basicEffect*> failedEffects;
+				if (sceneXML.pushTag("effects")) {
+					
+					int e=0;
+					failedEffects.clear();
+					for(auto it = layerEffects.begin(); it != layerEffects.end(); it++, e++){
+						
+						sceneXML.addTag("effect");
+						if( sceneXML.pushTag("effect", e) ){
+							
+							if(!(*it)->saveToXML(sceneXML)) failedEffects.push_back(*it);
+							
+							sceneXML.popTag(); //pop effect
+						}
+						else {
+							ofLogError("animationController::saveConfiguration()") << "Layer " << l << " couldn't be saved due to an ofxXmlSettings error.";
+							failedEffects.push_back(*it);
+						}
+					}
+					sceneXML.popTag(); // pop effects
+				}
+				else {
+					ofLogError("animationController::saveConfiguration()") << "Effects " << l << " couldn't be saved due to an ofxXmlSettings error.";
+					failedLayers.push_back(l);
+				}
+				
+				totalFailedEffects.insert(totalFailedEffects.end(), failedEffects.begin(), failedEffects.end());
+				
+				sceneXML.popTag(); //pop layer
+			}
+			else {
+				ofLogError("animationController::saveConfiguration()") << "Layer " << l << " couldn't be created due to an ofxXmlSettings error.";
+				failedLayers.push_back(l);
+			}
 		}
-		sceneXML.popTag();
 	}
 	
 	// save all modules data
@@ -616,11 +767,11 @@ bool animationController::saveConfiguration( const string& _filePath ){
 		//loadedConfiguration = ofFilePath::getFileName(fullPath);
 		loadedConfiguration = fullPath;
 		success = true;
-		if(failedEffects.size() == 0 && failedModules.size() ==0 ){
+		if(totalFailedEffects.size() == 0 && failedModules.size() == 0 && failedLayers.size() == 0 ){
 			ofLogNotice("animationController::saveConfiguration()", "Saved current configuration to `"+fullPath+"`");
 		}
 		else{
-			ofSystemAlertDialog("The configuration has been saved but "+ ofToString(failedEffects.size()) +" out of "+ ofToString(effects.size()) +" shapes and "+ ofToString(failedModules.size()) +" out of "+ofToString(modules.size())+" modules failed to save.");
+			ofSystemAlertDialog("The configuration has been saved but "+ ofToString(totalFailedEffects.size()) +" effects and "+ ofToString(failedModules.size()) +" modules and "+ofToString(failedLayers.size())+" layers failed to save.");
 		}
 	}
 	else ofSystemAlertDialog("Could not save the current configuration... :(\nSave File: "+fullPath);
@@ -631,25 +782,50 @@ bool animationController::saveConfiguration( const string& _filePath ){
 // keeps them loaded but ensures they're unbound from any shape
 bool animationController::unbindAllShapes(){
 	bool success = true;
-	for( auto it = effects.begin(); it != effects.end(); ++it){
-		success *= (*it)->detachFromAllShapes();
+	for(auto layer = layers.begin(); layer!=layers.end(); ++layer){
+		list<basicEffect*>& layerEffects = layer->second;
+		for( auto it = layerEffects.begin(); it != layerEffects.end(); ++it){
+			success *= (*it)->detachFromAllShapes();
+		}
 	}
 	return true;
 }
 
 bool animationController::unloadAllEffects(){
 	
-	for( auto it = effects.rbegin(); it != effects.rend(); ++it){
-		delete (*it); // todo: does this call destructor ?
-		effects.erase( std::next(it).base() );
+	for(auto layer = layers.begin(); layer!=layers.end(); ++layer){
+		list<basicEffect*>& layerEffects = layer->second;
+		for( auto it = layerEffects.rbegin(); it != layerEffects.rend(); ++it){
+			delete (*it); // todo: does this call destructor ?
+			layerEffects.erase( std::next(it).base() );
+		}
+		layerEffects.clear();
 	}
 	
-	effects.resize(0);
+	return true;
+}
+
+bool animationController::unloadAllLayers(){
 	
-	// file is not loaded anymore
-	loadedConfiguration = "";
+	if(layers.size()>0){
+		for(auto layer = layers.rbegin(); layer!=layers.rend(); ++layer){
+			list<basicEffect*>& layerEffects = layer->second;
+			
+			for( auto it = layerEffects.rbegin(); it != layerEffects.rend(); ++it){
+				delete (*it); // todo: does this call destructor ?
+				layerEffects.erase( std::next(it).base() );
+			}
+			layerEffects.clear();
+			
+			layers.erase( std::next(layer).base() );
+			//delete ( fbo );
+			if(layers.size()==0) break;
+		}
+	}
+	layers.clear();
 	
 	return true;
+	
 }
 
 bool animationController::unloadAllModules(){
@@ -662,11 +838,26 @@ bool animationController::unloadAllModules(){
 	modules.resize(0);
 	
 	return true;
+	
 }
 
+// todo: rename this to reset() ?
 void animationController::newConfiguration(){
-	unloadAllEffects();
+	unloadAllLayers();
+	unbindAllShapes();
 	scene.unloadShapes();
+	
+	// create first FBO
+	layers.emplace_back(
+		karmaFboLayer(ofGetWidth(),ofGetHeight()),
+		list<basicEffect*>()
+	);
+		
+	// setup karmaFboLayer
+	layers.back().first.set("Initial Layer", 0);
+		
+	// setup it's effects
+	layers.back().second.clear();
 }
 
 karmaModule* animationController::tryLoadModule(const string &_moduleType){
@@ -700,7 +891,7 @@ karmaModule* animationController::tryLoadModule(const string &_moduleType){
 	else {
 		// no dependencies entry.
 		// Should we handle this ?
-		ofLogNotice("animationController::tryLoadModule()") << "No dependencies found. Please make sure your effect is correctly implemented to prevent this message.";
+		ofLogNotice("animationController::tryLoadModule(" +_moduleType + ")") << "No dependencies found. Please make sure your effect is correctly implemented to prevent this message.";
 	}
 	
 	// spawn module
@@ -736,18 +927,26 @@ karmaModule* animationController::getModule(const string &_moduleType){
 // - - - - - - - -
 // GETTERS // UTILITIES
 // - - - - - - - -
-const unsigned int animationController::getNumEffects() const {
-	return effects.size();
+// todo: ret variable could be cached
+unsigned int animationController::getNumEffects() const {
+	unsigned int ret = 0;
+	for(auto layer = layers.cbegin(); layer!=layers.cend(); ++layer){
+		ret += layer->second.size();
+	}
+	return ret;
 }
 
-vector<basicEffect*> animationController::getEffectsByType(string _type){
+vector<basicEffect*> animationController::getEffectsOfType(string _type){
 	vector<basicEffect*> ret;
 	ret.clear();
 	ret.resize(0);
 	
-	// loop trough effects and return the wanted ones
-	for(auto it = effects.begin(); it != effects.end(); it++){
-		if((*it)->getType() == _type ) ret.push_back((*it));
+	for(auto layer = layers.begin(); layer!=layers.end(); ++layer){
+		list<basicEffect*>& layerEffects = layer->second;
+		// loop trough effects and return the wanted ones
+		for(auto it = layerEffects.begin(); it != layerEffects.end(); it++){
+			if((*it)->getType() == _type ) ret.push_back((*it));
+		}
 	}
 	
 	return ret;
@@ -755,13 +954,23 @@ vector<basicEffect*> animationController::getEffectsByType(string _type){
 
 map<string, vector<basicEffect*> > animationController::getAllEffectsByType() const {
 	map<string, vector<basicEffect*> > ret;
-	for( auto it=effects.begin(); it!=effects.end(); ++it ){
-		if( ret.find( (*it)->getType() ) == ret.end() ){
-			ret[ (*it)->getType() ] = vector<basicEffect*>();
+	//layers.
+	for(auto layer = layers.begin(); layer!=layers.end(); ++layer){
+		auto & layerEffects = layer->second;
+		//list<basicEffect*> * layerEffects = &(layer->second);
+		
+		for( auto it=layerEffects.begin(); it!=layerEffects.end(); ++it ){
+			if( ret.find( (*it)->getType() ) == ret.end() ){
+				ret[ (*it)->getType() ] = vector<basicEffect*>();
+			}
+			ret[ (*it)->getType() ].push_back(*it);
 		}
-		ret[ (*it)->getType() ].push_back(*it);
 	}
 	return ret;
+}
+
+unsigned int animationController::getNumLayers() const {
+	return layers.size();
 }
 
 // - - - - - - - -
@@ -776,12 +985,13 @@ void animationController::update(ofEventArgs &event){
 		(*it)->resetToScene();
 	}
 	
-	// todo:
-	// update/create animation state (bunch of variables)
-	
 	// update effects (run mode)
-	for(auto e=effects.begin(); e!=effects.end(); ++e){
-		(*e)->update(animationParams.params);
+	for(auto layer = layers.begin(); layer!=layers.end(); ++layer){
+		list<basicEffect*>& layerEffects = layer->second;
+		
+		for(auto e=layerEffects.begin(); e!=layerEffects.end(); ++e){
+			(*e)->update(animationParams.params);
+		}
 	}
 	
 	// update modules
@@ -798,10 +1008,6 @@ void animationController::draw(ofEventArgs& event){
 	drawEventArgs.stage = DRAW_EVENT_BEFORE_DRAW;
 	ofNotifyEvent(animationController::karmaControllerBeforeDraw, drawEventArgs, this);
 	
-	//ofScale(0.5, 0.5); // tmp
-	
-	//recorder.beginFrame();
-	
 	// tmp
 	ofClear(0,1);
 	//ofBackground(255,0,0);
@@ -812,17 +1018,21 @@ void animationController::draw(ofEventArgs& event){
 	}
 	
 	// render a scene without effects (tmp?)
-	if(effects.size()==0){
+	if(layers.size()==0){
 		ofSetColor( ofFloatColor(1.f, 1));//params.seasons.summer));
 		ofFill();
-		for(auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it){
-			(*it)->sendToGPU();
-		}
+//		for(auto it=scene.getShapesRef().begin(); it!=scene.getShapesRef().end(); ++it){
+//			(*it)->sendToGPU();
+//		}
 	}
 	
-	// draw effects
-	else for(auto e=effects.begin(); e!=effects.end(); ++e){
-		(*e)->render(animationParams.params);
+	else for(auto layer = layers.begin(); layer!=layers.end(); ++layer){
+		list<basicEffect*>& layerEffects = layer->second;
+	
+		// draw effects
+		for(auto e=layerEffects.begin(); e!=layerEffects.end(); ++e){
+			(*e)->render(animationParams.params);
+		}
 	}
 	
 	// notify end draw (before GUI)
@@ -1110,170 +1320,315 @@ void animationController::draw(ofEventArgs& event){
 				}
 			} // end shapes section
 			
-			ImGui::Spacing();
+			ImGui::Separator();
 			if( ImGui::CollapsingHeader( GUIEffectsTitle, "GUIEffectsPanel", true, true ) ){
 				
 				ImGui::Text( "Loaded configuration: %s", loadedConfiguration.c_str() );
 				
 				ImGui::Separator();
-				ImGui::Text( "Number of effects : %u", (int) effects.size() );
+				ImGui::Text( "Number of layers : %u", getNumLayers() );
+				ImGui::Text( "Number of effects : %u", getNumEffects() );
 				
-				if( ImGui::Button("Add new...") ){
-					ImGui::OpenPopup("Add new shape...");
-				}
-				ImGui::SameLine();
-				//ImGui::Text(selected_fish == -1 ? "<None>" : names[selected_fish]);
-				if (ImGui::BeginPopup("Add new shape...")){
-					ImGui::Separator();
-					for(auto it = effect::factory::getEffectRegistry().begin(); it!= effect::factory::getEffectRegistry().end(); ++it){
-						if ( ImGui::Selectable( it->first.c_str() )){
-							basicEffect* e = effect::create(it->first);
-							if( e != nullptr ){
-								e->initialise(animationParams.params);
-								effects.push_back( e );
-							}
-						}
-					}
-					ImGui::EndPopup();
+				// new layer button
+				ImGui::Separator();
+				if( ImGui::Button("Add new layer") ){
+				
+					layers.emplace_back(
+						karmaFboLayer(ofGetWidth(),ofGetHeight()),
+						list<basicEffect*>()
+					);
+					
+					// setup karmaFboLayer
+					layers.back().second.clear();
+					layers.back().first.set("Initial Layer", layers.size()-1);
 				}
 				
-				ImGui::Separator();
-				ImGui::Separator();
-				
-				if(getNumEffects()>0){
+				// loop trough layers
+				for(auto layer = layers.begin(); layer!=layers.end(); ++layer){
+					list<basicEffect*>& layerEffects = layer->second;
+					karmaFboLayer& fboLayer = layer->first;
+					
 					ImGui::SetNextTreeNodeOpened(true, ImGuiSetCond_Once );
-					if (ImGui::TreeNode("All Effects")){
-						//static ImGuiTextFilter filter;
-						//filter.Draw("Filter by name");
+					if (ImGui::TreeNode( (ofToString(fboLayer.getIndex())+" - "+fboLayer.getName()+"###layer"+ofToString(&fboLayer)).c_str() )){
 						
-						static int effectTypeFilter = 0;
-						ImGui::Text("Filter: ");
-						ImGui::SameLine();
-						ImGui::RadioButton("All", &effectTypeFilter, 0);
-						
-						auto effectsByType = getAllEffectsByType();
-						int i = 1;
-						for( auto it = effectsByType.begin(); it!=effectsByType.end(); ++it, ++i ){
+						// layer information
+						static char tmpName[32] = "";
+						if(ImGui::Button("Change name...")){
+							ImGui::OpenPopup("layerNamePopup");
+							std::strcpy (tmpName, fboLayer.getName().c_str());
+						}
+						if(ImGui::BeginPopup("layerNamePopup")){
+							bool doSave = false;
+							if( ImGui::InputText("Layer Name", tmpName, KM_ARRAY_SIZE(tmpName), ImGuiInputTextFlags_EnterReturnsTrue) ){
+								doSave = true;
+							}
 							ImGui::SameLine();
-							ImGui::RadioButton((it->first).c_str(), &effectTypeFilter, i);
+							if(ImGui::Button("Set###setLayerName")){
+								doSave=true;
+							}
+							if(doSave){
+								fboLayer.set(tmpName, fboLayer.getIndex());
+								ImGui::CloseCurrentPopup();
+							}
+							ImGui::EndPopup();
 						}
-						
-						ImGui::Separator();
-						
-						ImGui::Columns(6);
-						static bool firstTime = true;
-						if( firstTime ){
-							ImGui::SetColumnOffset(0, 00);
-							ImGui::SetColumnOffset(1, 50);
-							ImGui::SetColumnOffset(2, 220);
-							ImGui::SetColumnOffset(3, 300);
-							ImGui::SetColumnOffset(4, 350);
-							ImGui::SetColumnOffset(5, 400);
-							firstTime = false;
-						}
-						
-						//ImGui::SameLine(20);
-						ImGui::Text("On"); ImGui::NextColumn();
-						ImGui::Text("Name"); ImGui::NextColumn();
-						ImGui::Text("Type"); ImGui::NextColumn();
-						ImGui::Text("Shapes"); ImGui::NextColumn();
-						ImGui::Text("Order"); ImGui::NextColumn();
-						ImGui::Text("Rm?"); ImGui::NextColumn();
-						
-						ImGui::Separator();
-						
-						for( auto it=effects.begin(); it!=effects.end(); ++it ){
-							basicEffect* e = *it;
-							
-							// apply filters
-							if( effectTypeFilter > 0 ){
-								auto effectIt = effectsByType.begin();
-								std::advance( effectIt, effectTypeFilter );
-								
-								if( e->getType() == effectIt->first ) continue;
-							}
-							
-							ImGui::PushID(e);
-							
-							ImVec4 statusColor( !e->isReady()*1.f, e->isReady()*1.f + (!e->isReady() && !e->isLoading())*.5f, 0.f, 1.f );
-							ImGui::Text("x");
-							ImGui::NextColumn();// ImGui::SameLine(60);
-							//ImGui::Text( "%s", s->getName().c_str() );
-							
-							if( ImGui::Selectable(e->getName().c_str(), false)){//&e->isSelected ) ){
-								//s->isSelected = !s->isSelected;
-								e->toggleGuiWindow();
-								// todo: resolve namespace conflicts here
-							}
-							if (ImGui::IsItemHovered()){
-								ImGui::SetTooltip( "%s", e->getShortStatus().c_str() );
-							}
-
-							ImGui::NextColumn();// ImGui::SameLine(180);
-							ImGui::Text("%s", (*it)->getType().c_str() );
-							ImGui::NextColumn();// ImGui::SameLine(100);
-						
-							ImGui::Text("%i", (*it)->getNumShapes() );
-							ImGui::NextColumn();
-							
+						else {
+							ImGui::SameLine();
+							ImGui::Spacing();
+							ImGui::SameLine();
 							if(ImGui::Button("^")){ // up
-								if(it!=effects.begin()){
-									auto prevIt = std::prev(it);
-									int prevEffectCurIndex = (*prevIt)->getIndex();
-									(*prevIt)->setIndex(e->getIndex());
-									e->setIndex(prevEffectCurIndex);
-									effects.sort(basicEffect::orderByIndex);
+								// skip if first layer
+								if(layer!=layers.begin()){
+									auto prevIt = std::prev(layer);
+									int prevLayerCurIndex = prevIt->first.getIndex();
+									prevIt->first.setIndex( fboLayer.getIndex() );
+									fboLayer.setIndex(prevLayerCurIndex);
 								}
+								
+								layers.sort(karmaFboLayer::orderByIndex);
 							}
 							ImGui::SameLine();
-							if(ImGui::Button("v")){ // up
-								if(it!=effects.end()){
-									auto nextIt = std::next(it);
-									int nextEffectCurIndex = (*nextIt)->getIndex();
-									(*nextIt)->setIndex(e->getIndex());
-									e->setIndex(nextEffectCurIndex);
-									effects.sort(basicEffect::orderByIndex);
+							if(ImGui::Button("v")){ // down
+								// move to next layer ?
+								if( layer != std::prev(layers.end()) ) {
+									auto nextIt = std::next(layer);
+									int nextLayerCurIndex = nextIt->first.getIndex();
+									nextIt->first.setIndex(fboLayer.getIndex());
+									fboLayer.setIndex(nextLayerCurIndex);
 								}
+								
+								layers.sort(karmaFboLayer::orderByIndex);
 							}
-							
-							ImGui::NextColumn();
-							
-							//ImGui::PushID(e);
-							if(ImGui::Button("x")){
-								ImGui::OpenPopup(e->getName().insert(0, "rm-").c_str());
+							ImGui::SameLine();
+							ImGui::Spacing();
+							ImGui::SameLine();
+							if(ImGui::Button("Remove")){
+								ImGui::OpenPopup("rm-layer");
 							}
-							if( ImGui::BeginPopup(e->getName().insert(0, "rm-").c_str()) ){
+							if( ImGui::BeginPopup("rm-layer")){
 								ImGui::Text("Remove? ");
 								ImGui::SameLine();
 								if(ImGui::Button("Cancel")){
 									ImGui::CloseCurrentPopup();
 								} ImGui::SameLine();
 								if( ImGui::Button("Ok") ){
-									removeEffect(e);
-									it--; // keep valid iterator
+									auto erased = layer;
+									layer--; // keep valid iterator
+									//erased->second.
+									//layers.erase(erased);
+									removeLayer(erased->first);
+									
+									ImGui::CloseCurrentPopup();
+									ImGui::EndPopup();
+									ImGui::TreePop();
+									continue; // skip 1 frame because we're not reverse-iterating
 								}
-								
 								ImGui::EndPopup();
 							}
-							//ImGui::PopID();
-							
-							ImGui::NextColumn();
-							
-							ImGui::PopID();
 						}
-						ImGui::Columns(1);
 						
-						ImGui::Spacing();
-						ImGui::Spacing();
+						ImGui::TextWrapped("Effects on layer: %lu", layerEffects.size());
+						
+						// add new effect on layer stuff
+						{
+							if( ImGui::Button("Add new...") ){
+								ImGui::OpenPopup("Add new effect...");
+							}
+							ImGui::SameLine();
+							//ImGui::Text(selected_fish == -1 ? "<None>" : names[selected_fish]);
+							if (ImGui::BeginPopup("Add new effect...")){
+								ImGui::Separator();
+								for(auto it = effect::factory::getEffectRegistry().begin(); it!= effect::factory::getEffectRegistry().end(); ++it){
+									if ( ImGui::Selectable( it->first.c_str() )){
+										basicEffect* e = effect::create(it->first);
+										if( e != nullptr ){
+											e->initialise(animationParams.params);
+											layerEffects.push_back( e );
+										}
+									}
+								}
+								ImGui::EndPopup(); // end add new effect
+							}
+							
+							ImGui::Separator();
+							ImGui::Separator();
+						}
+						
+						// show all effects
+						if(layerEffects.size()>0){
+							ImGui::SetNextTreeNodeOpened(true, ImGuiSetCond_Once );
+							//static ImGuiTextFilter filter;
+							//filter.Draw("Filter by name");
+							
+							static int effectTypeFilter = 0;
+							ImGui::Text("Filter: ");
+							ImGui::SameLine();
+							ImGui::RadioButton("All", &effectTypeFilter, 0);
+							
+							auto effectsByType = getAllEffectsByType();
+							int i = 1;
+							for( auto it = effectsByType.begin(); it!=effectsByType.end(); ++it, ++i ){
+								if((i+1)%3!=0) ImGui::SameLine();
+								ImGui::RadioButton((it->first).c_str(), &effectTypeFilter, i);
+							}
+							
+							ImGui::Separator();
+							
+							ImGui::Columns(6);
+							static bool firstTime = true;
+							if( firstTime ){
+								ImGui::SetColumnOffset(0, 00);
+								ImGui::SetColumnOffset(1, 50);
+								ImGui::SetColumnOffset(2, 220);
+								ImGui::SetColumnOffset(3, 300);
+								ImGui::SetColumnOffset(4, 350);
+								ImGui::SetColumnOffset(5, 400);
+								firstTime = false;
+							}
+							
+							//ImGui::SameLine(20);
+							ImGui::Text("On"); ImGui::NextColumn();
+							ImGui::Text("Name"); ImGui::NextColumn();
+							ImGui::Text("Type"); ImGui::NextColumn();
+							ImGui::Text("Shapes"); ImGui::NextColumn();
+							ImGui::Text("Order"); ImGui::NextColumn();
+							ImGui::Text("Rm?"); ImGui::NextColumn();
+							
+							ImGui::Separator();
+							
+							for( auto it=layerEffects.begin(); it!=layerEffects.end(); ++it ){
+								basicEffect* e = *it;
+								
+								// apply filters
+								if( effectTypeFilter > 0 ){
+									auto effectIt = effectsByType.begin();
+									std::advance( effectIt, effectTypeFilter );
+									
+									if( e->getType() == effectIt->first ) continue;
+								}
+								
+								ImGui::PushID(e);
+								
+								ImVec4 statusColor( !e->isReady()*1.f, e->isReady()*1.f + (!e->isReady() && !e->isLoading())*.5f, 0.f, 1.f );
+								ImGui::TextColored(statusColor, e->isReady()?"*":"-");
+								ImGui::NextColumn();// ImGui::SameLine(60);
+								//ImGui::Text( "%s", s->getName().c_str() );
+								
+								if( ImGui::Selectable(e->getName().c_str(), false)){//&e->isSelected ) ){
+									//s->isSelected = !s->isSelected;
+									e->toggleGuiWindow();
+									// todo: resolve namespace conflicts here
+								}
+								if (ImGui::IsItemHovered()){
+									ImGui::SetTooltip( "%s", e->getShortStatus().c_str() );
+								}
+								
+								ImGui::NextColumn();// ImGui::SameLine(180);
+								ImGui::Text("%s", (*it)->getType().c_str() );
+								ImGui::NextColumn();// ImGui::SameLine(100);
+								
+								ImGui::Text("%i", (*it)->getNumShapes() );
+								ImGui::NextColumn();
+								
+								if(ImGui::Button("^")){ // up
+									// move to next layer ?
+									if( layerEffects.size()<=1 || it ==(layerEffects.begin())){
+										// skip if first layer
+										if(layer!=layers.begin()){
+											std::prev(layer)->second.push_back(e);
+											
+											auto tmpIt = std::prev(it);
+											layer->second.erase(it);
+											it = tmpIt;
+											
+											basicEffect* eff = *it;
+											//continue;
+										}
+									}
+									
+									else {
+										if(it!=layerEffects.begin()){
+											auto prevIt = std::prev(it);
+											int prevEffectCurIndex = (*prevIt)->getIndex();
+											(*prevIt)->setIndex(e->getIndex());
+											e->setIndex(prevEffectCurIndex);
+											layerEffects.sort(basicEffect::orderByIndex);
+										}
+									}
+								}
+								ImGui::SameLine();
+								if(ImGui::Button("v")){ // down
+									// move to next layer ?
+									if( layerEffects.size()<=1 || it == (std::prev(layerEffects.end()))){
+										// skip if first layer
+										if(layer!=std::prev(layers.end())){
+											std::next(layer)->second.push_front(e);
+											
+											auto tmpIt = std::prev(it);
+											
+											layer->second.erase(it);
+											it = tmpIt;
+											
+											basicEffect* eff = *it;
+											//continue;
+										}
+									}
+									else {
+										auto nextIt = std::next(it);
+										int nextEffectCurIndex = (*nextIt)->getIndex();
+										(*nextIt)->setIndex(e->getIndex());
+										e->setIndex(nextEffectCurIndex);
+										layerEffects.sort(basicEffect::orderByIndex);
+									}
+								}
+								
+								ImGui::NextColumn();
+								
+								//ImGui::PushID(e);
+								if(ImGui::Button("x")){
+									ImGui::OpenPopup(e->getName().insert(0, "rm-").c_str());
+								}
+								if( ImGui::BeginPopup(e->getName().insert(0, "rm-").c_str()) ){
+									ImGui::Text("Remove? ");
+									ImGui::SameLine();
+									if(ImGui::Button("Cancel")){
+										ImGui::CloseCurrentPopup();
+									} ImGui::SameLine();
+									if( ImGui::Button("Ok") ){
+										it--; // keep valid iterator
+										removeEffect(e);
+										
+										//break; // skip 1 frame because we're not reverse-iterating
+									}
+									
+									ImGui::EndPopup();
+								}
+								//ImGui::PopID();
+								
+								ImGui::NextColumn();
+								
+								ImGui::PopID();
+							}
+							ImGui::Columns(1);
+							
+							ImGui::Spacing();
+							ImGui::Spacing();
+							
+							//ImGui::TreePop();
+						} // end layer's effects
 						
 						ImGui::TreePop();
-					}
-				} // end effectsPanel
+					} // end fboLayer tree node
+					
+				} // end for(layers as layer)
+				
+				
 
 			}
 			
 			// end karma mapper main gui window
 			ImGui::End();
+			
 		} // end bGuiShowMainWindow
 		
 		if(bGuiShowModules){
@@ -1359,12 +1714,15 @@ void animationController::draw(ofEventArgs& event){
 		}
 		
 		// show effects gui
-		for(auto e=effects.cbegin(); e!=effects.cend(); ++e){
-			(*e)->showGuiWindow( scene );
+		for(auto layer = layers.begin(); layer!=layers.end(); ++layer){
+			list<basicEffect*>& layerEffects = layer->second;
+			for(auto e=layerEffects.begin(); e!=layerEffects.end(); ++e){
+				(*e)->showGuiWindow( scene );
+			}
 		}
 		
 		// show modules gui
-		for(auto m=modules.cbegin(); m!=modules.cend(); ++m){
+		for(auto m=modules.begin(); m!=modules.end(); ++m){
 			(*m)->showGuiWindow( );
 		}
 		

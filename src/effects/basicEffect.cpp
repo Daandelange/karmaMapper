@@ -136,7 +136,7 @@ void basicEffect::toggleGuiWindow() {
 bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 	if( !bShowGuiWindow ) return false;
 	
-	ImGui::SetNextWindowSize(ImVec2(400,ofGetHeight()*0.8));
+	ImGui::SetNextWindowSize(ImVec2(400,ofGetHeight()*0.8), ImGuiSetCond_Once);
 	ImGui::Begin( ((string)"Effect Settings: ").append(getName()).append("###effect-").append( ofToString(this) ).c_str() , &bShowGuiWindow );
 	
 	ImGui::LabelText("Type", "%s", getType().c_str() );

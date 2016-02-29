@@ -4,13 +4,16 @@
 //
 //  Created by Daan de Lange on 02/02/2016.
 //
-//	An abstract class for making karmaMapper modules
+//	For better console handling
+//	Based on Omar Cornut's imgui_demo.cpp console struct
+//	https://github.com/ocornut/imgui/blob/bf6f6ba858170c321c622856d645ccfe84b7bc36/imgui_demo.cpp
 //
 
 #pragma once
 
 #include "ofMain.h"
 #include "ofxImGui.h"
+#include <stdarg.h>
 
 #define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
 

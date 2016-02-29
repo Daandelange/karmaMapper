@@ -84,7 +84,7 @@ bool karmaModule::isEnabled() const {
 void karmaModule::showGuiWindow(){
 	if(!bShowGuiWindow) return;
 	
-	ImGui::SetNextWindowSize(ImVec2(400,ofGetHeight()*0.8));
+	ImGui::SetNextWindowSize(ImVec2(400,ofGetHeight()*0.8), ImGuiSetCond_Once);
 	ImGui::Begin( ((string)"Module: ").append(getName()).append("###module-").append( ofToString(this) ).c_str() , &bShowGuiWindow );
 	
 	ImGui::End();

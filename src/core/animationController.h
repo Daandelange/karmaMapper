@@ -23,6 +23,8 @@
 #include "karmaModule.h"
 #include "karmaConsole.h"
 #include "animationControllerEvents.h"
+#include "karmaFboLayer.h"
+#include "karmaUtilities.h"
 
 #include "OSCRouter.h"
 #include "mirReceiver.h"
@@ -55,7 +57,8 @@ public:
 	bool stop();
 	bool isEnabled() const;
 	bool removeEffect( basicEffect* _e);
-	bool addEffect( basicEffect* _e );
+	bool addEffect( basicEffect* _e, karmaFboLayer& _layer );
+	bool removeLayer( karmaFboLayer& _layer );
 
 	// load & save
 	bool loadConfiguration(const string& _file = "");
@@ -63,6 +66,7 @@ public:
 	bool saveConfiguration(const string& _filePath = "");
 	string loadedConfiguration;
 	bool unloadAllEffects();
+	bool unloadAllLayers();
 	void newConfiguration();
 	bool unbindAllShapes();
 	bool unloadAllModules();
@@ -70,10 +74,10 @@ public:
 	karmaModule* getModule(const string& _moduleType);
 	
 	// getters
-	const unsigned int getNumEffects() const;
-	vector<basicEffect*> getEffectsByType(string _type);
-	
+	unsigned int getNumEffects() const;
+	vector<basicEffect*> getEffectsOfType(string _type);
 	map<string, vector<basicEffect*> > getAllEffectsByType() const;
+	unsigned int getNumLayers() const;
 	
 	// event handlers
 	void update( ofEventArgs& event );
@@ -108,31 +112,22 @@ protected:
 	
 	// effects stuff
 	bool isEffectsIndex(int i);
-	list<basicEffect*> effects;
+	//list<basicEffect*> effects;
+	//list<ofxSwapBuffer> layers;
+	
+	list< karmaFboLayer::fboWithEffects > layers; // ping-pong
+	//map<karmaFboLayer*, list<basicEffect*>, karmaFboLayer::orderByIndex > layers; // ping pong
 	
 	animationParamsServer animationParams;
 	list< karmaModule* > modules;
 	
 	shapesDB& scene;
 	
-	// OSC
-	//OSCRouter oscRouter;
-	//mirReceiver mirOSCReceiver;
 	//durationReceiver durationOSCReceiver;
-	
-	// Video recording
-	//fboRecorder recorder;
 	
 private:
 	bool bEnabled;
 	
-//#ifdef TARGET_OSX
-//	
-//	#ifdef KM_ENABLE_SYPHON
-//		ofxSyphonServer syphonTexture;
-//	#endif
-//	
-//#endif
 };
 
 

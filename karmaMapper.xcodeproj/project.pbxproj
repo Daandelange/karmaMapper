@@ -411,8 +411,10 @@
 		858D333E1BEBF220003E49C7 /* Syphon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Syphon.framework; sourceTree = "<group>"; };
 		858D33401BEBF220003E49C7 /* SyphonNameboundClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SyphonNameboundClient.h; sourceTree = "<group>"; };
 		858D33411BEBF220003E49C7 /* SyphonNameboundClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SyphonNameboundClient.m; sourceTree = "<group>"; };
+		859723401C8220760022625A /* karmaFboLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaFboLayer.h; path = core/karmaFboLayer.h; sourceTree = "<group>"; };
 		85999DD21C537F6600786707 /* fullScreenShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fullScreenShape.cpp; path = shapes/shapes/fullScreenShape.cpp; sourceTree = "<group>"; };
 		85999DD31C537F6600786707 /* fullScreenShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fullScreenShape.h; path = shapes/shapes/fullScreenShape.h; sourceTree = "<group>"; };
+		85F5188D1C833EF8002E01D5 /* karmaUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaUtilities.h; path = core/karmaUtilities.h; sourceTree = "<group>"; };
 		87F26B4B24CBD428AD9EEBAA /* ofxBaseGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBaseGui.h; path = ../../../addons/ofxGui/src/ofxBaseGui.h; sourceTree = SOURCE_ROOT; };
 		883A95C78655CFEEA37EF9A1 /* ofxVideoRecorder.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxVideoRecorder.cpp; path = ../../../addons/ofxVideoRecorder/src/ofxVideoRecorder.cpp; sourceTree = SOURCE_ROOT; };
 		89449E3044D456F7DE7BEA14 /* ofxPanel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxPanel.h; path = ../../../addons/ofxGui/src/ofxPanel.h; sourceTree = SOURCE_ROOT; };
@@ -1083,6 +1085,8 @@
 				852F59551C7CDF0D00EB0192 /* animationControllerEvents.h */,
 				8529F1EF1C611A7D00949E5B /* karmaConsole.cpp */,
 				8529F1F01C611A7D00949E5B /* karmaConsole.h */,
+				859723401C8220760022625A /* karmaFboLayer.h */,
+				85F5188D1C833EF8002E01D5 /* karmaUtilities.h */,
 			);
 			name = core;
 			sourceTree = "<group>";
