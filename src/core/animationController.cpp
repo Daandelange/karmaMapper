@@ -542,13 +542,18 @@ bool animationController::loadConfiguration(const string& _file){
 //					}
 					
 					// pop layer
-					configXML.popTag();
+					if(!bypass) configXML.popTag();
 				}
 				else {
 					ofLogWarning("animationController::loadConfiguration") << "Can't load layer #" << l;
 				}
 				
+				
+				
 			} // end for(layer)
+			
+			// pop "layers"
+			if(!bypass) configXML.popTag();
 		}
 		else {
 			ofLogError("animationController::loadConfiguration") << "Weird situation... Can't push into layers section.";
@@ -1279,7 +1284,7 @@ void animationController::draw(ofEventArgs& event){
 								auto shapeIt = shapesByType.begin();
 								std::advance( shapeIt, shapeTypeFilter );
 								
-								if( s->getShapeType() == shapeIt->first ) continue;
+								if( !s->isType( shapeIt->first ) ) continue;
 							}
 							
 							if( filter.PassFilter( s->getName().c_str() ) ){
@@ -1341,6 +1346,18 @@ void animationController::draw(ofEventArgs& event){
 					// setup karmaFboLayer
 					layers.back().second.clear();
 					layers.back().first.set("Initial Layer", layers.size()-1);
+				}
+				
+				static int effectTypeFilter = 0;
+				ImGui::Text("Filter: ");
+				ImGui::SameLine();
+				ImGui::RadioButton("All", &effectTypeFilter, 0);
+				
+				auto effectsByType = getAllEffectsByType();
+				int i = 1;
+				for( auto it = effectsByType.begin(); it!=effectsByType.end(); ++it, ++i ){
+					if((i+1)%3!=0) ImGui::SameLine();
+					ImGui::RadioButton((it->first).c_str(), &effectTypeFilter, i);
 				}
 				
 				// loop trough layers
@@ -1431,7 +1448,7 @@ void animationController::draw(ofEventArgs& event){
 						
 						// add new effect on layer stuff
 						{
-							if( ImGui::Button("Add new...") ){
+							if( ImGui::Button("Add new effect...") ){
 								ImGui::OpenPopup("Add new effect...");
 							}
 							ImGui::SameLine();
@@ -1456,21 +1473,10 @@ void animationController::draw(ofEventArgs& event){
 						
 						// show all effects
 						if(layerEffects.size()>0){
-							ImGui::SetNextTreeNodeOpened(true, ImGuiSetCond_Once );
+							//ImGui::SetNextTreeNodeOpened(true, ImGuiSetCond_Once );
 							//static ImGuiTextFilter filter;
 							//filter.Draw("Filter by name");
 							
-							static int effectTypeFilter = 0;
-							ImGui::Text("Filter: ");
-							ImGui::SameLine();
-							ImGui::RadioButton("All", &effectTypeFilter, 0);
-							
-							auto effectsByType = getAllEffectsByType();
-							int i = 1;
-							for( auto it = effectsByType.begin(); it!=effectsByType.end(); ++it, ++i ){
-								if((i+1)%3!=0) ImGui::SameLine();
-								ImGui::RadioButton((it->first).c_str(), &effectTypeFilter, i);
-							}
 							
 							ImGui::Separator();
 							
@@ -1502,9 +1508,9 @@ void animationController::draw(ofEventArgs& event){
 								// apply filters
 								if( effectTypeFilter > 0 ){
 									auto effectIt = effectsByType.begin();
-									std::advance( effectIt, effectTypeFilter );
+									std::advance( effectIt, effectTypeFilter-1 );
 									
-									if( e->getType() == effectIt->first ) continue;
+									if( !e->isType( effectIt->first) ) continue;
 								}
 								
 								ImGui::PushID(e);

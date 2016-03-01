@@ -1,3 +1,4 @@
+#include "KMSettings.h"
 #include "ofMain.h"
 
 #ifdef KM_EDITOR_APP
@@ -6,35 +7,44 @@
 #include "ofApp.h"
 #endif
 
-#ifdef TARGET_OPENGLES
+#if (OF_VERSION_MINOR != 9) && defined(TARGET_OPENGLES)
 #include "ofGLProgrammableRenderer.h"
 #endif
 
-#define KARMAMAPPER_DEBUG true
-
 //========================================================================
 int main( ){
+#ifdef KARMAMAPPER_DEBUG
 	// Useful for debugging shaders and other inner-OF things
 	ofSetLogLevel(OF_LOG_VERBOSE);
+	//ofSetLogLevel("ofThread", OF_LOG_ERROR);
+#endif
 	
-	#ifdef TARGET_OPENGLES
-	//ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
-	//ofSetupOpenGL(700, 700, OF_WINDOW);// <-------- setup the GL context
+#ifdef TARGET_OPENGLES
+	
+#if (OF_VERSION_MINOR == 9)
 	ofGLESWindowSettings s;
-	s.setGLESVersion (2);
+	s.width = 700;
+	s.height = 700;
+	s.setGLESVersion(2);
 	ofCreateWindow(s);
-	#else
+#else
+	ofSetLogLevel("ofThread", OF_LOG_ERROR);
+	ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
+	ofSetupOpenGL(700, 700, OF_WINDOW);
+#endif
+	
+#else
 	ofGLWindowSettings s;
 	//s.setGLVersion(2,1);
 	s.setGLVersion(3,3);
 	//s.setGLVersion(4,3);
 	ofCreateWindow(s);
-	#endif
+#endif
 	
 	//ofAppGlutWindow window;
 	//window.setGlutDisplayString("rgba double depth alpha samples>=4");
 	//ofSetupOpenGL(&window, 1500,1200,OF_WINDOW);			// <-------- setup the GL context
-
+	
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
 	// pass in width and height too:

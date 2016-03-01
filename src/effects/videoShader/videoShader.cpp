@@ -19,8 +19,8 @@ videoShader::videoShader(){
 }
 
 videoShader::~videoShader(){
-	stopThread();
-	waitForThread();
+	//stopThread();
+	waitForThread(true);
 	
 //	ofRemoveListener(dir.events.serverAnnounced, this, &videoShader::syphonServerAnnounced);
 //	// not yet implemented
