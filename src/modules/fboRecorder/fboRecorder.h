@@ -89,9 +89,11 @@ protected:
 	enum videoRecMode fboRecMode;
 	bool useGrabScreen;
 	
+#ifdef KM_ENABLE_SYPHON
 	//string fboRecSyphonServerName;
 	ofxSyphonServer syphonServer;
-	
+#endif
+
 private:
 	
 	

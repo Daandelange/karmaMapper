@@ -31,7 +31,7 @@ struct shaderToyVariables {
 	float iTimeDelta = 0.f;
 	int iFrame = 0;
 	float iChannelTime[4] = { 0.f, 0.f, 0.f, 0.f };
-	float iChannelResolution[4][3] =  {
+	float iChannelResolution[4*3] =  {
 		0.f, 0.f, 0.f,
 		0.f, 0.f, 0.f,
 		0.f, 0.f, 0.f,

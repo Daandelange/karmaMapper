@@ -399,7 +399,11 @@ bool fboRecorder::endFrame(bool _showBuffer){
 	
 	if(_showBuffer){
 		if(!useGrabScreen){
+#ifdef KM_ENABLE_SYPHON
 			if( fboRecMode==VIDEOREC_MODE_SYPHON ){
+#else
+			if(false){
+#endif
 				fbo.draw(0, 0, fbo.getWidth(), fbo.getHeight()); // show recorded image
 			}
 			else {

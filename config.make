@@ -87,7 +87,8 @@
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-PROJECT_DEFINES = KM_EDITOR_APP
+#PROJECT_DEFINES = KM_EDITOR_APP
+PROJECT_DEFINES = KM_ANIMATOR_APP
 
 ################################################################################
 # PROJECT CFLAGS

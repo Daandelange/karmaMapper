@@ -96,9 +96,9 @@ void videoShader::update(const animationParams& params){
 			shaderToyArgs.iChannelTime[0]=ofGetElapsedTimef();
 			
 			// todo (should not be done here)
-			shaderToyArgs.iChannelResolution[0][0] = syphonSource.getWidth();
-			shaderToyArgs.iChannelResolution[0][1] = syphonSource.getHeight();
-			shaderToyArgs.iChannelResolution[0][2] = syphonSource.getWidth() / syphonSource.getHeight();
+			shaderToyArgs.iChannelResolution[0*3+0] = syphonSource.getWidth();
+			shaderToyArgs.iChannelResolution[0*3+1] = syphonSource.getHeight();
+			shaderToyArgs.iChannelResolution[0*3+2] = syphonSource.getWidth() / syphonSource.getHeight();
 			
 			if (syphonSource.isSetup()) {
 				// need to bind it so it updates....
@@ -388,9 +388,9 @@ bool videoShader::loadVideoFile(const string &_path) {
 				player.setLoopState(OF_LOOP_NORMAL);
 				//player.getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);
 				//player.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
-				shaderToyArgs.iChannelResolution[0][0] = player.getWidth();
-				shaderToyArgs.iChannelResolution[0][1] = player.getHeight();
-				shaderToyArgs.iChannelResolution[0][2] = player.getWidth() / player.getHeight();
+				shaderToyArgs.iChannelResolution[0*3+0] = player.getWidth();
+				shaderToyArgs.iChannelResolution[0*3+1] = player.getHeight();
+				shaderToyArgs.iChannelResolution[0*3+2] = player.getWidth() / player.getHeight();
 				player.play();
 				unlock();
 			}
@@ -434,9 +434,9 @@ bool videoShader::connectToSyphonServer( const ofxSyphonServerDescription& _addr
 		else {
 			if(textures.size()==0) textures.push_back( syphonSource.getTexture() );
 			
-			shaderToyArgs.iChannelResolution[0][0] = syphonSource.getWidth();
-			shaderToyArgs.iChannelResolution[0][1] = syphonSource.getHeight();
-			shaderToyArgs.iChannelResolution[0][2] = syphonSource.getWidth() / syphonSource.getHeight();
+			shaderToyArgs.iChannelResolution[0*3+0] = syphonSource.getWidth();
+			shaderToyArgs.iChannelResolution[0*3+1] = syphonSource.getHeight();
+			shaderToyArgs.iChannelResolution[0*3+2] = syphonSource.getWidth() / syphonSource.getHeight();
 			return true;
 		}
 	}
@@ -472,7 +472,7 @@ void videoShader::setUseThread(const bool& _useThread){
 void videoShader::threadedFunction(){
 
 #ifdef KARMAMAPPER_DEBUG
-	ofThread::setThreadName("videoShader::threadedFunction() " + ofToString(ofThread::getThreadId()) );
+	//ofThread::setThreadName("videoShader::threadedFunction() " + ofToString(ofThread::getThreadId()) );
 #endif
 	
 	while (isThreadRunning()) {

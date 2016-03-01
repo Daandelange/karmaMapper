@@ -16,6 +16,7 @@
 #include "animationParams.h"
 #include "mirReceiver.h"
 #include "shaderToyVariables.h"
+#include "karmaUtilities.h"
 
 #define ShaderEffectDefaultFrag "defaultShader.frag"
 #define ShaderEffectDefaultVert "defaultShader.vert"

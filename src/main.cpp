@@ -18,9 +18,11 @@ int main( ){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	
 	#ifdef TARGET_OPENGLES
-	ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
-	ofSetupOpenGL(700, 700, OF_WINDOW);// <-------- setup the GL context
-	
+	//ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
+	//ofSetupOpenGL(700, 700, OF_WINDOW);// <-------- setup the GL context
+	ofGLESWindowSettings s;
+	s.setGLESVersion (2);
+	ofCreateWindow(s);
 	#else
 	ofGLWindowSettings s;
 	//s.setGLVersion(2,1);

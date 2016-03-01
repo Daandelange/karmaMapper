@@ -326,10 +326,10 @@ bool shaderEffect::printCustomEffectGui(){
 				ImGui::Text("Textures (not yet)"); // todo
 				ImGui::InputFloat4("iChannelTime", shaderToyArgs.iChannelTime );
 				
-				ImGui::InputFloat3("iChannelResolution[0]", shaderToyArgs.iChannelResolution[0] );
-				ImGui::InputFloat3("iChannelResolution[1]", shaderToyArgs.iChannelResolution[1] );
-				ImGui::InputFloat3("iChannelResolution[2]", shaderToyArgs.iChannelResolution[2] );
-				ImGui::InputFloat3("iChannelResolution[3]", shaderToyArgs.iChannelResolution[3] );
+				ImGui::InputFloat3("iChannelResolution[0]", &shaderToyArgs.iChannelResolution[0*3] );
+				ImGui::InputFloat3("iChannelResolution[1]", &shaderToyArgs.iChannelResolution[1*3] );
+				ImGui::InputFloat3("iChannelResolution[2]", &shaderToyArgs.iChannelResolution[2*3] );
+				ImGui::InputFloat3("iChannelResolution[3]", &shaderToyArgs.iChannelResolution[3*3] );
 				
 				ImGui::Unindent();
 			} // end shadertoy variables
@@ -506,7 +506,7 @@ void shaderEffect::registerShaderToyVariables(){
 		}
 		//cout << iChannelResolution[0] << endl;
 		shader.setUniform1fv("iChannelTime", iChannelTime);
-		shader.setUniform3fv("iChannelResolution", *shaderToyArgs.iChannelResolution );
+		shader.setUniform3fv("iChannelResolution", shaderToyArgs.iChannelResolution, KM_ARRAY_SIZE(shaderToyArgs.iChannelResolution) );
 		shader.setUniform1i("textureMode", textureMode);
 		shader.setUniform4f("globalTextureTransform", textureTransform[0], textureTransform[1], textureTransform[2], textureTransform[3]);
 	}
