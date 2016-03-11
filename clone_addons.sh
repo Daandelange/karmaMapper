@@ -31,6 +31,8 @@ ${PREFIX}runemadsen/ofxVLCRemote.git
 
 #${PREFIX}timscaffidi/ofxVideoRecorder.git -b 0.9.0
 ${PREFIX}timscaffidi/ofxVideoRecorder.git
+# for windows::::
+#${PREFIX}DomAmato/ofxVideoRecorder
 
 # will probably become: ${PREFIX}astellato/ofxSyphon.git -b OF-9.0
 ${PREFIX}asus4/ofxSyphon.git -b of_v0.9.0_OpenGL3

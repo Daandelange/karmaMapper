@@ -234,6 +234,7 @@ int basicShape::getGroupID() const{
 
 vector<string> basicShape::getTypes() const{
 	ofLogError(__FUNCTION__) << "This function has been called but doesnt return anything!";
+	return vector<string>();
 }
 
 bool basicShape::isType(const string _type) const {

@@ -2,8 +2,8 @@ ofxAbletonLiveSet
 ofxAssimpModelLoader
 ofxGui
 ofxGuiExtended
+ofxImGui
 ofxOsc
 ofxVideoRecorder
-ofxXmlSettings
 ofxVLCRemote
-ofxImGui
+ofxXmlSettings

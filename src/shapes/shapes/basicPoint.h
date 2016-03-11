@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include "ofMain.h"
 #include "KMSettings.h"
+#include "ofMain.h"
+
 
 // needed forward declaration
 class basicShape;

@@ -58,7 +58,7 @@ bool basicEffect::initialise(const animationParams& params){
 
 // Usefull ?
 bool basicEffect::initialise(){
-
+	return true;
 }
 
 // todo: update -(handled by)-> animation

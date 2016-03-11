@@ -159,6 +159,8 @@ bool lineDrawEffect::printCustomEffectGui(){
 		
 		ImGui::Separator();
 	}
+
+	return true;
 }
 
 // - - - - - - -

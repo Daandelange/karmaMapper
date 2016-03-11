@@ -98,7 +98,7 @@ public:
 	typedef std::pair<karmaFboLayer, list<basicEffect*> > fboWithEffects;
 	
 	// used with std::sort()
-	static struct orderByIndexFunctor {
+	struct orderByIndexFunctor {
 		bool operator()(const karmaFboLayer* a, const karmaFboLayer* b) const {
 			return a->getIndex() < b->getIndex();
 		};
@@ -107,7 +107,8 @@ public:
 		bool operator()(const karmaFboLayer::fboWithEffects& a, const karmaFboLayer::fboWithEffects& b) const{
 			return a.first.getIndex() < b.first.getIndex();
 		};
-	} orderByIndex;
+	};
+	static struct orderByIndexFunctor orderByIndex;
 	
 private:
 	// ensured to be deleted on destruction

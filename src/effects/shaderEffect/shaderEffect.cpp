@@ -364,6 +364,8 @@ bool shaderEffect::printCustomEffectGui(){
 		
 		
 	}
+
+	return true;
 }
 
 // - - - - - - -
@@ -485,7 +487,7 @@ void shaderEffect::registerShaderToyVariables(){
 	// set textures
 	if( bUseTextures ){
 		
-		float iChannelTime[(textures.size())];
+		float* iChannelTime = new float[(textures.size())];
 		//float iChannelResolution[(textures.size()*3)];
 		
 		int i=0;
@@ -509,6 +511,8 @@ void shaderEffect::registerShaderToyVariables(){
 		shader.setUniform3fv("iChannelResolution", shaderToyArgs.iChannelResolution, KM_ARRAY_SIZE(shaderToyArgs.iChannelResolution) );
 		shader.setUniform1i("textureMode", textureMode);
 		shader.setUniform4f("globalTextureTransform", textureTransform[0], textureTransform[1], textureTransform[2], textureTransform[3]);
+
+		delete[] iChannelTime;
 	}
 // These variables will be available in your shader :)
 	
