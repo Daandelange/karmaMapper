@@ -154,6 +154,9 @@ void animationParamsServer::_draw(ofEventArgs &e){
 		ofDrawBitmapString("elapsedTime: "+ ofToString(params.elapsedTime), ITEM_spacing_x, height+KM_AP_guiElementHeight/1.2);
 		height += (KM_AP_guiElementHeight + KM_AP_guiElementSpacing);
 		
+		ofDrawBitmapString("idleTimeMillis: "+ ofToString(params.idleTimeMillis), ITEM_spacing_x, height+KM_AP_guiElementHeight/1.2);
+		height += (KM_AP_guiElementHeight + KM_AP_guiElementSpacing);
+		
 		// strings
 		ofDrawBitmapString("uniqueID: "+ ofToString(params.uniqueID), ITEM_spacing_x, height+KM_AP_guiElementHeight/1.2);
 		height += (KM_AP_guiElementHeight + KM_AP_guiElementSpacing);

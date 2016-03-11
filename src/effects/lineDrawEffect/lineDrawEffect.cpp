@@ -40,35 +40,15 @@ bool lineDrawEffect::initialise(const animationParams& params){
 	return bInitialised;
 }
 
-bool lineDrawEffect::render(const animationParams &params){
+bool lineDrawEffect::render(karmaFboLayer& renderLayer, const animationParams &params){
 	if(!isReady()) return false;
 	
-//	GLint prevFbo = 0;
-//	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevFbo);
-	//	cout << result << endl;
+	renderLayer.begin();
 	
-	
-	fbo.begin(false);
-	
-//	{	// erase BG ?
-//		glEnable(GL_BLEND);
-//		glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-//		glBlendFunc(GL_ONE, GL_ONE);
-//
-//		ofSetColor(0.0f, 3.0f* 1-(ofClamp( mirReceiver::mirCache.zcr-0.2f, 0, 1.0f )) );
-//		ofFill();
-//		ofDrawRectangle(0,0, fbo.getWidth(), fbo.getHeight());
-//		
-//		glDisable(GL_BLEND);
-//	}
-	
-	ofPushStyle();
 	// set drawing environment
+	ofPushStyle();
 	ofSetColor( linesColor[0]*255, linesColor[1]*255, linesColor[2]*255, linesColor[3]*255);
 	ofNoFill();
-	
-	// tmp
-	//ofDrawRectangle(50,50, 200,200);
 	
 	// draw shape so GPU gets their vertex data
 	for(auto it=lines.begin(); it!=lines.end(); ++it){
@@ -77,28 +57,42 @@ bool lineDrawEffect::render(const animationParams &params){
 	ofPopStyle();
 	
 	// flush the pipeline! :D
-	fbo.end();
-	
-	// reset to previous fbo
-	//glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
-	
+	renderLayer.end(false);
+
 	// dirty fix for flipped texture when using double FBO
 	//fbo.getTexture().texData.bFlipTexture = true;
 	//fbo.getTexture().setTextureWrap( 1, -1);
 	//ofGetCurrentRenderer().get()->isVFlipped() << endl;
 	//ofGetCurrentRenderer().get()->setupGraphicDefaults();
 	
-	// draw fbo
-	fbo.draw(0,0);
-	
 	return true;
 }
 
 // updates shape data
-void lineDrawEffect::update(const animationParams& params){
+void lineDrawEffect::update(karmaFboLayer& renderLayer, const animationParams& params){
 	
 	// do basic Effect function
-	basicEffect::update( params );
+	basicEffect::update( renderLayer, params );
+	
+	if(bStressTestMode){
+		if( params.fps >= fStressTestTargetFPS){
+			fStressTestMultiplier += (params.idleTimeMillis/(1000.0/fStressTestTargetFPS))*fStressTestAddTolerance;
+			//cout << fStressTestMultiplier << endl;
+		}
+		else {
+			fStressTestMultiplier -= (fStressTestTargetFPS-params.fps)*fStressTestRemoveTolerance;
+		}
+		if(fStressTestMultiplier<0) fStressTestMultiplier=0;
+		
+		for(int i=0; i<fStressTestMultiplier; ++i){
+			
+			for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+				if( (*s)->isType("vertexShape") ){
+					lines.push_back( lineDrawEffectLine( (vertexShape*)*s, 1*fLineBeatDuration ) );
+				}
+			}
+		}
+	}
 	
 	// check for dead lines
 	for(auto it=lines.rbegin(); it!= lines.rend(); it--){
@@ -121,13 +115,19 @@ void lineDrawEffect::reset(){
 	
 	fLineBeatDuration = 1.0;
 	
+	bStressTestMode = true; // tmp
+	fStressTestMultiplier = 1;
+	fStressTestAddTolerance = 0.01;
+	fStressTestRemoveTolerance = 0.28;
+	fStressTestTargetFPS = 60;
+	
 	// do stuff
 	ofEnableAlphaBlending();
 	
-	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
-	fbo.begin();
-	ofClear(0,0,0,0); // clear all, including alpha
-	fbo.end();
+//	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
+//	fbo.begin();
+//	ofClear(0,0,0,0); // clear all, including alpha
+//	fbo.end();
 	
 	lines.clear();
 	
@@ -152,12 +152,46 @@ bool lineDrawEffect::printCustomEffectGui(){
 		
 		ImGui::Separator();
 		
-		ImGui::LabelText("Number of lines", "%u", 0 );
+		ImGui::LabelText("Number of lines", "%lu", lines.size() );
 		ImGui::ColorEdit4("Color", linesColor, true);
 		//ImGui::Checkbox("React to mirTempoEvents");
 		ImGui::SliderFloat("Line Duration (in beats)", &fLineBeatDuration, 1, 4);
 		
 		ImGui::Separator();
+		ImGui::Separator();
+		ImGui::TextWrapped("Controls");
+		
+		bool spawnSomeLines = false;
+		
+		if (ImGui::Button("Spawn some lines")) {
+			spawnSomeLines = true;
+		}
+		ImGui::SameLine();
+		static bool spawnCheckbox = false;
+		ImGui::Checkbox("Lock", &spawnCheckbox);
+		
+		if(isReady() && (spawnSomeLines || spawnCheckbox)){
+			ofScopedLock(effectMutex);
+			
+			for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+				if( (*s)->isType("vertexShape") ){
+					int duration = 2; // sec
+					lines.push_back( lineDrawEffectLine( (vertexShape*)*s, 1*fLineBeatDuration ) );
+				}
+			}
+		}
+		
+		ImGui::Separator();
+		
+		ImGui::Checkbox("Stress Test Mode", &bStressTestMode);
+		if(bStressTestMode){
+			ImGui::Indent();
+			ImGui::InputInt("fStressTestTargetFPS", &fStressTestTargetFPS);
+			ImGui::DragFloat("fStressTestMultiplier", &fStressTestMultiplier);
+			ImGui::SliderFloat("fStressTestAddTolerance", &fStressTestAddTolerance, 0.01, 10);
+			ImGui::SliderFloat("fStressTestRemoveTolerance", &fStressTestRemoveTolerance, 0.001, 10);
+			ImGui::Unindent();
+		}
 	}
 
 	return true;

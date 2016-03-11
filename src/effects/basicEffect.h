@@ -14,7 +14,12 @@
 #include "effectFactory.h"
 #include "ofxImGui.h"
 #include "shapesDB.h"
+#include "karmaFboLayer.h"
 //#include "shapesServer.h"
+
+namespace karmaThreadsSharedMemory {
+	
+}
 
 // Basic parent class for effects
 
@@ -76,9 +81,9 @@ public:
 	// global effect functions
 	virtual bool initialise(const animationParams& params);
 	virtual bool initialise();
-	virtual bool render(const animationParams& params);
-	virtual void update(const animationParams& params);
-	virtual void update();
+	virtual bool render(karmaFboLayer& renderLayer, const animationParams& params);
+	virtual void update(karmaFboLayer& renderLayer, const animationParams& params);
+	//virtual void update();
 	virtual void reset();
 	void enable();
 	void disable();
@@ -112,6 +117,8 @@ public:
 	//virtual void transitionOut();
 	//void updateTransitionState();
 	string effectFolder(string _file) const;
+	bool usesPingPong() const;
+	virtual bool setUsePingPong(const bool& _usePingpong);
 	
 	//void setShader(ofShader& _shader);
 	void updateBoundingBox();
@@ -148,6 +155,7 @@ protected:
 	bool bInitialised;
 	bool bIsLoading;
 	bool bShowGuiWindow;
+	bool bUsePingpong;
 	string effectName; // must stay unique
 	string shortStatus;
 	
@@ -160,9 +168,11 @@ protected:
 	//ofPlanePrimitive
 	ofMutex effectMutex;
 	
-private:
-	
-	
+//private:
+	// todo: implement something to make threads safer
+	// maybe a class like this to hold any shared data ?
+	// http://stackoverflow.com/a/13300836/58565
+	// or rather use ofThreadChannel ?
 };
 
 
@@ -172,6 +182,8 @@ namespace effect
 	void destroy(const basicEffect* comp);
 	vector< std::string > getAllEffectTypes();
 }
+
+
 
 #define GUIBoundShapesTitle "Bound Shapes"
 

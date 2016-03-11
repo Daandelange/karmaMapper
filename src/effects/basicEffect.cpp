@@ -63,9 +63,15 @@ bool basicEffect::initialise(){
 
 // todo: update -(handled by)-> animation
 // returns true if rendering succeeded
-bool basicEffect::render(const animationParams& params){
+// only swap the FBo if you also transfer the pixels
+bool basicEffect::render(karmaFboLayer& renderLayer, const animationParams& params){
 	ofScopedLock lock(effectMutex);
 	if( !isReady() ) return false;
+	
+	// only swap if you need access to the previous FBO's source
+	//renderLayer.swap(); // ping-pong!
+	
+	renderLayer.begin();
 	
 	// draw bounding box
 	ofSetColor( 255,0,0 );
@@ -77,13 +83,15 @@ bool basicEffect::render(const animationParams& params){
 		shapes[i]->sendToGPU();
 	}
 	
+	renderLayer.end();
+	
 	return true;
 }
 
 // like ofApp::update()
 // todo: update should receive parameters like update rate, time variables, etc.
 // todo: this should always be called in fact. imageGrainEffect::update() should be called by it.
-void basicEffect::update(const animationParams& params){
+void basicEffect::update(karmaFboLayer& renderLayer, const animationParams& params){
 	ofScopedLock lock(effectMutex);
 	
 	if( !isReady() ) return;
@@ -91,9 +99,9 @@ void basicEffect::update(const animationParams& params){
 }
 
 // Usefull ?
-void basicEffect::update(){
-	
-}
+//void basicEffect::update(){
+//	
+//}
 
 // resets all values
 void basicEffect::reset(){
@@ -112,6 +120,7 @@ void basicEffect::reset(){
 	bIsLoading = false;
 	bShowGuiWindow = false;
 	effectName = effectType;
+	bUsePingpong = false;
 	
 	overallBoundingBox = ofRectangle(0,0,0,0);
 }
@@ -254,6 +263,7 @@ bool basicEffect::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("effectName", getName() );
 	xml.addValue("enabled", bEnabled );
 	xml.addValue("effectIndex", effectIndex);
+	xml.addValue("showGuiWindow", bShowGuiWindow);
 	
 	// remember bound shapes
 	xml.addTag("boundShapes");
@@ -282,11 +292,8 @@ bool basicEffect::loadFromXML(ofxXmlSettings& xml){
 	effectName = xml.getValue("effectName", getType() );
 	xml.getValue("enabled", false )?enable():disable();
 	effectIndex = xml.getValue("effectIndex", 0);
-	
-	//initialise(animationParams.params);
-	
-	
-	
+	bShowGuiWindow = xml.getValue("showGuiWindow", false);
+
 	return true; // todo
 }
 
@@ -339,6 +346,14 @@ bool basicEffect::randomizePresets(){
 // formats URLS for getting files within the effect folder itself
 string basicEffect::effectFolder(string _file) const{
 	return ofToDataPath( ((string)"effects/").append(getType()).append("/").append(_file));
+}
+
+bool basicEffect::usesPingPong() const {
+	return bUsePingpong;
+}
+
+bool basicEffect::setUsePingPong(const bool& _usePingpong){
+	bUsePingpong = _usePingpong;
 }
 
 void basicEffect::updateBoundingBox(){

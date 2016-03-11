@@ -25,6 +25,7 @@
 #include "animationControllerEvents.h"
 #include "karmaFboLayer.h"
 #include "karmaUtilities.h"
+#include "ofxMSATimer.h"
 
 #include "OSCRouter.h"
 #include "mirReceiver.h"
@@ -122,6 +123,10 @@ protected:
 	list< karmaModule* > modules;
 	
 	shapesDB& scene;
+	
+	ofxMSATimer idleTimeTimer;
+	uint32_t currentIdleTime;
+	//ofxMSATimer appLoadTimer;
 	
 	//durationReceiver durationOSCReceiver;
 	

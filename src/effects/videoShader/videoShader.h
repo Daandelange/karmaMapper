@@ -24,6 +24,7 @@ struct animationParams;
 // todo: make video decoding threaded
 
 enum videoMode {
+	// note: each mode must have a unique key
 	VIDEO_MODE_FILE = 0, // read image from file
 	VIDEO_MODE_SYPHON = 1 // read movie from file
 };
@@ -39,8 +40,8 @@ public:
 	
 	// global effect functions
 	bool initialise(const animationParams& params);
-	bool render(const animationParams& params);
-	void update(const animationParams& params);
+	bool render(karmaFboLayer& renderLayer, const animationParams& params);
+	void update(karmaFboLayer& renderLayer, const animationParams& params);
 	void reset();
 	
 	// #########

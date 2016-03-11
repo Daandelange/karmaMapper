@@ -114,11 +114,10 @@ void fboRecorder::drawMenuEntry(){
 			ImGui::InputInt("Bitrate", &videoRecBitRate);
 			ImGui::InputInt("AA quality", &videoRecAA);
 			ImGui::InputInt("Target video FPS", &videoRecFPS);
-			ImGui::Checkbox("Show output", &videoRecShowOutput);
 			break;
 #ifdef KM_ENABLE_SYPHON
 		case VIDEOREC_MODE_SYPHON :
-			ImGui::TextWrapped("Syphon Settings");
+			ImGui::TextWrapped("Syphon Settings (not yet)");
 			break;
 #endif
 		default:
@@ -349,9 +348,9 @@ bool fboRecorder::endFrame(bool _showBuffer){
 	static ofTexture tmpTex;
 	int w = ofGetWidth();
 	int h = ofGetHeight();
-	//if(!tmpTex.isAllocated()){
+	if(!tmpTex.isAllocated()){
 		tmpTex.allocate( w, h, GL_RGBA );
-	//}
+	}
 	
 	switch(fboRecMode){
 		case VIDEOREC_MODE_FILE_H264 :

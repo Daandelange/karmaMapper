@@ -66,7 +66,7 @@ bool lineEffect::initialise(const animationParams& params){
 
 // update --> animation
 // overrule this function with your own
-bool lineEffect::render(const animationParams& params){
+bool lineEffect::render(karmaFboLayer& renderLayer, const animationParams& params){
 	
 	effectMutex.lock();
 	
@@ -113,10 +113,10 @@ bool lineEffect::render(const animationParams& params){
 	}
 }
 
-void lineEffect::update(const animationParams& params){
+void lineEffect::update(karmaFboLayer& renderLayer, const animationParams& params){
 	
 	
-	basicEffect::update(params);
+	basicEffect::update(renderLayer, params);
 	
 	ofScopedLock lock(effectMutex);
 	if(!isReady()) return;

@@ -40,7 +40,8 @@ bool imageShader::initialise(const animationParams& params){
 	return bInitialised;
 }
 
-bool imageShader::render(const animationParams &params){
+bool imageShader::render(karmaFboLayer& renderLayer, const animationParams &params){
+	
 	if(!isReady()) return false;
 	
 	
@@ -49,10 +50,10 @@ bool imageShader::render(const animationParams &params){
 }
 
 // updates shape data
-void imageShader::update(const animationParams& params){
+void imageShader::update(karmaFboLayer& renderLayer, const animationParams& params){
 	
 	// do basic Effect function
-	basicEffect::update( params );
+	basicEffect::update( renderLayer, params );
 	
 
 }

@@ -62,8 +62,6 @@ void lineDrawEffectLine::render(float state) {
 	
 	if( points.shape == nullptr || !points.shape->isReady() ) return;
 	
-	
-	
 	//float opacity = abs( (state*2)-1 );
 	float opacity = 1-(state);
 		

@@ -19,13 +19,25 @@ videoShader::videoShader(){
 }
 
 videoShader::~videoShader(){
+	
+	lock();
+	player.stop();
+	player.closeMovie();
+	unlock();
+	
 	//stopThread();
 	waitForThread(true);
+	
+	
+	
+	
 	
 //	ofRemoveListener(dir.events.serverAnnounced, this, &videoShader::syphonServerAnnounced);
 //	// not yet implemented
 //	//ofRemoveListener(dir.events.serverUpdated, this, &ofApp::serverUpdated);
 //	ofRemoveListener(dir.events.serverRetired, this, &videoShader::syphonServerRetired);
+	
+	
 }
 
 // - - - - - - -
@@ -45,8 +57,8 @@ bool videoShader::initialise(const animationParams& params){
 	return bInitialised;
 }
 
-bool videoShader::render(const animationParams &params){
-	if( !shaderEffect::render(params) ) return false;
+bool videoShader::render(karmaFboLayer& renderLayer, const animationParams &params){
+	if( !shaderEffect::render(renderLayer, params) ) return false;
 	
 //	if(videoMode==VIDEO_MODE_FILE){
 //		// tmp
@@ -62,10 +74,10 @@ bool videoShader::render(const animationParams &params){
 }
 
 // updates shape data
-void videoShader::update(const animationParams& params){
+void videoShader::update(karmaFboLayer& renderLayer, const animationParams& params){
 	
 	// do basic Effect function
-	shaderEffect::update( params );
+	shaderEffect::update( renderLayer, params );
 	
 	if( textures.size()>0 ){
 		if(videoMode==VIDEO_MODE_FILE ){
@@ -121,6 +133,7 @@ void videoShader::reset(){
 	// over-ride shader's reset
 	bUseShadertoyVariables = true;
 	bUseTextures = true;
+	setUsePingPong(false);
 	
 	playBackSpeed = 1.f;
 	videoMode = VIDEO_MODE_FILE;
@@ -478,6 +491,12 @@ void videoShader::threadedFunction(){
 	
 	while (isThreadRunning()) {
 		if(lock()){
+			if(!player.isLoaded()){
+				unlock();
+				stopThread();
+				return;
+			}
+			
 			if (!bUseThreadedFileDecoding){
 				unlock();
 				stopThread();
@@ -498,7 +517,7 @@ void videoShader::threadedFunction(){
 				}
 			}
 			unlock();
-			sleep(14); // limits CPU usage, todo: could be revised
+			sleep(14); // limits CPU usage, todo: could be revised #dirty
 		}
 	}
 	stopThread();

@@ -52,7 +52,7 @@ bool distortEffect::initialise(const animationParams& params){
 	return bInitialised;
 }
 
-bool distortEffect::render(const animationParams &params){
+bool distortEffect::render(karmaFboLayer& renderLayer, const animationParams &params){
 	// everything happens in the update!
 	//return;
 	
@@ -84,12 +84,12 @@ bool distortEffect::render(const animationParams &params){
 }
 
 // updates shape data
-void distortEffect::update(const animationParams& params){
+void distortEffect::update(karmaFboLayer& renderLayer, const animationParams& params){
 	
 	if(!isReady()) return;
 	
 	// do basic Effect function
-	basicEffect::update( params );
+	basicEffect::update( renderLayer, params );
 	
 	ofScopedLock lock(effectMutex);
 	

@@ -11,17 +11,29 @@ layout(origin_upper_left) in vec4 gl_FragCoord;// <-- pixel position (layout fix
 // in vec2 gl_PointCoord;// <-- position of the vertex that created this pixel
 // in float gl_FragDepth;// <-- gl_FragCoord.z, if DEPTH enabled
 
-// these are our textures from OF
-// depreciated for now #toberemoved
-uniform vec4 globalColor;
+// these are our textures from OF when drawing an image
+// depreciated for now #toberemoved ?
 uniform sampler2DRect tex0;
 uniform vec2 tex0Resolution; // w,h
 
 uniform float opacity;
 uniform float timeValX;
 
+// these are for the programmable pipeline system and are passed in
+// by default from OpenFrameworks
+uniform mat4 orientationMatrix;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform mat4 textureMatrix;
+uniform mat4 modelViewProjectionMatrix;
+uniform vec4 globalColor;
+
+// the line below asks karmaMapper::animator to send the current BG as a texture for FBo ping-pong
+// ### karmaMapper request pingPong
+uniform sampler2DRect pingPongTexture;
+
 // the line below asks karmaMapper::animator to send shaderToy variables
-// ### karmaMapper request shaderToyValues
+// ### karmaMapper request shaderToyVariables
 
 // set by karmaMapper
 uniform vec2 	fboCanvas; // w,h
@@ -29,6 +41,8 @@ uniform vec4 	shapeBoundingBox; // x,y,w,h
 uniform vec2 	shapeCenter; // x,y
 uniform int 	textureMode; // 0=scale to shape, 1=cover, 2=fill (clamed edge), 3=fill (repeat)
 uniform vec4 	globalTextureTransform; // position(x,y) scale(z, w)
+uniform vec2	resolution;
+uniform vec2	textureResolution;
 
 // the following line requests mir Data from karmaMapper::animator
 // ### karmaMapper request mirValues
@@ -41,10 +55,24 @@ uniform float mirBalance; // [-1.0 to +1.0]
 uniform float mirVolume; // [0.0 to 1.0+] // not yet
 uniform int mirSilence; // 0 or 1
 
+// shadertoy variables
+// ### karmaMapper request shaderToyValues
+// uniform vec3      		iResolution;           // viewport resolution (in pixels)
+// uniform float     		iGlobalTime;           // shader playback time (in seconds)
+// uniform float     		iTimeDelta;            // render time (in seconds)
+// uniform int       		iFrame;                // shader playback frame
+// uniform float     		iChannelTime[4];       // channel playback time (in seconds)
+// uniform vec3      		iChannelResolution[4]; // channel resolution (in pixels)
+// uniform vec4     		iMouse;                // mouse pixel coords. xy: current (if MLB down), zw: click
+// uniform sampler2DRect 	iChannel0;             // input channel. XX = 2D/Cube
+// uniform vec4      		iDate;                 // (year, month, day, time in seconds)
+// uniform float     		iSampleRate;           // sound sample rate (i.e., 44100)
+
 //uniform vec2 manualZoom; //*km slider(0.1,3.3,0.5679)
 
 // this comes from the vertex shader
 in vec2 texCoordVarying;
+in vec4 gl_FragCoord;
 
 // this is the output of the fragment shader
 out vec4 outputColor;
@@ -120,6 +148,7 @@ void main(){
 	//outputColor.b = mod(expression+0,3.0)/3.0;
 	outputColor.a = 1;
 
+	
 	//outputColor.b = outputColor.b * mod( dot(xy+xy.yx/(1000.0+xy+timeValX)+offset, xy), 1.0);
 	//outputColor.b = mod(offset, 100.0);
 	//outputColor.rgba = vec4(outputColor.r*outputColor.b,outputColor.r*outputColor.b,outputColor.r*outputColor.b,1);

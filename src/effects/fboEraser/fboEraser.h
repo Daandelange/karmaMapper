@@ -1,8 +1,8 @@
 //
-//  distortEffect.h
+//  fboEraser.h
 //  karmaMapper
 //
-//  Created by Daan de Lange on 12/3/14.
+//  Created by Daan de Lange on 10/10/15.
 //
 //
 //
@@ -10,20 +10,19 @@
 #pragma once
 
 #include "ofMain.h"
-#include "basicShape.h"
-#include "vertexShape.h"
+#include "shapes.h"
 #include "basicEffect.h"
 #include "animationParams.h"
 #include "mirReceiver.h"
 
 struct animationParams;
 
-class distortEffect : public basicEffect {
+class fboEraser : public basicEffect {
 	
 public:
 	// constructors
-	distortEffect();
-	~distortEffect();
+	fboEraser();
+	~fboEraser();
 	
 	// global effect functions
 	bool initialise(const animationParams& params);
@@ -40,25 +39,18 @@ public:
 	virtual bool saveToXML(ofxXmlSettings& xml ) const;
 	virtual bool loadFromXML(ofxXmlSettings& xml);
 	
-	// controller functions
-	bool randomizePresets();
-	
 	virtual void tempoEventListener(mirTempoEventArgs &_args);
 	
-	
 protected:
-	bool bVariateInSeason;
-	int seasonVariation; // season number
-	//int
-	bool bReactToBpm;
-	int BPMMetronom;
-	float BPMMagnitude;
-	float BPMCurrentMagnitude;
-	
+	bool bClearAlways;
+	float fClearAlwaysOpacity;
+	bool bClearOnMir;
+	float fClearOnMirOpacity;
+	float fClearOnMirValue;
 	
 private:
 	
 	
 };
 
-#define GUIDistortPanel "Distorsion Effect"
+#define GUIfboEraserPanel "Line Draw"
