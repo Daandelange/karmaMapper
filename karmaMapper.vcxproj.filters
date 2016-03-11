@@ -25,6 +25,12 @@
     <ClCompile Include="src\effects\emptyEffect.cpp">
       <Filter>src\effects</Filter>
     </ClCompile>
+    <ClCompile Include="src\effects\fboEraser\fboEraser.cpp">
+      <Filter>src\effects\fboEraser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\effects\gpuGlitchEffect\gpuGlitchEffect.cpp">
+      <Filter>src\effects\gpuGlitchEffect</Filter>
+    </ClCompile>
     <ClCompile Include="src\effects\imageBeatEffect.cpp">
       <Filter>src\effects</Filter>
     </ClCompile>
@@ -268,6 +274,9 @@
     <ClCompile Include="..\..\..\addons\ofxImGui\src\ofxImGui.cpp">
       <Filter>addons\ofxImGui\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.cpp">
+      <Filter>addons\ofxMSATimer\src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp">
       <Filter>addons\ofxOsc\src</Filter>
     </ClCompile>
@@ -335,6 +344,12 @@
     </Filter>
     <Filter Include="src\effects\distortEffect">
       <UniqueIdentifier>{08743A3B-861B-0BEB-E8B7-5695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\effects\fboEraser">
+      <UniqueIdentifier>{9FF02AE7-BBB7-6CE1-E64C-B84A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\effects\gpuGlitchEffect">
+      <UniqueIdentifier>{8FC2A589-BB96-DCCC-325B-7E0F}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\effects\imageShader">
       <UniqueIdentifier>{D54A3ABF-F02C-34AA-285D-35C4}</UniqueIdentifier>
@@ -438,6 +453,12 @@
     <Filter Include="addons\ofxImGui\src">
       <UniqueIdentifier>{18028A43-13D3-1DD5-471A-BE87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="addons\ofxMSATimer">
+      <UniqueIdentifier>{FA2C7F81-95AD-913A-95EE-6D67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMSATimer\src">
+      <UniqueIdentifier>{21227B69-34BA-DC94-65C0-E080}</UniqueIdentifier>
+    </Filter>
     <Filter Include="addons\ofxOsc">
       <UniqueIdentifier>{D91DCA33-6E5D-4481-2AEC-9FBB}</UniqueIdentifier>
     </Filter>
@@ -517,6 +538,12 @@
     </ClInclude>
     <ClInclude Include="src\effects\emptyEffect.h">
       <Filter>src\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effects\fboEraser\fboEraser.h">
+      <Filter>src\effects\fboEraser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\effects\gpuGlitchEffect\gpuGlitchEffect.h">
+      <Filter>src\effects\gpuGlitchEffect</Filter>
     </ClInclude>
     <ClInclude Include="src\effects\imageBeatEffect.h">
       <Filter>src\effects</Filter>
@@ -916,6 +943,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxImGui\src\ThemeTest.h">
       <Filter>addons\ofxImGui\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.h">
+      <Filter>addons\ofxMSATimer\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h">
       <Filter>addons\ofxOsc\src</Filter>

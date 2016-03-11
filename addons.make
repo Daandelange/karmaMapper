@@ -3,6 +3,7 @@ ofxAssimpModelLoader
 ofxGui
 ofxGuiExtended
 ofxImGui
+ofxMSATimer
 ofxOsc
 ofxVideoRecorder
 ofxVLCRemote

@@ -53,7 +53,7 @@ bool gpuGlitchEffect::initialise(const animationParams& params){
 }
 
 bool gpuGlitchEffect::render(karmaFboLayer& renderLayer, const animationParams &params){
-	
+	return true;
 }
 
 // updates shape data
@@ -108,6 +108,7 @@ bool gpuGlitchEffect::printCustomEffectGui(){
 	
 	shaderEffect::printCustomEffectGui();
 	
+	return true;
 }
 
 // - - - - - - -

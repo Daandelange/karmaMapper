@@ -354,6 +354,8 @@ bool basicEffect::usesPingPong() const {
 
 bool basicEffect::setUsePingPong(const bool& _usePingpong){
 	bUsePingpong = _usePingpong;
+
+	return true;
 }
 
 void basicEffect::updateBoundingBox(){
