@@ -31,8 +31,8 @@ public:
 	
 	// global effect functions
 	bool initialise(const animationParams& params);
-	bool render(const animationParams& params);
-	void update(const animationParams& params);
+	bool render(karmaFboLayer& renderLayer, const animationParams& params);
+	void update(karmaFboLayer& renderLayer, const animationParams& params);
 	void reset();
 	
 	// #########

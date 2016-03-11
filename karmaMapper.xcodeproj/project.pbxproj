@@ -64,6 +64,9 @@
 		8529F1F21C611A7D00949E5B /* karmaConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1EF1C611A7D00949E5B /* karmaConsole.cpp */; };
 		8529F1F81C6139D200949E5B /* lineDrawEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1F41C6139D200949E5B /* lineDrawEffect.cpp */; };
 		8529F1F91C6139D200949E5B /* lineDrawEffectLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1F61C6139D200949E5B /* lineDrawEffectLine.cpp */; };
+		85382FDC1C90DB1300D09E5E /* ofxMSATimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85382FDA1C90DB1300D09E5E /* ofxMSATimer.cpp */; };
+		85382FDD1C90DB1300D09E5E /* ofxMSATimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85382FDA1C90DB1300D09E5E /* ofxMSATimer.cpp */; };
+		85382FE11C90F6B900D09E5E /* gpuGlitchEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85382FDF1C90F6B900D09E5E /* gpuGlitchEffect.cpp */; };
 		853CEC331C3AAD3D0030BF5D /* BaseEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853CEC1E1C3AAD3D0030BF5D /* BaseEngine.cpp */; };
 		853CEC341C3AAD3D0030BF5D /* BaseTheme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853CEC201C3AAD3D0030BF5D /* BaseTheme.cpp */; };
 		853CEC351C3AAD3D0030BF5D /* EngineGLFW.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853CEC221C3AAD3D0030BF5D /* EngineGLFW.cpp */; };
@@ -160,6 +163,7 @@
 		85999DD41C537F6600786707 /* fullScreenShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85999DD21C537F6600786707 /* fullScreenShape.cpp */; };
 		85999DD51C537F6600786707 /* fullScreenShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85999DD21C537F6600786707 /* fullScreenShape.cpp */; };
 		85E773091B965980003AF890 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
+		85FED3AC1C8F1AD800038AA0 /* fboEraser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85FED3AA1C8F1AD800038AA0 /* fboEraser.cpp */; };
 		879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BFFBBF4CC43DEE890B3C3E /* OscTypes.cpp */; };
 		8DED5056525646FA71980866 /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EDE55D82BD962DAC0E94B708 /* ofxAssimpModelLoader.cpp */; };
 		8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81967292BFC87A0144BD32C6 /* ofxOscSender.cpp */; };
@@ -327,6 +331,10 @@
 		8529F1F61C6139D200949E5B /* lineDrawEffectLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineDrawEffectLine.cpp; sourceTree = "<group>"; };
 		8529F1F71C6139D200949E5B /* lineDrawEffectLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineDrawEffectLine.h; sourceTree = "<group>"; };
 		852F59551C7CDF0D00EB0192 /* animationControllerEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = animationControllerEvents.h; path = core/animationControllerEvents.h; sourceTree = "<group>"; };
+		85382FDA1C90DB1300D09E5E /* ofxMSATimer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMSATimer.cpp; sourceTree = "<group>"; };
+		85382FDB1C90DB1300D09E5E /* ofxMSATimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxMSATimer.h; sourceTree = "<group>"; };
+		85382FDF1C90F6B900D09E5E /* gpuGlitchEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gpuGlitchEffect.cpp; sourceTree = "<group>"; };
+		85382FE01C90F6B900D09E5E /* gpuGlitchEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gpuGlitchEffect.h; sourceTree = "<group>"; };
 		853CEC1E1C3AAD3D0030BF5D /* BaseEngine.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BaseEngine.cpp; sourceTree = "<group>"; };
 		853CEC1F1C3AAD3D0030BF5D /* BaseEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseEngine.h; sourceTree = "<group>"; };
 		853CEC201C3AAD3D0030BF5D /* BaseTheme.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BaseTheme.cpp; sourceTree = "<group>"; };
@@ -415,6 +423,8 @@
 		85999DD21C537F6600786707 /* fullScreenShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fullScreenShape.cpp; path = shapes/shapes/fullScreenShape.cpp; sourceTree = "<group>"; };
 		85999DD31C537F6600786707 /* fullScreenShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fullScreenShape.h; path = shapes/shapes/fullScreenShape.h; sourceTree = "<group>"; };
 		85F5188D1C833EF8002E01D5 /* karmaUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaUtilities.h; path = core/karmaUtilities.h; sourceTree = "<group>"; };
+		85FED3AA1C8F1AD800038AA0 /* fboEraser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fboEraser.cpp; sourceTree = "<group>"; };
+		85FED3AB1C8F1AD800038AA0 /* fboEraser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fboEraser.h; sourceTree = "<group>"; };
 		87F26B4B24CBD428AD9EEBAA /* ofxBaseGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxBaseGui.h; path = ../../../addons/ofxGui/src/ofxBaseGui.h; sourceTree = SOURCE_ROOT; };
 		883A95C78655CFEEA37EF9A1 /* ofxVideoRecorder.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxVideoRecorder.cpp; path = ../../../addons/ofxVideoRecorder/src/ofxVideoRecorder.cpp; sourceTree = SOURCE_ROOT; };
 		89449E3044D456F7DE7BEA14 /* ofxPanel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxPanel.h; path = ../../../addons/ofxGui/src/ofxPanel.h; sourceTree = SOURCE_ROOT; };
@@ -733,6 +743,34 @@
 			path = effects/lineDrawEffect;
 			sourceTree = "<group>";
 		};
+		85382FD81C90DB1300D09E5E /* ofxMSATimer */ = {
+			isa = PBXGroup;
+			children = (
+				85382FD91C90DB1300D09E5E /* src */,
+			);
+			name = ofxMSATimer;
+			sourceTree = "<group>";
+		};
+		85382FD91C90DB1300D09E5E /* src */ = {
+			isa = PBXGroup;
+			children = (
+				85382FDA1C90DB1300D09E5E /* ofxMSATimer.cpp */,
+				85382FDB1C90DB1300D09E5E /* ofxMSATimer.h */,
+			);
+			name = src;
+			path = ../../../addons/ofxMSATimer/src;
+			sourceTree = "<group>";
+		};
+		85382FDE1C90F6B900D09E5E /* gpuGlitchEffect */ = {
+			isa = PBXGroup;
+			children = (
+				85382FDF1C90F6B900D09E5E /* gpuGlitchEffect.cpp */,
+				85382FE01C90F6B900D09E5E /* gpuGlitchEffect.h */,
+			);
+			name = gpuGlitchEffect;
+			path = effects/gpuGlitchEffect;
+			sourceTree = "<group>";
+		};
 		853CEC1C1C3AAD3D0030BF5D /* ofxImGui */ = {
 			isa = PBXGroup;
 			children = (
@@ -986,6 +1024,16 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		85FED3A91C8F1AD800038AA0 /* fboEraser */ = {
+			isa = PBXGroup;
+			children = (
+				85FED3AA1C8F1AD800038AA0 /* fboEraser.cpp */,
+				85FED3AB1C8F1AD800038AA0 /* fboEraser.h */,
+			);
+			name = fboEraser;
+			path = effects/fboEraser;
+			sourceTree = "<group>";
+		};
 		86D2677079A3AF4A5A88E29A /* oscpack */ = {
 			isa = PBXGroup;
 			children = (
@@ -1073,6 +1121,7 @@
 				851FA9841B9321FD00F94851 /* ofxGuiExtended */,
 				858D33311BEBF220003E49C7 /* ofxSyphon */,
 				853CEC1C1C3AAD3D0030BF5D /* ofxImGui */,
+				85382FD81C90DB1300D09E5E /* ofxMSATimer */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -1139,7 +1188,9 @@
 				854EA7A91C6771EF009A99DB /* imageShader */,
 				8529F1F31C6139D200949E5B /* lineDrawEffect */,
 				8557B83C1BC5B4ED00DAC695 /* lineEffect */,
+				85382FDE1C90F6B900D09E5E /* gpuGlitchEffect */,
 				854045ED1BC9643B005C25D2 /* shaderEffect */,
+				85FED3A91C8F1AD800038AA0 /* fboEraser */,
 				854EA7AC1C6771EF009A99DB /* videoShader */,
 			);
 			name = effects;
@@ -1383,6 +1434,7 @@
 				855451EF1B91FB4C00A36079 /* ofxSliderGroup.cpp in Sources */,
 				855451F01B91FB4C00A36079 /* ofxToggle.cpp in Sources */,
 				855451F11B91FB4C00A36079 /* ofxOscBundle.cpp in Sources */,
+				85382FDD1C90DB1300D09E5E /* ofxMSATimer.cpp in Sources */,
 				855451F21B91FB4C00A36079 /* ofxOscMessage.cpp in Sources */,
 				855451F31B91FB4C00A36079 /* ofxOscParameterSync.cpp in Sources */,
 				855451F41B91FB4C00A36079 /* ofxOscReceiver.cpp in Sources */,
@@ -1446,6 +1498,7 @@
 				8529F1F81C6139D200949E5B /* lineDrawEffect.cpp in Sources */,
 				483FA4F6D5FA6422C559B1F5 /* ofxAssimpMeshHelper.cpp in Sources */,
 				8DED5056525646FA71980866 /* ofxAssimpModelLoader.cpp in Sources */,
+				85382FE11C90F6B900D09E5E /* gpuGlitchEffect.cpp in Sources */,
 				858D33451BEBF220003E49C7 /* ofxSyphonServer.mm in Sources */,
 				B8846EF8E504895A4A9EFEC0 /* ofxAssimpTexture.cpp in Sources */,
 				8529F1F11C611A7D00949E5B /* karmaConsole.cpp in Sources */,
@@ -1484,6 +1537,7 @@
 				851FA9B11B9321FD00F94851 /* ofxMinimalToggle.cpp in Sources */,
 				85557B6E1C650D0B0091052C /* mirReceiver.cpp in Sources */,
 				ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */,
+				85382FDC1C90DB1300D09E5E /* ofxMSATimer.cpp in Sources */,
 				67FE4C7B15C2F0478C8126C2 /* NetworkingUtils.cpp in Sources */,
 				510CAFE035E576A4E1502D52 /* UdpSocket.cpp in Sources */,
 				854045F01BC9643B005C25D2 /* shaderEffect.cpp in Sources */,
@@ -1497,6 +1551,7 @@
 				851FA9B01B9321FD00F94851 /* ofxMinimalButton.cpp in Sources */,
 				851FA9AF1B9321FD00F94851 /* ofxMasterSlaveControl.cpp in Sources */,
 				851FA9B41B9321FD00F94851 /* ofxTabbedPages.cpp in Sources */,
+				85FED3AC1C8F1AD800038AA0 /* fboEraser.cpp in Sources */,
 				85557B6D1C650D0B0091052C /* durationReceiver.cpp in Sources */,
 				8574FEB01BC13BC20058E916 /* shapeFactory.cpp in Sources */,
 				851FA9B51B9321FD00F94851 /* ofxValuePlotter.cpp in Sources */,
@@ -1544,7 +1599,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
+					../../../addons/ofxSyphon/libs/Syphon/lib/osx,
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1629,7 +1684,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
+					../../../addons/ofxSyphon/libs/Syphon/lib/osx,
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -1873,7 +1928,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
+					../../../addons/ofxSyphon/libs/Syphon/lib/osx,
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1959,7 +2014,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx,
+					../../../addons/ofxSyphon/libs/Syphon/lib/osx,
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;

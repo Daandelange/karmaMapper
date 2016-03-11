@@ -61,6 +61,7 @@ struct animationParams {
 	elapsedUpdates(0),
 	elapsedFrames(0),
 	elapsedTime(0.f),
+	idleTimeMillis(0),
 	uniqueID(""),
 	uniqueIDAlt(""),
 	userChain("")
@@ -70,6 +71,7 @@ struct animationParams {
 	unsigned int elapsedUpdates;
 	unsigned int elapsedFrames;
 	float elapsedTime;
+	uint32_t idleTimeMillis;
 	
 	// used for customising effects and synchronising their
 	string uniqueID; // hex string

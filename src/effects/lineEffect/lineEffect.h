@@ -27,8 +27,8 @@ public:
 	~lineEffect();
 
 	virtual bool initialise(const animationParams& params);
-	virtual bool render(const animationParams& params);
-	virtual void update(const animationParams& params);
+	virtual bool render(karmaFboLayer& renderLayer, const animationParams& params);
+	virtual void update(karmaFboLayer& renderLayer, const animationParams& params);
 	virtual void reset();
 	
 	//bool grabSomeShapes();

@@ -533,7 +533,6 @@ bool animationController::loadConfiguration(const string& _file){
 					
 					ofLogVerbose("animationController::loadConfiguration") << "Loaded layer #"<< l << "/"<< numLayers <<" ("<< curFbo.getName() << ") from file [" << _file << "] with [" << numEffects << " effects] ( " << failedEffects.size() << "failed )";
 					
-					configXML.popTag(); // pop effects
 					
 					ofLogVerbose("animationController::loadConfiguration") << "Created layer "<< l <<" ("<< curFbo.getName() << ")";
 
@@ -547,8 +546,6 @@ bool animationController::loadConfiguration(const string& _file){
 				else {
 					ofLogWarning("animationController::loadConfiguration") << "Can't load layer #" << l;
 				}
-				
-				
 				
 			} // end for(layer)
 			
@@ -744,6 +741,7 @@ bool animationController::saveConfiguration( const string& _filePath ){
 				failedLayers.push_back(l);
 			}
 		}
+		sceneXML.popTag(); // pop layers
 	}
 	
 	// save all modules data
@@ -991,11 +989,11 @@ void animationController::update(ofEventArgs &event){
 	}
 	
 	// update effects (run mode)
-	for(auto layer = layers.begin(); layer!=layers.end(); ++layer){
+	for(auto layer = layers.rbegin(); layer!=layers.rend(); ++layer){
 		list<basicEffect*>& layerEffects = layer->second;
 		
-		for(auto e=layerEffects.begin(); e!=layerEffects.end(); ++e){
-			(*e)->update(animationParams.params);
+		for(auto e=layerEffects.rbegin(); e!=layerEffects.rend(); ++e){
+			(*e)->update(layer->first, animationParams.params);
 		}
 	}
 	
@@ -1007,6 +1005,10 @@ void animationController::update(ofEventArgs &event){
 
 void animationController::draw(ofEventArgs& event){
 	if(!isEnabled()) return;
+	
+	// set idle time
+	animationParams.params.idleTimeMillis = idleTimeTimer.getElapsedMillis();
+	
 	//karmaControllerDrawEventArgs tmp;
 	static karmaControllerDrawEventArgs drawEventArgs(animationParams.params);
 	drawEventArgs.params = animationParams.params;
@@ -1031,21 +1033,30 @@ void animationController::draw(ofEventArgs& event){
 //		}
 	}
 	
-	else for(auto layer = layers.begin(); layer!=layers.end(); ++layer){
+	else for(auto layer = layers.rbegin(); layer!=layers.rend(); ++layer){
 		list<basicEffect*>& layerEffects = layer->second;
-	
+		
+		// prevents screen flickering using double FBO + uneven nb of effects
+		layer->first.resetSwap();
+		
+		//layer->first.begin();
 		// draw effects
-		for(auto e=layerEffects.begin(); e!=layerEffects.end(); ++e){
-			(*e)->render(animationParams.params);
+		for(auto e=layerEffects.rbegin(); e!=layerEffects.rend(); ++e){
+			(*e)->render(layer->first, animationParams.params);
+			
 		}
+		//cout << "DONE --- Drawing fbo.texture: "<<" // " << layer->first.getFBO().getIdDrawBuffer()<<endl;
+		layer->first.getSrcTexture().draw(0,0);
+		
+		// uncomment to view layers
+		//layer->first.getSrcTextureIndex(0).draw( ofGetWidth()-500, ofGetHeight()-200*(layer->first.getIndex()+1), 250,200);
+		//layer->first.getSrcTextureIndex(1).draw( ofGetWidth()-250, ofGetHeight()-200*(layer->first.getIndex()+1), 250,200);
 	}
 	
 	// notify end draw (before GUI)
 	drawEventArgs.params = animationParams.params;
 	drawEventArgs.stage = DRAW_EVENT_AFTER_DRAW;
 	ofNotifyEvent(animationController::karmaControllerAfterDraw, drawEventArgs, this);
-	
-	//recorder.endFrame(true);
 	
 	
 	// draw gui stuff
@@ -1063,6 +1074,8 @@ void animationController::draw(ofEventArgs& event){
 			
 			ImGui::MenuItem("FPS", ofToString( ofGetFrameRate() ).c_str() );
 			
+			// Could be useful:
+			// https://github.com/armadillu/ofxTimeMeasurements.git
 			ImGui::MenuItem("Application load", "#todo" );
 			
 			char buffer[26];
@@ -1074,8 +1087,13 @@ void animationController::draw(ofEventArgs& event){
 				ImGui::SameLine();
 				if( ImGui::Button("Set") ){
 					ofSetWindowShape(int2[0], int2[1]);
-					int2[0] = ofGetWidth();
-					int2[1] = ofGetHeight();
+					
+					//int2[0] = ofGetWidth();
+					//int2[1] = ofGetHeight();
+					
+					for(auto l=layers.begin(); l!=layers.end(); ++l){
+						l->first.allocate(int2[0], int2[1]);
+					}
 				}
 				ImGui::EndMenu();
 			}
@@ -1380,6 +1398,7 @@ void animationController::draw(ofEventArgs& event){
 								doSave = true;
 							}
 							ImGui::SameLine();
+						
 							if(ImGui::Button("Set###setLayerName")){
 								doSave=true;
 							}
@@ -1446,6 +1465,17 @@ void animationController::draw(ofEventArgs& event){
 						
 						ImGui::TextWrapped("Effects on layer: %lu", layerEffects.size());
 						
+						
+						// display FBO ?
+						ImGui::Button("Show Layer FBO");
+						if(ImGui::IsItemHovered()){
+							// todo: this should be drawn after imgui
+							ofVec2f pos = ImGui::GetCursorPos();
+							pos += ImGui::GetWindowPos();
+							pos.y -= ImGui::GetItemRectSize().y;
+							fboLayer.getSrcTexture().draw(pos.x, pos.y,200,200);
+						}
+						
 						// add new effect on layer stuff
 						{
 							if( ImGui::Button("Add new effect...") ){
@@ -1460,7 +1490,8 @@ void animationController::draw(ofEventArgs& event){
 										basicEffect* e = effect::create(it->first);
 										if( e != nullptr ){
 											e->initialise(animationParams.params);
-											layerEffects.push_back( e );
+											layerEffects.push_front( e );
+											e->enable();
 										}
 									}
 								}
@@ -1677,8 +1708,9 @@ void animationController::draw(ofEventArgs& event){
 					if (ImGui::Button("x")) {
 						//auto it = sdt::find(modules.begin(), modules.end(), *m);
 						//if(
+						auto tmpIt = std::prev(m);
 						modules.erase(m);
-						--m;
+						m=tmpIt;
 						ImGui::PopID();
 						continue;
 					}
@@ -1766,6 +1798,9 @@ void animationController::draw(ofEventArgs& event){
 	
 	gui.end();
 	ofPopStyle();
+	
+	// fire idle timer at end of draw
+	idleTimeTimer.setStartTime();
 }
 
 // - - - - - - - -

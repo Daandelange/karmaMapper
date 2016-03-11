@@ -1,8 +1,8 @@
 //
-//  distortEffect.h
+//  gpuGlitchEffect.h
 //  karmaMapper
 //
-//  Created by Daan de Lange on 12/3/14.
+//  Created by Daan de Lange on 10/10/15.
 //
 //
 //
@@ -14,16 +14,22 @@
 #include "vertexShape.h"
 #include "basicEffect.h"
 #include "animationParams.h"
-#include "mirReceiver.h"
+#include "shaderEffect.h"
+#include "karmaUtilities.h"
+
+#define gpuGlitchEffectDefaultFrag "../shaderEffect/pingPongShader.frag"
+#define gpuGlitchEffectDefaultVert "../shaderEffect/pingPongShader.vert"
 
 struct animationParams;
 
-class distortEffect : public basicEffect {
+// todo: add a GPU memory extraction feature for stats and handling no more GPU allocatable errors.
+
+class gpuGlitchEffect : public shaderEffect {
 	
 public:
 	// constructors
-	distortEffect();
-	~distortEffect();
+	gpuGlitchEffect();
+	~gpuGlitchEffect();
 	
 	// global effect functions
 	bool initialise(const animationParams& params);
@@ -40,20 +46,7 @@ public:
 	virtual bool saveToXML(ofxXmlSettings& xml ) const;
 	virtual bool loadFromXML(ofxXmlSettings& xml);
 	
-	// controller functions
-	bool randomizePresets();
-	
-	virtual void tempoEventListener(mirTempoEventArgs &_args);
-	
-	
 protected:
-	bool bVariateInSeason;
-	int seasonVariation; // season number
-	//int
-	bool bReactToBpm;
-	int BPMMetronom;
-	float BPMMagnitude;
-	float BPMCurrentMagnitude;
 	
 	
 private:
@@ -61,4 +54,4 @@ private:
 	
 };
 
-#define GUIDistortPanel "Distorsion Effect"
+#define GUIGpuGlitchPanel "Shaders"

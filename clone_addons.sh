@@ -15,6 +15,7 @@ fi
 ${PREFIX}daandelange/ofxAbletonLiveSet.git
 
 ${PREFIX}Flightphase/ofxTextInputField.git
+#${PREFIX}Flightphase/ofxTextInputField.git -b develop
 echo "If you're using linux, please make sure you checkout the develop branch of ofxTextInputField"
 
 ${PREFIX}frauzufall/ofxGuiExtended.git
@@ -35,5 +36,5 @@ ${PREFIX}timscaffidi/ofxVideoRecorder.git
 # will probably become: ${PREFIX}astellato/ofxSyphon.git -b OF-9.0
 ${PREFIX}asus4/ofxSyphon.git -b of_v0.9.0_OpenGL3
 
-${PREFIX}Flightphase/ofxTextInputField.git -b develop
+${PREFIX}memo/ofxMSATimer.git
 

@@ -6,6 +6,8 @@
 //
 //	Render layer ready for ping-ponging & more. :)
 //
+//	Freely inspired from code from
+//	https://github.com/openframeworks/openFrameworks/blob/master/apps/devApps/fboTester/src/demo4.h
 
 #pragma once
 
@@ -39,27 +41,93 @@ public:
 	
 	void allocate( int _width, int _height, int _internalformat = GL_RGBA){
 		
-		for(int i = 0; i < 2; i++){
-			frameBuffers[i].allocate(_width,_height, _internalformat );
-		}
+		ofFbo::Settings s;
+		s.width				= _width;
+		s.height			= _height;
+		s.numColorbuffers	= 2;// gets us 2 textures for ping-pong
+		s.numSamples		= 0;// ? ofFbo::maxSamples() : 0;
+		s.internalformat	= _internalformat;
+		
+		fbo.allocate(s);
+		
+//		for(int i = 0; i < 2; i++){
+//			frameBuffers[i].allocate(s);
+//			//frameBuffers[i].allocate(_width,_height, _internalformat );
+//		}
+		
+		
+		width = _width;
+		height = _height;
 		
 		clear();
 		
 		// Set everything to 0
 		switched = false;
-		dst = &frameBuffers[1];
-		src = &frameBuffers[0];
+		//dst = &frameBuffers[1];
+		//src = &frameBuffers[0];
+		
+		MSAA = s.numSamples;
+	}
+	
+	void begin() {
+		
+		fbo.begin();
+		fbo.setActiveDrawBuffer(switched?0:1);
+		
+		// tmp disabled
+		if(false && getMSAA()>0){
+			fbo.end();
+			fbo.updateTexture(switched?0:1);
+			fbo.begin();
+		}
+		//glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + ((switched?0:1)));	// write to this texture
+		//cout << "drawing to fbo.texture: "<<(switched?0:1)<<" // " << fbo.getIdDrawBuffer()<<" // " << fbo.getId()<<endl;
+	}
+	
+	void end(const bool& displayOutput=true){
+		fbo.end();
+		
+		if(displayOutput){
+			draw();
+		}
+	}
+	
+	void draw(){
+		glColor3f(1, 1, 1);
+		fbo.draw(0,0);
 	}
 	
 	void swap(){
-		src = &frameBuffers[(switched?0:1)];
-		dst = &frameBuffers[(switched?1:0)];
+		//src = &frameBuffers[(switched?0:1)];
+		//dst = &frameBuffers[(switched?1:0)];
 		switched = !switched;
+		//cout << "Switched: "<< switched << endl;
+		
+		// clear new dest buffer
+		fbo.begin();
+		fbo.setActiveDrawBuffer(switched?0:1);
+		//glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + (switched?0:1));	// write to this texture
+		ofClear(0,0);
+		fbo.end();
+	}
+	
+	void resetSwap(){
+		switched = false;
+		//cout << "reset" << endl;
 	}
 	
 	void set(const string& _name, int _layerIndex){
 		layerName = _name;
 		layerIndex = _layerIndex;
+	}
+	
+	// tmp for debugging
+	ofFbo& getFBO(){
+		return fbo;
+	}
+	
+	const int& getMSAA(){
+		return MSAA;
 	}
 	
 	const string& getName() const {
@@ -75,24 +143,53 @@ public:
 	}
 	
 	bool isAllocated() const {
-		return frameBuffers[0].isAllocated() && frameBuffers[1].isAllocated();
+		return fbo.isAllocated();
+	}
+	
+	ofTexture& getSrcTexture() {
+		return (fbo.getTexture(switched?0:1));
+	}
+	
+	ofTexture& getDstTexture() {
+		//cout << "Dst = " << (switched?1:0) << endl;
+		return (fbo.getTexture(switched?1:0));
+	}
+	
+	ofTexture& getSrcTextureIndex(int i) {
+		return (fbo.getTexture(i));
+	}
+	
+	int getHeight() const {
+		return height;
+	}
+	
+	int getWidth() const {
+		return width;
 	}
 	
 	void clear(int _alpha=255){
-		for(int i = 0; i < 2; i++){
-			frameBuffers[i].begin();
-			ofClear(0,_alpha);
-			frameBuffers[i].end();
-		}
+//		for(int i = 0; i < 2; i++){
+//			frameBuffers[i].begin();
+//			ofClear(0,_alpha);
+//			frameBuffers[i].end();
+//		}
+		fbo.begin();
+		
+		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + 1);	// write to this texture
+		ofClear(0,_alpha);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + 0);	// write to this texture
+		ofClear(0,_alpha);
+		
+		fbo.end();
 	}
 	
-	ofFbo& operator[]( int n ){
-		return frameBuffers[n];
-	}
+//	ofFbo& operator[]( int n ){
+//		return frameBuffers[n];
+//	}
 	
 	// Ping-pong Fbos access
-	ofFbo *src;
-	ofFbo *dst;
+	//ofFbo *src;
+	//ofFbo *dst;
 	
 	// provide sorting functions
 	typedef std::pair<karmaFboLayer, list<basicEffect*> > fboWithEffects;
@@ -111,10 +208,13 @@ public:
 	
 private:
 	// ensured to be deleted on destruction
-	ofFbo frameBuffers[2];
+	//ofFbo frameBuffers[2];
+	ofFbo fbo;
 	bool switched;
 	string layerName;
 	int layerIndex;
+	int height, width;
+	int MSAA;
 };
 
 //bool operator<(const karmaFboLayer::fboWithEffects& a, const karmaFboLayer::fboWithEffects& b) {

@@ -57,92 +57,113 @@ bool shaderEffect::initialise(const animationParams& params){
 	return bInitialised;
 }
 
-bool shaderEffect::render(const animationParams &params){
+bool shaderEffect::render(karmaFboLayer& renderLayer, const animationParams &params){
 	if(!isReady() || !shader.isLoaded()) return false;
 	
 	if(bUseCustomFbo){
 		fbo.begin();
 	}
 	else {
-		ofPushStyle();
+		if(usesPingPong()){
+			// swap before so the current rendering turns into an fbo texture to use in our shader
+			renderLayer.swap();
+		}
+		
+		renderLayer.begin();
 	}
-	// fade out
-	//ofClear(ofFloatColor(0,0,0, 30);
-	
-//	glEnable(GL_BLEND);
-//	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
-//	glBlendEquation(GL_FUNC_ADD);
-
-	//ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-//	glEnable(GL_BLEND);
-//	glBlendEquation(GL_FUNC_ADD);
-//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-	glBlendFunc(GL_ONE, GL_ONE);
-	
-	
-//	glEnable(GL_BLEND);
-//	glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_DST_ALPHA);
-//	glBlendEquation(GL_FUNC_SUBTRACT);
-	
-	
-	//glBlendColor(0,0,0,30);
-
-	ofSetColor(0.0f, 5.0f*params.seasons.spring + 5.0f*params.seasons.autumn);
+	ofPushStyle();
+	ofSetColor(1, 1, 1, 1);
 	ofFill();
-	if (bUseCustomFbo) {
-		ofDrawRectangle(0,0, fbo.getWidth(), fbo.getHeight());
-	}
-	else {
-		ofDrawRectangle(0,0, ofGetWidth(), ofGetHeight());
-	}
 	
-	glDisable(GL_BLEND);
+	if(false){
+		// fade out
+		//ofClear(ofFloatColor(0,0,0, 30);
+		
+		//	glEnable(GL_BLEND);
+		//	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+		//	glBlendEquation(GL_FUNC_ADD);
+		
+		//ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
+		//	glEnable(GL_BLEND);
+		//	glBlendEquation(GL_FUNC_ADD);
+		//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+		glBlendFunc(GL_ONE, GL_ONE);
+
+		ofSetColor(0.0f, 5.0f*params.seasons.spring + 5.0f*params.seasons.autumn);
+		ofFill();
+		if (bUseCustomFbo) {
+			ofDrawRectangle(0,0, fbo.getWidth(), fbo.getHeight());
+		}
+		else {
+			ofDrawRectangle(0,0, renderLayer.getWidth(), renderLayer.getHeight());
+		}
+		glDisable(GL_BLEND);
+	}
 	
 	shader.begin();
+
 	registerShaderVariables(params);
 	
-	// set drawing environment
-	effectMutex.lock();
-	ofSetColor( params.varyingColors.main.getLerped(ofColor(0), onSetCalls/10.0f) );
-	onSetCalls = 0;
-	effectMutex.unlock();
-	ofFill();
-	
-	// tmp
-	//ofDrawRectangle(50,50, 200,200);
-	
-	// draw shape so GPU gets their vertex data
-	for(auto it=shapes.begin(); it!=shapes.end(); ++it){
-		shader.setUniform4f("shapeBoundingBox", (*it)->getBoundingBox().x, (*it)->getBoundingBox().y, (*it)->getBoundingBox().width, (*it)->getBoundingBox().height );
-		shader.setUniform2f("shapeCenter", (*it)->getPositionPtr()->x, (*it)->getPositionPtr()->y );
-		//cout << (*it)->getBoundingBox().width << endl;
-		(*it)->sendToGPU();
+	if( usesPingPong() ){
+		shader.setUniformTexture("pingPongTexture", renderLayer.getDstTexture(),5);
+		//cout << "Ping-pong drawing :" << renderLayer.getFBO().getIdDrawBuffer()<<endl;// << " - " << renderLayer.getDstTexture().getTextureData().textureID << endl;
+		//renderLayer.getDstTexture().draw(0,0); // DST between begin() and end() is SRC in fact
+		ofDrawRectangle(0,0,renderLayer.getWidth(), renderLayer.getHeight());
+		//fbo.getTexture(srcPos).draw(0, 0);
+		//cout << renderLayer.getWidth() << endl;
 	}
 	
+	else {
+	
+		// set drawing environment
+		effectMutex.lock();
+		ofSetColor( params.varyingColors.main.getLerped(ofColor(0), onSetCalls/10.0f) );
+		onSetCalls = 0;
+		effectMutex.unlock();
+		ofFill();
+	
+		// tmp
+		//ofDrawRectangle(50,50, 200,200);
+		
+		// draw shape so GPU gets their vertex data
+		for(auto it=shapes.begin(); it!=shapes.end(); ++it){
+			shader.setUniform4f("shapeBoundingBox", (*it)->getBoundingBox().x, (*it)->getBoundingBox().y, (*it)->getBoundingBox().width, (*it)->getBoundingBox().height );
+			shader.setUniform2f("shapeCenter", (*it)->getPositionPtr()->x, (*it)->getPositionPtr()->y );
+			//cout << (*it)->getBoundingBox().width << endl;
+			(*it)->sendToGPU();
+		}
+	}
+		
 	// flush the pipeline! :D
 	shader.end();
+	
+	ofPopStyle();
 	
 	if( bUseCustomFbo ){
 		fbo.end();
 		
 		// draw fbo
+		renderLayer.begin();
 		fbo.draw(0,0);
+		renderLayer.end(false);
 	}
 	else {
-		ofPopStyle();
+		renderLayer.end(false);
 	}
+	
+	//renderLayer.getSrcTexture().draw(0,0, 200,200);
 	
 	return true;
 }
 
 // updates shape data
-void shaderEffect::update(const animationParams& params){
+void shaderEffect::update(karmaFboLayer& renderLayer, const animationParams& params){
 	
 	// do basic Effect function
-	basicEffect::update( params );
+	basicEffect::update( renderLayer, params );
 	
 	ofScopedLock lock(effectMutex);
 	
@@ -232,7 +253,7 @@ void shaderEffect::reset(){
 // Just draw your gui items
 bool shaderEffect::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIShaderPanel, "GUIShaderPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUIShaderPanel, "GUIShaderPanel", true, false ) ){
 		
 		ImGui::TextWrapped("This effect loads shader files and animates them by feeding it parameters.");
 		ImGui::TextWrapped("You can enable some default variables or create your own."); // todo
@@ -241,6 +262,11 @@ bool shaderEffect::printCustomEffectGui(){
 		
 		if(ImGui::Checkbox("Use dedicated FBO", &bUseCustomFbo )){
 			setUseCustomFbo(bUseCustomFbo);
+		}
+		
+		ImGui::Separator();
+		if(ImGui::Checkbox("Use Ping-Pong FBO", &bUsePingpong)){
+			setUsePingPong(bUsePingpong);
 		}
 		
 		ImGui::LabelText("Vertex Shader", "%s", vertexShader.c_str() );
@@ -464,7 +490,7 @@ void shaderEffect::registerShaderVariables(const animationParams& params){
 	shader.setUniform1f("timeValX", ofGetElapsedTimef() * 0.1 );
 	shader.setUniform1f("timeValY", -ofGetElapsedTimef() * 0.18 );
 	
-	shader.setUniform2f("fboCanvas", ofGetWidth(), ofGetHeight() );
+	shader.setUniform2f("fboCanvas", ofGetWidth(), ofGetHeight() ); // todo: should match FBO instead of window
 	
 	shader.setUniform1i("tex", 0);
 	
@@ -576,6 +602,7 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 			bHasError = false;
 			fragmentShader = _frag;
 			vertexShader = _vert;
+			setUsePingPong(false);
 			
 			// analyse source files and check for special variable requests
 			
@@ -584,21 +611,23 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 				string fragSource = shader.getShaderSource(GL_FRAGMENT_SHADER);
 				
 				//if( std::regex_match( fragSource.begin(), fragSource.end(), e ) ){
-				string needle = "// ### karmaMapper request";
+				string needle = "\n// ### karmaMapper request";
 				std::size_t pos = fragSource.find( needle );
 				while( pos != std::string::npos ){
 					//cout << "pos=" << pos << "/" << fragSource.length() << endl;
-					string request = fragSource.substr(pos+needle.length(), fragSource.find("\n", pos) - (pos + needle.length()) );
+					string request = fragSource.substr(pos+needle.length(), fragSource.find("\n", pos+1) - (pos + needle.length()) );
 					
 					if( request.compare(" mirValues")==0 ){
 						bUseMirVariables = true;
 					}
-					else if( request.compare(" shaderToyVariables") ) {
+					else if( request.compare(" shaderToyVariables")==0 ) {
 						bUseShadertoyVariables = true;
 					}
-					pos = fragSource.find( needle, pos+needle.length() );
+					else if( request.compare(" pingPong") == 0 ) {
+						setUsePingPong(true);
+					}
+					pos = fragSource.find( needle, pos+needle.length()-1 );
 				}
-				
 				
 				needle = "//*km slider(";
 				pos = fragSource.find( needle );

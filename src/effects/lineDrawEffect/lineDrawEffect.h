@@ -30,8 +30,8 @@ public:
 	
 	// global effect functions
 	bool initialise(const animationParams& params);
-	bool render(const animationParams& params);
-	void update(const animationParams& params);
+	bool render(karmaFboLayer& renderLayer, const animationParams& params);
+	void update(karmaFboLayer& renderLayer, const animationParams& params);
 	void reset();
 	
 	// #########
@@ -49,11 +49,17 @@ public:
 	virtual void tempoEventListener(mirTempoEventArgs &_args);
 	
 protected:
-	ofFbo fbo; // for compatibility issues, we need a specific fbo object
+	//ofFbo fbo; // for compatibility issues, we need a specific fbo object
 	float linesColor[4];
 	list<lineDrawEffectLine> lines;
 	
 	float fLineBeatDuration;
+	
+	bool bStressTestMode;
+	float fStressTestMultiplier;
+	float fStressTestAddTolerance;
+	float fStressTestRemoveTolerance;
+	int fStressTestTargetFPS;
 	
 private:
 	

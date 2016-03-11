@@ -19,10 +19,11 @@ uniform vec4 	shapeBoundingBox; // x,y,w,h
 uniform vec2 	shapeCenter; // x,y
 uniform int 	textureMode; // 0=scale to shape, 1=cover, 2=fill (clamed edge), 3=fill (repeat)
 uniform vec4 	globalTextureTransform; // position(x,y) scale(z, w)
-
+uniform vec2    resolution;
+uniform vec2    textureResolution;
 
 // shadertoy variables
-// ### karmaMapper request shaderToyValues
+// ### karmaMapper request shaderToyVariables
 uniform vec3      		iResolution;           // viewport resolution (in pixels)
 uniform float     		iGlobalTime;           // shader playback time (in seconds)
 uniform float     		iTimeDelta;            // render time (in seconds)
@@ -33,11 +34,6 @@ uniform vec4     		iMouse;                // mouse pixel coords. xy: current (if
 uniform sampler2DRect 	iChannel0;             // input channel. XX = 2D/Cube
 uniform vec4      		iDate;                 // (year, month, day, time in seconds)
 uniform float     		iSampleRate;           // sound sample rate (i.e., 44100)
-
-//uniform sampler2DRect tex0; // video layer
-uniform vec2 resolution;
-uniform vec2 textureResolution;
-//uniform float textureScale;
 
 in vec2 texCoordVarying;
 in vec4 gl_FragCoord;
