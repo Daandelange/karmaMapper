@@ -43,6 +43,8 @@ uniform int 	textureMode; // 0=scale to shape, 1=cover, 2=fill (clamed edge), 3=
 uniform vec4 	globalTextureTransform; // position(x,y) scale(z, w)
 uniform vec2	resolution;
 uniform vec2	textureResolution;
+uniform vec4    effectColor; // color assigned to effects
+uniform int		kmIsPingPongPass;
 
 // the following line requests mir Data from karmaMapper::animator
 // ### karmaMapper request mirValues

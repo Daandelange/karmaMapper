@@ -74,7 +74,7 @@ bool basicEffect::render(karmaFboLayer& renderLayer, const animationParams& para
 	renderLayer.begin();
 	
 	// draw bounding box
-	ofSetColor( 255,0,0 );
+	ofSetColor(mainColor[0]*255, mainColor[1]*255, mainColor[2]*255, mainColor[3]*255);
 	ofNoFill();
 	if(overallBoundingBox.width > 0) ofDrawRectangle( overallBoundingBox );
 	
@@ -153,7 +153,7 @@ bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 	if( ImGui::InputText("Name", nameBuffer, 32) ){
 		effectName = nameBuffer;
 	}
-	ImGui::LabelText("Status", "%s", getShortStatus().c_str() );
+	ImGui::TextWrapped("Status: %s", getShortStatus().c_str() );
 	if( ImGui::Button("Reset effect") ){
 		reset();
 	}
@@ -167,6 +167,11 @@ bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 	ImGui::LabelText((isLoading()?"(Loading...)":"(Loaded)" ), "");
 	ImGui::SameLine(-50);
 	ImGui::LabelText((bHasError?"(Has Error)":"(No Errors)" ), "");
+	
+	ImGui::Spacing();
+	ImGui::Spacing();
+	
+	ImGui::ColorEdit4("Effect Color", &mainColor[0]);
 	
 	ImGui::Spacing();
 	ImGui::Spacing();
@@ -265,6 +270,16 @@ bool basicEffect::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("effectIndex", effectIndex);
 	xml.addValue("showGuiWindow", bShowGuiWindow);
 	
+	// color
+	xml.addTag("effectColor");
+	if(xml.pushTag("effectColor")){
+		xml.addValue("r", mainColor[0]);
+		xml.addValue("g", mainColor[1]);
+		xml.addValue("b", mainColor[2]);
+		xml.addValue("a", mainColor[3]);
+		xml.popTag();
+	}
+	
 	// remember bound shapes
 	xml.addTag("boundShapes");
 	xml.pushTag("boundShapes");
@@ -293,7 +308,16 @@ bool basicEffect::loadFromXML(ofxXmlSettings& xml){
 	xml.getValue("enabled", false )?enable():disable();
 	effectIndex = xml.getValue("effectIndex", 0);
 	bShowGuiWindow = xml.getValue("showGuiWindow", false);
-
+	
+	// color
+	if(xml.pushTag("effectColor")){
+		mainColor[0] = xml.getValue("r", 1.0);
+		mainColor[1] = xml.getValue("g", 1.0);
+		mainColor[2] = xml.getValue("b", 1.0);
+		mainColor[3] = xml.getValue("a", 1.0);
+		xml.popTag();
+	}
+	
 	return true; // todo
 }
 

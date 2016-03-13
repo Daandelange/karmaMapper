@@ -84,11 +84,12 @@ void lineDrawEffect::update(karmaFboLayer& renderLayer, const animationParams& p
 		}
 		if(fStressTestMultiplier<0) fStressTestMultiplier=0;
 		
-		for(int i=0; i<fStressTestMultiplier; ++i){
 			
-			for(auto s=shapes.begin(); s!=shapes.end(); ++s){
-				if( (*s)->isType("vertexShape") ){
-					lines.push_back( lineDrawEffectLine( (vertexShape*)*s, 1*fLineBeatDuration ) );
+		for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+			if( (*s)->isType("vertexShape") ){
+				vertexShape* shape = (vertexShape*) *s;
+				for(int i=0; i<fStressTestMultiplier; ++i){
+					lines.push_back( lineDrawEffectLine( shape, 1*fLineBeatDuration ) );
 				}
 			}
 		}

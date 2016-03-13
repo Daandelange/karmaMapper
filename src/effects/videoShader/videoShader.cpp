@@ -171,6 +171,9 @@ bool videoShader::printCustomEffectGui(){
 		ImGui::TextWrapped("Draws video streams on shapes.");
 		
 		ImGui::Separator();
+		ImGui::SliderFloat("Opacity", &mainColor[3], 0, 1);
+		
+		ImGui::Separator();
 		if( ImGui::ListBoxHeader("Texture Mode...", 2) ){
 			if(ImGui::Selectable("Fill Shape", textureMode==0)){
 				setTextureMode(0);
@@ -186,8 +189,6 @@ bool videoShader::printCustomEffectGui(){
 			}
 			ImGui::ListBoxFooter();
 		}
-		
-		
 		
 		if (ImGui::ListBoxHeader("Video Mode", 2)){
 			

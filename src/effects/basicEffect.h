@@ -159,6 +159,8 @@ protected:
 	string effectName; // must stay unique
 	string shortStatus;
 	
+	float mainColor[4] {1.0,1.0,1.0,1.0};
+	
 	// todo:
 	// animation preferences class
 	

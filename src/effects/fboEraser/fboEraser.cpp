@@ -61,12 +61,9 @@ bool fboEraser::render(karmaFboLayer& renderLayer, const animationParams &params
 		glDisable(GL_BLEND);
 	}
 	
-	effectMutex.lock();
-	
-	effectMutex.unlock();
-	
-//	ofSetColor( linesColor[0]*255, linesColor[1]*255, linesColor[2]*255, linesColor[3]*255);
-//	ofNoFill();
+//	effectMutex.lock();
+//	
+//	effectMutex.unlock();
 	
 	ofPopStyle();
 	
@@ -107,6 +104,12 @@ void fboEraser::reset(){
 	bInitialised = true;
 	bIsLoading = false;
 }
+
+// this effect is ping-pong only.
+// too: make it both
+//bool fboEraser::setUsePingPong(const bool &_usePingpong){
+//	bUsePingpong = true;
+//}
 
 // - - - - - - -
 // GUI STUFF

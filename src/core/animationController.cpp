@@ -1043,12 +1043,11 @@ void animationController::draw(ofEventArgs& event){
 		// draw effects
 		for(auto e=layerEffects.rbegin(); e!=layerEffects.rend(); ++e){
 			(*e)->render(layer->first, animationParams.params);
-			
 		}
 		//cout << "DONE --- Drawing fbo.texture: "<<" // " << layer->first.getFBO().getIdDrawBuffer()<<endl;
 		layer->first.getSrcTexture().draw(0,0);
 		
-		// uncomment to view layers
+		// uncomment to view layer contents
 		//layer->first.getSrcTextureIndex(0).draw( ofGetWidth()-500, ofGetHeight()-200*(layer->first.getIndex()+1), 250,200);
 		//layer->first.getSrcTextureIndex(1).draw( ofGetWidth()-250, ofGetHeight()-200*(layer->first.getIndex()+1), 250,200);
 	}
@@ -1474,6 +1473,11 @@ void animationController::draw(ofEventArgs& event){
 							pos += ImGui::GetWindowPos();
 							pos.y -= ImGui::GetItemRectSize().y;
 							fboLayer.getSrcTexture().draw(pos.x, pos.y,200,200);
+						}
+						
+						ImGui::SameLine();
+						if(ImGui::Button("Clear FBO")){
+							layer->first.clear();
 						}
 						
 						// add new effect on layer stuff

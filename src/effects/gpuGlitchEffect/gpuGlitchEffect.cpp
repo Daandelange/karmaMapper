@@ -31,17 +31,10 @@ gpuGlitchEffect::~gpuGlitchEffect(){
 // initialises the effect
 bool gpuGlitchEffect::initialise(const animationParams& params){
 	// init values
-	shaderEffect::initialise(params);
+	bool ret = basicEffect::initialise(params);
 	
 	bIsLoading = true;
 	bInitialised = false;
-	onSetCalls = 0;
-	fTimeFactor = 1.0f;
-	bUseShadertoyVariables = false;
-	bUseMirVariables = false;
-	
-	// do stuff
-	ofEnableAlphaBlending();
 	
 	gpuGlitchEffect::reset();
 	
@@ -49,42 +42,68 @@ bool gpuGlitchEffect::initialise(const animationParams& params){
 	bInitialised = true;
 	bIsLoading = false;
 	
-	return bInitialised;
+	return bInitialised * ret;
 }
 
 bool gpuGlitchEffect::render(karmaFboLayer& renderLayer, const animationParams &params){
+	if(!isReady()) return false;
 	
+	if(fbo.isAllocated()){
+		
+		renderLayer.begin();
+		
+		ofPushStyle();
+		ofSetColor(mainColor[0]*255, mainColor[1]*255, mainColor[2]*255, mainColor[3]*255);
+		ofFill();
+		
+		
+		// bind the glitched fbo
+		//fbo.getTexture().bind();
+		fbo.getTexture().bind(); // todo, doesn't work... need to use a shader here ?
+		
+		// draw shape so GPU gets their vertex data
+		for(auto it=shapes.begin(); it!=shapes.end(); ++it){
+			(*it)->sendToGPU();
+		}
+		
+		fbo.getTexture().unbind();
+		
+		ofPopStyle();
+		
+		//fbo.getTexture().setAlphaMask();
+		fbo.getTexture().draw(0,0);
+		
+		renderLayer.end();
+	}
+	
+	return true;
 }
 
 // updates shape data
 void gpuGlitchEffect::update(karmaFboLayer& renderLayer, const animationParams& params){
 	
-	shaderEffect::update( renderLayer, params );
+	basicEffect::update( renderLayer, params );
 	
-	ofScopedLock lock(effectMutex);
+	//ofScopedLock lock(effectMutex);
 	
-	if( !isReady() ) return;
+	//if( !isReady() ) return;
 	
 	
 }
 
 // resets all values
 void gpuGlitchEffect::reset(){
-	shaderEffect::reset();
+	basicEffect::reset();
 	
-	//ofScopedLock lock(effectMutex);
 	effectMutex.lock();
 	
-	// effect type must match with class
-	effectType = "gpuGlitchEffect";
-	vertexShader = effectFolder(gpuGlitchEffectDefaultVert);
-	fragmentShader = effectFolder(gpuGlitchEffectDefaultFrag);
-
-	setUseCustomFbo(false);
-	setUsePingPong(true);
-	bUseShadertoyVariables = false;
-	bUseMirVariables = false;
-	bUseTextures = false;
+	setUsePingPong(false);
+	
+	fboSettings.width = ofGetWidth();
+	fboSettings.height = ofGetHeight();
+	fboSettings.internalformat = GL_RGBA;
+	//fboSettings.numColorbuffers = 1;
+	fboSettings.numSamples = ofFbo::maxSamples();
 	
 	effectMutex.unlock();
 }
@@ -96,17 +115,18 @@ void gpuGlitchEffect::reset(){
 // Just draw your gui items
 bool gpuGlitchEffect::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIGpuGlitchPanel, "GUIShaderPanel", true, false ) ){
+	if( ImGui::CollapsingHeader( GUIGpuGlitchPanel, "GUIGpuGlitchPanel", true, true ) ){
 		ImGui::TextWrapped("Gets some textures directly from your unallocated GPU memory. (computer dreams!)");
 		
 		ImGui::Separator();
 		
 		if(ImGui::Button("Refresh")){
-			
+			fbo.clear();
+			fbo.allocate(fboSettings);
 		}
 	}
 	
-	shaderEffect::printCustomEffectGui();
+	//parentEffect::printCustomEffectGui();
 	
 }
 
@@ -117,7 +137,7 @@ bool gpuGlitchEffect::printCustomEffectGui(){
 // writes the effect data to XML. xml's cursor is already pushed into the right <effect> tag.
 bool gpuGlitchEffect::saveToXML(ofxXmlSettings& xml) const{
 	
- 	bool ret = shaderEffect::saveToXML(xml);
+ 	bool ret = basicEffect::saveToXML(xml);
 	
 	
 	
@@ -127,13 +147,11 @@ bool gpuGlitchEffect::saveToXML(ofxXmlSettings& xml) const{
 // load effect settings from xml
 // xml's cursor is pushed to the root of the <effect> tag to load
 bool gpuGlitchEffect::loadFromXML(ofxXmlSettings& xml){
-	bool ret = shaderEffect::loadFromXML(xml);
-	
-	loadShader( effectFolder(gpuGlitchEffectDefaultVert), effectFolder(gpuGlitchEffectDefaultFrag) );
+	bool ret = basicEffect::loadFromXML(xml);
 	
 	
 	
-	return shader.isLoaded();
+	return ret;
 }
 
 // - - - - -

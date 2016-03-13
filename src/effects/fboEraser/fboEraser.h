@@ -29,6 +29,7 @@ public:
 	bool render(karmaFboLayer& renderLayer, const animationParams& params);
 	void update(karmaFboLayer& renderLayer, const animationParams& params);
 	void reset();
+	//virtual bool setUsePingPong(const bool& _usePingpong);
 	
 	// #########
 	// GUI STUFF
@@ -53,4 +54,4 @@ private:
 	
 };
 
-#define GUIfboEraserPanel "Line Draw"
+#define GUIfboEraserPanel "FBO Eraser"

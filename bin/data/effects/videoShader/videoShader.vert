@@ -8,16 +8,24 @@ uniform mat4 projectionMatrix;
 uniform mat4 textureMatrix;
 uniform mat4 modelViewProjectionMatrix;
 uniform vec4 globalColor;
+uniform int     kmIsPingPongPass;
 
 //in vec2 texcoord; // This is provide by openFrameworks
 in vec4 position;
 out vec2 texCoordVarying;
+in vec2 texcoord;
 
 void main()
 {
 	// Absolute window position: gl_FragCoord.x / windowWidth
 	//gl_Position.xy;//	
+	if(kmIsPingPongPass == 1){
+		//texCoordVarying = texcoord;
+		texCoordVarying = position.xy;
+	}
+	else {
+		texCoordVarying = position.xy;
+	}
 
-    texCoordVarying = position.xy;
 	gl_Position = modelViewProjectionMatrix * position;
 }

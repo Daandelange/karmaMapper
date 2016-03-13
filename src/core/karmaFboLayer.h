@@ -50,11 +50,12 @@ public:
 		
 		fbo.allocate(s);
 		
+		maskFbo.allocate(_width, _height, GL_LUMINANCE); //or GL_RED if you are using the programmable renderer
+		
 //		for(int i = 0; i < 2; i++){
 //			frameBuffers[i].allocate(s);
 //			//frameBuffers[i].allocate(_width,_height, _internalformat );
 //		}
-		
 		
 		width = _width;
 		height = _height;
@@ -181,6 +182,10 @@ public:
 		ofClear(0,_alpha);
 		
 		fbo.end();
+		
+		maskFbo.begin();
+		ofClear(0,_alpha);
+		maskFbo.end();
 	}
 	
 //	ofFbo& operator[]( int n ){
@@ -210,6 +215,7 @@ private:
 	// ensured to be deleted on destruction
 	//ofFbo frameBuffers[2];
 	ofFbo fbo;
+	ofFbo maskFbo;
 	bool switched;
 	string layerName;
 	int layerIndex;

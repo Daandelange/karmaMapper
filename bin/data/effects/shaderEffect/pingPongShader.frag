@@ -18,6 +18,8 @@ uniform vec2 	fboCanvas; // w,h
 // uniform vec4 	globalTextureTransform; // position(x,y) scale(z, w)
 //uniform vec2	resolution;
 // uniform vec2	textureResolution;
+uniform int		kmIsPingPongPass;
+uniform vec4    effectColor;
 
 out vec4 outputColor;
 

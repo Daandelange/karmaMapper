@@ -64,17 +64,10 @@ bool shaderEffect::render(karmaFboLayer& renderLayer, const animationParams &par
 		fbo.begin();
 	}
 	else {
-		if(usesPingPong()){
-			// swap before so the current rendering turns into an fbo texture to use in our shader
-			renderLayer.swap();
-		}
-		
 		renderLayer.begin();
 	}
-	ofPushStyle();
-	ofSetColor(1, 1, 1, 1);
-	ofFill();
 	
+	// todo: rm this, keeping for re-use
 	if(false){
 		// fade out
 		//ofClear(ofFloatColor(0,0,0, 30);
@@ -104,55 +97,99 @@ bool shaderEffect::render(karmaFboLayer& renderLayer, const animationParams &par
 	}
 	
 	shader.begin();
-
 	registerShaderVariables(params);
 	
+	ofPushStyle();
+	ofSetColor(mainColor[0]*255, mainColor[1]*255, mainColor[2]*255, mainColor[3]*255);
+	ofFill();
+	
+	// tmp
+	effectMutex.lock();
+	onSetCalls = 0;
+	effectMutex.unlock();
+	
+	// draw shape so GPU gets their vertex data
+	for(auto it=shapes.begin(); it!=shapes.end(); ++it){
+		shader.setUniform4f("shapeBoundingBox", (*it)->getBoundingBox().x, (*it)->getBoundingBox().y, (*it)->getBoundingBox().width, (*it)->getBoundingBox().height );
+		shader.setUniform2f("shapeCenter", (*it)->getPositionPtr()->x, (*it)->getPositionPtr()->y );
+		//cout << (*it)->getBoundingBox().width << endl;
+		(*it)->sendToGPU();
+	}
+	ofPopStyle();
+	
+	shader.end();
+	
+	// stop rendering on FBO
+	if(bUseCustomFbo){
+		fbo.end();
+		
+		// draw fbo to layer
+		renderLayer.begin();
+		ofPushStyle();
+		ofSetColor(1.0, 1.0, 1.0, 1.0);
+		ofFill();
+		fbo.draw(0,0);
+		ofPopStyle();
+		renderLayer.end(false);
+	}
+	else {
+		renderLayer.end(false);
+	}
+	
+	// do a pingpong pass ?
 	if( usesPingPong() ){
-		shader.setUniformTexture("pingPongTexture", renderLayer.getDstTexture(),5);
+		
+		// swap before so the current rendering turns into an fbo texture to use in our shader
+		renderLayer.swap();
+		//ofTexture&
+		renderLayer.begin();
+		
+		shader.begin();
+		
+		//shader.begin();
+		//registerShaderVariables(params);
+		
+		shader.setUniform1i("kmIsPingPongPass", 1);
+		if(bUseCustomFbo){
+			shader.setUniformTexture("pingPongTexture", fbo.getTexture(),5);
+		}
+		else {
+			// note: between begin() and end() SRC is DST
+			shader.setUniformTexture("pingPongTexture", renderLayer.getDstTexture(),5);
+		}
+		
+		ofPushStyle();
+		ofSetColor(1.0, 1.0, 1.0, 2.0);
+		ofFill();
+		
 		//cout << "Ping-pong drawing :" << renderLayer.getFBO().getIdDrawBuffer()<<endl;// << " - " << renderLayer.getDstTexture().getTextureData().textureID << endl;
 		//renderLayer.getDstTexture().draw(0,0); // DST between begin() and end() is SRC in fact
 		ofDrawRectangle(0,0,renderLayer.getWidth(), renderLayer.getHeight());
 		//fbo.getTexture(srcPos).draw(0, 0);
 		//cout << renderLayer.getWidth() << endl;
-	}
-	
-	else {
-	
-		// set drawing environment
-		effectMutex.lock();
-		ofSetColor( params.varyingColors.main.getLerped(ofColor(0), onSetCalls/10.0f) );
-		onSetCalls = 0;
-		effectMutex.unlock();
-		ofFill();
-	
-		// tmp
-		//ofDrawRectangle(50,50, 200,200);
 		
-		// draw shape so GPU gets their vertex data
-		for(auto it=shapes.begin(); it!=shapes.end(); ++it){
-			shader.setUniform4f("shapeBoundingBox", (*it)->getBoundingBox().x, (*it)->getBoundingBox().y, (*it)->getBoundingBox().width, (*it)->getBoundingBox().height );
-			shader.setUniform2f("shapeCenter", (*it)->getPositionPtr()->x, (*it)->getPositionPtr()->y );
-			//cout << (*it)->getBoundingBox().width << endl;
-			(*it)->sendToGPU();
-		}
-	}
+		//shader.end();
 		
-	// flush the pipeline! :D
-	shader.end();
-	
-	ofPopStyle();
-	
-	if( bUseCustomFbo ){
-		fbo.end();
+		ofPopStyle();
 		
-		// draw fbo
-		renderLayer.begin();
-		fbo.draw(0,0);
+		shader.end();
+		
 		renderLayer.end(false);
 	}
-	else {
-		renderLayer.end(false);
-	}
+	
+	//shader.end();
+	
+//	if( bUseCustomFbo ){
+//		fbo.end();
+//		
+//		// draw fbo
+//		renderLayer.begin();
+//		fbo.draw(0,0);
+//		renderLayer.end(false);
+//	}
+//	else {
+//		renderLayer.end(false);
+//	}
 	
 	//renderLayer.getSrcTexture().draw(0,0, 200,200);
 	
@@ -260,12 +297,14 @@ bool shaderEffect::printCustomEffectGui(){
 		
 		ImGui::Separator();
 		
+		ImGui::ColorEdit4("mainColor", &mainColor[0]);
+		
 		if(ImGui::Checkbox("Use dedicated FBO", &bUseCustomFbo )){
 			setUseCustomFbo(bUseCustomFbo);
 		}
 		
 		ImGui::Separator();
-		if(ImGui::Checkbox("Use Ping-Pong FBO", &bUsePingpong)){
+		if(ImGui::Checkbox("Use Ping-Pong pass", &bUsePingpong)){
 			setUsePingPong(bUsePingpong);
 		}
 		
@@ -327,7 +366,7 @@ bool shaderEffect::printCustomEffectGui(){
 		
 		ImGui::Separator();
 		
-		if( ImGui::CollapsingHeader( GUIShaderVariablesPanel, "GUIShaderVariablesPanel", true, true ) ){
+		if( ImGui::CollapsingHeader( GUIShaderVariablesPanel, "GUIShaderVariablesPanel", true, false ) ){
 			
 			ImGui::TextWrapped("Here, you can enable/disable some standard shader variables, and (soon) create your own ones.");
 			
@@ -494,6 +533,10 @@ void shaderEffect::registerShaderVariables(const animationParams& params){
 	
 	shader.setUniform1i("tex", 0);
 	
+	shader.setUniform4fv("effectColor", &mainColor[0]);
+	shader.setUniform1i("kmIsPingPongPass", 0);
+	
+	ofFill(); // todo: rm this line ?
 	effectMutex.unlock();
 	
 	
@@ -571,7 +614,7 @@ void shaderEffect::setUseCustomFbo(const bool &_useCustomFbo){
 	   
 	bUseCustomFbo = _useCustomFbo;
 	if(bUseCustomFbo){
-		fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
+		fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, ofFbo::maxSamples());
 		fbo.begin();
 		ofClear(0,0,0,0); // clear all, including alpha
 		fbo.end();

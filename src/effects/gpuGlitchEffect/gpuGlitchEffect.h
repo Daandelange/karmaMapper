@@ -24,7 +24,7 @@ struct animationParams;
 
 // todo: add a GPU memory extraction feature for stats and handling no more GPU allocatable errors.
 
-class gpuGlitchEffect : public shaderEffect {
+class gpuGlitchEffect : public basicEffect {
 	
 public:
 	// constructors
@@ -47,11 +47,12 @@ public:
 	virtual bool loadFromXML(ofxXmlSettings& xml);
 	
 protected:
-	
+	ofFbo fbo;
+	ofFbo::Settings fboSettings;
 	
 private:
 	
 	
 };
 
-#define GUIGpuGlitchPanel "Shaders"
+#define GUIGpuGlitchPanel "GPU Glitch"
