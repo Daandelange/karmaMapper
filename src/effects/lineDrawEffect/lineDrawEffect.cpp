@@ -194,7 +194,8 @@ bool lineDrawEffect::printCustomEffectGui(){
 			ImGui::Unindent();
 		}
 	}
-	
+
+	return true;
 }
 
 // - - - - - - -

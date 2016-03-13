@@ -148,6 +148,7 @@ bool fboEraser::printCustomEffectGui(){
 //		ImGui::Separator();
 	}
 	
+	return true;
 }
 
 // - - - - - - -

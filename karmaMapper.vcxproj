@@ -1,0 +1,473 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7FD42DF7-442E-479A-BA76-D0022F99702A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>karmaMapper</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksRelease.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksRelease.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksDebug.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksDebug.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>bin\</OutDir>
+    <IntDir>obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_debug</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <GenerateManifest>true</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>bin\</OutDir>
+    <IntDir>obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_debug</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <GenerateManifest>true</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>bin\</OutDir>
+    <IntDir>obj\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>bin\</OutDir>
+    <IntDir>obj\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;src\core;src\effects;src\effects\distortEffect;src\effects\fboEraser;src\effects\gpuGlitchEffect;src\effects\imageShader;src\effects\lineDrawEffect;src\effects\lineEffect;src\effects\shaderEffect;src\effects\videoShader;src\modules;src\modules\durationOSC;src\modules\fboRecorder;src\modules\mirOSC;src\modules\oscRouter;src\modules\soundAnalyser;src\parameters;src\shapes;src\shapes\shapes;..\..\..\addons\ofxAbletonLiveSet\libs;..\..\..\addons\ofxAbletonLiveSet\libs\pugixml;..\..\..\addons\ofxAbletonLiveSet\libs\pugixml\src;..\..\..\addons\ofxAbletonLiveSet\src;..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet;..\..\..\addons\ofxAssimpModelLoader\libs;..\..\..\addons\ofxAssimpModelLoader\libs\assimp;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\Compiler;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\emscripten;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\Win32;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\x64;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\license;..\..\..\addons\ofxAssimpModelLoader\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxGuiExtended\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxVideoRecorder\src;..\..\..\addons\ofxVLCRemote\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <AdditionalDependencies>%(AdditionalDependencies);assimp.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\Win32</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;src\core;src\effects;src\effects\distortEffect;src\effects\fboEraser;src\effects\gpuGlitchEffect;src\effects\imageShader;src\effects\lineDrawEffect;src\effects\lineEffect;src\effects\shaderEffect;src\effects\videoShader;src\modules;src\modules\durationOSC;src\modules\fboRecorder;src\modules\mirOSC;src\modules\oscRouter;src\modules\soundAnalyser;src\parameters;src\shapes;src\shapes\shapes;..\..\..\addons\ofxAbletonLiveSet\libs;..\..\..\addons\ofxAbletonLiveSet\libs\pugixml;..\..\..\addons\ofxAbletonLiveSet\libs\pugixml\src;..\..\..\addons\ofxAbletonLiveSet\src;..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet;..\..\..\addons\ofxAssimpModelLoader\libs;..\..\..\addons\ofxAssimpModelLoader\libs\assimp;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\Compiler;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\emscripten;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\Win32;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\x64;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\license;..\..\..\addons\ofxAssimpModelLoader\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxGuiExtended\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxVideoRecorder\src;..\..\..\addons\ofxVLCRemote\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <AdditionalDependencies>%(AdditionalDependencies);assimp.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\x64</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;src\core;src\effects;src\effects\distortEffect;src\effects\fboEraser;src\effects\gpuGlitchEffect;src\effects\imageShader;src\effects\lineDrawEffect;src\effects\lineEffect;src\effects\shaderEffect;src\effects\videoShader;src\modules;src\modules\durationOSC;src\modules\fboRecorder;src\modules\mirOSC;src\modules\oscRouter;src\modules\soundAnalyser;src\parameters;src\shapes;src\shapes\shapes;..\..\..\addons\ofxAbletonLiveSet\libs;..\..\..\addons\ofxAbletonLiveSet\libs\pugixml;..\..\..\addons\ofxAbletonLiveSet\libs\pugixml\src;..\..\..\addons\ofxAbletonLiveSet\src;..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet;..\..\..\addons\ofxAssimpModelLoader\libs;..\..\..\addons\ofxAssimpModelLoader\libs\assimp;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\Compiler;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\emscripten;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\Win32;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\x64;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\license;..\..\..\addons\ofxAssimpModelLoader\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxGuiExtended\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxVideoRecorder\src;..\..\..\addons\ofxVLCRemote\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <AdditionalDependencies>%(AdditionalDependencies);assimp.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\Win32</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;src\core;src\effects;src\effects\distortEffect;src\effects\fboEraser;src\effects\gpuGlitchEffect;src\effects\imageShader;src\effects\lineDrawEffect;src\effects\lineEffect;src\effects\shaderEffect;src\effects\videoShader;src\modules;src\modules\durationOSC;src\modules\fboRecorder;src\modules\mirOSC;src\modules\oscRouter;src\modules\soundAnalyser;src\parameters;src\shapes;src\shapes\shapes;..\..\..\addons\ofxAbletonLiveSet\libs;..\..\..\addons\ofxAbletonLiveSet\libs\pugixml;..\..\..\addons\ofxAbletonLiveSet\libs\pugixml\src;..\..\..\addons\ofxAbletonLiveSet\src;..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet;..\..\..\addons\ofxAssimpModelLoader\libs;..\..\..\addons\ofxAssimpModelLoader\libs\assimp;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\Compiler;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\emscripten;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\Win32;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\x64;..\..\..\addons\ofxAssimpModelLoader\libs\assimp\license;..\..\..\addons\ofxAssimpModelLoader\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxGuiExtended\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxVideoRecorder\src;..\..\..\addons\ofxVLCRemote\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <AdditionalDependencies>%(AdditionalDependencies);assimp.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);..\..\..\addons\ofxAssimpModelLoader\libs\assimp\lib\vs\x64</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent />
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ofApp.cpp" />
+    <ClCompile Include="src\core\animationController.cpp" />
+    <ClCompile Include="src\core\karmaConsole.cpp" />
+    <ClCompile Include="src\effects\basicEffect.cpp" />
+    <ClCompile Include="src\effects\distortEffect\distortEffect.cpp" />
+    <ClCompile Include="src\effects\effectFactory.cpp" />
+    <ClCompile Include="src\effects\emptyEffect.cpp" />
+    <ClCompile Include="src\effects\fboEraser\fboEraser.cpp" />
+    <ClCompile Include="src\effects\gpuGlitchEffect\gpuGlitchEffect.cpp" />
+    <ClCompile Include="src\effects\imageBeatEffect.cpp" />
+    <ClCompile Include="src\effects\imageBeatEffectItem.cpp" />
+    <ClCompile Include="src\effects\imageEffect.cpp" />
+    <ClCompile Include="src\effects\imageFolderEffect.cpp" />
+    <ClCompile Include="src\effects\imageGrainEffect.cpp" />
+    <ClCompile Include="src\effects\imageMeltingEffect.cpp" />
+    <ClCompile Include="src\effects\imageShader\imageShader.cpp" />
+    <ClCompile Include="src\effects\lineDrawEffect\lineDrawEffect.cpp" />
+    <ClCompile Include="src\effects\lineDrawEffect\lineDrawEffectLine.cpp" />
+    <ClCompile Include="src\effects\lineEffect\lineEffect.cpp" />
+    <ClCompile Include="src\effects\lineEffect\lineEffectLine.cpp" />
+    <ClCompile Include="src\effects\meshRenderer3D.cpp" />
+    <ClCompile Include="src\effects\musicEffect.cpp" />
+    <ClCompile Include="src\effects\shaderEffect\shaderEffect.cpp" />
+    <ClCompile Include="src\effects\videoEffect.cpp" />
+    <ClCompile Include="src\effects\videoShader\videoShader.cpp" />
+    <ClCompile Include="src\effects\videoStreamEffect.cpp" />
+    <ClCompile Include="src\modules\durationOSC\durationRC.cpp" />
+    <ClCompile Include="src\modules\durationOSC\durationReceiver.cpp" />
+    <ClCompile Include="src\modules\fboRecorder\fboRecorder.cpp" />
+    <ClCompile Include="src\modules\karmaModule.cpp" />
+    <ClCompile Include="src\modules\mirOSC\mirReceiver.cpp" />
+    <ClCompile Include="src\modules\moduleFactory.cpp" />
+    <ClCompile Include="src\modules\oscRouter\OSCNode.cpp" />
+    <ClCompile Include="src\modules\oscRouter\OSCRouter.cpp" />
+    <ClCompile Include="src\modules\singletonModule.cpp" />
+    <ClCompile Include="src\modules\soundAnalyser\karmaSoundAnalyser.cpp" />
+    <ClCompile Include="src\ofAppEditor.cpp" />
+    <ClCompile Include="src\parameters\animationParamsServer.cpp" />
+    <ClCompile Include="src\shapes\shapeFactory.cpp" />
+    <ClCompile Include="src\shapes\shapes\basicPoint.cpp" />
+    <ClCompile Include="src\shapes\shapes\basicShape.cpp" />
+    <ClCompile Include="src\shapes\shapes\fullScreenShape.cpp" />
+    <ClCompile Include="src\shapes\shapes\vertexShape.cpp" />
+    <ClCompile Include="src\shapes\shapesDB.cpp" />
+    <ClCompile Include="src\shapes\shapesEditor.cpp" />
+    <ClCompile Include="src\shapes\shapesScene.cpp" />
+    <ClCompile Include="src\shapes\shapesTransformator.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet\EventHandler.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet\Model.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet\Parser.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet\Tempo.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAbletonLiveSet\libs\pugixml\src\pugixml.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAssimpModelLoader\src\ofxAssimpAnimation.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAssimpModelLoader\src\ofxAssimpMeshHelper.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAssimpModelLoader\src\ofxAssimpModelLoader.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAssimpModelLoader\src\ofxAssimpTexture.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxBaseGui.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxButton.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxGuiGroup.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxLabel.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxPanel.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSlider.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxFpsPlotter.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiBaseDraws.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiGroupExtended.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiMatrix.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiPage.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiSpacer.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiZoomableBaseDraws.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxLabelExtended.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxMasterSlaveControl.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxMinimalButton.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxMinimalToggle.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxPanelExtended.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxRotarySlider.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxTabbedPages.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxValuePlotter.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxGuiExtended\src\ofxVerticalSlider.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxImGui\src\BaseEngine.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxImGui\src\BaseTheme.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxImGui\src\EngineGLFW.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxImGui\src\EngineOpenGLES.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxImGui\src\imgui.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxImGui\src\imgui_demo.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxImGui\src\imgui_draw.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxImGui\src\ofxImGui.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscParameterSync.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscSender.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\IpEndpointName.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\NetworkingUtils.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\UdpSocket.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscOutboundPacketStream.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscPrintReceivedElements.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscReceivedElements.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxVideoRecorder\src\ofxVideoRecorder.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxVLCRemote\src\ofxVLCRemote.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ofApp.h" />
+    <ClInclude Include="src\core\animationController.h" />
+    <ClInclude Include="src\core\animationControllerEvents.h" />
+    <ClInclude Include="src\core\karmaConsole.h" />
+    <ClInclude Include="src\core\karmaFboLayer.h" />
+    <ClInclude Include="src\core\karmaUtilities.h" />
+    <ClInclude Include="src\effects\basicEffect.h" />
+    <ClInclude Include="src\effects\distortEffect\distortEffect.h" />
+    <ClInclude Include="src\effects\effectFactory.h" />
+    <ClInclude Include="src\effects\effects.h" />
+    <ClInclude Include="src\effects\emptyEffect.h" />
+    <ClInclude Include="src\effects\fboEraser\fboEraser.h" />
+    <ClInclude Include="src\effects\gpuGlitchEffect\gpuGlitchEffect.h" />
+    <ClInclude Include="src\effects\imageBeatEffect.h" />
+    <ClInclude Include="src\effects\imageBeatEffectItem.h" />
+    <ClInclude Include="src\effects\imageEffect.h" />
+    <ClInclude Include="src\effects\imageFolderEffect.h" />
+    <ClInclude Include="src\effects\imageGrainEffect.h" />
+    <ClInclude Include="src\effects\imageMeltingEffect.h" />
+    <ClInclude Include="src\effects\imageShader\imageShader.h" />
+    <ClInclude Include="src\effects\lineDrawEffect\lineDrawEffect.h" />
+    <ClInclude Include="src\effects\lineDrawEffect\lineDrawEffectLine.h" />
+    <ClInclude Include="src\effects\lineEffect\lineEffect.h" />
+    <ClInclude Include="src\effects\lineEffect\lineEffectLine.h" />
+    <ClInclude Include="src\effects\meshRenderer3D.h" />
+    <ClInclude Include="src\effects\musicEffect.h" />
+    <ClInclude Include="src\effects\shaderEffect\shaderEffect.h" />
+    <ClInclude Include="src\effects\shaderEffect\shaderToyVariables.h" />
+    <ClInclude Include="src\effects\videoEffect.h" />
+    <ClInclude Include="src\effects\videoShader\videoShader.h" />
+    <ClInclude Include="src\effects\videoStreamEffect.h" />
+    <ClInclude Include="src\KMSettings.h" />
+    <ClInclude Include="src\modules\durationOSC\durationEvents.h" />
+    <ClInclude Include="src\modules\durationOSC\durationRC.h" />
+    <ClInclude Include="src\modules\durationOSC\durationReceiver.h" />
+    <ClInclude Include="src\modules\fboRecorder\fboRecorder.h" />
+    <ClInclude Include="src\modules\karmaModule.h" />
+    <ClInclude Include="src\modules\mirOSC\mirEvents.h" />
+    <ClInclude Include="src\modules\mirOSC\mirReceiver.h" />
+    <ClInclude Include="src\modules\moduleFactory.h" />
+    <ClInclude Include="src\modules\oscRouter\OSCNode.h" />
+    <ClInclude Include="src\modules\oscRouter\OSCRouter.h" />
+    <ClInclude Include="src\modules\singletonModule.h" />
+    <ClInclude Include="src\modules\soundAnalyser\karmaSoundAnalyser.h" />
+    <ClInclude Include="src\ofAppEditor.h" />
+    <ClInclude Include="src\parameters\animationParams.h" />
+    <ClInclude Include="src\parameters\animationParamsServer.h" />
+    <ClInclude Include="src\shapes\shapeFactory.hpp" />
+    <ClInclude Include="src\shapes\shapes\basicPoint.h" />
+    <ClInclude Include="src\shapes\shapes\basicShape.h" />
+    <ClInclude Include="src\shapes\shapes\fullScreenShape.h" />
+    <ClInclude Include="src\shapes\shapes\shapes.h" />
+    <ClInclude Include="src\shapes\shapes\vertexShape.h" />
+    <ClInclude Include="src\shapes\shapesDB.h" />
+    <ClInclude Include="src\shapes\shapesEditor.h" />
+    <ClInclude Include="src\shapes\shapesScene.h" />
+    <ClInclude Include="src\shapes\shapesTransformator.h" />
+    <ClInclude Include="src\shapes\shapeUtils.h" />
+    <ClInclude Include="..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet\Constants.h" />
+    <ClInclude Include="..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet\EventHandler.h" />
+    <ClInclude Include="..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet\Model.h" />
+    <ClInclude Include="..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet\Parser.h" />
+    <ClInclude Include="..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet\Tempo.h" />
+    <ClInclude Include="..\..\..\addons\ofxAbletonLiveSet\src\ofxAbletonLiveSet.h" />
+    <ClInclude Include="..\..\..\addons\ofxAbletonLiveSet\libs\pugixml\src\pugiconfig.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAbletonLiveSet\libs\pugixml\src\pugixml.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\src\ofxAssimpAnimation.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\src\ofxAssimpMeshHelper.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\src\ofxAssimpModelLoader.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\src\ofxAssimpTexture.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\src\ofxAssimpUtils.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\ai_assert.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\anim.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\camera.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\cexport.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\cfileio.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\cimport.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\color4.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\Compiler\poppack1.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\Compiler\pstdint.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\config.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\DefaultLogger.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\defs.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\Exporter.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\Importer.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\importerdesc.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\IOStream.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\IOSystem.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\light.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\Logger.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\LogStream.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\material.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\matrix3x3.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\matrix4x4.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\mesh.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\metadata.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\NullLogger.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\postprocess.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\ProgressHandler.hpp" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\quaternion.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\scene.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\texture.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\types.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\vector2.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\vector3.h" />
+    <ClInclude Include="..\..\..\addons\ofxAssimpModelLoader\libs\assimp\include\assimp\version.h" />
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxBaseGui.h" />
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxButton.h" />
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxGui.h" />
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxGuiGroup.h" />
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxLabel.h" />
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxPanel.h" />
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.h" />
+    <ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxFpsPlotter.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiBaseDraws.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiExtended.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiGroupExtended.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiMatrix.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiPage.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiSpacer.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxGuiZoomableBaseDraws.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxLabelExtended.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxMasterSlaveControl.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxMinimalButton.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxMinimalToggle.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxPanelExtended.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxRotarySlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxTabbedPages.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxValuePlotter.h" />
+    <ClInclude Include="..\..\..\addons\ofxGuiExtended\src\ofxVerticalSlider.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\BaseEngine.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\BaseTheme.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\EngineGLFW.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\EngineOpenGLES.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\imconfig.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\imgui.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\imgui_internal.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\ofxImGui.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\stb_rect_pack.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\stb_textedit.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\stb_truetype.h" />
+    <ClInclude Include="..\..\..\addons\ofxImGui\src\ThemeTest.h" />
+    <ClInclude Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscArg.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscParameterSync.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscSender.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\IpEndpointName.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\NetworkingUtils.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\PacketListener.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\TimerListener.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\UdpSocket.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\MessageMappingOscPacketListener.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscException.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscHostEndianness.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscOutboundPacketStream.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscPacketListener.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscPrintReceivedElements.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscReceivedElements.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.h" />
+    <ClInclude Include="..\..\..\addons\ofxVideoRecorder\src\ofxVideoRecorder.h" />
+    <ClInclude Include="..\..\..\addons\ofxVLCRemote\src\ofxVLCRemote.h" />
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
+      <Project>{5837595d-aca9-485c-8e76-729040ce4b0b}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/D_DEBUG %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/D_DEBUG %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(OF_ROOT)\libs\openFrameworksCompiled\project\vs</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="icon.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

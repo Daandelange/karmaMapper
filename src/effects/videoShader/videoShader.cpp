@@ -288,6 +288,7 @@ bool videoShader::printCustomEffectGui(){
 		
 		ImGui::Separator();
 	}
+	return true;
 }
 
 // - - - - - - -

@@ -58,7 +58,7 @@ bool basicEffect::initialise(const animationParams& params){
 
 // Usefull ?
 bool basicEffect::initialise(){
-
+	return true;
 }
 
 // todo: update -(handled by)-> animation
@@ -378,6 +378,8 @@ bool basicEffect::usesPingPong() const {
 
 bool basicEffect::setUsePingPong(const bool& _usePingpong){
 	bUsePingpong = _usePingpong;
+
+	return true;
 }
 
 void basicEffect::updateBoundingBox(){
