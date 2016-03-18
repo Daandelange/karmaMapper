@@ -73,7 +73,10 @@ public:
 	void begin() {
 		
 		fbo.begin();
-		fbo.setActiveDrawBuffer(switched?0:1);
+        glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + ((switched?0:1)));	// write to this texture
+        
+        // alternatve method, but doesnt work on all GPUs
+		//fbo.setActiveDrawBuffer(switched?0:1);
 		
 		// tmp disabled
 		if(false && getMSAA()>0){
@@ -81,7 +84,6 @@ public:
 			fbo.updateTexture(switched?0:1);
 			fbo.begin();
 		}
-		//glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + ((switched?0:1)));	// write to this texture
 		//cout << "drawing to fbo.texture: "<<(switched?0:1)<<" // " << fbo.getIdDrawBuffer()<<" // " << fbo.getId()<<endl;
 	}
 	
