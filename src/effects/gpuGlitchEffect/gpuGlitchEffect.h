@@ -38,6 +38,10 @@ public:
 	void reset();
 	
 	// #########
+	// GPUGLITCHEFFECT METHODS
+	void refreshGlitches();
+	
+	// #########
 	// GUI STUFF
 	virtual bool printCustomEffectGui();
 	
@@ -49,6 +53,7 @@ public:
 protected:
 	ofFbo fbo;
 	ofFbo::Settings fboSettings;
+	int maxAllocations;
 	
 private:
 	

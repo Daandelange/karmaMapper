@@ -47,7 +47,6 @@ bool lineDrawEffect::render(karmaFboLayer& renderLayer, const animationParams &p
 	
 	// set drawing environment
 	ofPushStyle();
-	ofSetColor( linesColor[0]*255, linesColor[1]*255, linesColor[2]*255, linesColor[3]*255);
 	ofNoFill();
 	
 	// draw shape so GPU gets their vertex data
@@ -89,7 +88,7 @@ void lineDrawEffect::update(karmaFboLayer& renderLayer, const animationParams& p
 			if( (*s)->isType("vertexShape") ){
 				vertexShape* shape = (vertexShape*) *s;
 				for(int i=0; i<fStressTestMultiplier; ++i){
-					lines.push_back( lineDrawEffectLine( shape, 1*fLineBeatDuration ) );
+					lines.push_back( lineDrawEffectLine( shape, fLineBeatDuration, ofColor(mainColor[0]*255, mainColor[1]*255,mainColor[2]*255, mainColor[3]*255) ) );
 				}
 			}
 		}
@@ -154,7 +153,7 @@ bool lineDrawEffect::printCustomEffectGui(){
 		ImGui::Separator();
 		
 		ImGui::LabelText("Number of lines", "%lu", lines.size() );
-		ImGui::ColorEdit4("Color", linesColor, true);
+		//ImGui::ColorEdit4("Color", linesColor, true);
 		//ImGui::Checkbox("React to mirTempoEvents");
 		ImGui::SliderFloat("Line Duration (in beats)", &fLineBeatDuration, 1, 4);
 		
@@ -177,7 +176,8 @@ bool lineDrawEffect::printCustomEffectGui(){
 			for(auto s=shapes.begin(); s!=shapes.end(); ++s){
 				if( (*s)->isType("vertexShape") ){
 					int duration = 2; // sec
-					lines.push_back( lineDrawEffectLine( (vertexShape*)*s, 1*fLineBeatDuration ) );
+					vertexShape* shape = (vertexShape*) *s;
+					lines.push_back( lineDrawEffectLine( shape, fLineBeatDuration, ofColor(mainColor[0]*255, mainColor[1]*255,mainColor[2]*255, mainColor[3]*255) ));
 				}
 			}
 		}
@@ -206,14 +206,14 @@ bool lineDrawEffect::printCustomEffectGui(){
 bool lineDrawEffect::saveToXML(ofxXmlSettings& xml) const{
 	bool ret = basicEffect::saveToXML(xml);
 	
-	xml.addTag("linesColor");
-	if(xml.pushTag("linesColor")){
-		xml.addValue("r", linesColor[0] );
-		xml.addValue("g", linesColor[1] );
-		xml.addValue("b", linesColor[2] );
-		xml.addValue("a", linesColor[3] );
-		xml.popTag();
-	}
+//	xml.addTag("linesColor");
+//	if(xml.pushTag("linesColor")){
+//		xml.addValue("r", linesColor[0] );
+//		xml.addValue("g", linesColor[1] );
+//		xml.addValue("b", linesColor[2] );
+//		xml.addValue("a", linesColor[3] );
+//		xml.popTag();
+//	}
 	xml.addValue("LineDuration", fLineBeatDuration);
 	
 	return ret;
@@ -224,13 +224,13 @@ bool lineDrawEffect::saveToXML(ofxXmlSettings& xml) const{
 bool lineDrawEffect::loadFromXML(ofxXmlSettings& xml){
 	bool ret = basicEffect::loadFromXML(xml);
 	
-	if(xml.pushTag("linesColor")){
-		linesColor[0] = xml.getValue("r", 1.0f );
-		linesColor[1] = xml.getValue("g", 1.0f );
-		linesColor[2] = xml.getValue("b", 1.0f );
-		linesColor[3] = xml.getValue("a", 1.0f );
-		xml.popTag();
-	}
+//	if(xml.pushTag("linesColor")){
+//		linesColor[0] = xml.getValue("r", 1.0f );
+//		linesColor[1] = xml.getValue("g", 1.0f );
+//		linesColor[2] = xml.getValue("b", 1.0f );
+//		linesColor[3] = xml.getValue("a", 1.0f );
+//		xml.popTag();
+//	}
 	fLineBeatDuration = xml.getValue("LineDuration", 1.0f);
 	
 	return ret;
@@ -258,7 +258,7 @@ void lineDrawEffect::tempoEventListener(mirTempoEventArgs &_args){
 	
 	if(_args.isTempoBis) for(auto s=shapes.begin(); s!=shapes.end(); ++s){
 		if( (*s)->isType("vertexShape") ){
-			lines.push_back( lineDrawEffectLine( (vertexShape*)*s, (1.0f/(mirReceiver::mirCache.bpm/60.0f) )*fLineBeatDuration ) );
+			lines.push_back( lineDrawEffectLine( (vertexShape*)*s, (1.0f/(mirReceiver::mirCache.bpm/60.0f) )*fLineBeatDuration, ofColor(mainColor[0]*255, mainColor[1]*255,mainColor[2]*255, mainColor[3]*255) ));
 		}
 	}
 }

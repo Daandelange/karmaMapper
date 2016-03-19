@@ -50,7 +50,7 @@ public:
 	
 protected:
 	//ofFbo fbo; // for compatibility issues, we need a specific fbo object
-	float linesColor[4];
+	//float linesColor[4];
 	list<lineDrawEffectLine> lines;
 	
 	float fLineBeatDuration;

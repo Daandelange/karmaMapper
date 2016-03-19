@@ -29,7 +29,7 @@ class lineDrawEffectLine {
 public:
 	lineDrawEffectLine( basicPoint* _from, basicPoint* _to);
 	lineDrawEffectLine( basicShape* targetShape );
-	lineDrawEffectLine( vertexShape* targetShape, float _lifeTime );
+	lineDrawEffectLine( vertexShape* targetShape, float _lifeTime, ofColor _color );
 	~lineDrawEffectLine();
 	
 	void render();

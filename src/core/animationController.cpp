@@ -1419,8 +1419,9 @@ void animationController::draw(ofEventArgs& event){
 									prevIt->first.setIndex( fboLayer.getIndex() );
 									fboLayer.setIndex(prevLayerCurIndex);
 								}
-								
-								//layers.sort(karmaFboLayer::orderByIndex);
+#ifndef TARGET_WIN32
+								layers.sort(karmaFboLayer::orderByIndex);
+#endif
 							}
 							ImGui::SameLine();
 							if(ImGui::Button("v")){ // down
@@ -1432,7 +1433,9 @@ void animationController::draw(ofEventArgs& event){
 									fboLayer.setIndex(nextLayerCurIndex);
 								}
 								
-								//layers.sort(karmaFboLayer::orderByIndex);
+#ifndef TARGET_WIN32
+								layers.sort(karmaFboLayer::orderByIndex);
+#endif
 							}
 							ImGui::SameLine();
 							ImGui::Spacing();

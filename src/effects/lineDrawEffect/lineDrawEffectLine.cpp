@@ -25,7 +25,7 @@ lineDrawEffectLine::lineDrawEffectLine( basicShape* targetShape ){
 //	posTo = rememberShape->getPositionPtr();
 }
 
-lineDrawEffectLine::lineDrawEffectLine( vertexShape* _targetShape, float _lifeTime ){
+lineDrawEffectLine::lineDrawEffectLine( vertexShape* _targetShape, float _lifeTime, ofColor _color ){
 	bAlive = true;
 	lifeTime = _lifeTime;
 	if( lifeTime < 0.05f ) lifeTime = 1.0f;
@@ -36,6 +36,8 @@ lineDrawEffectLine::lineDrawEffectLine( vertexShape* _targetShape, float _lifeTi
 	points.points.push_back( _targetShape->getRandomVertexPtr() );
 	points.points.push_back( _targetShape->getRandomVertexPtr() );
 	points.points.push_back( _targetShape->getRandomVertexPtr() );
+	
+	color = _color;
 //	posFrom = _targetShape->getRandomVertexPtr();
 //	posCenter =
 //	posTo = _targetShape->getRandomVertexPtr();
@@ -69,7 +71,7 @@ void lineDrawEffectLine::render(float state) {
 	ofPushMatrix();
 	ofTranslate( points.shape->getPositionPtr()->x, points.shape->getPositionPtr()->y );
 	
-	ofSetColor(color, opacity*255 );
+	ofSetColor(color, color.a*opacity );
 	ofNoFill();
 	//ofSetLineWidth(5);
 	

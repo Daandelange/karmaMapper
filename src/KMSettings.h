@@ -11,11 +11,16 @@
 #ifdef TARGET_OSX
 
         // for the moment Syphon only compiles on XCODE....
-#ifdef KM_XCODE_COMPILER
+#if defined(KM_XCODE_COMPILER) || defined(KM_QT_CREATOR)
 
 	// comment line to force-disable
 	#define KM_ENABLE_SYPHON
-	#pragma message "Enabling Syphon. Make sure you use OSX + XCode to compile. Also verify your git branch depending on your window type and OF version."
+
+	#ifdef KM_QT_CREATOR
+                #pragma message "Enabling Syphon. On Qt Creator you'll need to copy Syphon.framework to /Library/Frameworks. Also verify your git branch depending on your window type and OF version."
+	#else
+		#pragma message "Enabling Syphon. Make sure you use OSX + XCode to compile. Also verify your git branch depending on your window type and OF version."
+	#endif
 
 #endif
 #endif

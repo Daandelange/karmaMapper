@@ -73,6 +73,8 @@ bool basicEffect::render(karmaFboLayer& renderLayer, const animationParams& para
 	
 	renderLayer.begin();
 	
+	ofPushStyle();
+	
 	// draw bounding box
 	ofSetColor(mainColor[0]*255, mainColor[1]*255, mainColor[2]*255, mainColor[3]*255);
 	ofNoFill();
@@ -82,6 +84,8 @@ bool basicEffect::render(karmaFboLayer& renderLayer, const animationParams& para
 	for(int i=0; i<shapes.size(); i++){
 		shapes[i]->sendToGPU();
 	}
+	
+	ofPopStyle();
 	
 	renderLayer.end();
 	

@@ -175,7 +175,7 @@ void karmaConsoleChannel::log(ofLogLevel level, const string & module, const str
 	
 	if(bLogToConsole) consoleLogger.log(level, module, message);
 	
-	if(bLogToScreen) console.AddLog( message.c_str() );
+	if(bLogToScreen) console.AddLog( "%s", message.c_str() );
 	
 }
 

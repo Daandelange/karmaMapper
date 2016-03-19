@@ -56,6 +56,8 @@ bool gpuGlitchEffect::render(karmaFboLayer& renderLayer, const animationParams &
 		ofSetColor(mainColor[0]*255, mainColor[1]*255, mainColor[2]*255, mainColor[3]*255);
 		ofFill();
 		
+		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+		
 		
 		// bind the glitched fbo
 		//fbo.getTexture().bind();
@@ -105,7 +107,29 @@ void gpuGlitchEffect::reset(){
 	//fboSettings.numColorbuffers = 1;
 	fboSettings.numSamples = ofFbo::maxSamples();
 	
+	maxAllocations = 20;
+	
 	effectMutex.unlock();
+}
+
+// - - - - - - -
+// GPUGLITCHEFFECT METHODS
+// - - - - - - -
+void gpuGlitchEffect::refreshGlitches(){
+	fbo.clear();
+	
+	int cnt = 1+ofRandomuf()*maxAllocations;
+	vector<ofFbo> tmpFbos(cnt);
+	for( auto it=tmpFbos.begin(); it!=tmpFbos.end(); ++it){
+		it->allocate(round(fbo.getWidth()*(0.5+ofRandomuf()/2.0) ), round(fbo.getHeight()*(0.5+ofRandomuf()/2.0) ));
+	}
+//	while(cnt >= 1){
+//		
+//		cnt --;
+//	}
+	
+	fbo.allocate(fboSettings);
+	
 }
 
 // - - - - - - -
@@ -116,14 +140,26 @@ void gpuGlitchEffect::reset(){
 bool gpuGlitchEffect::printCustomEffectGui(){
 	
 	if( ImGui::CollapsingHeader( GUIGpuGlitchPanel, "GUIGpuGlitchPanel", true, true ) ){
-		ImGui::TextWrapped("Gets some textures directly from your unallocated GPU memory. (computer dreams!)");
+		ImGui::TextWrapped("Gets some textures directly from your previously allocated GPU memory. (computer dreams!)");
 		
 		ImGui::Separator();
 		
-		if(ImGui::Button("Refresh")){
-			fbo.clear();
-			fbo.allocate(fboSettings);
+		ImGui::DragInt("max allocations", &maxAllocations);
+		ImGui::TextWrapped("More allocations give more chance to get more different glitches.");
+		
+		if(ImGui::Button("Refresh Glitches")){
+			refreshGlitches();
 		}
+		if (ImGui::IsItemHovered()){
+			ImGui::SetTooltip( "%s", "(click several times if not changing)" );
+		}
+		
+		ImGui::TreePush("General GPU information:");
+		ImGui::TextWrapped("maxSamples:\t %u", ofFbo::maxSamples() );
+		ImGui::TextWrapped("maxColorAttachments:\t %u", ofFbo::maxColorAttachments() );
+		ImGui::TextWrapped("maxDrawBuffers:\t %u", ofFbo::maxDrawBuffers() );
+		
+		ImGui::TreePop();
 	}
 	
 	//parentEffect::printCustomEffectGui();

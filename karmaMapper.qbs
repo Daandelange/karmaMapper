@@ -3,6 +3,7 @@ import qbs.Process
 import qbs.File
 import qbs.FileInfo
 import qbs.TextFile
+//import qbs.base 1.0
 import "../../../libs/openFrameworksCompiled/project/qtcreator/ofApp.qbs" as ofApp
 
 Project{
@@ -10,6 +11,8 @@ Project{
 
     ofApp {
         name: { return FileInfo.baseName(path) }
+
+        //cpp.includePaths: of.cpp.includePaths.concat(Helpers.listDirsRecursive(project.sourceDirectory + '/src'))
 
         files: [
             'src/main.cpp',
@@ -24,6 +27,8 @@ Project{
             'src/core/animationController.h',
             'src/core/karmaConsole.cpp',
             'src/core/karmaConsole.h',
+            'src/core/karmaFboLayer.h',
+            'src/core/karmaUtilities.h',
 
             // MODULES (CORE)
             'src/modules/karmaModule.cpp',
@@ -75,6 +80,10 @@ Project{
             'src/effects/lineDrawEffect/lineDrawEffect.h',
             'src/effects/lineDrawEffect/lineDrawEffectLine.cpp',
             'src/effects/lineDrawEffect/lineDrawEffectLine.h',
+            'src/effects/gpuGlitchEffect/gpuGlitchEffect.cpp',
+            'src/effects/gpuGlitchEffect/gpuGlitchEffect.h',
+            'src/effects/fboEraser/fboEraser.cpp',
+            'src/effects/fboEraser/fboEraser.h',
             'src/effects/shaderEffect/shaderEffect.cpp',
             'src/effects/shaderEffect/shaderEffect.h',
             'src/effects/videoShader/videoShader.cpp',
@@ -109,6 +118,7 @@ Project{
         // the addons from the qbs file change the following lines to
         // the list of used addons in array format. eg:
         //
+
         of.addons: [
              'ofxGui',
              //'ofxOpenCv',
@@ -122,8 +132,8 @@ Project{
              'ofxVideoRecorder',
              'ofxXmlSettings',
              'ofxImGui',
-             'ofxSyphon'
-        ]
+             'ofxMSATimer'
+        ];
 
         // additional flags for the project. the of module sets some
         // flags by default to add the core libraries, search paths...
@@ -151,22 +161,51 @@ Project{
                 'src/modules/soundAnalyser',
                 'src/modules/mirOSC',
                 'src/modules/durationOSC',
-//            '../../../addons/ofxSyphon/libs',
-//            '../../../addons/ofxSyphon/libs/Syphon',
-//            '../../../addons/ofxSyphon/libs/Syphon/lib',
-//            '../../../addons/ofxSyphon/libs/Syphon/lib/osx',
-//            '../../../addons/ofxSyphon/libs/Syphon/src',
-//            '../../../addons/ofxSyphon/src',
-//            '/Library/Frameworks/'
         ] // include search paths
-        of.cFlags: ['-fpermissive']  // flags passed to the c compiler
-        of.cxxFlags: []         // flags passed to the c++ compiler
-        of.linkerFlags: ['-v']//, '-F/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx']      // flags passed to the linker
+        of.cFlags: [
+            '-fpermissive',
+        ]  // flags passed to the c compiler
+        //of.cxxFlags: []         // flags passed to the c++ compiler
+        of.linkerFlags: [
+
+        ]      // flags passed to the linker
         //of.defines: ['KM_EDITOR_APP', 'KM_QT_CREATOR'] // defines are passed as -D to the compiler
         of.defines: ['KM_ANIMATOR_APP', 'KM_QT_CREATOR']
         // and can be checked with #ifdef or #if in the code
-        //of.frameworks: ['Syphon']  // osx only, additional frameworks to link with the project
-        //of.frameworks: ['Qtkit', 'Syphon']
+
+        // add Syphon Support on OSX
+        Properties {
+
+            // osx only, additional frameworks to link with the project
+            condition: qbs.targetOS.contains("osx")
+            of.addons: ['ofxSyphon'].concat(outer)
+
+            of.frameworks: outer.concat(['Syphon', 'Qtkit'])
+            of.linkerFlags: outer.concat([
+                '-F/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx',
+                //'-lSyphon'
+            ])
+            of.includePaths: outer.concat([
+                '../../../addons/ofxSyphon/libs',
+                '../../../addons/ofxSyphon/libs/Syphon',
+                '../../../addons/ofxSyphon/libs/Syphon/lib',
+                '../../../addons/ofxSyphon/libs/Syphon/lib/osx',
+                '../../../addons/ofxSyphon/libs/Syphon/src',
+                '../../../addons/ofxSyphon/src',
+            ]);
+        }
+        Group {
+            name: 'Syphon Files DirtyFix'
+            // osx only, additional frameworks to link with the project
+            condition: qbs.targetOS.contains("osx")
+            // dirty fix for .mm files
+            files: base.concat([
+                '../../../addons/ofxSyphon/src/ofxSyphonClient.mm',
+                '../../../addons/ofxSyphon/src/ofxSyphonServer.mm',
+                '../../../addons/ofxSyphon/src/ofxSyphonServerDirectory.mm',
+                '../../../addons/ofxSyphon/libs/Syphon/src/SyphonNameboundClient.m',
+            ])
+        }
 
         // other flags can be set through the cpp module: http://doc.qt.io/qbs/cpp-module.html
         // eg: this will enable ccache when compiling
@@ -187,10 +226,7 @@ Project{
             name: "openFrameworks"
         }
 
-//        Depends{
-//            name: "Syphon.framework"
-//        }
-    }
+    } // end ofApp
 
     references: [FileInfo.joinPaths(of_root, "/libs/openFrameworksCompiled/project/qtcreator/openFrameworks.qbs")]
 }
