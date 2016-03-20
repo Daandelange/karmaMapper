@@ -163,7 +163,7 @@ bool gpuGlitchEffect::printCustomEffectGui(){
 	}
 	
 	//parentEffect::printCustomEffectGui();
-	
+	return true;
 }
 
 // - - - - - - -
