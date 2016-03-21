@@ -18,9 +18,6 @@
 
 struct animationParams;
 
-// todo : add statistics to effects. Track their rendering time so we have an overview of their rendering time.
-// todo: add a GPU memory extraction feature for stats and handling no more GPU allocatable errors.
-
 class lineDrawEffect : public basicEffect {
 	
 public:
@@ -54,6 +51,9 @@ protected:
 	list<lineDrawEffectLine> lines;
 	
 	float fLineBeatDuration;
+	int spawnAmount;
+	
+	bool bReactToMusic; // *threaded memory*
 	
 	bool bStressTestMode;
 	float fStressTestMultiplier;
@@ -66,4 +66,4 @@ private:
 	
 };
 
-#define GUILineDrawEffectPanel "Line Draw"
+#define GUILineDrawEffectPanel "Line Drawer"

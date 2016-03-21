@@ -46,11 +46,14 @@ public:
 	virtual bool disable();
 	virtual void update(const animationParams& params);
 	virtual void draw(const animationParams& params);
+	virtual bool reset();
+	void showGuiWindow();
+	void drawMenuEntry();
 	
 	// basic functions
 	//bool startListening();
 	//bool stopListening();
-        bool connectToOSCRouter(){return false;};
+	bool connectToOSCRouter(){return false;};
 	
 	// listeners
 	//void oscIn();
@@ -68,6 +71,9 @@ protected:
 	
 	// analysis variables
 	
+	
+	// Shared thread memory *beware of race conditions, use oscMutex*
+	string lastReceivedParamName;
 	
 	ofMutex oscMutex; // needed because audioIn() runs on a separate thread
 	

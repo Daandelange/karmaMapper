@@ -476,9 +476,9 @@ bool shaderEffect::saveToXML(ofxXmlSettings& xml) const{
 bool shaderEffect::loadFromXML(ofxXmlSettings& xml){
 	bool ret = basicEffect::loadFromXML(xml);
 	
-	loadShader( xml.getValue("vertexShader",""), xml.getValue("fragmentShader","") );
+	loadShader( xml.getValue("vertexShader",vertexShader), xml.getValue("fragmentShader",fragmentShader) );
 	
-	bUseShadertoyVariables = xml.getValue( "useShadertoyVariables", false );
+	bUseShadertoyVariables = xml.getValue( "useShadertoyVariables", bUseShadertoyVariables );
 	
 	if( xml.pushTag("shadertoyVariables") ){
 		shaderToyArgs.iGlobalTimeScale = xml.getValue("iGlobalTimeScale", 1.0f );

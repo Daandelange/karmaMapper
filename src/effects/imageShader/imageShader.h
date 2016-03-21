@@ -15,14 +15,7 @@
 
 struct animationParams;
 
-
-
-enum textureMode {
-	TEXTURE_MODE_MOVIE_STREAM, // read image from file
-	TEXTURE_MODE_MOVIE_FILE // read movie from file
-};
-
-class imageShader : public shaderEffect, public ofThread {
+class imageShader : public shaderEffect {
 	
 public:
 	// constructors
@@ -40,6 +33,10 @@ public:
 	virtual bool printCustomEffectGui();
 	
 	// #########
+	// CUSTOM METHODS
+	bool loadFromImage(string _imagePath);
+	
+	// #########
 	// LOAD & SAVE FUNCTIONS
 	virtual bool saveToXML(ofxXmlSettings& xml ) const;
 	virtual bool loadFromXML(ofxXmlSettings& xml);
@@ -51,12 +48,15 @@ public:
 	
 protected:
 	
-	ofTexture texture;
-	
+	string imagePath;
+	bool bReDrawNextFrame;
+	bool bDrawAlways;
+	bool bReactToMusic;
+	//bool bUseThreadedFileDecoding;
 	
 private:
 	
 	
 };
 
-#define GUIimageShaderPanel "Line Draw"
+#define GUIimageShaderPanel "Image Shader"

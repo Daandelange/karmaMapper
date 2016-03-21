@@ -52,6 +52,7 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 	
 	// handle messages coming from karma Sound Analyser
 	if( addr.substr(0,6)=="/kmsa/" ){
+		string tmpLastMsg = "";
 		string subAddr = addr.substr(5,addr.npos);
 		
 		if( subAddr.substr(0,7).compare("/aubio/") == 0 ){
@@ -77,10 +78,11 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 					// send bangEvent
 					mirBangEventArgs args;
 					args.what="aubioTempoBis";
+					tmpLastMsg = args.what;
 					ofNotifyEvent(mirBangEvent, args);
 				}
 				{
-					// send bangEvent
+					// send tmpoEvent
 					mirTempoEventArgs args;
 					args.bpm = mirCache.bpm;
 					args.isTempoBis=true;
@@ -93,12 +95,16 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 					// send OnSetEvent
 					mirOnSetEventArgs args;
 					args.source="aubioOnSet";
+					tmpLastMsg = args.source;
 					ofNotifyEvent(mirOnSetEvent, args);
 				}
 				return true;
 			}
 			else if( subAddr.compare("/bpm") == 0 ){
 				if(_msg.getNumArgs()>0) mirCache.bpm = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
+				
+				tmpLastMsg = "bpm";
+				
 				return true;
 			}
 			else if( subAddr.compare("/pitch") == 0 ){
@@ -167,6 +173,8 @@ bool mirReceiver::enable(){
 	// try connect
 	ret *= OSCRouter::getInstance().addNode(this);
 	
+	bHasError = ret;
+	
 	return ret;
 }
 
@@ -185,6 +193,52 @@ void mirReceiver::update(const animationParams &params){
 
 void mirReceiver::draw(const animationParams &params){
 	karmaModule::draw(params);
+}
+
+bool mirReceiver::reset(){
+	lastReceivedParamName="";
+}
+
+void mirReceiver::showGuiWindow(){
+	if(!bShowGuiWindow) return;
+	
+	ImGui::SetNextWindowSize(ImVec2(400,ofGetHeight()*0.8), ImGuiSetCond_Once);
+	ImGui::Begin( ((string)"Module: ").append(karmaModule::getName()).append("###module-").append( ofToString(this) ).c_str() , &bShowGuiWindow );
+	ImGui::TextWrapped("This module receives OSC messages trough the OSCRouter module and forwards them to effects and other components.");
+	
+	ImGui::Separator();
+	static bool oscRouterConnection = false;
+	if( ImGui::Button("Test connection with OSC Router" )){
+		oscRouterConnection = OSCRouter::getInstance().isEnabled();
+		ImGui::OpenPopup("oscRouterConnectionResult");
+	}
+	if( ImGui::BeginPopup("oscRouterConnectionResult") ){
+		ImGui::SameLine();
+		
+		if (oscRouterConnection){
+			ImGui::Text("Up & Running! :)");
+		}
+		else {
+			ImGui::Text("Error... Please check if the OSCRouter module is enabled.");
+		}
+		if(ImGui::Button("Ok")){
+			ImGui::CloseCurrentPopup();
+		}
+		
+		ImGui::EndPopup();
+	}
+	
+	ImGui::Separator();
+	
+	oscMutex.lock();
+	ImGui::TextWrapped("Last Received Param: %s", lastReceivedParamName.c_str());
+	oscMutex.unlock();
+	
+	ImGui::End();
+}
+
+void mirReceiver::drawMenuEntry() {
+	karmaModule::drawMenuEntry();
 }
 
 

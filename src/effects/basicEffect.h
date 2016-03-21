@@ -116,7 +116,7 @@ public:
 	//virtual void transitionIn();
 	//virtual void transitionOut();
 	//void updateTransitionState();
-	string effectFolder(string _file) const;
+	string effectFolder(const string _file, const string _effectFolder="") const;
 	bool usesPingPong() const;
 	virtual bool setUsePingPong(const bool& _usePingpong);
 	

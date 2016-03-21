@@ -94,14 +94,15 @@ void lineDrawEffect::update(karmaFboLayer& renderLayer, const animationParams& p
 		}
 	}
 	
+	ofScopedLock(oscMutex);
+	
 	// check for dead lines
-	for(auto it=lines.rbegin(); it!= lines.rend(); it--){
+	for(auto it=lines.rbegin(); it!=lines.rend(); it++){
 		
 		// remve dead ones
 		if( !(*it).isAlive() ) {
-			it++;
-			it= std::list<lineDrawEffectLine>::reverse_iterator( lines.erase( it.base() ));
-			it--;
+			it = std::list<lineDrawEffectLine>::reverse_iterator( lines.erase( std::next(it).base() ));
+			it = std::prev(it);
 		}
 	}
 }
@@ -114,8 +115,11 @@ void lineDrawEffect::reset(){
 	effectType = "lineDrawEffect";
 	
 	fLineBeatDuration = 1.0;
+	spawnAmount = 1;
 	
-	bStressTestMode = true; // tmp
+	bReactToMusic = true;
+	
+	bStressTestMode = false;
 	fStressTestMultiplier = 1;
 	fStressTestAddTolerance = 0.01;
 	fStressTestRemoveTolerance = 0.28;
@@ -148,14 +152,30 @@ bool lineDrawEffect::printCustomEffectGui(){
 	
 	if( ImGui::CollapsingHeader( GUILineDrawEffectPanel, "GUILineDrawEffectPanel", true, true ) ){
 		
-		ImGui::TextWrapped("Draws lines on shapes on the rythm of music.");
+		ImGui::TextWrapped("Draws lines on shapes in various ways.");
+		ImGui::Separator();
+		ImGui::LabelText("Number of lines", "%lu", lines.size() );
+		ImGui::SliderInt("Spawn Amount", &spawnAmount, 0, 50);
 		
 		ImGui::Separator();
+		ImGui::Separator();
+		effectMutex.lock();
+		if( ImGui::Checkbox("React to music", &bReactToMusic )){
+			// check if MIR router is running
+			if(bReactToMusic && mirReceiver::getInstance().isEnabled() ) bReactToMusic = false;
+			// todo: else request mir receiver
+		}
+		effectMutex.unlock();
+		if(ImGui::IsItemHovered()){
+			ImGui::SetTooltip("Draws lines on shapes on the rythm of music. (uses aubioTempo)");
+		}
 		
-		ImGui::LabelText("Number of lines", "%lu", lines.size() );
+		ImGui::Separator();
+		ImGui::Separator();
+		
 		//ImGui::ColorEdit4("Color", linesColor, true);
 		//ImGui::Checkbox("React to mirTempoEvents");
-		ImGui::SliderFloat("Line Duration (in beats)", &fLineBeatDuration, 1, 4);
+		ImGui::SliderFloat("Line Duration (in beats)", &fLineBeatDuration, 1, 10);
 		
 		ImGui::Separator();
 		ImGui::Separator();
@@ -215,6 +235,15 @@ bool lineDrawEffect::saveToXML(ofxXmlSettings& xml) const{
 //		xml.popTag();
 //	}
 	xml.addValue("LineDuration", fLineBeatDuration);
+	xml.addValue("spawnAmount", spawnAmount);
+	
+	xml.addValue("bReactToMusic", bReactToMusic);
+	
+	xml.addValue("bStressTestMode", bStressTestMode);
+	xml.addValue("fStressTestMultiplier", fStressTestMultiplier);
+	xml.addValue("fStressTestAddTolerance",fStressTestAddTolerance);
+	xml.addValue("fStressTestRemoveTolerance",fStressTestRemoveTolerance);
+	xml.addValue("fStressTestTargetFPS", fStressTestTargetFPS);
 	
 	return ret;
 }
@@ -224,14 +253,16 @@ bool lineDrawEffect::saveToXML(ofxXmlSettings& xml) const{
 bool lineDrawEffect::loadFromXML(ofxXmlSettings& xml){
 	bool ret = basicEffect::loadFromXML(xml);
 	
-//	if(xml.pushTag("linesColor")){
-//		linesColor[0] = xml.getValue("r", 1.0f );
-//		linesColor[1] = xml.getValue("g", 1.0f );
-//		linesColor[2] = xml.getValue("b", 1.0f );
-//		linesColor[3] = xml.getValue("a", 1.0f );
-//		xml.popTag();
-//	}
 	fLineBeatDuration = xml.getValue("LineDuration", 1.0f);
+	spawnAmount = xml.getValue("spawnAmount", spawnAmount);
+	
+	bReactToMusic = xml.getValue("bReactToMusic", bReactToMusic);
+	
+	bStressTestMode = xml.getValue("bStressTestMode", bStressTestMode);
+	fStressTestMultiplier = xml.getValue("fStressTestMultiplier", fStressTestMultiplier);
+	fStressTestAddTolerance = xml.getValue("fStressTestAddTolerance",fStressTestAddTolerance);
+	fStressTestRemoveTolerance = xml.getValue("fStressTestRemoveTolerance",fStressTestRemoveTolerance);
+	fStressTestTargetFPS = xml.getValue("fStressTestTargetFPS", fStressTestTargetFPS);
 	
 	return ret;
 }
@@ -254,11 +285,16 @@ bool lineDrawEffect::randomizePresets(){
 void lineDrawEffect::tempoEventListener(mirTempoEventArgs &_args){
 	ofScopedLock lock(effectMutex);
 	
+	if(!bReactToMusic) return;
+	
 	if(shapes.size()<=0) return;
 	
-	if(_args.isTempoBis) for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+	if(!_args.isTempoBis) for(auto s=shapes.begin(); s!=shapes.end(); ++s){
 		if( (*s)->isType("vertexShape") ){
-			lines.push_back( lineDrawEffectLine( (vertexShape*)*s, (1.0f/(mirReceiver::mirCache.bpm/60.0f) )*fLineBeatDuration, ofColor(mainColor[0]*255, mainColor[1]*255,mainColor[2]*255, mainColor[3]*255) ));
+			vertexShape* shape = (vertexShape*)*s;
+			for(int i=0; i<spawnAmount; i++){
+				lines.push_back( lineDrawEffectLine( shape, (1.0f/(mirReceiver::mirCache.bpm/60.0f) )*fLineBeatDuration, ofColor(mainColor[0]*255, mainColor[1]*255,mainColor[2]*255, mainColor[3]*255) ));
+			}
 		}
 	}
 }

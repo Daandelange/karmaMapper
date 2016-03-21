@@ -21,6 +21,7 @@ fboRecorder::fboRecorder( ){
 	// karmaModule setup
 	bInitialised = true;
 	bEnabled = false;
+	bFlipVertical = false;
 	moduleName = "fboRecorder";
 	moduleType = "fboRecorder";
 	
@@ -88,6 +89,7 @@ void fboRecorder::drawMenuEntry(){
 		ImGui::ListBoxFooter();
 	}
 	ImGui::Checkbox("Use grab screen instead of fbo", &useGrabScreen);
+	ImGui::Checkbox("Flip Vertical", &bFlipVertical);
 	ImGui::Checkbox("Show recorded output", &videoRecShowOutput);
 	ImGui::Separator();
 	
@@ -139,6 +141,7 @@ bool fboRecorder::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("videoRecBitRate", (int) videoRecBitRate);
 	xml.addValue("videoRecShowOutput", videoRecShowOutput);
 	xml.addValue("useGrabScreen", useGrabScreen);
+	xml.addValue("bFlipVertical", bFlipVertical);
 	
 	return ret;
 }
@@ -155,6 +158,7 @@ bool fboRecorder::loadFromXML(ofxXmlSettings& xml){
 	videoRecAA = xml.getValue("videoRecAA", KM_FBOREC_DEFAULT_AA);
 	videoRecBitRate = xml.getValue("videoRecBitRate", KM_FBOREC_DEFAULT_BITRATE);
 	videoRecShowOutput = xml.getValue("videoRecShowOutput", true);
+	bFlipVertical = xml.getValue("bFlipVertical", bFlipVertical);
 	useGrabScreen = xml.getValue("useGrabScreen", false);
 	setRecordMode (static_cast<enum videoRecMode>(xml.getValue("fboRecMode", VIDEOREC_MODE_FILE_H264)));
 	
@@ -380,6 +384,7 @@ bool fboRecorder::endFrame(bool _showBuffer){
 				syphonServer.publishTexture( &tmpTex );
 			}
 			else {
+				fbo.getTexture().getTextureData().bFlipTexture = bFlipVertical;
 				//tmpTex = fbo.getTexture();
 				syphonServer.publishTexture( &fbo.getTexture() );
 			}

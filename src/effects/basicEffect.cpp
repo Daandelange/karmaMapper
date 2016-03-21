@@ -372,8 +372,14 @@ bool basicEffect::randomizePresets(){
 }
 
 // formats URLS for getting files within the effect folder itself
-string basicEffect::effectFolder(string _file) const{
-	return ofToDataPath( ((string)"effects/").append(getType()).append("/").append(_file));
+string basicEffect::effectFolder(const string _file, const string _effectFolder) const{
+	
+	string tmpEffectFolder = _effectFolder;
+	if(tmpEffectFolder.compare("")==0){
+		tmpEffectFolder = getType();
+	}
+	
+	return ofToDataPath( ((string)"effects/").append(tmpEffectFolder).append("/").append(_file));
 }
 
 bool basicEffect::usesPingPong() const {

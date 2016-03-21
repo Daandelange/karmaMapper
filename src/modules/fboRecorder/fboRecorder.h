@@ -77,6 +77,7 @@ protected:
 	// recording
 	bool bRecording = false;
 	bool bFrameStarted = false;
+	bool bFlipVertical = false;
 	ofFbo fbo;
 	//ofxVideoRecorder videoRecorder;
 	

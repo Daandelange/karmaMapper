@@ -20,7 +20,7 @@ imageShader::imageShader(){
 }
 
 imageShader::~imageShader(){
-	
+	ofRemoveListener(mirReceiver::mirTempoEvent, this, &imageShader::tempoEventListener);
 }
 
 // - - - - - - -
@@ -42,9 +42,13 @@ bool imageShader::initialise(const animationParams& params){
 
 bool imageShader::render(karmaFboLayer& renderLayer, const animationParams &params){
 	
-	if(!isReady()) return false;
+	if(!bReDrawNextFrame && !bDrawAlways) return true;
 	
+	if(!shaderEffect::render(renderLayer, params)){
+		return false;
+	}
 	
+	bReDrawNextFrame = false;
 	
 	return true;
 }
@@ -55,7 +59,6 @@ void imageShader::update(karmaFboLayer& renderLayer, const animationParams& para
 	// do basic Effect function
 	basicEffect::update( renderLayer, params );
 	
-
 }
 
 // resets all values
@@ -65,11 +68,17 @@ void imageShader::reset(){
 	// effect type must match with class
 	effectType = "imageShader";
 	
-//	ofRemoveListener(mirReceiver::mirTempoEvent, this, &imageShader::tempoEventListener);
-//	ofAddListener(mirReceiver::mirTempoEvent, this, &imageShader::tempoEventListener);
+	ofRemoveListener(mirReceiver::mirTempoEvent, this, &imageShader::tempoEventListener);
+	ofAddListener(mirReceiver::mirTempoEvent, this, &imageShader::tempoEventListener);
 	
-	// reset texture ?
-	//texture.
+	bool tmp = loadShader( effectFolder("videoShader.vert", "videoShader"), effectFolder("videoShader.frag", "videoShader") );
+	
+	bDrawAlways = true;
+	bReactToMusic = false;
+	imagePath = "";
+	bReDrawNextFrame = false;
+	
+	bUseTextures = true;
 	
 	// set this when done
 	bInitialised = true;
@@ -85,18 +94,77 @@ bool imageShader::printCustomEffectGui(){
 	
 	if( ImGui::CollapsingHeader( GUIimageShaderPanel, "GUIimageShaderPanel", true, true ) ){
 		
-		ImGui::TextWrapped("Draws lines on shapes on the rythm of music.");
+		ImGui::TextWrapped("Loads an image and renders it.");
+		
+		ImGui::Separator();
+		ImGui::Separator();
+		
+		if(ImGui::Button("Load image...")){
+			ofFileDialogResult d = ofSystemLoadDialog("Choose a video file...");
+			if(d.bSuccess){
+				loadFromImage( d.getPath() );
+			}
+		}
+		
+		ImGui::Separator();
+		ImGui::Checkbox("Draw always", &bDrawAlways);
+		effectMutex.lock();
+		if(ImGui::Checkbox("React to music", &bReactToMusic )){
+			// disable this param so this one is visible
+			//if(bReactToMusic && bDrawAlways) bDrawAlways = false;
+		}
+		effectMutex.unlock();
 		
 		ImGui::Separator();
 		
-		ImGui::LabelText("Number of lines", "%u", 0 );
-		//ImGui::ColorEdit4("Color", linesColor, true);
-		//ImGui::Checkbox("React to mirTempoEvents");
-		//ImGui::SliderFloat("Line Duration (in beats)", &fLineBeatDuration, 1, 4);
+		if(textures.size()>0 && textures.back().isAllocated()){
+			ImGui::LabelText("Loaded image", "%s", imagePath.c_str() );
+			ImGui::LabelText("Image width", "%f", textures.back().getWidth() );
+			ImGui::LabelText("Image height", "%f", textures.back().getHeight() );
+		}
 		
 		ImGui::Separator();
 	}
-        return true;
+	
+	shaderEffect::printCustomEffectGui();
+	
+	return true;
+}
+
+// - - - - - - -
+// CUSTOM METHODS
+// - - - - - - -
+
+bool imageShader::loadFromImage(string _imagePath){
+	ofFile file( _imagePath );
+	if( file.exists() && file ){
+		imagePath = file.getAbsolutePath();
+		
+		ofImage tmpImage;
+		if( tmpImage.load( file.getAbsolutePath() ) ){
+			textures.clear();
+			textures.push_back( ofTexture() );
+			textures.back().allocate(tmpImage.getWidth(), tmpImage.getHeight(), GL_RGBA);
+			textures.back().loadData( tmpImage.getPixels() );
+			
+			shaderToyArgs.iChannelResolution[0*3+0] = tmpImage.getWidth();
+			shaderToyArgs.iChannelResolution[0*3+1] = tmpImage.getHeight();
+			shaderToyArgs.iChannelResolution[0*3+2] = tmpImage.getWidth() / tmpImage.getHeight();
+			shaderToyArgs.iChannelTime[0]=0.f;
+			
+			imagePath = file.getAbsolutePath();
+			
+			ofLogNotice("imageShader::loadVideoFile") << "Loaded "<< imagePath << ".";
+		}
+		else {
+			// not in video mode
+		}
+		return true;
+	}
+	else {
+		ofLogNotice("videoShader::loadVideoFile") << "Invalid movie file. Not loading...";
+	}
+	return false;
 }
 
 // - - - - - - -
@@ -106,16 +174,10 @@ bool imageShader::printCustomEffectGui(){
 // writes the effect data to XML. xml's cursor is already pushed into the right <effect> tag.
 bool imageShader::saveToXML(ofxXmlSettings& xml) const{
 	bool ret = basicEffect::saveToXML(xml);
-	
-//	xml.addTag("linesColor");
-//	if(xml.pushTag("linesColor")){
-//		xml.addValue("r", linesColor[0] );
-//		xml.addValue("g", linesColor[1] );
-//		xml.addValue("b", linesColor[2] );
-//		xml.addValue("a", linesColor[3] );
-//		xml.popTag();
-//	}
-//	xml.addValue("LineDuration", fLineBeatDuration);
+
+	xml.addValue("bReactToMusic", bReactToMusic);
+	xml.addValue("bDrawAlways", bDrawAlways);
+	xml.addValue("imagePath", imagePath);
 	
 	return ret;
 }
@@ -125,7 +187,10 @@ bool imageShader::saveToXML(ofxXmlSettings& xml) const{
 bool imageShader::loadFromXML(ofxXmlSettings& xml){
 	bool ret = shaderEffect::loadFromXML(xml);
 	
+	bReactToMusic = xml.getValue("bReactToMusic",bReactToMusic);
+	bDrawAlways = xml.getValue("bDrawAlways", bDrawAlways);
 	
+	ret *= loadFromImage( xml.getValue("imagePath", imagePath ) );
 	
 	return ret;
 }
@@ -148,12 +213,17 @@ bool imageShader::randomizePresets(){
 void imageShader::tempoEventListener(mirTempoEventArgs &_args){
 	ofScopedLock lock(effectMutex);
 	
+	if(!bReactToMusic) return;
+	
 	if(shapes.size()<=0) return;
 	
-	if(_args.isTempoBis) for(auto s=shapes.begin(); s!=shapes.end(); ++s){
-		if( (*s)->isType("vertexShape") ){
-			
-		}
+	if(!_args.isTempoBis){
+		bReDrawNextFrame = true;
+//		for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+//			if( (*s)->isType("vertexShape") ){
+//				
+//			}
+//		}
 	}
 }
 
