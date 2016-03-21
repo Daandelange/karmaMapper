@@ -196,6 +196,9 @@ bool videoShader::printCustomEffectGui(){
 			if ( ImGui::Selectable("VIDEO_MODE_FILE", videoMode==VIDEO_MODE_FILE)) {
 				setVideoMode(VIDEO_MODE_FILE);
 			}
+            if ( ImGui::Selectable("VIDEO_MODE_UVC_WEBCAM", videoMode==VIDEO_MODE_UVC_WEBCAM)) {
+                setVideoMode(VIDEO_MODE_UVC_WEBCAM);
+            }
 #ifdef KM_ENABLE_SYPHON
 			if ( ImGui::Selectable("VIDEO_MODE_SYPHON", videoMode==VIDEO_MODE_SYPHON)) {
 				setVideoMode(VIDEO_MODE_SYPHON);
@@ -260,6 +263,9 @@ bool videoShader::printCustomEffectGui(){
 			}
 			
 		}
+        else if(videoMode==VIDEO_MODE_UVC_WEBCAM){
+            ImGui::TextWrapped("This mode reads a video streqm from a UVC webcam.");
+        }
 #ifdef KM_ENABLE_SYPHON
 		else if(videoMode==VIDEO_MODE_SYPHON){
 			ImGui::TextWrapped("This mode reads a video from a syphon server.");
@@ -422,7 +428,8 @@ bool videoShader::loadVideoFile(const string &_path) {
 			ofLogNotice("videoShader::loadVideoFile") << "Loaded "<< videoFile << ".";
 		}
 		else {
-			// not in video mode
+			// not in video mode, simply remember file
+            
 		}
 		return true;
 	}
@@ -430,6 +437,12 @@ bool videoShader::loadVideoFile(const string &_path) {
 		ofLogNotice("videoShader::loadVideoFile") << "Invalid movie file. Not loading...";
 	}
 	return false;
+}
+
+bool videoShader::enableWebcam(){
+    if (videoMode==VIDEO_MODE_FILE) {
+        
+    }
 }
 
 #ifdef KM_ENABLE_SYPHON

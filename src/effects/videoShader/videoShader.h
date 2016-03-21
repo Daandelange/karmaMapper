@@ -26,7 +26,8 @@ struct animationParams;
 enum videoMode {
 	// note: each mode must have a unique key
 	VIDEO_MODE_FILE = 0, // read image from file
-	VIDEO_MODE_SYPHON = 1 // read movie from file
+	VIDEO_MODE_SYPHON = 1, // read movie from file
+    VIDEO_MODE_UVC_WEBCAM = 2,
 };
 
 // Important: lock() when accessing player or bUseThreadedFileDecoding
@@ -60,6 +61,7 @@ public:
 	// videoEffect FUNCTIONS
 	void setVideoMode(const enum videoMode& mode);
 	bool loadVideoFile( const string &_path);
+    bool enableWebcam();
 #ifdef KM_ENABLE_SYPHON
 	bool connectToSyphonServer( const ofxSyphonServerDescription& _addr );
 #endif

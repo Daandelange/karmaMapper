@@ -408,6 +408,7 @@ bool fboRecorder::endFrame(bool _showBuffer){
 #else
 			if(false){
 #endif
+                ofClear(255, 0);
 				fbo.draw(0, 0, fbo.getWidth(), fbo.getHeight()); // show recorded image
 			}
 			else {

@@ -14,6 +14,7 @@
 
 #define KM_OSC_PORT_IN 12000
 #define KM_SA_OSC_PORT_IN 12001
+#define KM_SA_OSC_ADDR "localhost"
 
 // based upon this model to register an OSC router
 // http://gamedev.stackexchange.com/a/17759
@@ -70,6 +71,9 @@ protected:
 	ofMutex oscMutex;
 	int OSCListeningPort;
 	bool bIsListening;
+    
+    
+    ofxOscSender sender;
 	
 private:
 	

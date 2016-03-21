@@ -267,9 +267,8 @@ bool OSCRouter::clearAllNodes(){
 
 // tries to let the KMSA know we're live now
 void OSCRouter::reconnectKMSA(){
-	ofxOscSender sender;
-	sender.setup("localhost", KM_SA_OSC_PORT_IN);
-	ofxOscMessage m;
+    sender.setup(KM_SA_OSC_ADDR, KM_SA_OSC_PORT_IN);
+    ofxOscMessage m;
 	m.setAddress("/km/reconnectKMSA");
 	m.addTriggerArg();
 	sender.sendMessage(m);
