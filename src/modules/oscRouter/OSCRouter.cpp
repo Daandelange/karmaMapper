@@ -7,7 +7,7 @@
 //
 
 #include "OSCRouter.h"
-
+#include "ofxImGui.h"
 
 // - - - - - - - -
 // CONSTRUCTORS
@@ -272,6 +272,31 @@ void OSCRouter::reconnectKMSA(){
 	m.setAddress("/km/reconnectKMSA");
 	m.addTriggerArg();
 	sender.sendMessage(m);
+}
+
+void OSCRouter::ImGuiShowOSCRouterConnectionTester() {
+	
+	static bool oscRouterConnection = false;
+	if( ImGui::Button("Test connection with OSC Router" )){
+		oscRouterConnection = OSCRouter::getInstance().isEnabled();
+		ImGui::OpenPopup("oscRouterConnectionResult");
+	}
+	if( ImGui::BeginPopup("oscRouterConnectionResult") ){
+		ImGui::SameLine();
+		
+		if (oscRouterConnection){
+			ImGui::Text("Up & Running! :)");
+		}
+		else {
+			ImGui::Text("Error... Please check if the OSCRouter module is enabled.");
+		}
+		if(ImGui::Button("Ok")){
+			ImGui::CloseCurrentPopup();
+		}
+		
+		ImGui::EndPopup();
+	}
+	
 }
 
 bool OSCRouter::startOSC(int _port){

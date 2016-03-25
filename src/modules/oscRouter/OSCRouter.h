@@ -60,6 +60,7 @@ public:
 	bool startOSC( int _port = KM_OSC_PORT_IN );
 	bool stopOSC();
 	void reconnectKMSA();
+	static void ImGuiShowOSCRouterConnectionTester();
 	
 protected:
 	// gui

@@ -21,6 +21,7 @@ imageShader::imageShader(){
 
 imageShader::~imageShader(){
 	ofRemoveListener(mirReceiver::mirTempoEvent, this, &imageShader::tempoEventListener);
+	ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &imageShader::liveGrabberNoteEventListener);
 }
 
 // - - - - - - -
@@ -59,6 +60,9 @@ void imageShader::update(karmaFboLayer& renderLayer, const animationParams& para
 	// do basic Effect function
 	basicEffect::update( renderLayer, params );
 	
+	mainColor[0] = liveGrabberOSC::liveGrabberAnalysis.lowFollower;
+	mainColor[1] = liveGrabberOSC::liveGrabberAnalysis.midFollower*2;
+	mainColor[2] = liveGrabberOSC::liveGrabberAnalysis.highFollower*2;
 }
 
 // resets all values
@@ -70,6 +74,9 @@ void imageShader::reset(){
 	
 	ofRemoveListener(mirReceiver::mirTempoEvent, this, &imageShader::tempoEventListener);
 	ofAddListener(mirReceiver::mirTempoEvent, this, &imageShader::tempoEventListener);
+	
+	ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &imageShader::liveGrabberNoteEventListener);
+	ofAddListener(liveGrabberOSC::liveGrabberNoteEvent, this, &imageShader::liveGrabberNoteEventListener);
 	
 	bool tmp = loadShader( effectFolder("videoShader.vert", "videoShader"), effectFolder("videoShader.frag", "videoShader") );
 	
@@ -98,7 +105,8 @@ bool imageShader::printCustomEffectGui(){
 		
 		ImGui::Separator();
 		ImGui::Separator();
-		
+		ImGui::Text("Settings :");
+		ImGui::Indent();
 		if(ImGui::Button("Load image...")){
 			ofFileDialogResult d = ofSystemLoadDialog("Choose a video file...");
 			if(d.bSuccess){
@@ -108,13 +116,25 @@ bool imageShader::printCustomEffectGui(){
 		
 		ImGui::Separator();
 		ImGui::Checkbox("Draw always", &bDrawAlways);
+		
 		effectMutex.lock();
 		if(ImGui::Checkbox("React to music", &bReactToMusic )){
 			// disable this param so this one is visible
-			//if(bReactToMusic && bDrawAlways) bDrawAlways = false;
+			if(bReactToMusic && bDrawAlways) bDrawAlways = false;
+		}
+		ImGui::Unindent();
+		
+		ImGui::Separator();
+		ImGui::Separator();
+		ImGui::Text("Controls");
+		
+		ImGui::Indent();
+		if(ImGui::Button("Re-draw image")){
+			bReDrawNextFrame = true;
 		}
 		effectMutex.unlock();
 		
+		ImGui::Separator();
 		ImGui::Separator();
 		
 		if(textures.size()>0 && textures.back().isAllocated()){
@@ -122,6 +142,7 @@ bool imageShader::printCustomEffectGui(){
 			ImGui::LabelText("Image width", "%f", textures.back().getWidth() );
 			ImGui::LabelText("Image height", "%f", textures.back().getHeight() );
 		}
+		ImGui::Unindent();
 		
 		ImGui::Separator();
 	}
@@ -224,6 +245,18 @@ void imageShader::tempoEventListener(mirTempoEventArgs &_args){
 //				
 //			}
 //		}
+	}
+}
+
+void imageShader::liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args){
+	ofScopedLock lock(effectMutex);
+	
+	if(!bReactToMusic) return;
+	
+	if(shapes.size()<=0) return;
+	
+	if(_args.key.compare("A0")==0){
+		bReDrawNextFrame = true;
 	}
 }
 

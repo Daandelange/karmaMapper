@@ -14,6 +14,7 @@
 #include "basicEffect.h"
 #include "animationParams.h"
 #include "mirReceiver.h"
+#include "liveGrabberOSC.h"
 #include "lineDrawEffectLine.h"
 
 struct animationParams;
@@ -44,6 +45,7 @@ public:
 	bool randomizePresets();
 	
 	virtual void tempoEventListener(mirTempoEventArgs &_args);
+	virtual void liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args);
 	
 protected:
 	//ofFbo fbo; // for compatibility issues, we need a specific fbo object

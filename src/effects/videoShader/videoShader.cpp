@@ -60,6 +60,9 @@ bool videoShader::initialise(const animationParams& params){
 bool videoShader::render(karmaFboLayer& renderLayer, const animationParams &params){
 	if( !shaderEffect::render(renderLayer, params) ) return false;
 	
+//	if(textures.size()>0 ){
+//		textures[0].draw(0,0);
+//	}
 //	if(videoMode==VIDEO_MODE_FILE){
 //		// tmp
 //		if (lock()) {
@@ -93,16 +96,31 @@ void videoShader::update(karmaFboLayer& renderLayer, const animationParams& para
 				}
 				else {
 					unlock(); // no threading = no locking
-					if( player.isLoaded() && (player.isFrameNew() || player.getPosition()<0) && textures.size()>0){
+					player.update();
+					if( player.isLoaded() && (player.isFrameNew() || player.getPosition()<0) ){
 						player.setUseTexture(true);
-						player.update();
 						textures[0] = player.getTexture();
 					}
 				}
 			}
 		}
+		
+		else if(videoMode==VIDEO_MODE_UVC_WEBCAM ){
+			//shaderToyArgs.iChannelTime[0]=player.getPosition();
+			
+			if( UVCWebcam.isReady() ){
+				UVCWebcam.update();
+				
+				if(UVCWebcam.isFrameNew()){
+					//tex.loadData(vidGrabber.getPixels());
+					UVCWebcam.getPixels();
+					textures[0].loadData( UVCWebcam.getPixels());
+				}
+			}
+		}
+		
 #ifdef KM_ENABLE_SYPHON
-		else if(videoMode==VIDEO_MODE_SYPHON && textures.size() > 0){
+		else if(videoMode==VIDEO_MODE_SYPHON){
 			
 			// todo: set REAL channel time
 			shaderToyArgs.iChannelTime[0]=ofGetElapsedTimef();
@@ -144,6 +162,13 @@ void videoShader::reset(){
 	}
 	loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
 	
+	activeUVCCamera = "";
+	UVCWebcam.close();
+	UVCWebcam.setUseAudio(false);
+#ifdef KARMAMAPPER_DEBUG
+	UVCWebcam.setVerbose(false);
+#endif
+	
 #ifdef KM_ENABLE_SYPHON
 	syphonAddr.appName = "Simple Server";
 	syphonAddr.serverName = "";
@@ -163,8 +188,6 @@ void videoShader::reset(){
 // When called, ImGui is already pushed into a Gui surface
 // Just draw your gui items
 bool videoShader::printCustomEffectGui(){
-	
-	shaderEffect::printCustomEffectGui();
 	
 	if( ImGui::CollapsingHeader( GUIvideoShaderPanel, "GUIvideoShaderPanel", true, true ) ){
 		
@@ -196,9 +219,9 @@ bool videoShader::printCustomEffectGui(){
 			if ( ImGui::Selectable("VIDEO_MODE_FILE", videoMode==VIDEO_MODE_FILE)) {
 				setVideoMode(VIDEO_MODE_FILE);
 			}
-            if ( ImGui::Selectable("VIDEO_MODE_UVC_WEBCAM", videoMode==VIDEO_MODE_UVC_WEBCAM)) {
-                setVideoMode(VIDEO_MODE_UVC_WEBCAM);
-            }
+			if ( ImGui::Selectable("VIDEO_MODE_UVC_WEBCAM", videoMode==VIDEO_MODE_UVC_WEBCAM)) {
+				setVideoMode(VIDEO_MODE_UVC_WEBCAM);
+			}
 #ifdef KM_ENABLE_SYPHON
 			if ( ImGui::Selectable("VIDEO_MODE_SYPHON", videoMode==VIDEO_MODE_SYPHON)) {
 				setVideoMode(VIDEO_MODE_SYPHON);
@@ -263,9 +286,25 @@ bool videoShader::printCustomEffectGui(){
 			}
 			
 		}
-        else if(videoMode==VIDEO_MODE_UVC_WEBCAM){
-            ImGui::TextWrapped("This mode reads a video streqm from a UVC webcam.");
-        }
+		
+		else if(videoMode==VIDEO_MODE_UVC_WEBCAM){
+			ImGui::TextWrapped("This mode reads a video stream from a UVC webcam.");
+			ImGui::Text("Select webcam source :");
+			ImGui::Indent();
+			vector<string> availableCams = UVCWebcam.listVideoDevices();
+			if(availableCams.size()==0){
+				ImGui::TextWrapped("[None available...]");
+			}
+			else {
+				for(auto it=availableCams.begin(); it!=availableCams.end(); it++){
+					if( ImGui::Selectable( it->c_str(), (*it).compare(activeUVCCamera)==0 ) ){
+						selectUVCWebcam(*it);
+					}
+				}
+			}
+			ImGui::Unindent();
+		}
+		
 #ifdef KM_ENABLE_SYPHON
 		else if(videoMode==VIDEO_MODE_SYPHON){
 			ImGui::TextWrapped("This mode reads a video from a syphon server.");
@@ -294,6 +333,9 @@ bool videoShader::printCustomEffectGui(){
 		
 		ImGui::Separator();
 	}
+	
+	shaderEffect::printCustomEffectGui();
+	
 	return true;
 }
 
@@ -316,6 +358,9 @@ bool videoShader::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("playBackSpeed", playBackSpeed);
 	xml.addValue("videoMode", static_cast<int>(videoMode) );
 	xml.addValue("videoFile", videoFile );
+	xml.addValue("videoIsPlaying", player.isPlaying());
+	xml.addValue("videoPosition", player.getPosition());
+	xml.addValue("videoIsPaused", player.isPaused());
 
 #ifdef KM_ENABLE_SYPHON
 	xml.addValue("syphonServer", syphonAddr.serverName);
@@ -344,13 +389,28 @@ bool videoShader::loadFromXML(ofxXmlSettings& xml){
 	loadVideoFile( xml.getValue("videoFile", "") );
 	setUseThread( xml.getValue("bUseThreadedFileDecoding", true) );
 	
+	if( player.isLoaded() && xml.getValue("videoIsPlaying", false) ){
+		
+		player.play();
+		
+		// todo: seems not to work properly...
+		player.setPosition( xml.getValue("videoPosition", 0.f) );
+		
+		if(xml.getValue("videoIsPaused", false)){
+			player.setPaused(true);
+		}
+	}
+	else {
+		player.stop();
+	}
+	
+	
 #ifdef KM_ENABLE_SYPHON
 	connectToSyphonServer( ofxSyphonServerDescription(
 		xml.getValue("syphonServer", syphonAddr.serverName),
 		xml.getValue("syphonApp", syphonAddr.appName)
 	));
 #endif
-	
 	
 	return ret;
 }
@@ -371,15 +431,23 @@ bool videoShader::randomizePresets(){
 // videoEffect FUNCTIONS
 // - - - - - - -
 void videoShader::setVideoMode(const enum videoMode& mode){
-	videoMode = mode;
 	
 	if (videoMode == VIDEO_MODE_FILE) {
-		bHasError = player.isLoaded();
-		if (bHasError) shortStatus = "Please select a source video.";
+		videoMode = mode;
+		
+		if( !player.isLoaded() ) setError(true, "Please select a source video.");
+	}
+	
+	else if (videoMode == VIDEO_MODE_UVC_WEBCAM ) {
+		videoMode = mode;
+		
+		if( !selectUVCWebcam() ) setError(true, "Please select a source video.");
 	}
 	
 #ifdef KM_ENABLE_SYPHON
 	else if (videoMode == VIDEO_MODE_SYPHON) {
+		videoMode = mode;
+		
 		// start Syphon server tracker
 		dir.setup();
 
@@ -387,8 +455,7 @@ void videoShader::setVideoMode(const enum videoMode& mode){
 	}
 #endif
 	else {
-		bHasError = true;
-		shortStatus = "Unsupported video mode in videoShader.";
+		setError( true, "Unsupported video mode in videoShader.");
 		ofLogWarning("videoShader::setVideoMode") << "UnSupported video mode: " << mode;
 	}
 }
@@ -425,11 +492,16 @@ bool videoShader::loadVideoFile(const string &_path) {
 			shaderToyArgs.iChannelTime[0]=0.f;
 			//texturesTime.push_back(0.f);
 			
+			// tmp, this could possibly reset another error then the video file error... // todo
+			if(bHasError){
+				setError(false);
+			}
+			
 			ofLogNotice("videoShader::loadVideoFile") << "Loaded "<< videoFile << ".";
 		}
 		else {
 			// not in video mode, simply remember file
-            
+			
 		}
 		return true;
 	}
@@ -439,10 +511,74 @@ bool videoShader::loadVideoFile(const string &_path) {
 	return false;
 }
 
-bool videoShader::enableWebcam(){
-    if (videoMode==VIDEO_MODE_FILE) {
-        
-    }
+bool videoShader::selectUVCWebcam(string _cam){
+	int camNum = -1;
+	vector<string> cams = UVCWebcam.listVideoDevices();
+	
+	if(cams.size()<1){
+		
+		if(videoMode==VIDEO_MODE_UVC_WEBCAM){
+			setError(true, "No webcams available!");
+		}
+		
+		return false;
+	}
+	
+	// no cam?
+	if( _cam.compare("")==0 ){
+		// use prev selected one ?
+		if(activeUVCCamera.compare("")!=0){
+			_cam = activeUVCCamera;
+		}
+		
+		// select first one ?
+		camNum = 0;
+		_cam = cams[camNum];
+	}
+	
+	// check if camera exists...
+	for(int i=0;i!=cams.size();++i){
+		if( cams[i].compare(_cam) == 0 ){
+			camNum = i;
+		}
+	}
+	
+	if(camNum == -1) {
+		setError(true, "Please select a webcam!");
+		activeUVCCamera = -1;
+		return false;
+	}
+	else {
+		// not in UVC mode, simply remember the camera
+		activeUVCCamera = _cam;
+		
+		// setup cam ?
+		if (videoMode==VIDEO_MODE_UVC_WEBCAM) {
+			//UVCWebcam.setVideoDeviceID(camNum);
+			UVCWebcam.setDeviceID(camNum);
+			//UVCWebcam.setup(-1,-1); // native dimensions
+			UVCWebcam.setup(800,600);
+			//UVCWebcam.initRecording();
+			
+			if(UVCWebcam.isInitialized()){
+				shaderToyArgs.iChannelResolution[0*3+0] = UVCWebcam.getWidth();
+				shaderToyArgs.iChannelResolution[0*3+1] = UVCWebcam.getHeight();
+				shaderToyArgs.iChannelResolution[0*3+2] = UVCWebcam.getWidth() / UVCWebcam.getHeight();
+				shaderToyArgs.iChannelTime[0]=0.f;
+				
+				textures.clear();
+				textures.push_back( ofTexture() );
+				textures.back().allocate(player.getWidth(), player.getHeight(), GL_RGB);
+				
+				setError(false);
+			}
+			else{
+				setError(true, "UVC Camera Error...");
+			}
+		}
+	}
+	
+	return true;
 }
 
 #ifdef KM_ENABLE_SYPHON

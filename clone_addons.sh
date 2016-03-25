@@ -16,7 +16,7 @@ ${PREFIX}daandelange/ofxAbletonLiveSet.git
 
 ${PREFIX}Flightphase/ofxTextInputField.git
 #${PREFIX}Flightphase/ofxTextInputField.git -b develop
-echo "If you're using linux, please make sure you checkout the develop branch of ofxTextInputField"
+echo "IMPORTANT WARNING: If you're using Linux, please make sure you checkout the develop branch of ofxTextInputField"
 
 ${PREFIX}frauzufall/ofxGuiExtended.git
 
@@ -46,3 +46,6 @@ ${PREFIX}asus4/ofxSyphon.git -b of_v0.9.0_OpenGL3
 
 ${PREFIX}obviousjim/ofxMSATimer.git
 
+${PREFIX}atduskgreg/ofxUVC.git
+
+echo "Done cloning addons! :)"

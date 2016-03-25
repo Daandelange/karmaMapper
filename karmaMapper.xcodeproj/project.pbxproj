@@ -162,6 +162,11 @@
 		858D334F1BEBF220003E49C7 /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 858D33411BEBF220003E49C7 /* SyphonNameboundClient.m */; };
 		85999DD41C537F6600786707 /* fullScreenShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85999DD21C537F6600786707 /* fullScreenShape.cpp */; };
 		85999DD51C537F6600786707 /* fullScreenShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85999DD21C537F6600786707 /* fullScreenShape.cpp */; };
+		85AC0C2F1CA4604800DD2962 /* liveGrabberOSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AC0C2D1CA4604800DD2962 /* liveGrabberOSC.cpp */; };
+		85BE66B91CA5A4D30024C10F /* ofxUVC.mm in Sources */ = {isa = PBXBuildFile; fileRef = 85BE66B61CA5A4D30024C10F /* ofxUVC.mm */; };
+		85BE66BA1CA5A4D30024C10F /* UVCCameraControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BE66B81CA5A4D30024C10F /* UVCCameraControl.m */; };
+		85BE66BB1CA5A4D30024C10F /* ofxUVC.mm in Sources */ = {isa = PBXBuildFile; fileRef = 85BE66B61CA5A4D30024C10F /* ofxUVC.mm */; };
+		85BE66BC1CA5A4D30024C10F /* UVCCameraControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BE66B81CA5A4D30024C10F /* UVCCameraControl.m */; };
 		85E773091B965980003AF890 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		85FED3AC1C8F1AD800038AA0 /* fboEraser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85FED3AA1C8F1AD800038AA0 /* fboEraser.cpp */; };
 		879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BFFBBF4CC43DEE890B3C3E /* OscTypes.cpp */; };
@@ -422,6 +427,13 @@
 		859723401C8220760022625A /* karmaFboLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaFboLayer.h; path = core/karmaFboLayer.h; sourceTree = "<group>"; };
 		85999DD21C537F6600786707 /* fullScreenShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fullScreenShape.cpp; path = shapes/shapes/fullScreenShape.cpp; sourceTree = "<group>"; };
 		85999DD31C537F6600786707 /* fullScreenShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fullScreenShape.h; path = shapes/shapes/fullScreenShape.h; sourceTree = "<group>"; };
+		85AC0C2C1CA4604800DD2962 /* liveGrabberEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = liveGrabberEvents.h; sourceTree = "<group>"; };
+		85AC0C2D1CA4604800DD2962 /* liveGrabberOSC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = liveGrabberOSC.cpp; sourceTree = "<group>"; };
+		85AC0C2E1CA4604800DD2962 /* liveGrabberOSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = liveGrabberOSC.h; sourceTree = "<group>"; };
+		85BE66B51CA5A4D30024C10F /* ofxUVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxUVC.h; sourceTree = "<group>"; };
+		85BE66B61CA5A4D30024C10F /* ofxUVC.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxUVC.mm; sourceTree = "<group>"; };
+		85BE66B71CA5A4D30024C10F /* UVCCameraControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UVCCameraControl.h; sourceTree = "<group>"; };
+		85BE66B81CA5A4D30024C10F /* UVCCameraControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UVCCameraControl.m; sourceTree = "<group>"; };
 		85F5188D1C833EF8002E01D5 /* karmaUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaUtilities.h; path = core/karmaUtilities.h; sourceTree = "<group>"; };
 		85FED3AA1C8F1AD800038AA0 /* fboEraser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fboEraser.cpp; sourceTree = "<group>"; };
 		85FED3AB1C8F1AD800038AA0 /* fboEraser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fboEraser.h; sourceTree = "<group>"; };
@@ -830,6 +842,7 @@
 				85557B621C650D0B0091052C /* durationOSC */,
 				85557B681C650D0B0091052C /* mirOSC */,
 				85557B5A1C650BB10091052C /* fboRecorder */,
+				85AC0C2B1CA4604800DD2962 /* liveGrabberOSC */,
 				85557B471C64EDFE0091052C /* oscRouter */,
 				85557B5E1C650BFC0091052C /* soundAnalyser */,
 			);
@@ -1049,6 +1062,36 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		85AC0C2B1CA4604800DD2962 /* liveGrabberOSC */ = {
+			isa = PBXGroup;
+			children = (
+				85AC0C2C1CA4604800DD2962 /* liveGrabberEvents.h */,
+				85AC0C2D1CA4604800DD2962 /* liveGrabberOSC.cpp */,
+				85AC0C2E1CA4604800DD2962 /* liveGrabberOSC.h */,
+			);
+			path = liveGrabberOSC;
+			sourceTree = "<group>";
+		};
+		85BE66B31CA5A4D30024C10F /* ofxUVC */ = {
+			isa = PBXGroup;
+			children = (
+				85BE66B41CA5A4D30024C10F /* src */,
+			);
+			name = ofxUVC;
+			sourceTree = "<group>";
+		};
+		85BE66B41CA5A4D30024C10F /* src */ = {
+			isa = PBXGroup;
+			children = (
+				85BE66B51CA5A4D30024C10F /* ofxUVC.h */,
+				85BE66B61CA5A4D30024C10F /* ofxUVC.mm */,
+				85BE66B71CA5A4D30024C10F /* UVCCameraControl.h */,
+				85BE66B81CA5A4D30024C10F /* UVCCameraControl.m */,
+			);
+			name = src;
+			path = ../../../addons/ofxUVC/src;
+			sourceTree = "<group>";
+		};
 		85FED3A91C8F1AD800038AA0 /* fboEraser */ = {
 			isa = PBXGroup;
 			children = (
@@ -1147,6 +1190,7 @@
 				858D33311BEBF220003E49C7 /* ofxSyphon */,
 				85382FD81C90DB1300D09E5E /* ofxMSATimer */,
 				8557F8BA1C9C5CC30066BE7D /* ofxImGui */,
+				85BE66B31CA5A4D30024C10F /* ofxUVC */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -1436,6 +1480,7 @@
 				851FA9B91B9321FD00F94851 /* ofxGuiGroupExtended.cpp in Sources */,
 				8574FEB11BC13BC20058E916 /* shapeFactory.cpp in Sources */,
 				851FA9BC1B9321FD00F94851 /* ofxGuiSpacer.cpp in Sources */,
+				85BE66BB1CA5A4D30024C10F /* ofxUVC.mm in Sources */,
 				851FA9C61B9321FD00F94851 /* ofxVerticalSlider.cpp in Sources */,
 				855451DD1B91FB4C00A36079 /* shapesDB.cpp in Sources */,
 				855451DE1B91FB4C00A36079 /* shapesScene.cpp in Sources */,
@@ -1488,6 +1533,7 @@
 				851FA9C31B9321FD00F94851 /* ofxRotarySlider.cpp in Sources */,
 				8557F8DE1C9C5CC30066BE7D /* BaseEngine.cpp in Sources */,
 				8554522C1B91FB4C00A36079 /* ofxXmlSettings.cpp in Sources */,
+				85BE66BC1CA5A4D30024C10F /* UVCCameraControl.m in Sources */,
 				8554522D1B91FB4C00A36079 /* tinyxml.cpp in Sources */,
 				851FA9BE1B9321FD00F94851 /* ofxLabelExtended.cpp in Sources */,
 				8554522E1B91FB4C00A36079 /* tinyxmlerror.cpp in Sources */,
@@ -1525,6 +1571,7 @@
 				858D33451BEBF220003E49C7 /* ofxSyphonServer.mm in Sources */,
 				8557F8DC1C9C5CC30066BE7D /* imgui_draw.cpp in Sources */,
 				B8846EF8E504895A4A9EFEC0 /* ofxAssimpTexture.cpp in Sources */,
+				85AC0C2F1CA4604800DD2962 /* liveGrabberOSC.cpp in Sources */,
 				8529F1F11C611A7D00949E5B /* karmaConsole.cpp in Sources */,
 				856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */,
 				855DCFA01C6211EE00F9D804 /* distortEffect.cpp in Sources */,
@@ -1555,6 +1602,7 @@
 				858D33461BEBF220003E49C7 /* ofxSyphonServerDirectory.mm in Sources */,
 				8529F1F91C6139D200949E5B /* lineDrawEffectLine.cpp in Sources */,
 				640279EE111671BD026CB013 /* ofxOscReceiver.cpp in Sources */,
+				85BE66B91CA5A4D30024C10F /* ofxUVC.mm in Sources */,
 				85557B4C1C64EDFE0091052C /* OSCNode.cpp in Sources */,
 				858D33441BEBF220003E49C7 /* ofxSyphonClient.mm in Sources */,
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
@@ -1569,6 +1617,7 @@
 				851FA9A71B9321FD00F94851 /* ofxFpsPlotter.cpp in Sources */,
 				62545D179C94265CA1389D4A /* OscOutboundPacketStream.cpp in Sources */,
 				C4782ECC372420ACE0615B74 /* OscPrintReceivedElements.cpp in Sources */,
+				85BE66BA1CA5A4D30024C10F /* UVCCameraControl.m in Sources */,
 				0546D1A38E13BD319CC9755B /* OscReceivedElements.cpp in Sources */,
 				879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */,
 				851FA9AD1B9321FD00F94851 /* ofxGuiZoomableBaseDraws.cpp in Sources */,

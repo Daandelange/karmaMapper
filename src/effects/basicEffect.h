@@ -145,6 +145,8 @@ public:
 	}
 	
 protected:
+    void setError(const bool& _hasError, const string& _errorMsg="");
+    
 	string effectType;
 	string effectUID;
 	int effectIndex; // for ordering

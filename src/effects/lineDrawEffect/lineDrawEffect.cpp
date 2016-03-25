@@ -21,6 +21,7 @@ lineDrawEffect::lineDrawEffect(){
 
 lineDrawEffect::~lineDrawEffect(){
 	ofRemoveListener(mirReceiver::mirTempoEvent, this, &lineDrawEffect::tempoEventListener);
+	ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &lineDrawEffect::liveGrabberNoteEventListener);
 }
 
 // - - - - - - -
@@ -137,6 +138,9 @@ void lineDrawEffect::reset(){
 	
 	ofRemoveListener(mirReceiver::mirTempoEvent, this, &lineDrawEffect::tempoEventListener);
 	ofAddListener(mirReceiver::mirTempoEvent, this, &lineDrawEffect::tempoEventListener);
+	
+	ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &lineDrawEffect::liveGrabberNoteEventListener);
+	ofAddListener(liveGrabberOSC::liveGrabberNoteEvent, this, &lineDrawEffect::liveGrabberNoteEventListener);
 	
 	// set this when done
 	bInitialised = true;
@@ -289,7 +293,7 @@ void lineDrawEffect::tempoEventListener(mirTempoEventArgs &_args){
 	
 	if(shapes.size()<=0) return;
 	
-	if(!_args.isTempoBis) for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+	if(_args.isTempoBis) for(auto s=shapes.begin(); s!=shapes.end(); ++s){
 		if( (*s)->isType("vertexShape") ){
 			vertexShape* shape = (vertexShape*)*s;
 			for(int i=0; i<spawnAmount; i++){
@@ -299,6 +303,24 @@ void lineDrawEffect::tempoEventListener(mirTempoEventArgs &_args){
 	}
 }
 
+void lineDrawEffect::liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args){
+	ofScopedLock lock(effectMutex);
+	
+	if(!bReactToMusic) return;
+	
+	if(shapes.size()<=0) return;
+	
+	if(_args.key.compare("A0")==0){
+		for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+			if( (*s)->isType("vertexShape") ){
+				vertexShape* shape = (vertexShape*)*s;
+				for(int i=0; i<spawnAmount; i++){
+					lines.push_back( lineDrawEffectLine( shape, (1.0f/(mirReceiver::mirCache.bpm/60.0f) )*fLineBeatDuration, ofColor(mainColor[0]*255, mainColor[1]*255,mainColor[2]*255, mainColor[3]*255) ));
+				}
+			}
+		}
+	}
+}
 
 // register effect type
 EFFECT_REGISTER( lineDrawEffect , "lineDrawEffect" );

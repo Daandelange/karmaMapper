@@ -14,6 +14,7 @@
 #include "shaderEffect.h"
 #include "animationParams.h"
 #include "mirReceiver.h"
+#include "ofxUVC.h"
 
 #ifdef KM_ENABLE_SYPHON
 	#include "ofxSyphon.h"
@@ -22,12 +23,13 @@
 struct animationParams;
 
 // todo: make video decoding threaded
+// todo: 
 
 enum videoMode {
 	// note: each mode must have a unique key
 	VIDEO_MODE_FILE = 0, // read image from file
 	VIDEO_MODE_SYPHON = 1, // read movie from file
-    VIDEO_MODE_UVC_WEBCAM = 2,
+	VIDEO_MODE_UVC_WEBCAM = 2,
 };
 
 // Important: lock() when accessing player or bUseThreadedFileDecoding
@@ -61,7 +63,7 @@ public:
 	// videoEffect FUNCTIONS
 	void setVideoMode(const enum videoMode& mode);
 	bool loadVideoFile( const string &_path);
-    bool enableWebcam();
+	bool selectUVCWebcam(string _cam="");
 #ifdef KM_ENABLE_SYPHON
 	bool connectToSyphonServer( const ofxSyphonServerDescription& _addr );
 #endif
@@ -70,15 +72,20 @@ public:
 protected:
 	videoMode videoMode;
 	
+	// VIDEO FILES
 	float playBackSpeed;
+	ofVideoPlayer player;
 	string videoFile;
-	
 	bool bUseThreadedFileDecoding;
 	ofThreadChannel<ofPixels> images_to_update;
-	
 	virtual void threadedFunction();
 	
-	ofVideoPlayer player;
+	// UVC webcam
+	ofQTKitGrabber UVCWebcam;
+	string activeUVCCamera;
+	
+	
+	// Syphon
 #ifdef TARGET_OSX
 	
 	#ifdef KM_ENABLE_SYPHON

@@ -747,6 +747,5 @@ void shaderEffect::onResizeListener(ofResizeEventArgs &resize){
 }
 
 
-
 // register effect type
 EFFECT_REGISTER( shaderEffect , "shaderEffect" );

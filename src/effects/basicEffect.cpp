@@ -525,6 +525,11 @@ int basicEffect::getNumShapes() const{
 	return shapes.size();
 }
 
+void basicEffect::setError(const bool& _hasError, const string& _errorMsg){
+    bHasError = _hasError;
+    shortStatus = _errorMsg;
+}
+
 
 // Bind with factory
 namespace effect

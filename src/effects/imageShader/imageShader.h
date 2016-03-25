@@ -12,6 +12,7 @@
 #include "ofMain.h"
 #include "shapes.h"
 #include "shaderEffect.h"
+#include "liveGrabberOSC.h"
 
 struct animationParams;
 
@@ -45,6 +46,7 @@ public:
 	bool randomizePresets();
 	
 	virtual void tempoEventListener(mirTempoEventArgs &_args);
+	virtual void liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args);
 	
 protected:
 	

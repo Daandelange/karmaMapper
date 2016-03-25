@@ -16,6 +16,7 @@ struct mirBangEventArgs {
 struct mirTempoEventArgs {
 	float bpm = 0;
 	bool isTempoBis = 0;
+	int beatCount = 0;
 };
 
 struct mirOnSetEventArgs {

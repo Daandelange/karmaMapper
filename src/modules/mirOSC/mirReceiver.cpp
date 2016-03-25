@@ -54,9 +54,11 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 	if( addr.substr(0,6)=="/kmsa/" ){
 		string tmpLastMsg = "";
 		string subAddr = addr.substr(5,addr.npos);
+		bool ret = false;
 		
 		if( subAddr.substr(0,7).compare("/aubio/") == 0 ){
 			subAddr = subAddr.substr(6,addr.npos);
+			
 			if( subAddr.compare("/tempo") == 0 ){
 				{
 					// send bangEvent
@@ -71,14 +73,14 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 					args.isTempoBis=false;
 					ofNotifyEvent(mirTempoEvent, args);
 				}
-				return true;
+				tmpLastMsg = "aubioTempoBis";
+				ret = true;
 			}
 			else if( subAddr.compare("/tempoBis") == 0 ){
 				{
 					// send bangEvent
 					mirBangEventArgs args;
 					args.what="aubioTempoBis";
-					tmpLastMsg = args.what;
 					ofNotifyEvent(mirBangEvent, args);
 				}
 				{
@@ -88,49 +90,50 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 					args.isTempoBis=true;
 					ofNotifyEvent(mirTempoEvent, args);
 				}
-				return true;
+				tmpLastMsg = "aubioTempoBis";
+				ret = true;
 			}
 			else if( subAddr.compare("/onSet") == 0 ){
 				{
 					// send OnSetEvent
 					mirOnSetEventArgs args;
 					args.source="aubioOnSet";
-					tmpLastMsg = args.source;
 					ofNotifyEvent(mirOnSetEvent, args);
 				}
-				return true;
+				tmpLastMsg = "aubioOnSet";
+				ret = true;
 			}
 			else if( subAddr.compare("/bpm") == 0 ){
 				if(_msg.getNumArgs()>0) mirCache.bpm = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
 				
 				tmpLastMsg = "bpm";
 				
-				return true;
+				ret = true;
 			}
 			else if( subAddr.compare("/pitch") == 0 ){
 				if(_msg.getNumArgs()>0)	mirCache.pitch = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
-				return true;
+				ret = true;
 			}
 			else if( subAddr.compare("/quiet") == 0 ){
 				if(_msg.getNumArgs()>0) mirCache.silence = (_msg.getArgAsInt32(0)==0)?true:false;
-				return true;
+				ret = true;
 			}
 			else if( subAddr.compare("/playing") == 0 ){
 				if(_msg.getNumArgs()>0) mirCache.isPlaying = (_msg.getArgAsFloat(0)==0)?true:false;
-				return true;
+				ret = true;
 			}
 			else if( subAddr.compare("/zcr") == 0 ){
 				if(_msg.getNumArgs()>0) mirCache.zcr = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
-				return true;
+				ret = true;
 			}
 			else if( subAddr.compare("/noisy") == 0 ){
 				//if(_msg.getNumArgs()>0) mirCache.zcr = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
-				return true;
+				ret = true;
 			}
 		}
 		else if( subAddr.compare("/balance") == 0 ){
 			if(_msg.getNumArgs()>0) mirCache.balance = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
-			return true;
+			ret = true;
 		}
 		// Fiddle FFT Equaliser
 		else if( subAddr.compare(0, 16, "/fiddle_fft/band") == 0 ){ // 16 first chars
@@ -141,13 +144,17 @@ bool mirReceiver::handle(const ofxOscMessage &_msg) {
 			else // pitch
 				mirCache.fiddleFFT[band][1]=_msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);
 			
-			return true;
+			ret = true;
 		}
 		
 		// unrecognized /kmsa/ messge
 		else {
-			return true; // flags the message as 'intercepted'
+			tmpLastMsg = subAddr;
+			ret = true; // flags the message as 'intercepted'
 		}
+		
+		lastReceivedParamName = tmpLastMsg;
+		return ret;
 	}
 	
 	// unrecognized messge
@@ -207,27 +214,7 @@ void mirReceiver::showGuiWindow(){
 	ImGui::TextWrapped("This module receives OSC messages trough the OSCRouter module and forwards them to effects and other components.");
 	
 	ImGui::Separator();
-	static bool oscRouterConnection = false;
-	if( ImGui::Button("Test connection with OSC Router" )){
-		oscRouterConnection = OSCRouter::getInstance().isEnabled();
-		ImGui::OpenPopup("oscRouterConnectionResult");
-	}
-	if( ImGui::BeginPopup("oscRouterConnectionResult") ){
-		ImGui::SameLine();
-		
-		if (oscRouterConnection){
-			ImGui::Text("Up & Running! :)");
-		}
-		else {
-			ImGui::Text("Error... Please check if the OSCRouter module is enabled.");
-		}
-		if(ImGui::Button("Ok")){
-			ImGui::CloseCurrentPopup();
-		}
-		
-		ImGui::EndPopup();
-	}
-	
+	OSCRouter::ImGuiShowOSCRouterConnectionTester();
 	ImGui::Separator();
 	
 	oscMutex.lock();

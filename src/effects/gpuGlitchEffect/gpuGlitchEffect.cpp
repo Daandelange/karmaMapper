@@ -61,14 +61,15 @@ bool gpuGlitchEffect::render(karmaFboLayer& renderLayer, const animationParams &
 		
 		// bind the glitched fbo
 		//fbo.getTexture().bind();
-		fbo.getTexture().bind(); // todo, doesn't work... need to use a shader here ?
+		//fbo.getTexture().bind(); // todo, doesn't work... need to use a shader here ?
 		
 		// draw shape so GPU gets their vertex data
 		for(auto it=shapes.begin(); it!=shapes.end(); ++it){
 			(*it)->sendToGPU();
 		}
+		ofDisableBlendMode();
 		
-		fbo.getTexture().unbind();
+		//fbo.getTexture().unbind();
 		
 		ofPopStyle();
 		
