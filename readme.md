@@ -1,12 +1,12 @@
 # karmaMapper
 ________
 
-karmaMapper is an collection of OpenSource 2D mapping software made for real-time interactions and digital image generation. Built upon the amazing [OpenFrameworks](http://www.openframeworks.cc/) framework, it gives an interface between the physical and the virtual and some other features. If you're at ease with code, it's a perfect tool to start coding on physical surfaces using a video projector.
+karmaMapper is a collection of OpenSource 2D mapping software made for real-time interactions and digital image generation. Built upon the amazing [OpenFrameworks](http://www.openframeworks.cc/) framework, it gives an interface between the physical and the virtual and some other useful features for facilitating generative visuals. If you're at ease with code, it's a perfect tool to start coding on physical surfaces using a video projector.
 
-Runs on Mac and Linux and should run on Windows. 
+Runs on Mac and Linux and Windows (alpha). 
 
 __karmaMapper is a work in progress.__  
-_Curently (09-01-2016), there's a scene editor allowing you to configure a set of mappable shapes, a music analyser that streams over the network and the very bare basics of the animator app allowing to instantiate the first effects on shapes._
+_Curently (25-03-2016), the latest build is stable on Mac & Linux while the Windows version is not stable yet. There's a scene editor allowing you to configure a set of "mappable" shapes, then load them within the animator app and instantiate some effects and modules on them. There's a GUI overlay giving control over the animations and video can be outPut via Syphon for projection. Configurations can be saved and loaded. There's a music analyser that streams MIR data over the network and a module that lets you sync effects with LiveGrabber. In other words, karmaMapper is ready to be used in interactive installations & performances! :)_
 
 ![Old screenshot](https://raw.githubusercontent.com/Karma-Kusala/karmaMapper/master/karmaMapper.png)
 
@@ -43,12 +43,15 @@ To select a **target**, edit `karmaMapper.qbs` and look for `of.defines: ['KM_AN
 - **Xcode**:  
 Open `karmaMapper.xcodeproj` and select either the `karmaMapper Editor` or `karmaMapper Animator` target.
 
+- **Visual Studio**:  
+Open `karmaMapper.vcxproj` and compile. If not compiling, it may help to re-generate the project using OpenFramework's Project Generator.
+
 #### Optional:
-- a RaspberryPi + Raspbian _(for real-time sound analysis and video streaming #notyet )_
+- a RaspberryPi + Raspbian _(for real-time sound analysis with Pd Vanilla)_
+Note: I successfully compiled and ran the karmaMapper animator on a RaspberryPi2.
 
 ## Details
-It lets you configure a series of virtual 2D shapes on a 3D environment. This simplifies the whole image output generation process not needing complex transform matrices and so on. These shapes are then passed to an animator class which applies effects on them. The idea is to build a big animator app that works together with a bunch of side-apps and tools. Imagine connecting devices such as a camera, gamepads, a raspberryPi music analyser, a control interface on a tablet, etc.  
-_(note: most of these are not yet implemented)_
+It lets you configure a series of virtual 2D shapes on a 3D environment. This simplifies the whole image output generation process not needing complex transform matrices and so on. These shapes are then passed to an animator class which applies effects on them. The idea is to build a big animator app for creative coders that works together with a bunch of side-apps and tools.  
 
 ## Architecture
 It's made for extensibility and there are several components:
@@ -72,6 +75,7 @@ It's made for extensibility and there are several components:
  - [Tetalab](http://tetalab.org/)
  - [Esaaix](http://ecole-art-aix.fr/)
  - [François Parra](http://www.autotune.eu/)
+ - [Bruce Lane // VideoDromm](https://github.com/brucelane)
 
 ##  
 Feel free to comment, contibute, fork, pull, etc. :)
