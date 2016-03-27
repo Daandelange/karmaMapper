@@ -109,13 +109,23 @@ void videoShader::update(karmaFboLayer& renderLayer, const animationParams& para
 			//shaderToyArgs.iChannelTime[0]=player.getPosition();
 			
 			if( UVCWebcam.isReady() ){
+				
 				UVCWebcam.update();
 				
 				if(UVCWebcam.isFrameNew()){
+					webcamFPSCounter.begin();
+					if(ofGetFrameNum()%4==0) webcamFPSCounter.tick("newframe");
+					webcamFPSCounter.end();
+					
 					//tex.loadData(vidGrabber.getPixels());
-					UVCWebcam.getPixels();
+					//UVCWebcam.getPixels();
 					textures[0].loadData( UVCWebcam.getPixels());
 				}
+				for(int i=0; i<WEBCAM_FPS_HISTORY_SIZE-1; ++i){
+					webcamFPSHistory[i]=webcamFPSHistory[i+1];
+				}
+				webcamFPSHistory[WEBCAM_FPS_HISTORY_SIZE-1] = webcamFPSCounter.getFps();
+				
 			}
 		}
 		
@@ -162,12 +172,76 @@ void videoShader::reset(){
 	}
 	loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
 	
-	activeUVCCamera = "";
+	activeCamera = "";
 	UVCWebcam.close();
 	UVCWebcam.setUseAudio(false);
+	webcamSettings.targetFPS = 30;
+	webcamSettings.width = 1280;
+	webcamSettings.height = 720;
+
 #ifdef KARMAMAPPER_DEBUG
 	UVCWebcam.setVerbose(false);
 #endif
+	
+	{ // add presets for some cameras
+		// most presets come from ofxUVC: https://github.com/atduskgreg/ofxUVC/blob/master/example-ofxUVC/bin/data/camera_settings.yml
+		selectedUVCControlCamera = nullptr;
+		UVCUsbPresets.clear();
+		
+		ofxUVCCameraSetting preset;
+		preset.name = "HD Pro Webcam C920"; // has to match the USB device name
+		preset.vendorId = 0x046d;
+		preset.productId = 0x82d;
+		preset.interfaceNum = 0x00;
+		//preset.interfaceNum = 0x03;
+		//# 1280x720 (this is 1/2 res)
+		// width: 1280 - height: 720
+		UVCUsbPresets.push_back(preset);
+		
+		preset.name = "Microsoft LifeCam HD-3000";
+		preset.vendorId = 0x45e;
+		preset.productId = 0x779;
+		preset.interfaceNum = 0x00;
+		// # 1280x720 (this is 1/2 res)
+		// width: 640 - height: 360
+		UVCUsbPresets.push_back(preset);
+		
+		preset.name = "Encore Electronics ENUCM-013";
+		preset.vendorId = 0x1e4e;
+		preset.productId = 0x103;
+		preset.interfaceNum = 0x00;
+		// width: 640 - height: 480
+		UVCUsbPresets.push_back(preset);
+		
+		preset.name = "Rosewill";
+		preset.vendorId = 0x603;
+		preset.productId = 0x8b08;
+		preset.interfaceNum = 0x00;
+		// width: 640 - height: 480
+		UVCUsbPresets.push_back(preset);
+		
+		preset.name = "Built-in iSight";
+		preset.vendorId = 0x5ac;
+		preset.productId = 0x8507;
+		preset.interfaceNum = 0x00;
+		// width: 640 - height: 480
+		UVCUsbPresets.push_back(preset);
+		
+		preset.name = "Logitech c910";
+		preset.vendorId = 0x046d;
+		preset.productId = 0x821;
+		preset.interfaceNum = 0x02;
+		//# 1280x720 (this is 1/2 res)
+		// width: 640 - height: 360
+		UVCUsbPresets.push_back(preset);
+		
+		preset.name = "Logitech c6260";
+		preset.vendorId = 0x046d;
+		preset.productId = 0x81a;
+		preset.interfaceNum = 0x00;
+		// width: 640 - height: 480
+		UVCUsbPresets.push_back(preset);
+	}
 	
 #ifdef KM_ENABLE_SYPHON
 	syphonAddr.appName = "Simple Server";
@@ -289,20 +363,219 @@ bool videoShader::printCustomEffectGui(){
 		
 		else if(videoMode==VIDEO_MODE_UVC_WEBCAM){
 			ImGui::TextWrapped("This mode reads a video stream from a UVC webcam.");
-			ImGui::Text("Select webcam source :");
-			ImGui::Indent();
-			vector<string> availableCams = UVCWebcam.listVideoDevices();
-			if(availableCams.size()==0){
-				ImGui::TextWrapped("[None available...]");
-			}
-			else {
-				for(auto it=availableCams.begin(); it!=availableCams.end(); it++){
-					if( ImGui::Selectable( it->c_str(), (*it).compare(activeUVCCamera)==0 ) ){
-						selectUVCWebcam(*it);
+			ImGui::Text("Webcam source : %s", activeCamera.c_str());
+			
+			if(ImGui::TreeNode("Webcam Selection")){
+				vector<string> availableCams = UVCWebcam.listVideoDevices();
+				if(availableCams.size()==0){
+					ImGui::TextWrapped("[None available...]");
+				}
+				else {
+					for(auto it=availableCams.begin(); it!=availableCams.end(); it++){
+						if( ImGui::Selectable( it->c_str(), (*it).compare(activeCamera)==0 ) ){
+							selectUVCWebcam(*it);
+						}
 					}
 				}
+				ImGui::TreePop();
 			}
-			ImGui::Unindent();
+			
+			if(ImGui::TreeNode("Webcam Setup")){
+				//UVCWebcam.setDesiredFrameRate();
+				ImGui::TextWrapped("Device ID: %d", UVCWebcam.getDeviceID() );
+				
+				ImGui::Separator();
+				ImGui::Text("Resolution:");
+				ImGui::SameLine();
+				if(ImGui::Button("Choose preset...")){
+					ImGui::OpenPopup("camResPresets");
+				}
+				if(ImGui::BeginPopup("camResPresets")){
+					if(ImGui::Selectable("1920 x 1080")){
+						webcamSettings.width = 1920;
+						webcamSettings.height = 1080;
+						selectUVCWebcam();
+					}
+					if(ImGui::Selectable("1280 x 720")){
+						webcamSettings.width = 1280;
+						webcamSettings.height = 720;
+						selectUVCWebcam();
+					}
+					if(ImGui::Selectable("640 x 360")){
+						webcamSettings.width = 640;
+						webcamSettings.height = 360;
+						selectUVCWebcam();
+					}
+					if(ImGui::Selectable("360 x 240")){
+						webcamSettings.width = 320;
+						webcamSettings.height = 240;
+						selectUVCWebcam();
+					}
+					
+					ImGui::EndPopup();
+				}
+				ImGui::Indent();
+				
+				static bool lockRatio = true;
+				if(ImGui::InputInt("Width:", &webcamSettings.width, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue)){
+					if(lockRatio){
+						webcamSettings.height = (webcamSettings.height*1.f) * ((webcamSettings.width*1.f)/UVCWebcam.getWidth());
+					}
+					// reload camera settings
+					selectUVCWebcam();
+				}
+				if(ImGui::InputInt("Height:", &webcamSettings.height, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue)){
+					if(lockRatio){
+						webcamSettings.width = (webcamSettings.width*1.f) * ((webcamSettings.height*1.f)/UVCWebcam.getHeight());
+					}
+					// reload camera settings
+					selectUVCWebcam();
+				}
+				ImGui::Checkbox("Lock Ratio", &lockRatio);
+				ImGui::Unindent();
+				
+				ImGui::Separator();
+				if(ImGui::InputInt("Target FPS", &webcamSettings.targetFPS, 1, 1, ImGuiInputTextFlags_EnterReturnsTrue)){
+					UVCWebcam.setDesiredFrameRate(webcamSettings.targetFPS);
+				}
+				ImGui::Text("Real FPS: %f", webcamFPSCounter.getFps() );
+				ImGui::PlotHistogram("Histogram", webcamFPSHistory, WEBCAM_FPS_HISTORY_SIZE, 0, NULL, 0.f, 60.f, ImVec2(0,80));
+				
+				ImGui::TreePop();
+			}
+			
+			if(ImGui::TreeNode("Webcam UVC Setup")){
+				
+				ImGui::TextWrapped("This widget gives extended control options to some webcams using ofxUVC.");
+				
+				if( ImGui::Button("Show compatible webcams") ){
+					ImGui::OpenPopup("UVC Webcam Presets");
+					
+				}
+				
+				ImGui::SetNextWindowPos(ImGui::GetCursorScreenPos());
+				if(ImGui::BeginPopupContextItem("UVC Webcam Presets")){
+
+					//ImGui::SetWindowSize(ImVec2(300,200));
+					//ImGui::setwin
+					ImGui::Text("You may add your own presets in videoShader.cpp");
+					
+					ImGui::Separator();
+					ImGui::PushItemWidth(200);
+					for(auto it=UVCUsbPresets.begin();it!=UVCUsbPresets.end(); ++it){
+						ImGui::TextWrapped("%s", it->name.c_str());
+					}
+					ImGui::EndPopup();
+				}
+				
+				ImGui::Separator();
+				if(selectedUVCControlCamera!=nullptr){
+					ImGui::TextWrapped("Connected with: %s", selectedUVCControlCamera->name.c_str());
+					ImGui::Indent();
+					ImGui::TextWrapped("vendorId: %x", selectedUVCControlCamera->vendorId);
+					ImGui::TextWrapped("productId: %x", selectedUVCControlCamera->productId);
+					ImGui::TextWrapped("interfaceNum: %x", selectedUVCControlCamera->interfaceNum);
+					ImGui::Unindent();
+				}
+				else {
+					ImGui::TextWrapped("The selected webcam has no available UVC control presets.");
+				}
+				
+				ImGui::TreePop();
+			}
+			
+			if(ImGui::TreeNode("Webcam UVC Controls")){
+				if(selectedUVCControlCamera!=nullptr){
+					ImGui::Separator();
+					if(UVCController.getCameraControls().size()>0){
+						bool autoExposure = UVCController.getAutoExposure();
+						if(ImGui::Checkbox("Auto Exposure", &autoExposure)){
+							UVCController.setAutoExposure(autoExposure);
+						}
+						float UVCExposure = UVCController.getExposure();
+						if(ImGui::SliderFloat("Exposure", &UVCExposure, 0, 1)){
+							UVCController.setExposure(UVCExposure);
+						}
+						bool autoFocus = UVCController.getAutoFocus();
+						if(ImGui::Checkbox("Auto Focus", &autoFocus)){
+							UVCController.setAutoFocus(autoFocus);
+						}
+						float UVCFocus = UVCController.getAbsoluteFocus();
+						if(ImGui::SliderFloat("Focus", &UVCFocus, 0, 1)){
+							UVCController.setAbsoluteFocus(UVCFocus);
+						}
+						bool autoWB = UVCController.getAutoWhiteBalance();
+						if(ImGui::Checkbox("Auto White Balance", &autoWB)){
+							UVCController.setAutoWhiteBalance(autoWB);
+						}
+						float UVCWhiteBalance = UVCController.getWhiteBalance();
+						if(ImGui::SliderFloat("White Balance", &UVCWhiteBalance, 0, 1)){
+							UVCController.setWhiteBalance(UVCWhiteBalance);
+						}
+						
+						ImGui::Separator();
+						ImGui::Separator();
+						
+						float UVCContrast = UVCController.getContrast();
+						if(ImGui::SliderFloat("Contrast", &UVCContrast, 0, 1)){
+							UVCController.setWhiteBalance(UVCContrast);
+						}
+						float UVCSaturation = UVCController.getSaturation();
+						if(ImGui::SliderFloat("Saturation", &UVCSaturation, 0, 1)){
+							UVCController.setSaturation(UVCSaturation);
+						}
+						float UVCSharpness = UVCController.getSharpness();
+						if(ImGui::SliderFloat("Sharpness", &UVCSharpness, 0, 1)){
+							UVCController.setSharpness(UVCSharpness);
+						}
+						float UVCGain = UVCController.getGain();
+						if(ImGui::SliderFloat("Gain", &UVCGain, 0, 1)){
+							UVCController.setGain(UVCGain);
+						}
+						float UVCBrightness = UVCController.getBrightness();
+						if(ImGui::SliderFloat("Brightness", &UVCBrightness, 0, 1)){
+							UVCController.setBrightness(UVCBrightness);
+						}
+						
+						if(ImGui::TreeNode("Detailed UVC information")){
+							ImGui::Columns(4);
+							ImGui::SetColumnOffset(0, 0);
+							ImGui::Text("Param Name");
+							ImGui::NextColumn();
+							ImGui::SetColumnOffset(1, 180);
+							ImGui::Text("Status Code");
+							ImGui::NextColumn();
+							ImGui::SetColumnOffset(2, 220);
+							ImGui::Text("r/w");
+							ImGui::NextColumn();
+							ImGui::SetColumnOffset(3, 260);
+							ImGui::Text("Auto-controlled");
+							ImGui::NextColumn();
+							ImGui::Separator();
+							auto params = UVCController.getCameraControls();
+							for(auto it=params.begin(); it!=params.end(); it++){
+								ImGui::Text("%s", it->name.c_str());
+								ImGui::NextColumn();
+								ImGui::Text("%ld", it->status);
+								ImGui::NextColumn();
+								ImGui::Text("%d/%d", it->supportsGet(), it->supportsSet());
+								ImGui::NextColumn();
+								ImGui::Text("%d", it->underAutomaticControl());
+								ImGui::NextColumn();
+							}
+							
+							ImGui::Columns(1);
+							ImGui::TreePop();
+						}
+						
+					}
+				}
+				else {
+					ImGui::TextWrapped("Unavailable...");
+				}
+				
+				ImGui::TreePop(); // pop UVC controls
+			}
 		}
 		
 #ifdef KM_ENABLE_SYPHON
@@ -347,30 +620,27 @@ bool videoShader::printCustomEffectGui(){
 bool videoShader::saveToXML(ofxXmlSettings& xml) const{
 	bool ret = shaderEffect::saveToXML(xml);
 	
-//	xml.addTag("linesColor");
-//	if(xml.pushTag("linesColor")){
-//		xml.addValue("r", linesColor[0] );
-//		xml.addValue("g", linesColor[1] );
-//		xml.addValue("b", linesColor[2] );
-//		xml.addValue("a", linesColor[3] );
-//		xml.popTag();
-//	}
-	xml.addValue("playBackSpeed", playBackSpeed);
 	xml.addValue("videoMode", static_cast<int>(videoMode) );
+	
+	xml.addValue("playBackSpeed", playBackSpeed);
 	xml.addValue("videoFile", videoFile );
 	xml.addValue("videoIsPlaying", player.isPlaying());
 	xml.addValue("videoPosition", player.getPosition());
 	xml.addValue("videoIsPaused", player.isPaused());
+	//if( lock() ){
+	xml.addValue("bUseThreadedFileDecoding", bUseThreadedFileDecoding);
+	//unlock();
+	//}
 
 #ifdef KM_ENABLE_SYPHON
 	xml.addValue("syphonServer", syphonAddr.serverName);
 	xml.addValue("syphonApp", syphonAddr.appName);
 #endif
 
-	//if( lock() ){
-		xml.addValue("bUseThreadedFileDecoding", bUseThreadedFileDecoding);
-		//unlock();
-	//}
+	xml.addValue("activeCamera", activeCamera);
+	xml.addValue("activeCameraTargetFPS", webcamSettings.targetFPS);
+	xml.addValue("activeCameraWidth", webcamSettings.width);
+	xml.addValue("activeCameraHeight", webcamSettings.height);
 	
 	return ret;
 }
@@ -404,6 +674,10 @@ bool videoShader::loadFromXML(ofxXmlSettings& xml){
 		player.stop();
 	}
 	
+	webcamSettings.targetFPS = xml.getValue("activeCameraTargetFPS", webcamSettings.targetFPS);
+	webcamSettings.width = xml.getValue("activeCameraWidth", webcamSettings.width);
+	webcamSettings.height = xml.getValue("activeCameraHeight", webcamSettings.height);
+	selectUVCWebcam(xml.getValue("activeCamera", "none"));
 	
 #ifdef KM_ENABLE_SYPHON
 	connectToSyphonServer( ofxSyphonServerDescription(
@@ -515,6 +789,8 @@ bool videoShader::selectUVCWebcam(string _cam){
 	int camNum = -1;
 	vector<string> cams = UVCWebcam.listVideoDevices();
 	
+	selectedUVCControlCamera = nullptr;
+	
 	if(cams.size()<1){
 		
 		if(videoMode==VIDEO_MODE_UVC_WEBCAM){
@@ -527,8 +803,8 @@ bool videoShader::selectUVCWebcam(string _cam){
 	// no cam?
 	if( _cam.compare("")==0 ){
 		// use prev selected one ?
-		if(activeUVCCamera.compare("")!=0){
-			_cam = activeUVCCamera;
+		if(activeCamera.compare("")!=0){
+			_cam = activeCamera;
 		}
 		
 		// select first one ?
@@ -543,21 +819,22 @@ bool videoShader::selectUVCWebcam(string _cam){
 		}
 	}
 	
-	if(camNum == -1) {
+	if(camNum == -1 && videoMode==VIDEO_MODE_UVC_WEBCAM) {
 		setError(true, "Please select a webcam!");
-		activeUVCCamera = -1;
+		activeCamera = -1;
 		return false;
 	}
 	else {
 		// not in UVC mode, simply remember the camera
-		activeUVCCamera = _cam;
+		activeCamera = _cam;
 		
 		// setup cam ?
 		if (videoMode==VIDEO_MODE_UVC_WEBCAM) {
 			//UVCWebcam.setVideoDeviceID(camNum);
 			UVCWebcam.setDeviceID(camNum);
 			//UVCWebcam.setup(-1,-1); // native dimensions
-			UVCWebcam.setup(800,600);
+			UVCWebcam.setup(webcamSettings.width,webcamSettings.height);
+			UVCWebcam.setDesiredFrameRate(webcamSettings.targetFPS);
 			//UVCWebcam.initRecording();
 			
 			if(UVCWebcam.isInitialized()){
@@ -569,6 +846,23 @@ bool videoShader::selectUVCWebcam(string _cam){
 				textures.clear();
 				textures.push_back( ofTexture() );
 				textures.back().allocate(player.getWidth(), player.getHeight(), GL_RGB);
+				
+				// check if UVC controls are available ?
+				for(auto it=UVCUsbPresets.begin(); it!=UVCUsbPresets.end(); ++it){
+					// on mac devices sometimes get renamed to `device name #2`
+					string cleanName = activeCamera;
+					if(activeCamera.find(" #")!=activeCamera.npos){
+						cleanName = cleanName.replace(activeCamera.find(" #"), activeCamera.npos, "");
+					}
+					cout << cleanName << endl;
+					if(it->name.compare( cleanName ) == 0){
+						UVCController.useCamera(it->vendorId, it->productId, it->interfaceNum);
+						selectedUVCControlCamera = &(*it);
+						#ifdef KARMAMAPPER_DEBUG
+						ofLogVerbose("videoShader::selectUVCWebcam") << "Found matching UVC control presets for camera " << selectedUVCControlCamera->name;
+						#endif
+					}
+				}
 				
 				setError(false);
 			}

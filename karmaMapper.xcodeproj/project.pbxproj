@@ -64,6 +64,8 @@
 		8529F1F21C611A7D00949E5B /* karmaConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1EF1C611A7D00949E5B /* karmaConsole.cpp */; };
 		8529F1F81C6139D200949E5B /* lineDrawEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1F41C6139D200949E5B /* lineDrawEffect.cpp */; };
 		8529F1F91C6139D200949E5B /* lineDrawEffectLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1F61C6139D200949E5B /* lineDrawEffectLine.cpp */; };
+		852D8A4D1CA821D20054BE62 /* ofxFps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 852D8A4B1CA821D20054BE62 /* ofxFps.cpp */; };
+		852D8A4E1CA821D20054BE62 /* ofxFps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 852D8A4B1CA821D20054BE62 /* ofxFps.cpp */; };
 		85382FDC1C90DB1300D09E5E /* ofxMSATimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85382FDA1C90DB1300D09E5E /* ofxMSATimer.cpp */; };
 		85382FDD1C90DB1300D09E5E /* ofxMSATimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85382FDA1C90DB1300D09E5E /* ofxMSATimer.cpp */; };
 		85382FE11C90F6B900D09E5E /* gpuGlitchEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85382FDF1C90F6B900D09E5E /* gpuGlitchEffect.cpp */; };
@@ -335,6 +337,8 @@
 		8529F1F51C6139D200949E5B /* lineDrawEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineDrawEffect.h; sourceTree = "<group>"; };
 		8529F1F61C6139D200949E5B /* lineDrawEffectLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lineDrawEffectLine.cpp; sourceTree = "<group>"; };
 		8529F1F71C6139D200949E5B /* lineDrawEffectLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lineDrawEffectLine.h; sourceTree = "<group>"; };
+		852D8A4B1CA821D20054BE62 /* ofxFps.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFps.cpp; sourceTree = "<group>"; };
+		852D8A4C1CA821D20054BE62 /* ofxFps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxFps.h; sourceTree = "<group>"; };
 		852F59551C7CDF0D00EB0192 /* animationControllerEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = animationControllerEvents.h; path = core/animationControllerEvents.h; sourceTree = "<group>"; };
 		85382FDA1C90DB1300D09E5E /* ofxMSATimer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMSATimer.cpp; sourceTree = "<group>"; };
 		85382FDB1C90DB1300D09E5E /* ofxMSATimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxMSATimer.h; sourceTree = "<group>"; };
@@ -753,6 +757,24 @@
 			);
 			name = lineDrawEffect;
 			path = effects/lineDrawEffect;
+			sourceTree = "<group>";
+		};
+		852D8A491CA821D20054BE62 /* ofxFps */ = {
+			isa = PBXGroup;
+			children = (
+				852D8A4A1CA821D20054BE62 /* src */,
+			);
+			name = ofxFps;
+			sourceTree = "<group>";
+		};
+		852D8A4A1CA821D20054BE62 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				852D8A4B1CA821D20054BE62 /* ofxFps.cpp */,
+				852D8A4C1CA821D20054BE62 /* ofxFps.h */,
+			);
+			name = src;
+			path = ../../../addons/ofxFps/src;
 			sourceTree = "<group>";
 		};
 		85382FD81C90DB1300D09E5E /* ofxMSATimer */ = {
@@ -1191,6 +1213,7 @@
 				85382FD81C90DB1300D09E5E /* ofxMSATimer */,
 				8557F8BA1C9C5CC30066BE7D /* ofxImGui */,
 				85BE66B31CA5A4D30024C10F /* ofxUVC */,
+				852D8A491CA821D20054BE62 /* ofxFps */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -1515,6 +1538,7 @@
 				851FA9BD1B9321FD00F94851 /* ofxGuiZoomableBaseDraws.cpp in Sources */,
 				8557F8E21C9C5CC30066BE7D /* ofxImGui.cpp in Sources */,
 				855451F51B91FB4C00A36079 /* ofxOscSender.cpp in Sources */,
+				852D8A4E1CA821D20054BE62 /* ofxFps.cpp in Sources */,
 				851FA9BB1B9321FD00F94851 /* ofxGuiPage.cpp in Sources */,
 				855451F61B91FB4C00A36079 /* IpEndpointName.cpp in Sources */,
 				855451F71B91FB4C00A36079 /* NetworkingUtils.cpp in Sources */,
@@ -1584,6 +1608,7 @@
 				F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */,
 				837220E80EB56CD44AD27F2A /* ofxSlider.cpp in Sources */,
 				8557B8411BC5B4ED00DAC695 /* lineEffect.cpp in Sources */,
+				852D8A4D1CA821D20054BE62 /* ofxFps.cpp in Sources */,
 				854EA7AF1C6771EF009A99DB /* imageShader.cpp in Sources */,
 				855DEE951C3FCD61000936F8 /* effectFactory.cpp in Sources */,
 				854EA7B01C6771EF009A99DB /* videoShader.cpp in Sources */,

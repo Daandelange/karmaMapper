@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Dependencies for karmaMapper
-# inspired by ObviousJim and ofxTimeline "clone_addons" script
+# Clones dependencies for karmaMapper
+# Inspired by ObviousJim and ofxTimeline "clone_addons.sh" script
 
 cd ../../../addons/
 
@@ -47,5 +47,7 @@ ${PREFIX}asus4/ofxSyphon.git -b of_v0.9.0_OpenGL3
 ${PREFIX}obviousjim/ofxMSATimer.git
 
 ${PREFIX}atduskgreg/ofxUVC.git
+
+${PREFIX}tobiasebsen/ofxFps.git
 
 echo "Done cloning addons! :)"

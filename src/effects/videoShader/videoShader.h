@@ -15,10 +15,13 @@
 #include "animationParams.h"
 #include "mirReceiver.h"
 #include "ofxUVC.h"
+#include "ofxFPS.h"
 
 #ifdef KM_ENABLE_SYPHON
 	#include "ofxSyphon.h"
 #endif
+
+#define WEBCAM_FPS_HISTORY_SIZE 120
 
 struct animationParams;
 
@@ -26,10 +29,21 @@ struct animationParams;
 // todo: 
 
 enum videoMode {
-	// note: each mode must have a unique key
+	// note: each mode must have a unique key, never replace the one of another
 	VIDEO_MODE_FILE = 0, // read image from file
 	VIDEO_MODE_SYPHON = 1, // read movie from file
 	VIDEO_MODE_UVC_WEBCAM = 2,
+};
+
+struct ofxUVCCameraSetting {
+	int vendorId, productId, interfaceNum;
+	string name;
+};
+
+struct webcamSettingsStruct {
+	int targetFPS = 30;
+	int width = 800;
+	int height = 600;
 };
 
 // Important: lock() when accessing player or bUseThreadedFileDecoding
@@ -82,7 +96,13 @@ protected:
 	
 	// UVC webcam
 	ofQTKitGrabber UVCWebcam;
-	string activeUVCCamera;
+	webcamSettingsStruct webcamSettings;
+	ofxFps webcamFPSCounter;
+	float webcamFPSHistory[WEBCAM_FPS_HISTORY_SIZE];
+	ofxUVC UVCController;
+	ofxUVCCameraSetting* selectedUVCControlCamera;
+	list<ofxUVCCameraSetting> UVCUsbPresets;
+	string activeCamera;
 	
 	
 	// Syphon
