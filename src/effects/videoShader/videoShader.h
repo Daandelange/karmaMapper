@@ -14,8 +14,11 @@
 #include "shaderEffect.h"
 #include "animationParams.h"
 #include "mirReceiver.h"
-#include "ofxUVC.h"
 #include "ofxFPS.h"
+
+#ifdef TARGET_OSX
+	#include "ofxUVC.h"
+#endif
 
 #ifdef KM_ENABLE_SYPHON
 	#include "ofxSyphon.h"
@@ -98,16 +101,17 @@ protected:
 	ofQTKitGrabber UVCWebcam;
 	webcamSettingsStruct webcamSettings;
 	ofxFps webcamFPSCounter;
+	string activeCamera;
 	float webcamFPSHistory[WEBCAM_FPS_HISTORY_SIZE];
+	
+#ifdef TARGET_OSX
+	
+	// UVC Control (mac only)
 	ofxUVC UVCController;
 	ofxUVCCameraSetting* selectedUVCControlCamera;
 	list<ofxUVCCameraSetting> UVCUsbPresets;
-	string activeCamera;
-	
 	
 	// Syphon
-#ifdef TARGET_OSX
-	
 	#ifdef KM_ENABLE_SYPHON
 		ofxSyphonClient syphonSource;
 		ofxSyphonServerDescription syphonAddr;

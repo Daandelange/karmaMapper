@@ -8,8 +8,8 @@ ofxOsc
 ofxVideoRecorder
 ofxVLCRemote
 ofxXmlSettings
-ofxFPS
-ofxSyphon
-# Note: ofxSyphon is windows only... comment it out to generate a clean project on other platforms
-ofxUVC
 ofxFps
+ofxSyphon
+# Note: ofxSyphon is Mac only... comment it out to generate a clean project on other platforms
+ofxUVC
+# Note: ofxUVC is Mac only... comment it out to generate a clean project on other platforms

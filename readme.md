@@ -14,8 +14,10 @@ _Curently (25-03-2016), the latest build is stable on Mac & Linux while the Wind
 #### Required Dependencies:  
 - [OpenFrameworks 9.0](http://www.openframeworks.cc/) with the following addons:  
 	- [ofxImUI](https://github.com/jvcleave/ofxImGui)
-	- [ofxAbletonLiveSet](https://github.com/satoruhiga/ofxAbletonLiveSet)	
-	- Etc. _(see `clone_addons.sh`)_
+	- [ofxAbletonLiveSet](https://github.com/satoruhiga/ofxAbletonLiveSet)	 
+	- ofxUVC  
+	_Note: Mac only. You may have to rename the `.mm`/`.m` file extensions in the addons' `/src/` to `.cpp` if you compile with makefiles_)
+	- Etc. _(see `clone_addons.sh`_
 	- __Note__: _Some effects may have other dependencies._
  
 #### Install
@@ -65,6 +67,7 @@ It's made for extensibility and there are several components:
 #### Contributors
 - [Daan de Lange](http://daandelange.com/) ([Karma Kusala](http://karma-kusala.com/) / [ADN](http://artdistorsionsnumeriques.com/))
 - Kévin Pouget / [Vienin](https://soundcloud.com/vienin) ([Karma Kusala](http://karma-kusala.com/))  
+- Bruce Lane ([VideoDromm](https://github.com/brucelane))  
 
 #### Thanks
  - Ricardo Garcia
@@ -75,7 +78,7 @@ It's made for extensibility and there are several components:
  - [Tetalab](http://tetalab.org/)
  - [Esaaix](http://ecole-art-aix.fr/)
  - [François Parra](http://www.autotune.eu/)
- - [Bruce Lane // VideoDromm](https://github.com/brucelane)
+ - Locust
 
 ##  
 Feel free to comment, contibute, fork, pull, etc. :)

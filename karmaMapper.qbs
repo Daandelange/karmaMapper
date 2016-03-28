@@ -55,6 +55,9 @@ Project{
             'src/modules/oscRouter/OSCNode.h',
             'src/modules/oscRouter/OSCRouter.cpp',
             'src/modules/oscRouter/OSCRouter.h',
+            'src/modules/liveGrabberOSC/liveGrabberEvents.h',
+            'src/modules/liveGrabberOSC/liveGrabberOSC.cpp',
+            'src/modules/liveGrabberOSC/liveGrabberOSC.h',
 
             // PARAMS
             'src/parameters/animationParams.h',
@@ -120,19 +123,21 @@ Project{
         //
 
         of.addons: [
-             'ofxGui',
-             //'ofxOpenCv',
-             //'ofxAbletonLiveSet',
-             //'ofxAssimpModelLoader',
-             'ofxGuiExtended',
-             'ofxOsc',
-             'ofxTextBox',
-             //'ofxTrueTypeFontUC',
-             'ofxVLCRemote',
-             'ofxVideoRecorder',
-             'ofxXmlSettings',
-             'ofxImGui',
-             'ofxMSATimer'
+            'ofxGui',
+            //'ofxOpenCv',
+            //'ofxAbletonLiveSet',
+            //'ofxAssimpModelLoader',
+            'ofxGuiExtended',
+            'ofxOsc',
+            'ofxTextBox',
+            //'ofxTrueTypeFontUC',
+            'ofxVLCRemote',
+            'ofxVideoRecorder',
+            'ofxXmlSettings',
+            'ofxImGui',
+            'ofxMSATimer',
+            'ofxFPS',
+            'ofxUVC'
         ];
 
         // additional flags for the project. the of module sets some
@@ -204,6 +209,16 @@ Project{
                 '../../../addons/ofxSyphon/src/ofxSyphonServer.mm',
                 '../../../addons/ofxSyphon/src/ofxSyphonServerDirectory.mm',
                 '../../../addons/ofxSyphon/libs/Syphon/src/SyphonNameboundClient.m',
+            ])
+        }
+        Group {
+            name: 'ofxUVC Files DirtyFix'
+            // osx only, additional frameworks to link with the project
+            condition: qbs.targetOS.contains("osx")
+            // dirty fix for .mm files
+            files: base.concat([
+                '../../../addons/ofxUVC/src/ofxUVC.mm',
+                '../../../addons/ofxUVC/src/UVCCameraControl.m',
             ])
         }
 

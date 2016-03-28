@@ -28,15 +28,10 @@ videoShader::~videoShader(){
 	//stopThread();
 	waitForThread(true);
 	
-	
-	
-	
-	
 //	ofRemoveListener(dir.events.serverAnnounced, this, &videoShader::syphonServerAnnounced);
 //	// not yet implemented
 //	//ofRemoveListener(dir.events.serverUpdated, this, &ofApp::serverUpdated);
 //	ofRemoveListener(dir.events.serverRetired, this, &videoShader::syphonServerRetired);
-	
 	
 }
 
@@ -178,13 +173,19 @@ void videoShader::reset(){
 	webcamSettings.targetFPS = 30;
 	webcamSettings.width = 1280;
 	webcamSettings.height = 720;
+	
+	for(int i=0; i<WEBCAM_FPS_HISTORY_SIZE; ++i){
+		webcamFPSHistory[i]=0;
+	}
 
 #ifdef KARMAMAPPER_DEBUG
 	UVCWebcam.setVerbose(false);
 #endif
-	
+
+#ifdef TARGET_OSX
 	{ // add presets for some cameras
 		// most presets come from ofxUVC: https://github.com/atduskgreg/ofxUVC/blob/master/example-ofxUVC/bin/data/camera_settings.yml
+		
 		selectedUVCControlCamera = nullptr;
 		UVCUsbPresets.clear();
 		
@@ -242,6 +243,7 @@ void videoShader::reset(){
 		// width: 640 - height: 480
 		UVCUsbPresets.push_back(preset);
 	}
+#endif
 	
 #ifdef KM_ENABLE_SYPHON
 	syphonAddr.appName = "Simple Server";
@@ -441,9 +443,24 @@ bool videoShader::printCustomEffectGui(){
 				ImGui::Text("Real FPS: %f", webcamFPSCounter.getFps() );
 				ImGui::PlotHistogram("Histogram", webcamFPSHistory, WEBCAM_FPS_HISTORY_SIZE, 0, NULL, 0.f, 60.f, ImVec2(0,80));
 				
+				ImGui::Separator();
+				ImGui::TextWrapped("Video Codecs:");
+				ImGui::Indent();
+				ImGui::TextWrapped("Sets the video codec used. Check status in console with KARMAMAPPER_DEBUG on.");
+				ImGui::Separator();
+				static auto codecs = UVCWebcam.listVideoCodecs();
+				for(auto it=codecs.begin(); it!=codecs.end(); ++it){
+					//UVCWebcam.
+					if(ImGui::Selectable(it->c_str(), false, ImGuiSelectableFlags_DontClosePopups )){
+						UVCWebcam.setVideoCodec(*it);
+						selectUVCWebcam();
+					}
+				}
+				ImGui::Unindent();
+				
 				ImGui::TreePop();
 			}
-			
+#ifdef TARGET_OSX
 			if(ImGui::TreeNode("Webcam UVC Setup")){
 				
 				ImGui::TextWrapped("This widget gives extended control options to some webcams using ofxUVC.");
@@ -576,6 +593,8 @@ bool videoShader::printCustomEffectGui(){
 				
 				ImGui::TreePop(); // pop UVC controls
 			}
+// endif OSX UVC
+#endif
 		}
 		
 #ifdef KM_ENABLE_SYPHON
@@ -789,7 +808,9 @@ bool videoShader::selectUVCWebcam(string _cam){
 	int camNum = -1;
 	vector<string> cams = UVCWebcam.listVideoDevices();
 	
+#ifdef TARGET_OSX
 	selectedUVCControlCamera = nullptr;
+#endif
 	
 	if(cams.size()<1){
 		
@@ -832,10 +853,11 @@ bool videoShader::selectUVCWebcam(string _cam){
 		if (videoMode==VIDEO_MODE_UVC_WEBCAM) {
 			//UVCWebcam.setVideoDeviceID(camNum);
 			UVCWebcam.setDeviceID(camNum);
+			UVCWebcam.initRecording();
 			//UVCWebcam.setup(-1,-1); // native dimensions
 			UVCWebcam.setup(webcamSettings.width,webcamSettings.height);
 			UVCWebcam.setDesiredFrameRate(webcamSettings.targetFPS);
-			//UVCWebcam.initRecording();
+			
 			
 			if(UVCWebcam.isInitialized()){
 				shaderToyArgs.iChannelResolution[0*3+0] = UVCWebcam.getWidth();
@@ -846,7 +868,7 @@ bool videoShader::selectUVCWebcam(string _cam){
 				textures.clear();
 				textures.push_back( ofTexture() );
 				textures.back().allocate(player.getWidth(), player.getHeight(), GL_RGB);
-				
+#ifdef TARGET_OSX
 				// check if UVC controls are available ?
 				for(auto it=UVCUsbPresets.begin(); it!=UVCUsbPresets.end(); ++it){
 					// on mac devices sometimes get renamed to `device name #2`
@@ -854,7 +876,7 @@ bool videoShader::selectUVCWebcam(string _cam){
 					if(activeCamera.find(" #")!=activeCamera.npos){
 						cleanName = cleanName.replace(activeCamera.find(" #"), activeCamera.npos, "");
 					}
-					cout << cleanName << endl;
+
 					if(it->name.compare( cleanName ) == 0){
 						UVCController.useCamera(it->vendorId, it->productId, it->interfaceNum);
 						selectedUVCControlCamera = &(*it);
@@ -863,6 +885,7 @@ bool videoShader::selectUVCWebcam(string _cam){
 						#endif
 					}
 				}
+#endif
 				
 				setError(false);
 			}

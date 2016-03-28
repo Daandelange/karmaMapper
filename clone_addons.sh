@@ -42,10 +42,12 @@ else
 fi
 
 # will probably become: ${PREFIX}astellato/ofxSyphon.git -b OF-9.0
+# note: Only required on Mac
 ${PREFIX}asus4/ofxSyphon.git -b of_v0.9.0_OpenGL3
 
 ${PREFIX}obviousjim/ofxMSATimer.git
 
+# note: Only required on Mac
 ${PREFIX}atduskgreg/ofxUVC.git
 
 ${PREFIX}tobiasebsen/ofxFps.git
