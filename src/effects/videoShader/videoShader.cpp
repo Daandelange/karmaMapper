@@ -286,6 +286,9 @@ bool videoShader::printCustomEffectGui(){
 			if(ImGui::Selectable("Fit (repeat)", textureMode==3)){
 				setTextureMode(3);
 			}
+			if(ImGui::Selectable("Multiple shapes", textureMode==4)){
+				setTextureMode(4);
+			}
 			ImGui::ListBoxFooter();
 		}
 		

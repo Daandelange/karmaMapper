@@ -80,7 +80,7 @@ void main()
         		scale.y=scale.x;
         	}
         	scale *= globalTextureTransform.zw;
-        	pos *= ratio*(scale);
+        	pos *= ratio*scale;
 
         	pos = pos+vec2(1)*vec2(0.5);
         }
@@ -95,7 +95,7 @@ void main()
         		scale.y=scale.x;
         	}
         	scale *= globalTextureTransform.zw;
-        	pos *= ratio*(scale);
+        	pos *= ratio*scale;
 
         	if(textureMode==3){ // FIT with REPEAT
         		pos = mod(pos+vec2(1)*vec2(0.5), 1.0);
@@ -105,7 +105,24 @@ void main()
         	}
         	
         }
-        else pos = ( ((shapeBoundingBox.zw*vec2(0.5)+texCoordVarying)) / shapeBoundingBox.zw) * iChannelResolution[0].xy; // fit tex to screen
+        else if( textureMode == 4 ){ // stretch texture to fill
+            pos = ((gl_FragCoord.xy+globalTextureTransform.xy)/fboCanvas.xy);
+
+            // dont distort
+            vec2 ratio = vec2(fboCanvas.xy/iChannelResolution[0].xy);
+            vec2 scale = vec2(iChannelResolution[0].x/fboCanvas.xy.x, iChannelResolution[0].y/fboCanvas.y);
+            if(scale.x>scale.y){
+                scale.x=scale.y;
+            }
+            else{
+                scale.y=scale.x;
+            }
+            scale *= globalTextureTransform.zw;
+            pos *= ratio*scale;
+
+            pos = pos+vec2(1)*vec2(0.5);
+        }
+        else pos = ( ((shapeBoundingBox.zw*vec2(0.5)+texCoordVarying)) / shapeBoundingBox.zw); // fit tex to screen
         //pos.y = -100.0f+pos.y;
         //outputColor = vec4( texture( iChannel0, pos ).rgb, 1);
         
@@ -117,5 +134,7 @@ void main()
     	//outputColor = vec4( texture(iChannel0, ( (texCoordVarying-shapeCenterOffset)/iResolution.xy*iChannelResolution[0].xy*textureScale) ).rgb, 1);//outputColor.a);
     	//outputColor.r += 0.5f; // debugging
     	//outputColor = vec4(1, 0, 0, 1);
+        //outputColor = vec4(iResolution.x,iResolution.x,iResolution.y, 1);
+        //outputColor = vec4( gl_FragCoord.xy / fboCanvas.xy,1,1);
     }
 }

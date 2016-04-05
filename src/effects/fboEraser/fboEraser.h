@@ -43,6 +43,7 @@ public:
 	virtual void tempoEventListener(mirTempoEventArgs &_args);
 	
 protected:
+	bool bInvert;
 	bool bClearAlways;
 	float fClearAlwaysOpacity;
 	bool bClearOnMir;

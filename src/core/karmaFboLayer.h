@@ -70,10 +70,11 @@ public:
 		MSAA = s.numSamples;
 	}
 	
-	void begin() {
+	//_bUseBufferFbo lets you draw to the pre-allocated other texture.
+	void begin(bool _bUseBufferFbo=false) {
 		
 		fbo.begin();
-        glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + ((switched?0:1)));	// write to this texture
+        glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + ((switched?(0+_bUseBufferFbo):(1-_bUseBufferFbo))));	// write to this texture
         
         // alternatve method, but doesnt work on all GPUs
 		//fbo.setActiveDrawBuffer(switched?0:1);

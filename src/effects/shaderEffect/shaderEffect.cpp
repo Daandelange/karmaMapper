@@ -415,10 +415,17 @@ bool shaderEffect::printCustomEffectGui(){
 				ImGui::TextWrapped("Lets you upload textures to the GPU.");
 				ImGui::TextWrapped("Note: Shares the same textures with shadertoy.");
 				
+				
 				ImGui::DragFloat2("Global Texture Position", &textureTransform[0]);
-				if( ImGui::SliderFloat("GlobalTextureScale", &textureTransform[2], -2.0f,8.0f) ){
-					// lock ratio
-					textureTransform[3] = textureTransform[2];
+				
+				static bool tmpLockScaleRatio = true;
+				if(ImGui::Checkbox("Lock Scale Ratio", &tmpLockScaleRatio));
+				if( ImGui::DragFloat2("GlobalTextureScale", &textureTransform[2], -0.001f,0.2f) ){
+					// lock ratio ?
+					if(tmpLockScaleRatio){
+						textureTransform[3] = textureTransform[2];
+					}
+					
 				}
 				
 				ImGui::Separator();

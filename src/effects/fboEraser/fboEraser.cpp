@@ -43,6 +43,32 @@ bool fboEraser::initialise(const animationParams& params){
 bool fboEraser::render(karmaFboLayer& renderLayer, const animationParams &params){
 	if(!isReady()) return false;
 	
+	if( bInvert ){
+		// render to th other fbo
+		renderLayer.begin(true);
+		
+		ofPushStyle();
+		
+		ofClearAlpha();
+		ofFill();
+		ofSetColor(0.0f, fClearOnMirValue*255.0f );
+		ofDrawRectangle(0,0, renderLayer.getWidth(), renderLayer.getHeight());
+		
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+		glBlendFunc(GL_ONE, GL_ONE);
+		ofSetColor(0.0f, 255.0f );
+		
+		for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+			(*s)->sendToGPU();
+		}
+		
+		ofPopStyle();
+		
+		renderLayer.end();
+		renderLayer.getFBO().updateTexture( renderLayer.getFBO().getId() );
+	}
+	
 	renderLayer.begin();
 	
 	// set drawing environment
@@ -56,10 +82,33 @@ bool fboEraser::render(karmaFboLayer& renderLayer, const animationParams &params
 		
 		ofSetColor(0.0f, fClearAlwaysOpacity*255.0f );
 		ofFill();
+		
 		ofDrawRectangle(0,0, renderLayer.getWidth(), renderLayer.getHeight());
 		
 		glDisable(GL_BLEND);
 	}
+	
+	// clear on MIR ?
+	effectMutex.lock();
+	if( bClearOnMir && fClearOnMirValue > 0 ){
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+		//else glBlendEquation(GL_FUNC_SUBTRACT);
+		glBlendFunc(GL_ONE, GL_ONE);
+		
+		ofSetColor(0.0f, fClearOnMirValue*255.0f );
+		ofFill();
+		
+		if(shapes.size()==0){
+			ofDrawRectangle(0,0, renderLayer.getWidth(), renderLayer.getHeight());
+		}
+		else {
+			renderLayer.getFBO().draw(0,0);
+		}
+		
+		glDisable(GL_BLEND);
+	}
+	effectMutex.unlock();
 	
 //	effectMutex.lock();
 //	
@@ -79,6 +128,11 @@ void fboEraser::update(karmaFboLayer& renderLayer, const animationParams& params
 	// do basic Effect function
 	basicEffect::update( renderLayer, params );
 	
+	ofScopedLock(effectMutex);
+	if(bClearOnMir && fClearOnMirValue > 0){
+		// todo: makee this timed (not FPS dependent)
+		fClearOnMirValue-=0.1*fClearOnMirOpacity;
+	}
 }
 
 // resets all values
@@ -88,6 +142,7 @@ void fboEraser::reset(){
 	// effect type must match with class
 	effectType = "fboEraser";
 	
+	bInvert = false;
 	bClearAlways = true;
 	fClearAlwaysOpacity = 1.f;
 	bClearOnMir = false;
@@ -120,7 +175,15 @@ bool fboEraser::printCustomEffectGui(){
 	
 	if( ImGui::CollapsingHeader( GUIfboEraserPanel, "GUIfboEraserPanel", true, true ) ){
 		
-		ImGui::TextWrapped("Erases the background of the FBO.");
+		ImGui::TextWrapped("Erases the background of the FBO (bottom layer). Can also be used as mask (top layer).");
+		ImGui::TextWrapped("Uses shapes if bound to any shape, otherwise it will erase everything.");
+		
+		ImGui::Separator();
+		ImGui::Separator();
+		
+		effectMutex.lock();
+		ImGui::Checkbox("Inverted", &bInvert);
+		effectMutex.unlock();
 		
 		ImGui::Separator();
 		ImGui::Separator();
@@ -130,11 +193,13 @@ bool fboEraser::printCustomEffectGui(){
 			ImGui::SameLine();
 			ImGui::SliderFloat("Opacity", &fClearAlwaysOpacity, 0.f, 1.f);
 		}
+		effectMutex.lock();
 		ImGui::Checkbox("Clear on Tempo", &bClearOnMir);
 		if(bClearOnMir){
 			ImGui::SameLine();
 			ImGui::SliderFloat("Mir Opacity", &fClearOnMirOpacity, 0.f, 1.f);
 		}
+		effectMutex.unlock();
 		
 		ImGui::Separator();
 		if(ImGui::Checkbox("Use Ping-Pong FBO", &bUsePingpong)){
@@ -159,6 +224,7 @@ bool fboEraser::printCustomEffectGui(){
 bool fboEraser::saveToXML(ofxXmlSettings& xml) const{
 	bool ret = basicEffect::saveToXML(xml);
 	
+	xml.addValue("clearInverted", bInvert);
 	xml.addValue("clearAlways", bClearAlways);
 	xml.addValue("clearAlwaysOpacity", fClearAlwaysOpacity);
 	xml.addValue("clearOnMir", bClearOnMir);
@@ -172,6 +238,7 @@ bool fboEraser::saveToXML(ofxXmlSettings& xml) const{
 bool fboEraser::loadFromXML(ofxXmlSettings& xml){
 	bool ret = basicEffect::loadFromXML(xml);
 	
+	bInvert = xml.getValue("clearInverted", false);
 	bClearAlways = xml.getValue("clearAlways", true);
 	fClearAlwaysOpacity = xml.getValue("clearAlwaysOpacity", 1.0f);
 	bClearOnMir = xml.getValue("clearOnMir", false);
@@ -191,9 +258,9 @@ bool fboEraser::loadFromXML(ofxXmlSettings& xml){
 void fboEraser::tempoEventListener(mirTempoEventArgs &_args){
 	ofScopedLock lock(effectMutex);
 	
-	if(shapes.size()<=0) return;
+	if(!isReady()) return;
 	
-	if(_args.isTempoBis) for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+	if(_args.isTempoBis){
 		fClearOnMirValue=fClearOnMirOpacity;
 	}
 }
