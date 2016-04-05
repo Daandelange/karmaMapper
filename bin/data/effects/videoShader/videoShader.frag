@@ -105,12 +105,13 @@ void main()
         	}
         	
         }
-        else if( textureMode == 4 ){ // stretch texture to fill
-            pos = ((gl_FragCoord.xy+globalTextureTransform.xy)/fboCanvas.xy);
+        else if( textureMode == 4 ){ // fit whole video to all shapes, cover
+            //offset = (fboCanvas.xy+shapeBoundingBox.zw*vec2(0.5)) - shapeCenter;
+            pos = (((gl_FragCoord.xy+globalTextureTransform.xy))/fboCanvas.xy)-vec2(0.5);
 
             // dont distort
             vec2 ratio = vec2(fboCanvas.xy/iChannelResolution[0].xy);
-            vec2 scale = vec2(iChannelResolution[0].x/fboCanvas.xy.x, iChannelResolution[0].y/fboCanvas.y);
+            vec2 scale = vec2(iChannelResolution[0].x/fboCanvas.x, iChannelResolution[0].y/fboCanvas.y);
             if(scale.x>scale.y){
                 scale.x=scale.y;
             }
@@ -136,5 +137,6 @@ void main()
     	//outputColor = vec4(1, 0, 0, 1);
         //outputColor = vec4(iResolution.x,iResolution.x,iResolution.y, 1);
         //outputColor = vec4( gl_FragCoord.xy / fboCanvas.xy,1,1);
+        //outputColor = vec4(vec2(gl_FragCoord.x/fboCanvas.x),1,1);
     }
 }
