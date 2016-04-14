@@ -91,6 +91,8 @@ Project{
             'src/effects/shaderEffect/shaderEffect.h',
             'src/effects/videoShader/videoShader.cpp',
             'src/effects/videoShader/videoShader.h',
+            'src/effects/textureDistortionEffect/textureDistortionEffect.cpp',
+            'src/effects/textureDistortionEffect/textureDistortionEffect.h',
 
 
            // SHAPES
@@ -137,7 +139,8 @@ Project{
             'ofxImGui',
             'ofxMSATimer',
             'ofxFPS',
-            'ofxUVC'
+            'ofxUVC',
+            'ofxDelaunay',
         ];
 
         // additional flags for the project. the of module sets some
@@ -179,38 +182,38 @@ Project{
         // and can be checked with #ifdef or #if in the code
 
         // add Syphon Support on OSX
-        Properties {
+//        Properties {
 
-            // osx only, additional frameworks to link with the project
-            condition: qbs.targetOS.contains("osx")
-            of.addons: ['ofxSyphon'].concat(outer)
+//            // osx only, additional frameworks to link with the project
+//            condition: qbs.targetOS.contains("osx")
+//            of.addons: ['ofxSyphon'].concat(outer)
 
-            of.frameworks: outer.concat(['Syphon', 'Qtkit'])
-            of.linkerFlags: outer.concat([
-                '-F/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx',
-                //'-lSyphon'
-            ])
-            of.includePaths: outer.concat([
-                '../../../addons/ofxSyphon/libs',
-                '../../../addons/ofxSyphon/libs/Syphon',
-                '../../../addons/ofxSyphon/libs/Syphon/lib',
-                '../../../addons/ofxSyphon/libs/Syphon/lib/osx',
-                '../../../addons/ofxSyphon/libs/Syphon/src',
-                '../../../addons/ofxSyphon/src',
-            ]);
-        }
-        Group {
-            name: 'Syphon Files DirtyFix'
-            // osx only, additional frameworks to link with the project
-            condition: qbs.targetOS.contains("osx")
-            // dirty fix for .mm files
-            files: base.concat([
-                '../../../addons/ofxSyphon/src/ofxSyphonClient.mm',
-                '../../../addons/ofxSyphon/src/ofxSyphonServer.mm',
-                '../../../addons/ofxSyphon/src/ofxSyphonServerDirectory.mm',
-                '../../../addons/ofxSyphon/libs/Syphon/src/SyphonNameboundClient.m',
-            ])
-        }
+//            of.frameworks: outer.concat(['Syphon', 'Qtkit'])
+//            of.linkerFlags: outer.concat([
+//                '-F/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx',
+//                //'-lSyphon'
+//            ])
+//            of.includePaths: outer.concat([
+//                '../../../addons/ofxSyphon/libs',
+//                '../../../addons/ofxSyphon/libs/Syphon',
+//                '../../../addons/ofxSyphon/libs/Syphon/lib',
+//                '../../../addons/ofxSyphon/libs/Syphon/lib/osx',
+//                '../../../addons/ofxSyphon/libs/Syphon/src',
+//                '../../../addons/ofxSyphon/src',
+//            ]);
+//        }
+//        Group {
+//            name: 'Syphon Files DirtyFix'
+//            // osx only, additional frameworks to link with the project
+//            condition: qbs.targetOS.contains("osx")
+//            // dirty fix for .mm files
+//            files: base.concat([
+//                '../../../addons/ofxSyphon/src/ofxSyphonClient.mm',
+//                '../../../addons/ofxSyphon/src/ofxSyphonServer.mm',
+//                '../../../addons/ofxSyphon/src/ofxSyphonServerDirectory.mm',
+//                '../../../addons/ofxSyphon/libs/Syphon/src/SyphonNameboundClient.m',
+//            ])
+//        }
         Group {
             name: 'ofxUVC Files DirtyFix'
             // osx only, additional frameworks to link with the project

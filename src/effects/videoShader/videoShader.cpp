@@ -508,53 +508,53 @@ bool videoShader::printCustomEffectGui(){
 				if(selectedUVCControlCamera!=nullptr){
 					ImGui::Separator();
 					if(UVCController.getCameraControls().size()>0){
-						bool autoExposure = UVCController.getAutoExposure();
-						if(ImGui::Checkbox("Auto Exposure", &autoExposure)){
-							UVCController.setAutoExposure(autoExposure);
+						//bool autoExposure = UVCController.getAutoExposure();
+						if(ImGui::Checkbox("Auto Exposure", &webcamSettings.UVCAutoExposure)){
+							UVCController.setAutoExposure(webcamSettings.UVCAutoExposure);
 						}
-						float UVCExposure = UVCController.getExposure();
-						if(ImGui::SliderFloat("Exposure", &UVCExposure, 0, 1)){
-							UVCController.setExposure(UVCExposure);
+						//float UVCExposure = UVCController.getExposure();
+						if(ImGui::SliderFloat("Exposure", &webcamSettings.UVCExposure, 0, 1)){
+							UVCController.setExposure(webcamSettings.UVCExposure);
 						}
-						bool autoFocus = UVCController.getAutoFocus();
-						if(ImGui::Checkbox("Auto Focus", &autoFocus)){
-							UVCController.setAutoFocus(autoFocus);
+						//bool autoFocus = UVCController.getAutoFocus();
+						if(ImGui::Checkbox("Auto Focus", &webcamSettings.UVCAutoFocus)){
+							UVCController.setAutoFocus(webcamSettings.UVCAutoFocus);
 						}
-						float UVCFocus = UVCController.getAbsoluteFocus();
-						if(ImGui::SliderFloat("Focus", &UVCFocus, 0, 1)){
-							UVCController.setAbsoluteFocus(UVCFocus);
+						//float UVCFocus = UVCController.getAbsoluteFocus();
+						if(ImGui::SliderFloat("Focus", &webcamSettings.UVCFocus, 0, 1)){
+							UVCController.setAbsoluteFocus(webcamSettings.UVCFocus);
 						}
-						bool autoWB = UVCController.getAutoWhiteBalance();
-						if(ImGui::Checkbox("Auto White Balance", &autoWB)){
-							UVCController.setAutoWhiteBalance(autoWB);
+						//bool autoWB = UVCController.getAutoWhiteBalance();
+						if(ImGui::Checkbox("Auto White Balance", &webcamSettings.UVCAutoWhiteBalance)){
+							UVCController.setAutoWhiteBalance(webcamSettings.UVCAutoWhiteBalance);
 						}
-						float UVCWhiteBalance = UVCController.getWhiteBalance();
-						if(ImGui::SliderFloat("White Balance", &UVCWhiteBalance, 0, 1)){
-							UVCController.setWhiteBalance(UVCWhiteBalance);
+						//float UVCWhiteBalance = UVCController.getWhiteBalance();
+						if(ImGui::SliderFloat("White Balance", &webcamSettings.UVCWhiteBalance, 0, 1)){
+							UVCController.setWhiteBalance(webcamSettings.UVCWhiteBalance);
 						}
 						
 						ImGui::Separator();
 						ImGui::Separator();
 						
-						float UVCContrast = UVCController.getContrast();
-						if(ImGui::SliderFloat("Contrast", &UVCContrast, 0, 1)){
-							UVCController.setWhiteBalance(UVCContrast);
+						//float UVCContrast = UVCController.getContrast();
+						if(ImGui::SliderFloat("Contrast", &webcamSettings.UVCContrast, 0, 1)){
+							UVCController.setContrast(webcamSettings.UVCContrast);
 						}
-						float UVCSaturation = UVCController.getSaturation();
-						if(ImGui::SliderFloat("Saturation", &UVCSaturation, 0, 1)){
-							UVCController.setSaturation(UVCSaturation);
+						//float UVCSaturation = UVCController.getSaturation();
+						if(ImGui::SliderFloat("Saturation", &webcamSettings.UVCSaturation, 0, 1)){
+							UVCController.setSaturation(webcamSettings.UVCSaturation);
 						}
-						float UVCSharpness = UVCController.getSharpness();
-						if(ImGui::SliderFloat("Sharpness", &UVCSharpness, 0, 1)){
-							UVCController.setSharpness(UVCSharpness);
+						//float UVCSharpness = UVCController.getSharpness();
+						if(ImGui::SliderFloat("Sharpness", &webcamSettings.UVCSharpness, 0, 1)){
+							UVCController.setSharpness(webcamSettings.UVCSharpness);
 						}
-						float UVCGain = UVCController.getGain();
-						if(ImGui::SliderFloat("Gain", &UVCGain, 0, 1)){
-							UVCController.setGain(UVCGain);
+						//float UVCGain = UVCController.getGain();
+						if(ImGui::SliderFloat("Gain", &webcamSettings.UVCGain, 0, 1)){
+							UVCController.setGain(webcamSettings.UVCGain);
 						}
-						float UVCBrightness = UVCController.getBrightness();
-						if(ImGui::SliderFloat("Brightness", &UVCBrightness, 0, 1)){
-							UVCController.setBrightness(UVCBrightness);
+						//float UVCBrightness = UVCController.getBrightness();
+						if(ImGui::SliderFloat("Brightness", &webcamSettings.UVCBrightness, 0, 1)){
+							UVCController.setBrightness(webcamSettings.UVCBrightness);
 						}
 						
 						if(ImGui::TreeNode("Detailed UVC information")){
@@ -664,13 +664,29 @@ bool videoShader::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("activeCameraWidth", webcamSettings.width);
 	xml.addValue("activeCameraHeight", webcamSettings.height);
 	
+	
+	xml.addValue("UVCAutoFocus", webcamSettings.UVCAutoFocus );
+	xml.addValue("UVCFocus", webcamSettings.UVCFocus);
+	
+	xml.addValue("UVCAutoWhiteBalance", webcamSettings.UVCAutoWhiteBalance );
+	xml.addValue("UVCWhiteBalance", webcamSettings.UVCWhiteBalance);
+	
+	xml.addValue("UVCAutoExposure", webcamSettings.UVCAutoExposure );
+	xml.addValue("UVCExposure", webcamSettings.UVCExposure);
+	
+	xml.addValue("UVCContrast", webcamSettings.UVCContrast);
+	xml.addValue("UVCSaturation", webcamSettings.UVCSaturation);
+	xml.addValue("UVCSharpness", webcamSettings.UVCSharpness);
+	xml.addValue("UVCGain", webcamSettings.UVCGain);
+	xml.addValue("UVCBrightness", webcamSettings.UVCBrightness);
+	
 	return ret;
 }
 
 // load effect settings from xml
 // xml's cursor is pushed to the root of the <effect> tag to load
-bool videoShader::loadFromXML(ofxXmlSettings& xml){
-	bool ret = shaderEffect::loadFromXML(xml);
+bool videoShader::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
+	bool ret = shaderEffect::loadFromXML(xml, _scene);
 	
 	ret *= loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
 	
@@ -700,6 +716,42 @@ bool videoShader::loadFromXML(ofxXmlSettings& xml){
 	webcamSettings.width = xml.getValue("activeCameraWidth", webcamSettings.width);
 	webcamSettings.height = xml.getValue("activeCameraHeight", webcamSettings.height);
 	selectUVCWebcam(xml.getValue("activeCamera", "none"));
+	
+	webcamSettings.UVCAutoFocus = xml.getValue("UVCAutoFocus", webcamSettings.UVCAutoFocus );
+	webcamSettings.UVCFocus = xml.getValue("UVCFocus", webcamSettings.UVCFocus);
+	webcamSettings.UVCAutoWhiteBalance = xml.getValue("UVCAutoWhiteBalance", webcamSettings.UVCAutoWhiteBalance );
+	webcamSettings.UVCWhiteBalance = xml.getValue("UVCWhiteBalance", webcamSettings.UVCWhiteBalance);
+	webcamSettings.UVCAutoExposure = xml.getValue("UVCAutoExposure", webcamSettings.UVCAutoExposure );
+	webcamSettings.UVCExposure = xml.getValue("UVCExposure", webcamSettings.UVCExposure);
+	
+	webcamSettings.UVCContrast = xml.getValue("UVCContrast", webcamSettings.UVCContrast);
+	webcamSettings.UVCSaturation = xml.getValue("UVCSaturation", webcamSettings.UVCSaturation);
+	webcamSettings.UVCSharpness = xml.getValue("UVCSharpness", webcamSettings.UVCSharpness);
+	webcamSettings.UVCGain = xml.getValue("UVCGain", webcamSettings.UVCGain);
+	webcamSettings.UVCBrightness = xml.getValue("UVCBrightness", webcamSettings.UVCBrightness);
+	
+#ifdef TARGET_OSX
+	// set webcam settings
+	if(selectedUVCControlCamera!=nullptr){
+		UVCController.setAutoExposure(webcamSettings.UVCAutoExposure);
+		if(!webcamSettings.UVCAutoExposure){
+			UVCController.setExposure(webcamSettings.UVCExposure);
+		}
+		UVCController.setAutoFocus(webcamSettings.UVCAutoFocus);
+		if(!webcamSettings.UVCAutoFocus){
+			UVCController.setAutoFocus(webcamSettings.UVCFocus);
+		}
+		UVCController.setAutoWhiteBalance(webcamSettings.UVCAutoWhiteBalance);
+		if(!webcamSettings.UVCAutoWhiteBalance){
+			UVCController.setWhiteBalance(webcamSettings.UVCWhiteBalance);
+		}
+		UVCController.setContrast(webcamSettings.UVCContrast);
+		UVCController.setSaturation(webcamSettings.UVCSaturation);
+		UVCController.setSharpness(webcamSettings.UVCSharpness);
+		UVCController.setGain(webcamSettings.UVCGain);
+		UVCController.setBrightness(webcamSettings.UVCBrightness);
+	}
+#endif
 	
 #ifdef KM_ENABLE_SYPHON
 	connectToSyphonServer( ofxSyphonServerDescription(

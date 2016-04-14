@@ -55,6 +55,14 @@ basicPoint::~basicPoint(){
 //#endif
 }
 
+basicPoint::basicPoint(const ofPoint& _p) : x(_p.y), y(_p.y) {
+	
+}
+
+basicPoint::basicPoint(const ofVec2f& _p) : x(_p.y), y(_p.y) {
+	
+}
+
 // - - - - - - - - - - -
 
 #ifdef KM_EDITOR_APP

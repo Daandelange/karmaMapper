@@ -189,8 +189,8 @@ bool distortEffect::saveToXML(ofxXmlSettings& xml) const{
 
 // load effect settings from xml
 // xml's cursor is pushed to the root of the <effect> tag to load
-bool distortEffect::loadFromXML(ofxXmlSettings& xml){
-	bool ret = basicEffect::loadFromXML(xml);
+bool distortEffect::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
+	bool ret = basicEffect::loadFromXML(xml, _scene);
 	
 	bVariateInSeason = xml.getValue("VariateInSeason", false);
 	seasonVariation = xml.getValue("SeasonNb", 0);

@@ -82,7 +82,7 @@ public:
 		// tmp disabled
 		if(false && getMSAA()>0){
 			fbo.end();
-			fbo.updateTexture(switched?0:1);
+			fbo.updateTexture(switched?(0+_bUseBufferFbo):(1-_bUseBufferFbo));
 			fbo.begin();
 		}
 		//cout << "drawing to fbo.texture: "<<(switched?0:1)<<" // " << fbo.getIdDrawBuffer()<<" // " << fbo.getId()<<endl;

@@ -306,7 +306,7 @@ bool basicEffect::saveToXML(ofxXmlSettings& xml) const{
 
 // load effect settings from xml
 // xml's cursor is pushed to the root of the <effect> tag to load
-bool basicEffect::loadFromXML(ofxXmlSettings& xml){
+bool basicEffect::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 	
 	effectName = xml.getValue("effectName", getType() );
 	xml.getValue("enabled", false )?enable():disable();
@@ -322,6 +322,49 @@ bool basicEffect::loadFromXML(ofxXmlSettings& xml){
 		xml.popTag();
 	}
 	
+	// bind with previously bound shapes
+	if( xml.pushTag("boundShapes") ){
+		
+		// bind with previous shapes
+		int numShapes = xml.getNumTags("shape");
+		vector<string> failedShapes;
+		failedShapes.clear();
+		
+		for(int s=0; s<numShapes; s++){
+			
+			if( xml.tagExists("shape", s) ){
+				
+				// get shape instance
+				string tmpName = xml.getAttribute("shape", "name", "", s);
+				basicShape* tmpShape = _scene.getShapeByName( tmpName );
+				
+				if(tmpShape != nullptr){
+					if( !bindWithShape(tmpShape) ){
+						tmpName += "(failed binding with ";
+						tmpName += xml.getAttribute("shape", "type", "undefined type", s);
+						tmpName += ")";
+						failedShapes.push_back( (tmpName) );
+					}
+				}
+				else {
+					tmpName += "(";
+					tmpName += xml.getAttribute("shape", "type", "undefined type", s);
+					tmpName += " = not found)";
+					failedShapes.push_back( (tmpName) );
+				}
+				
+				//configXML.popTag();
+			}
+			
+			// todo: (important) adapt this structure in the basicShape save process
+		}
+		
+		// todo: make this GUI message and show details
+		if(failedShapes.size() > 0) ofLogWarning("animationController::loadConfiguration") << " Effect '" << effectType << "' loaded but failed to bind with " << failedShapes.size() << " out of " << numShapes << " shapes... (ignoring, but re-saving the configuration will erase this information).";
+		
+		xml.popTag(); // pop bound shapes
+	}
+	
 	return true; // todo
 }
 
@@ -329,7 +372,7 @@ bool basicEffect::loadFromXML(ofxXmlSettings& xml){
 // - - - - - - -
 // EFFECT PROPERTIES
 // - - - - - - -
-	
+
 bool basicEffect::isReady() const {
 	return bInitialised && !bHasError && !bIsLoading && bEnabled;
 }

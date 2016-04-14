@@ -38,7 +38,7 @@ public:
 	basicShape* getRandomShapeByType(string _type);
 	vector<basicShape*> getShapesByGroup(int _group);
 	basicShape* getRandomShapeByGroup(int _group);
-	basicShape* getShapeByName( string _name );
+	basicShape* getShapeByName( string _name ) const;
 	
 	
 	

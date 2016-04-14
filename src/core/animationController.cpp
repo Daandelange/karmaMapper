@@ -437,16 +437,17 @@ bool animationController::loadConfiguration(const string& _file){
 								// --> http://stackoverflow.com/questions/8269465/how-can-i-instantiate-an-object-knowing-only-its-name
 								string effectType = configXML.getValue("effectType", "basicEffect");
 								basicEffect* effect = effect::create(effectType);
+								
+								
 								if( effect != nullptr ){
 									curLayerEffects.push_back( effect );
+									
 									effect->initialise(animationParams.params);
-									effect->loadFromXML( configXML );
 									
 									// check index
 									int tmpIndex = effect->getIndex();
 									if(std::find(effectIndexes.begin(), effectIndexes.end(), tmpIndex) == effectIndexes.end() ){
 										// index is OK to have
-										
 									}
 									else {
 										while( std::find(effectIndexes.begin(), effectIndexes.end(), tmpIndex) != effectIndexes.end() ){
@@ -456,49 +457,8 @@ bool animationController::loadConfiguration(const string& _file){
 									}
 									effectIndexes.push_back(tmpIndex);
 									
-									if( configXML.pushTag("boundShapes") ){
-										
-										// bind with previous shapes
-										int numShapes = configXML.getNumTags("shape");
-										vector<string> failedShapes;
-										failedShapes.clear();
-										
-										for(int s=0; s<numShapes; s++){
-											
-											if( configXML.tagExists("shape", s) ){
-												
-												// get shape instance
-												string tmpName = configXML.getAttribute("shape", "name", "", s);
-												basicShape* tmpShape = scene.getShapeByName( tmpName );
-												
-												if(tmpShape != nullptr){
-													if( !curLayerEffects.back()->bindWithShape(tmpShape) ){
-														tmpName += "(failed binding with ";
-														tmpName += configXML.getAttribute("shape", "type", "undefined type", s);
-														tmpName += ")";
-														failedShapes.push_back( (tmpName) );
-													}
-												}
-												else {
-													tmpName += "(";
-													tmpName += configXML.getAttribute("shape", "type", "undefined type", s);
-													tmpName += " = not found)";
-													failedShapes.push_back( (tmpName) );
-												}
-												
-												//configXML.popTag();
-											}
-											
-											// todo: (important) adapt this structure in the basicShape save process
-										}
-										
-										// todo: make this GUI message and show details
-										if(failedShapes.size() > 0) ofLogWarning("animationController::loadConfiguration") << " Effect '" << effectType << "' loaded but failed to bind with " << failedShapes.size() << " out of " << numShapes << " shapes... (ignoring, but re-saving the configuration will erase this information).";
-										
-										configXML.popTag(); // pop bound shapes
-									}
-									
-									
+									// todo: this returns a bool status, do something with it!
+									effect->loadFromXML( configXML, scene );
 								}
 								else {
 									failedEffects.push_back(e);

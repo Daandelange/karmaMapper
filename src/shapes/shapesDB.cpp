@@ -138,7 +138,7 @@ basicShape* shapesDB::getRandomShapeByGroup(int _group){
 	return ret[round(-.49f+(ofRandomuf()*(ret.size()-.011f)))];
 }
 
-basicShape* shapesDB::getShapeByName( string _name ){
+basicShape* shapesDB::getShapeByName( string _name ) const{
 	if( _name.empty() ) return nullptr;
 		
 	for(auto it = shapes.begin(); it != shapes.end(); it++){

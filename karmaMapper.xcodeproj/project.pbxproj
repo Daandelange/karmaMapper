@@ -66,6 +66,11 @@
 		8529F1F91C6139D200949E5B /* lineDrawEffectLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8529F1F61C6139D200949E5B /* lineDrawEffectLine.cpp */; };
 		852D8A4D1CA821D20054BE62 /* ofxFps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 852D8A4B1CA821D20054BE62 /* ofxFps.cpp */; };
 		852D8A4E1CA821D20054BE62 /* ofxFps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 852D8A4B1CA821D20054BE62 /* ofxFps.cpp */; };
+		8538144F1CBD3F2700F785D8 /* textureDistortionEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8538144D1CBD3F2700F785D8 /* textureDistortionEffect.cpp */; };
+		8538145A1CBD912000F785D8 /* ofxDelaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853814531CBD912000F785D8 /* ofxDelaunay.cpp */; };
+		8538145B1CBD912000F785D8 /* Delaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853814581CBD912000F785D8 /* Delaunay.cpp */; };
+		8538145C1CBD912000F785D8 /* ofxDelaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853814531CBD912000F785D8 /* ofxDelaunay.cpp */; };
+		8538145D1CBD912000F785D8 /* Delaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853814581CBD912000F785D8 /* Delaunay.cpp */; };
 		85382FDC1C90DB1300D09E5E /* ofxMSATimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85382FDA1C90DB1300D09E5E /* ofxMSATimer.cpp */; };
 		85382FDD1C90DB1300D09E5E /* ofxMSATimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85382FDA1C90DB1300D09E5E /* ofxMSATimer.cpp */; };
 		85382FE11C90F6B900D09E5E /* gpuGlitchEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85382FDF1C90F6B900D09E5E /* gpuGlitchEffect.cpp */; };
@@ -340,6 +345,12 @@
 		852D8A4B1CA821D20054BE62 /* ofxFps.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFps.cpp; sourceTree = "<group>"; };
 		852D8A4C1CA821D20054BE62 /* ofxFps.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxFps.h; sourceTree = "<group>"; };
 		852F59551C7CDF0D00EB0192 /* animationControllerEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = animationControllerEvents.h; path = core/animationControllerEvents.h; sourceTree = "<group>"; };
+		8538144D1CBD3F2700F785D8 /* textureDistortionEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = textureDistortionEffect.cpp; sourceTree = "<group>"; };
+		8538144E1CBD3F2700F785D8 /* textureDistortionEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = textureDistortionEffect.h; sourceTree = "<group>"; };
+		853814531CBD912000F785D8 /* ofxDelaunay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxDelaunay.cpp; sourceTree = "<group>"; };
+		853814541CBD912000F785D8 /* ofxDelaunay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxDelaunay.h; sourceTree = "<group>"; };
+		853814581CBD912000F785D8 /* Delaunay.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Delaunay.cpp; sourceTree = "<group>"; };
+		853814591CBD912000F785D8 /* Delaunay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Delaunay.h; sourceTree = "<group>"; };
 		85382FDA1C90DB1300D09E5E /* ofxMSATimer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMSATimer.cpp; sourceTree = "<group>"; };
 		85382FDB1C90DB1300D09E5E /* ofxMSATimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxMSATimer.h; sourceTree = "<group>"; };
 		85382FDF1C90F6B900D09E5E /* gpuGlitchEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gpuGlitchEffect.cpp; sourceTree = "<group>"; };
@@ -775,6 +786,61 @@
 			);
 			name = src;
 			path = ../../../addons/ofxFps/src;
+			sourceTree = "<group>";
+		};
+		8538144C1CBD3F2700F785D8 /* textureDistortionEffect */ = {
+			isa = PBXGroup;
+			children = (
+				8538144D1CBD3F2700F785D8 /* textureDistortionEffect.cpp */,
+				8538144E1CBD3F2700F785D8 /* textureDistortionEffect.h */,
+			);
+			name = textureDistortionEffect;
+			path = effects/textureDistortionEffect;
+			sourceTree = "<group>";
+		};
+		853814511CBD912000F785D8 /* ofxDelaunay */ = {
+			isa = PBXGroup;
+			children = (
+				853814521CBD912000F785D8 /* src */,
+				853814551CBD912000F785D8 /* libs */,
+			);
+			name = ofxDelaunay;
+			sourceTree = "<group>";
+		};
+		853814521CBD912000F785D8 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				853814531CBD912000F785D8 /* ofxDelaunay.cpp */,
+				853814541CBD912000F785D8 /* ofxDelaunay.h */,
+			);
+			name = src;
+			path = ../../../addons/ofxDelaunay/src;
+			sourceTree = "<group>";
+		};
+		853814551CBD912000F785D8 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				853814561CBD912000F785D8 /* Delaunay */,
+			);
+			name = libs;
+			path = ../../../addons/ofxDelaunay/libs;
+			sourceTree = "<group>";
+		};
+		853814561CBD912000F785D8 /* Delaunay */ = {
+			isa = PBXGroup;
+			children = (
+				853814571CBD912000F785D8 /* src */,
+			);
+			path = Delaunay;
+			sourceTree = "<group>";
+		};
+		853814571CBD912000F785D8 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				853814581CBD912000F785D8 /* Delaunay.cpp */,
+				853814591CBD912000F785D8 /* Delaunay.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		85382FD81C90DB1300D09E5E /* ofxMSATimer */ = {
@@ -1214,6 +1280,7 @@
 				8557F8BA1C9C5CC30066BE7D /* ofxImGui */,
 				85BE66B31CA5A4D30024C10F /* ofxUVC */,
 				852D8A491CA821D20054BE62 /* ofxFps */,
+				853814511CBD912000F785D8 /* ofxDelaunay */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -1277,6 +1344,7 @@
 				3EA6183E7E925AEF111E8587 /* basicEffect.cpp */,
 				F19E4F7003214B080BB274A0 /* basicEffect.h */,
 				855DCF9D1C6211EE00F9D804 /* distortEffect */,
+				8538144C1CBD3F2700F785D8 /* textureDistortionEffect */,
 				854EA7A91C6771EF009A99DB /* imageShader */,
 				8529F1F31C6139D200949E5B /* lineDrawEffect */,
 				8557B83C1BC5B4ED00DAC695 /* lineEffect */,
@@ -1487,9 +1555,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8538145D1CBD912000F785D8 /* Delaunay.cpp in Sources */,
 				85E773091B965980003AF890 /* main.cpp in Sources */,
 				855451C11B91FB4C00A36079 /* ofApp.cpp in Sources */,
 				851FA9B71B9321FD00F94851 /* ofxFpsPlotter.cpp in Sources */,
+				8538145C1CBD912000F785D8 /* ofxDelaunay.cpp in Sources */,
 				855451C21B91FB4C00A36079 /* animationController.cpp in Sources */,
 				850D6F071B9E10370047DB3D /* shapesTransformator.cpp in Sources */,
 				858D334A1BEBF220003E49C7 /* ofxSyphonClient.mm in Sources */,
@@ -1625,16 +1695,19 @@
 				8557B8421BC5B4ED00DAC695 /* lineEffectLine.cpp in Sources */,
 				4ADB88E2FB52E76A471065DE /* ofxOscParameterSync.cpp in Sources */,
 				858D33461BEBF220003E49C7 /* ofxSyphonServerDirectory.mm in Sources */,
+				8538145A1CBD912000F785D8 /* ofxDelaunay.cpp in Sources */,
 				8529F1F91C6139D200949E5B /* lineDrawEffectLine.cpp in Sources */,
 				640279EE111671BD026CB013 /* ofxOscReceiver.cpp in Sources */,
 				85BE66B91CA5A4D30024C10F /* ofxUVC.mm in Sources */,
 				85557B4C1C64EDFE0091052C /* OSCNode.cpp in Sources */,
 				858D33441BEBF220003E49C7 /* ofxSyphonClient.mm in Sources */,
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
+				8538145B1CBD912000F785D8 /* Delaunay.cpp in Sources */,
 				851FA9B11B9321FD00F94851 /* ofxMinimalToggle.cpp in Sources */,
 				85557B6E1C650D0B0091052C /* mirReceiver.cpp in Sources */,
 				ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */,
 				85382FDC1C90DB1300D09E5E /* ofxMSATimer.cpp in Sources */,
+				8538144F1CBD3F2700F785D8 /* textureDistortionEffect.cpp in Sources */,
 				67FE4C7B15C2F0478C8126C2 /* NetworkingUtils.cpp in Sources */,
 				510CAFE035E576A4E1502D52 /* UdpSocket.cpp in Sources */,
 				854045F01BC9643B005C25D2 /* shaderEffect.cpp in Sources */,

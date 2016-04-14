@@ -44,14 +44,14 @@ bool fboEraser::render(karmaFboLayer& renderLayer, const animationParams &params
 	if(!isReady()) return false;
 	
 	if( bInvert ){
-		// render to th other fbo
+		// render to the other fbo (use it as a pre-allocated cache fbo)
 		renderLayer.begin(true);
 		
 		ofPushStyle();
 		
 		ofClearAlpha();
 		ofFill();
-		ofSetColor(0.0f, fClearOnMirValue*255.0f );
+		ofSetColor(0.0f, 255.0f );
 		ofDrawRectangle(0,0, renderLayer.getWidth(), renderLayer.getHeight());
 		
 		glEnable(GL_BLEND);
@@ -77,13 +77,27 @@ bool fboEraser::render(karmaFboLayer& renderLayer, const animationParams &params
 	
 	if( bClearAlways ){	// erase BG ?
 		glEnable(GL_BLEND);
+		//if(bInvert)
 		glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+		//else glBlendEquation(GL_FUNC_SUBTRACT);
 		glBlendFunc(GL_ONE, GL_ONE);
 		
 		ofSetColor(0.0f, fClearAlwaysOpacity*255.0f );
 		ofFill();
 		
-		ofDrawRectangle(0,0, renderLayer.getWidth(), renderLayer.getHeight());
+		if(shapes.size()==0){
+			ofDrawRectangle(0,0, renderLayer.getWidth(), renderLayer.getHeight());
+		}
+		else {
+			if(bInvert){
+				renderLayer.getFBO().draw(0,0);
+			}
+			else {
+				for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+					(*s)->sendToGPU();
+				}
+			}
+		}
 		
 		glDisable(GL_BLEND);
 	}
@@ -235,8 +249,8 @@ bool fboEraser::saveToXML(ofxXmlSettings& xml) const{
 
 // load effect settings from xml
 // xml's cursor is pushed to the root of the <effect> tag to load
-bool fboEraser::loadFromXML(ofxXmlSettings& xml){
-	bool ret = basicEffect::loadFromXML(xml);
+bool fboEraser::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
+	bool ret = basicEffect::loadFromXML(xml, _scene);
 	
 	bInvert = xml.getValue("clearInverted", false);
 	bClearAlways = xml.getValue("clearAlways", true);

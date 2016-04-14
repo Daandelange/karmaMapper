@@ -48,7 +48,7 @@ public:
 	// #########
 	// LOAD & SAVE FUNCTIONS
 	virtual bool saveToXML(ofxXmlSettings& xml ) const;
-	virtual bool loadFromXML(ofxXmlSettings& xml);
+	virtual bool loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene);
 	
 protected:
 	ofFbo fbo;

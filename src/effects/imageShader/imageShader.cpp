@@ -210,8 +210,8 @@ bool imageShader::saveToXML(ofxXmlSettings& xml) const{
 
 // load effect settings from xml
 // xml's cursor is pushed to the root of the <effect> tag to load
-bool imageShader::loadFromXML(ofxXmlSettings& xml){
-	bool ret = shaderEffect::loadFromXML(xml);
+bool imageShader::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
+	bool ret = shaderEffect::loadFromXML(xml, _scene);
 	
 	bReactToMusic = xml.getValue("bReactToMusic",bReactToMusic);
 	bDrawAlways = xml.getValue("bDrawAlways", bDrawAlways);

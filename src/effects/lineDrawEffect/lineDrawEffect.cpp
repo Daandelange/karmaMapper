@@ -254,8 +254,8 @@ bool lineDrawEffect::saveToXML(ofxXmlSettings& xml) const{
 
 // load effect settings from xml
 // xml's cursor is pushed to the root of the <effect> tag to load
-bool lineDrawEffect::loadFromXML(ofxXmlSettings& xml){
-	bool ret = basicEffect::loadFromXML(xml);
+bool lineDrawEffect::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
+	bool ret = basicEffect::loadFromXML(xml, _scene);
 	
 	fLineBeatDuration = xml.getValue("LineDuration", 1.0f);
 	spawnAmount = xml.getValue("spawnAmount", spawnAmount);

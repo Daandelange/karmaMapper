@@ -121,7 +121,7 @@ void main()
             scale *= globalTextureTransform.zw;
             pos *= ratio*scale;
 
-            pos = pos+vec2(1)*vec2(0.5);
+            pos = (pos+vec2(1))*vec2(0.5);
         }
         else pos = ( ((shapeBoundingBox.zw*vec2(0.5)+texCoordVarying)) / shapeBoundingBox.zw); // fit tex to screen
         //pos.y = -100.0f+pos.y;

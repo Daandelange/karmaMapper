@@ -29,6 +29,8 @@ public:
 	basicPoint();
 	basicPoint(float _f);
 	basicPoint(float _x, float _y);
+	basicPoint(const ofPoint& p);
+	basicPoint(const ofVec2f& p);
 	~basicPoint();
 	
 	// #########
@@ -38,9 +40,14 @@ public:
 	float x;
 	float y;
 	
-	
 	inline bool operator ==( const basicPoint& p ) const;
 	inline bool operator !=( const basicPoint& p ) const;
+	
+	// conversion
+	basicPoint operator =( const ofVec2f& p ) const;
+	basicPoint operator =( const ofPoint& p ) const;
+	operator ofVec2f() const { return ofVec2f(x,y); }
+	operator ofPoint() const { return ofPoint(x,y,0); }
 	
 	basicPoint operator + ( const basicPoint& p ) const;
 	basicPoint operator - ( const basicPoint& p ) const;
@@ -122,6 +129,15 @@ inline bool basicPoint::operator==( const basicPoint& p ) const {
 
 inline bool basicPoint::operator!=( const basicPoint& p ) const {
 	return (x != p.x) || (y != p.y);
+}
+
+// conversion
+inline basicPoint basicPoint::operator =( const ofVec2f& p ) const{
+	
+	return basicPoint(x-p.x, y-p.y);
+}
+inline basicPoint basicPoint::operator =( const ofPoint& p ) const {
+	return basicPoint(x-p.x, y-p.y);
 }
 
 // operations

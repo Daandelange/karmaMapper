@@ -47,6 +47,20 @@ struct webcamSettingsStruct {
 	int targetFPS = 30;
 	int width = 800;
 	int height = 600;
+	
+	bool UVCAutoFocus = false;
+	float UVCFocus = 0.1f;
+	bool UVCAutoWhiteBalance = false;
+	float UVCWhiteBalance = 0.5f;
+	bool UVCAutoExposure = false;
+	float UVCExposure = 0.9f;
+	
+	float UVCContrast = 0.5f;
+	float UVCSaturation = 0.5f;
+	float UVCSharpness = 0.5f;
+	float UVCGain = 0.5f;
+	float UVCBrightness = 0.5f;
+	
 };
 
 // Important: lock() when accessing player or bUseThreadedFileDecoding
@@ -71,7 +85,7 @@ public:
 	// #########
 	// LOAD & SAVE FUNCTIONS
 	virtual bool saveToXML(ofxXmlSettings& xml ) const;
-	virtual bool loadFromXML(ofxXmlSettings& xml);
+	virtual bool loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene);
 	
 	// controller functions
 	bool randomizePresets();
