@@ -45,33 +45,61 @@ bool textureDistortionEffect::render(karmaFboLayer& renderLayer, const animation
 	
 	if(!isReady()) return false;
 	
-	renderLayer.begin();
 	
-	
-	// draw texture distorsion
-	ofPushStyle();
-	ofSetColor(mainColor[0]*255,mainColor[1]*255,mainColor[2]*255,mainColor[3]*255);
-	static ofTexture myTex;
-	if(!myTex.isAllocated()){
-		//ofLoadImage(myTex, "/Volumes/Yosemite/Developer/openFrameworks/apps/karmaApps/karmaMapper/bin/data/vendome_full_small.jpeg");
+	if((!bIsInEditMode && clicked!=nullptr)){
+			// draw nothing to reveal the original (underlying) undistorted texture
 	}
-	else{
-		if(bIsInEditMode && clicked!=nullptr){
-			// just draw original texture
-			myTex.draw(0,0);
+	else if(shader.isLoaded()){
+		
+		renderLayer.swap();
+		renderLayer.begin();
+		
+		ofPushStyle();
+		
+		shader.begin();
+		//registerShaderVariables(params);
+		
+		shader.setUniform1i("kmIsPingPongPass", 1);
+		if(bUseCustomFbo){
+			shader.setUniformTexture("pingPongTexture", fbo.getTexture(),5);
 		}
 		else {
-			ofSetColor(255,255,255,255);
-			myTex.bind();
-			triangulation.triangleMesh.draw();
-			myTex.unbind();
+			// note: between begin() and end() SRC is DST
+			shader.setUniformTexture("pingPongTexture", renderLayer.getDstTexture(),5);
 		}
+		
+		//ofSetColor(255,255,255,255);
+		ofSetColor(mainColor[0]*255,mainColor[1]*255,mainColor[2]*255,mainColor[3]*255);
+		triangulation.triangleMesh.draw();
+		shader.end();
+		
+		ofPopStyle();
+		renderLayer.end();
 	}
-	ofPopStyle();
+	// no custom shader rendering...
+	else {
+		renderLayer.begin();
+		ofPushStyle();
+		ofSetColor(255,255,255,255);
+		//myTex.bind();
+		triangulation.triangleMesh.draw();
+		//myTex.unbind();
+		
+		ofPopStyle();
+		renderLayer.end();
+	}
+	//}
 	
 	if(bIsInEditMode){
-		// draw points
+		renderLayer.begin();
 		ofPushStyle();
+		if(clicked!=nullptr){
+			// just draw nothing to reveal texture
+			//myTex.draw(0,0);
+			ofSetColor(mainColor[0]*255,mainColor[1]*255,mainColor[2]*255,mainColor[3]*255/2.0f);
+			//ofDrawRectangle(0,0, renderLayer.getWidth(), renderLayer.getHeight());
+		}
+		// draw points
 		ofNoFill();
 		ofSetColor(255,0,0,255);
 		for(auto pt=distortedPoints.begin(); pt!=distortedPoints.end(); ++pt){
@@ -80,40 +108,67 @@ bool textureDistortionEffect::render(karmaFboLayer& renderLayer, const animation
 			ofDrawCircle(tmpAbsPt, KM_TDE_HANDLE_RADIUS);
 		}
 		ofPopStyle();
+		renderLayer.end();
 	}
 	
 	// draw triangle mesh ?
 	if(bDrawTriangulation){
+		renderLayer.begin();
 		ofPushStyle();
 		ofNoFill();
 		ofSetColor(mainColor[0]*255,mainColor[1]*255,mainColor[2]*255,mainColor[3]*255);
 		//triangulation.triangleMesh.drawVertices();
 		triangulation.triangleMesh.drawWireframe();
 		ofPopStyle();
+		renderLayer.end();
 	}
 	
 	/// tmp
-	ofPushStyle();
-	ofSetColor(255,0,0,255);
-	for(auto sh=shapes.begin(); sh!=shapes.end();++sh){
-		if((*sh)->isType("vertexShape")){
-			vertexShape* shape = static_cast<vertexShape*>(*sh);
-			int i=0;
-			for(auto pt=shape->getPoints().begin(); pt!=shape->getPoints().end(); ++pt){
-				ofDrawBitmapString(i, (*pt).x+shape->getCenterPtr()->x, (*pt).y+shape->getCenterPtr()->y);
-				i++;
-			}
-		}
-		
+//	ofPushStyle();
+//	ofSetColor(255,0,0,255);
+//	for(auto sh=shapes.begin(); sh!=shapes.end();++sh){
+//		if((*sh)->isType("vertexShape")){
+//			vertexShape* shape = static_cast<vertexShape*>(*sh);
+//			int i=0;
+//			for(auto pt=shape->getPoints().begin(); pt!=shape->getPoints().end(); ++pt){
+//				ofDrawBitmapString(i, (*pt).x+shape->getCenterPtr()->x, (*pt).y+shape->getCenterPtr()->y);
+//				i++;
+//			}
+//		}
+//		
+//	}
+//	ofPopStyle();
+
+	//renderLayer.end();
+	
+	return true; // TMP
+	// swap before so the current rendering turns into an fbo texture to use in our shader
+	renderLayer.swap();
+	renderLayer.begin();
+	
+	shader.begin();
+	//registerShaderVariables(params);
+	
+	shader.setUniform1i("kmIsPingPongPass", 1);
+	if(bUseCustomFbo){
+		shader.setUniformTexture("pingPongTexture", fbo.getTexture(),5);
+	}
+	else {
+		// note: between begin() and end() SRC is DST
+		shader.setUniformTexture("pingPongTexture", renderLayer.getDstTexture(),5);
 	}
 	
-	ofPopStyle();
+	ofPushStyle();
+	ofSetColor(1.0, 1.0, 1.0, 2.0);
+	ofFill();
 
-	renderLayer.end();
+	ofDrawRectangle(0,0,renderLayer.getWidth(), renderLayer.getHeight());
 	
-//	if(!shaderEffect::render(renderLayer, params)){
-//		return false;
-//	}
+	ofPopStyle();
+	
+	shader.end();
+	
+	renderLayer.end(false);
 	
 	return true;
 }
@@ -140,7 +195,7 @@ void textureDistortionEffect::reset(){
 	// effect type must match with class
 	effectType = "textureDistortionEffect";
 	
-	bInitialised = loadShader( effectFolder("textureDistortion.vert", "textureDistortionEffect"), effectFolder("textureDistortion.frag", "textureDistortionEffect") );
+	loadShader( effectFolder("textureDistortion.vert", "textureDistortionEffect"), effectFolder("textureDistortion.frag", "textureDistortionEffect") );
 	
 	// tmp, as the shader doesn't load... and is not needed yet...
 	setError(false);
@@ -154,6 +209,7 @@ void textureDistortionEffect::reset(){
 	distortedPoints.clear();
 	
 	// set this when done
+	bInitialised = true;
 	bIsLoading = false;
 }
 

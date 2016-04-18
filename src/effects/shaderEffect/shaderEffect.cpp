@@ -712,6 +712,7 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 		else {
 			bHasError = true;
 			shortStatus = "Shader not loaded (but it compiled)";
+			return false;
 		}
 	}
 	else{
@@ -720,11 +721,12 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 		
 		// todo: trigger shader not found errors here
 		bHasError = true;
+		return false;
 	}
 	
 	bIsLoading = false;
 	
-	return bHasError;
+	return true;
 	
 	
 	//cout << "OK:" << shader.linkProgram() << endl;
