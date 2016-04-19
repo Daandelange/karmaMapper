@@ -150,6 +150,7 @@
 		8557F8E51C9C5CC30066BE7D /* imgui_draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8557F8CE1C9C5CC30066BE7D /* imgui_draw.cpp */; };
 		855DCFA01C6211EE00F9D804 /* distortEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855DCF9E1C6211EE00F9D804 /* distortEffect.cpp */; };
 		855DEE951C3FCD61000936F8 /* effectFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855DEE941C3FCD61000936F8 /* effectFactory.cpp */; };
+		856522A31CC61CC400EF129E /* meshRenderer3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 856522A11CC61CC400EF129E /* meshRenderer3D.cpp */; };
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
 		8574FEB01BC13BC20058E916 /* shapeFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */; };
 		8574FEB11BC13BC20058E916 /* shapeFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */; };
@@ -424,6 +425,8 @@
 		855DCF9F1C6211EE00F9D804 /* distortEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = distortEffect.h; sourceTree = "<group>"; };
 		855DEE931C3FCD61000936F8 /* effectFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = effectFactory.h; path = effects/effectFactory.h; sourceTree = "<group>"; };
 		855DEE941C3FCD61000936F8 /* effectFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = effectFactory.cpp; path = effects/effectFactory.cpp; sourceTree = "<group>"; };
+		856522A11CC61CC400EF129E /* meshRenderer3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = meshRenderer3D.cpp; sourceTree = "<group>"; };
+		856522A21CC61CC400EF129E /* meshRenderer3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = meshRenderer3D.h; sourceTree = "<group>"; };
 		8574FEAE1BC131E40058E916 /* shapeFactory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = shapeFactory.hpp; path = shapes/shapeFactory.hpp; sourceTree = "<group>"; };
 		8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shapeFactory.cpp; path = shapes/shapeFactory.cpp; sourceTree = "<group>"; };
 		85884B431C3BC80E004BC99C /* animationParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = animationParams.h; sourceTree = "<group>"; };
@@ -1073,6 +1076,16 @@
 			path = effects/distortEffect;
 			sourceTree = "<group>";
 		};
+		856522A01CC61CC400EF129E /* meshRenderer3D */ = {
+			isa = PBXGroup;
+			children = (
+				856522A11CC61CC400EF129E /* meshRenderer3D.cpp */,
+				856522A21CC61CC400EF129E /* meshRenderer3D.h */,
+			);
+			name = meshRenderer3D;
+			path = effects/meshRenderer3D;
+			sourceTree = "<group>";
+		};
 		85884B421C3BC80E004BC99C /* parameters */ = {
 			isa = PBXGroup;
 			children = (
@@ -1348,6 +1361,7 @@
 				854EA7A91C6771EF009A99DB /* imageShader */,
 				8529F1F31C6139D200949E5B /* lineDrawEffect */,
 				8557B83C1BC5B4ED00DAC695 /* lineEffect */,
+				856522A01CC61CC400EF129E /* meshRenderer3D */,
 				85382FDE1C90F6B900D09E5E /* gpuGlitchEffect */,
 				854045ED1BC9643B005C25D2 /* shaderEffect */,
 				85FED3A91C8F1AD800038AA0 /* fboEraser */,
@@ -1682,6 +1696,7 @@
 				854EA7AF1C6771EF009A99DB /* imageShader.cpp in Sources */,
 				855DEE951C3FCD61000936F8 /* effectFactory.cpp in Sources */,
 				854EA7B01C6771EF009A99DB /* videoShader.cpp in Sources */,
+				856522A31CC61CC400EF129E /* meshRenderer3D.cpp in Sources */,
 				851562D11C6DE235006AE43F /* singletonModule.cpp in Sources */,
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
 				858D33491BEBF220003E49C7 /* SyphonNameboundClient.m in Sources */,

@@ -31,7 +31,7 @@ textureDistortionEffect::~textureDistortionEffect(){
 // initialises the effect
 bool textureDistortionEffect::initialise(const animationParams& params){
 	// init values
-	basicEffect::initialise(params);
+	shaderEffect::initialise(params);
 	
 	bIsLoading = true;
 	bInitialised = false;
@@ -88,7 +88,6 @@ bool textureDistortionEffect::render(karmaFboLayer& renderLayer, const animation
 		ofPopStyle();
 		renderLayer.end();
 	}
-	//}
 	
 	if(bIsInEditMode){
 		renderLayer.begin();
@@ -123,61 +122,14 @@ bool textureDistortionEffect::render(karmaFboLayer& renderLayer, const animation
 		renderLayer.end();
 	}
 	
-	/// tmp
-//	ofPushStyle();
-//	ofSetColor(255,0,0,255);
-//	for(auto sh=shapes.begin(); sh!=shapes.end();++sh){
-//		if((*sh)->isType("vertexShape")){
-//			vertexShape* shape = static_cast<vertexShape*>(*sh);
-//			int i=0;
-//			for(auto pt=shape->getPoints().begin(); pt!=shape->getPoints().end(); ++pt){
-//				ofDrawBitmapString(i, (*pt).x+shape->getCenterPtr()->x, (*pt).y+shape->getCenterPtr()->y);
-//				i++;
-//			}
-//		}
-//		
-//	}
-//	ofPopStyle();
-
-	//renderLayer.end();
-	
-	return true; // TMP
-	// swap before so the current rendering turns into an fbo texture to use in our shader
-	renderLayer.swap();
-	renderLayer.begin();
-	
-	shader.begin();
-	//registerShaderVariables(params);
-	
-	shader.setUniform1i("kmIsPingPongPass", 1);
-	if(bUseCustomFbo){
-		shader.setUniformTexture("pingPongTexture", fbo.getTexture(),5);
-	}
-	else {
-		// note: between begin() and end() SRC is DST
-		shader.setUniformTexture("pingPongTexture", renderLayer.getDstTexture(),5);
-	}
-	
-	ofPushStyle();
-	ofSetColor(1.0, 1.0, 1.0, 2.0);
-	ofFill();
-
-	ofDrawRectangle(0,0,renderLayer.getWidth(), renderLayer.getHeight());
-	
-	ofPopStyle();
-	
-	shader.end();
-	
-	renderLayer.end(false);
-	
 	return true;
 }
 
 // updates shape data
 void textureDistortionEffect::update(karmaFboLayer& renderLayer, const animationParams& params){
 	
-	// do basic Effect function
-	basicEffect::update( renderLayer, params );
+	// do basic Effect functionality
+	shaderEffect::update( renderLayer, params );
 	
 	// drag/click ?
 	if(bIsInEditMode && clicked!=nullptr){
@@ -431,7 +383,7 @@ void textureDistortionEffect::mouseReleased(ofMouseEventArgs &args){
 
 // writes the effect data to XML. xml's cursor is already pushed into the right <effect> tag.
 bool textureDistortionEffect::saveToXML(ofxXmlSettings& xml) const{
-	bool ret = basicEffect::saveToXML(xml);
+	bool ret = shaderEffect::saveToXML(xml);
 	
 	xml.addValue("bDrawTriangulation", bDrawTriangulation);
 	

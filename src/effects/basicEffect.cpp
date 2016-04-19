@@ -56,7 +56,7 @@ bool basicEffect::initialise(const animationParams& params){
 	return bInitialised;
 }
 
-// Usefull ?
+// todo: rm this
 bool basicEffect::initialise(){
 	return true;
 }
@@ -117,6 +117,8 @@ void basicEffect::reset(){
 
 	shapes.clear();
 	shapes.resize(0);
+	
+	effectIndex = 0;
 	
 	bInitialised = true;
 	bHasError = false;

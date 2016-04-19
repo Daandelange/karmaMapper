@@ -16,6 +16,13 @@
 
 #define KM_TDE_HANDLE_RADIUS 5.0f
 
+// useful links for later
+// http://www.geeks3d.com/20140213/glsl-shader-library-fish-eye-and-dome-and-barrel-distortion-post-processing-filters/
+// OpenCV camera calibration
+// http://www.geeks3d.com/20140213/glsl-shader-library-fish-eye-and-dome-and-barrel-distortion-post-processing-filters/
+// http://davis.wpi.edu/~matt/courses/morph/2d.htm
+// 
+
 struct animationParams;
 
 struct distortionPoint {

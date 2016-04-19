@@ -453,12 +453,14 @@ bool animationController::loadConfiguration(const string& _file){
 										while( std::find(effectIndexes.begin(), effectIndexes.end(), tmpIndex) != effectIndexes.end() ){
 											tmpIndex++;
 										}
-										effect->setIndex(tmpIndex);
 									}
 									effectIndexes.push_back(tmpIndex);
 									
 									// todo: this returns a bool status, do something with it!
 									effect->loadFromXML( configXML, scene );
+									
+									// force index
+									effect->setIndex(tmpIndex);
 								}
 								else {
 									failedEffects.push_back(e);
