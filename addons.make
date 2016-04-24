@@ -10,6 +10,7 @@ ofxVLCRemote
 ofxXmlSettings
 ofxFps
 ofxDelaunay
+ofxTurboJpeg
 ofxSyphon
 # Note: ofxSyphon is Mac only... comment it out to generate a clean project on other platforms
 ofxUVC

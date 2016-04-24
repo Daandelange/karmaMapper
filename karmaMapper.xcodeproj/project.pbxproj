@@ -152,6 +152,11 @@
 		855DEE951C3FCD61000936F8 /* effectFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 855DEE941C3FCD61000936F8 /* effectFactory.cpp */; };
 		856522A31CC61CC400EF129E /* meshRenderer3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 856522A11CC61CC400EF129E /* meshRenderer3D.cpp */; };
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
+		856CFC811CCBA22700A38783 /* ofxTurboJpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 856CFC6D1CCBA22700A38783 /* ofxTurboJpeg.cpp */; };
+		856CFC821CCBA22700A38783 /* libturbojpeg.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 856CFC751CCBA22700A38783 /* libturbojpeg.dylib */; };
+		856CFC831CCBA22700A38783 /* ofxTurboJpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 856CFC6D1CCBA22700A38783 /* ofxTurboJpeg.cpp */; };
+		856CFC841CCBA22700A38783 /* libturbojpeg.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 856CFC751CCBA22700A38783 /* libturbojpeg.dylib */; };
+		856CFC851CCBBEE500A38783 /* libturbojpeg.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 856CFC751CCBA22700A38783 /* libturbojpeg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8574FEB01BC13BC20058E916 /* shapeFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */; };
 		8574FEB11BC13BC20058E916 /* shapeFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */; };
 		85884B521C3BC80E004BC99C /* animationParamsServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85884B441C3BC80E004BC99C /* animationParamsServer.cpp */; };
@@ -175,6 +180,7 @@
 		85BE66BA1CA5A4D30024C10F /* UVCCameraControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BE66B81CA5A4D30024C10F /* UVCCameraControl.m */; };
 		85BE66BB1CA5A4D30024C10F /* ofxUVC.mm in Sources */ = {isa = PBXBuildFile; fileRef = 85BE66B61CA5A4D30024C10F /* ofxUVC.mm */; };
 		85BE66BC1CA5A4D30024C10F /* UVCCameraControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BE66B81CA5A4D30024C10F /* UVCCameraControl.m */; };
+		85E428D71CCA2AAF00330C72 /* lossyImageEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E428D51CCA2AAF00330C72 /* lossyImageEffect.cpp */; };
 		85E773091B965980003AF890 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		85FED3AC1C8F1AD800038AA0 /* fboEraser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85FED3AA1C8F1AD800038AA0 /* fboEraser.cpp */; };
 		879A251454401BC0B6E4F238 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9BFFBBF4CC43DEE890B3C3E /* OscTypes.cpp */; };
@@ -238,6 +244,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				858D33481BEBF220003E49C7 /* Syphon.framework in CopyFiles */,
+				856CFC851CCBBEE500A38783 /* libturbojpeg.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,6 +434,10 @@
 		855DEE941C3FCD61000936F8 /* effectFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = effectFactory.cpp; path = effects/effectFactory.cpp; sourceTree = "<group>"; };
 		856522A11CC61CC400EF129E /* meshRenderer3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = meshRenderer3D.cpp; sourceTree = "<group>"; };
 		856522A21CC61CC400EF129E /* meshRenderer3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = meshRenderer3D.h; sourceTree = "<group>"; };
+		856CFC6D1CCBA22700A38783 /* ofxTurboJpeg.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTurboJpeg.cpp; sourceTree = "<group>"; };
+		856CFC6E1CCBA22700A38783 /* ofxTurboJpeg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTurboJpeg.h; sourceTree = "<group>"; };
+		856CFC721CCBA22700A38783 /* turbojpeg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = turbojpeg.h; sourceTree = "<group>"; };
+		856CFC751CCBA22700A38783 /* libturbojpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libturbojpeg.dylib; sourceTree = "<group>"; };
 		8574FEAE1BC131E40058E916 /* shapeFactory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = shapeFactory.hpp; path = shapes/shapeFactory.hpp; sourceTree = "<group>"; };
 		8574FEAF1BC13BC20058E916 /* shapeFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shapeFactory.cpp; path = shapes/shapeFactory.cpp; sourceTree = "<group>"; };
 		85884B431C3BC80E004BC99C /* animationParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = animationParams.h; sourceTree = "<group>"; };
@@ -452,6 +463,8 @@
 		85BE66B61CA5A4D30024C10F /* ofxUVC.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxUVC.mm; sourceTree = "<group>"; };
 		85BE66B71CA5A4D30024C10F /* UVCCameraControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UVCCameraControl.h; sourceTree = "<group>"; };
 		85BE66B81CA5A4D30024C10F /* UVCCameraControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UVCCameraControl.m; sourceTree = "<group>"; };
+		85E428D51CCA2AAF00330C72 /* lossyImageEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lossyImageEffect.cpp; sourceTree = "<group>"; };
+		85E428D61CCA2AAF00330C72 /* lossyImageEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lossyImageEffect.h; sourceTree = "<group>"; };
 		85F5188D1C833EF8002E01D5 /* karmaUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaUtilities.h; path = core/karmaUtilities.h; sourceTree = "<group>"; };
 		85FED3AA1C8F1AD800038AA0 /* fboEraser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fboEraser.cpp; sourceTree = "<group>"; };
 		85FED3AB1C8F1AD800038AA0 /* fboEraser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fboEraser.h; sourceTree = "<group>"; };
@@ -530,6 +543,7 @@
 			files = (
 				855452311B91FB4C00A36079 /* openFrameworksDebug.a in Frameworks */,
 				858D334D1BEBF220003E49C7 /* Syphon.framework in Frameworks */,
+				856CFC841CCBA22700A38783 /* libturbojpeg.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,6 +553,7 @@
 			files = (
 				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
 				858D33471BEBF220003E49C7 /* Syphon.framework in Frameworks */,
+				856CFC821CCBA22700A38783 /* libturbojpeg.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1086,6 +1101,67 @@
 			path = effects/meshRenderer3D;
 			sourceTree = "<group>";
 		};
+		856CFC6B1CCBA22700A38783 /* ofxTurboJpeg */ = {
+			isa = PBXGroup;
+			children = (
+				856CFC6C1CCBA22700A38783 /* src */,
+				856CFC6F1CCBA22700A38783 /* libs */,
+			);
+			name = ofxTurboJpeg;
+			sourceTree = "<group>";
+		};
+		856CFC6C1CCBA22700A38783 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				856CFC6D1CCBA22700A38783 /* ofxTurboJpeg.cpp */,
+				856CFC6E1CCBA22700A38783 /* ofxTurboJpeg.h */,
+			);
+			name = src;
+			path = ../../../addons/ofxTurboJpeg/src;
+			sourceTree = "<group>";
+		};
+		856CFC6F1CCBA22700A38783 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				856CFC701CCBA22700A38783 /* turbo-jpeg */,
+			);
+			name = libs;
+			path = ../../../addons/ofxTurboJpeg/libs;
+			sourceTree = "<group>";
+		};
+		856CFC701CCBA22700A38783 /* turbo-jpeg */ = {
+			isa = PBXGroup;
+			children = (
+				856CFC711CCBA22700A38783 /* include */,
+				856CFC731CCBA22700A38783 /* lib */,
+			);
+			path = "turbo-jpeg";
+			sourceTree = "<group>";
+		};
+		856CFC711CCBA22700A38783 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				856CFC721CCBA22700A38783 /* turbojpeg.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		856CFC731CCBA22700A38783 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				856CFC741CCBA22700A38783 /* osx */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		856CFC741CCBA22700A38783 /* osx */ = {
+			isa = PBXGroup;
+			children = (
+				856CFC751CCBA22700A38783 /* libturbojpeg.dylib */,
+			);
+			path = osx;
+			sourceTree = "<group>";
+		};
 		85884B421C3BC80E004BC99C /* parameters */ = {
 			isa = PBXGroup;
 			children = (
@@ -1193,6 +1269,16 @@
 			path = ../../../addons/ofxUVC/src;
 			sourceTree = "<group>";
 		};
+		85E428D41CCA2AAF00330C72 /* lossyImageEffect */ = {
+			isa = PBXGroup;
+			children = (
+				85E428D51CCA2AAF00330C72 /* lossyImageEffect.cpp */,
+				85E428D61CCA2AAF00330C72 /* lossyImageEffect.h */,
+			);
+			name = lossyImageEffect;
+			path = effects/lossyImageEffect;
+			sourceTree = "<group>";
+		};
 		85FED3A91C8F1AD800038AA0 /* fboEraser */ = {
 			isa = PBXGroup;
 			children = (
@@ -1294,6 +1380,7 @@
 				85BE66B31CA5A4D30024C10F /* ofxUVC */,
 				852D8A491CA821D20054BE62 /* ofxFps */,
 				853814511CBD912000F785D8 /* ofxDelaunay */,
+				856CFC6B1CCBA22700A38783 /* ofxTurboJpeg */,
 			);
 			name = addons;
 			sourceTree = "<group>";
@@ -1361,6 +1448,7 @@
 				854EA7A91C6771EF009A99DB /* imageShader */,
 				8529F1F31C6139D200949E5B /* lineDrawEffect */,
 				8557B83C1BC5B4ED00DAC695 /* lineEffect */,
+				85E428D41CCA2AAF00330C72 /* lossyImageEffect */,
 				856522A01CC61CC400EF129E /* meshRenderer3D */,
 				85382FDE1C90F6B900D09E5E /* gpuGlitchEffect */,
 				854045ED1BC9643B005C25D2 /* shaderEffect */,
@@ -1629,6 +1717,7 @@
 				858D334B1BEBF220003E49C7 /* ofxSyphonServer.mm in Sources */,
 				85999DD51C537F6600786707 /* fullScreenShape.cpp in Sources */,
 				855451F81B91FB4C00A36079 /* UdpSocket.cpp in Sources */,
+				856CFC831CCBA22700A38783 /* ofxTurboJpeg.cpp in Sources */,
 				855451F91B91FB4C00A36079 /* OscOutboundPacketStream.cpp in Sources */,
 				855451FA1B91FB4C00A36079 /* OscPrintReceivedElements.cpp in Sources */,
 				855451FB1B91FB4C00A36079 /* OscReceivedElements.cpp in Sources */,
@@ -1663,6 +1752,7 @@
 				1C90EB188A21A18AD91F42B2 /* animationController.cpp in Sources */,
 				50F666D143E446BDF89A7744 /* basicEffect.cpp in Sources */,
 				85557B501C64FDBB0091052C /* moduleFactory.cpp in Sources */,
+				856CFC811CCBA22700A38783 /* ofxTurboJpeg.cpp in Sources */,
 				85557B5D1C650BB10091052C /* fboRecorder.cpp in Sources */,
 				851FA9B21B9321FD00F94851 /* ofxPanelExtended.cpp in Sources */,
 				851FA9AC1B9321FD00F94851 /* ofxGuiSpacer.cpp in Sources */,
@@ -1677,6 +1767,7 @@
 				8DED5056525646FA71980866 /* ofxAssimpModelLoader.cpp in Sources */,
 				85382FE11C90F6B900D09E5E /* gpuGlitchEffect.cpp in Sources */,
 				858D33451BEBF220003E49C7 /* ofxSyphonServer.mm in Sources */,
+				85E428D71CCA2AAF00330C72 /* lossyImageEffect.cpp in Sources */,
 				8557F8DC1C9C5CC30066BE7D /* imgui_draw.cpp in Sources */,
 				B8846EF8E504895A4A9EFEC0 /* ofxAssimpTexture.cpp in Sources */,
 				85AC0C2F1CA4604800DD2962 /* liveGrabberOSC.cpp in Sources */,
@@ -1845,7 +1936,10 @@
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				KM_EDITOR_APP = true;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Developer/openFrameworks/addons/ofxTurboJpeg/libs/turbo-jpeg/lib/osx",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
@@ -1856,7 +1950,7 @@
 				);
 				PRODUCT_NAME = karmaMapperEditor;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxTurboJpeg/libs/turbo-jpeg/include/";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1929,7 +2023,10 @@
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				KM_EDITOR_APP = true;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Developer/openFrameworks/addons/ofxTurboJpeg/libs/turbo-jpeg/lib/osx",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -1939,7 +2036,7 @@
 				);
 				PRODUCT_NAME = karmaMapperEditor;
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxTurboJpeg/libs/turbo-jpeg/include/";
 				WRAPPER_EXTENSION = app;
 				baseConfigurationReference = E4EB6923138AFD0F00A09F29;
 			};
@@ -2175,7 +2272,10 @@
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Developer/openFrameworks/addons/ofxTurboJpeg/libs/turbo-jpeg/lib/osx",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "";
@@ -2186,7 +2286,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxTurboJpeg/libs/turbo-jpeg/include/";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2260,7 +2360,10 @@
 				ICON_FILE = "$(ICON_FILE_PATH)$(ICON)";
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Developer/openFrameworks/addons/ofxTurboJpeg/libs/turbo-jpeg/lib/osx",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -2270,7 +2373,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "";
+				USER_HEADER_SEARCH_PATHS = "../../../addons/ofxTurboJpeg/libs/turbo-jpeg/include/";
 				WRAPPER_EXTENSION = app;
 				baseConfigurationReference = E4EB6923138AFD0F00A09F29;
 			};

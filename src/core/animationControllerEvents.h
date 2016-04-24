@@ -10,6 +10,9 @@
 
 #include "animationParamsServer.h"
 
+// forward declaration ?
+struct animationParams;
+
 enum karmaControllerDrawEventStage {
 	DRAW_EVENT_BEFORE_DRAW,
 	DRAW_EVENT_AFTER_DRAW

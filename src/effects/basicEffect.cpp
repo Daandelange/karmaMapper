@@ -427,10 +427,12 @@ string basicEffect::effectFolder(const string _file, const string _effectFolder)
 	return ofToDataPath( ((string)"effects/").append(tmpEffectFolder).append("/").append(_file));
 }
 
+// todo: should be in shaderEffect
 bool basicEffect::usesPingPong() const {
 	return bUsePingpong;
 }
 
+// todo: should be in shaderEffect
 bool basicEffect::setUsePingPong(const bool& _usePingpong){
 	bUsePingpong = _usePingpong;
 

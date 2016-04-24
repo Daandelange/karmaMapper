@@ -54,4 +54,6 @@ ${PREFIX}tobiasebsen/ofxFps.git
 
 ${PREFIX}/obviousjim/ofxDelaunay.git
 
+${PREFIX}/armadillu/ofxTurboJpeg.git
+
 echo "Done cloning addons! :)"

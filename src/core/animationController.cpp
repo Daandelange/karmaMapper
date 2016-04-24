@@ -10,10 +10,14 @@
 
 #include "ofxVLCRemote.h"
 #include "durationRC.h"
+//#include "animationParamsServer.h"
 
-// forward declarations are needed for event listening
-ofEvent<karmaControllerDrawEventArgs> animationController::karmaControllerBeforeDraw;//(animationParams& _p);
+
+ofEvent<karmaControllerDrawEventArgs> animationController::karmaControllerBeforeDraw;
 ofEvent<karmaControllerDrawEventArgs> animationController::karmaControllerAfterDraw;
+ofEvent<karmaFboLayerDrawEventArgs> karmaFboLayer::karmaFboLayerBeforeDraw;
+ofEvent<karmaFboLayerDrawEventArgs> karmaFboLayer::karmaFboLayerAfterDraw;
+
 
 // - - - - - - - -
 // CONSTRUCTORS
@@ -977,7 +981,7 @@ void animationController::draw(ofEventArgs& event){
 	drawEventArgs.stage = DRAW_EVENT_BEFORE_DRAW;
 	ofNotifyEvent(animationController::karmaControllerBeforeDraw, drawEventArgs, this);
 	
-	// tmp
+	// clear BG
 	ofClear(0,1);
 	//ofBackground(255,0,0);
 	
@@ -1001,17 +1005,34 @@ void animationController::draw(ofEventArgs& event){
 		// prevents screen flickering using double FBO + uneven nb of effects
 		layer->first.resetSwap();
 		
+		karmaFboLayerDrawEventArgs fboDrawEventArgs(layer->first);
+		fboDrawEventArgs.stage = DRAW_EVENT_BEFORE_DRAW;
+		ofNotifyEvent(layer->first.karmaFboLayerBeforeDraw, fboDrawEventArgs, &layer->first);
+		
 		//layer->first.begin();
 		// draw effects
 		for(auto e=layerEffects.rbegin(); e!=layerEffects.rend(); ++e){
 			(*e)->render(layer->first, animationParams.params);
+
+// FOR DEBUGGING RENDERING
+//			if(ofGetFrameNum()==200){
+//				ofPixels previewPix;
+//				previewPix.allocate(layer->first.getWidth(), layer->first.getHeight(), GL_RGBA);
+//				layer->first.getSrcTexture().readToPixels(previewPix);
+//				ofSaveImage(previewPix, ofToDataPath("debugEffectsPreview/after-E"+ofToString((*e)->getIndex())+"-"+(*e)->getName()+".png"));
+//			}
 		}
 		//cout << "DONE --- Drawing fbo.texture: "<<" // " << layer->first.getFBO().getIdDrawBuffer()<<endl;
 		layer->first.getSrcTexture().draw(0,0);
 		
+		
+		
+		
 		// uncomment to view layer contents
 		//layer->first.getSrcTextureIndex(0).draw( ofGetWidth()-500, ofGetHeight()-200*(layer->first.getIndex()+1), 250,200);
 		//layer->first.getSrcTextureIndex(1).draw( ofGetWidth()-250, ofGetHeight()-200*(layer->first.getIndex()+1), 250,200);
+		fboDrawEventArgs.stage = DRAW_EVENT_AFTER_DRAW;
+		ofNotifyEvent(layer->first.karmaFboLayerAfterDraw, fboDrawEventArgs, &layer->first);
 	}
 	
 	// notify end draw (before GUI)

@@ -306,16 +306,15 @@ bool meshRenderer3D::saveToXML(ofxXmlSettings& xml) const{
 bool meshRenderer3D::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 	bool ret = shaderEffect::loadFromXML(xml, _scene);
 	
-	// force shader
-	//loadShader( effectFolder("meshRenderer3D.vert", "meshRenderer3D"), effectFolder("meshRenderer3D.frag", "meshRenderer3D") );
-	
-	// tmp, as the shader doesn't load... and is not needed yet...
+	// tmp, don't let shaderEffect create errors
 	setError(false);
 	
-	//setUsePingPong(true);
 	bUseTextures = false;
 	
-	meshPath = xml.getValue("meshPath", meshPath);
+	if(!loadModel(xml.getValue("meshPath", meshPath))){
+		setError(true, "Can't load mesh file!");
+		ret = false;
+	}
 	
 	return ret;
 }

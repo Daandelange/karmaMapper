@@ -60,14 +60,14 @@ void imageShader::update(karmaFboLayer& renderLayer, const animationParams& para
 	// do basic Effect function
 	basicEffect::update( renderLayer, params );
 	
-	effectMutex.lock();
-	if(bReactToMusic ){
-		// todo: maincolor has to become a changeable color parameter so we don't have to alter it's original value // nodes
-		mainColor[0] = liveGrabberOSC::liveGrabberAnalysis.lowFollower;
-		mainColor[1] = liveGrabberOSC::liveGrabberAnalysis.midFollower*2;
-		mainColor[2] = liveGrabberOSC::liveGrabberAnalysis.highFollower*2;
-	}
-	effectMutex.unlock();
+//	effectMutex.lock();
+//	if(bReactToMusic ){
+//		// todo: maincolor has to become a changeable color parameter so we don't have to alter it's original value // nodes
+//		mainColor[0] = liveGrabberOSC::liveGrabberAnalysis.lowFollower;
+//		mainColor[1] = liveGrabberOSC::liveGrabberAnalysis.midFollower*2;
+//		mainColor[2] = liveGrabberOSC::liveGrabberAnalysis.highFollower*2;
+//	}
+//	effectMutex.unlock();
 }
 
 // resets all values

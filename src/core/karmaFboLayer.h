@@ -13,6 +13,18 @@
 
 #include "ofMain.h"
 #include "basicEffect.h"
+#include "animationControllerEvents.h"
+
+class karmaFboLayer;
+struct karmaFboLayerDrawEventArgs {
+	
+	karmaFboLayerDrawEventArgs(karmaFboLayer& _fbo) : fbo(_fbo){
+		
+	}
+	
+	karmaControllerDrawEventStage stage;
+	karmaFboLayer& fbo;
+};
 
 class karmaFboLayer {
 public:
@@ -191,6 +203,9 @@ public:
 		maskFbo.end();
 	}
 	
+	static ofEvent<karmaFboLayerDrawEventArgs> karmaFboLayerBeforeDraw;
+	static ofEvent<karmaFboLayerDrawEventArgs> karmaFboLayerAfterDraw;
+	
 //	ofFbo& operator[]( int n ){
 //		return frameBuffers[n];
 //	}
@@ -226,6 +241,7 @@ private:
 	int height, width;
 	int MSAA;
 };
+
 
 //bool operator<(const karmaFboLayer::fboWithEffects& a, const karmaFboLayer::fboWithEffects& b) {
 //	return a.first.getIndex() < b.first.getIndex();

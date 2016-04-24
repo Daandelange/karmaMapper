@@ -46,7 +46,7 @@ bool textureDistortionEffect::render(karmaFboLayer& renderLayer, const animation
 	if(!isReady()) return false;
 	
 	
-	if((!bIsInEditMode && clicked!=nullptr)){
+	if(bIsInEditMode && clicked!=nullptr){
 			// draw nothing to reveal the original (underlying) undistorted texture
 	}
 	else if(shader.isLoaded()){

@@ -117,7 +117,14 @@ bool fboEraser::render(karmaFboLayer& renderLayer, const animationParams &params
 			ofDrawRectangle(0,0, renderLayer.getWidth(), renderLayer.getHeight());
 		}
 		else {
-			renderLayer.getFBO().draw(0,0);
+			if(bInvert){
+				renderLayer.getFBO().draw(0,0);
+			}
+			else {
+				for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+					(*s)->sendToGPU();
+				}
+			}
 		}
 		
 		glDisable(GL_BLEND);

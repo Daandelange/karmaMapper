@@ -30,17 +30,8 @@
 #include "OSCRouter.h"
 #include "mirReceiver.h"
 #include "durationReceiver.h"
-//#include "fboRecorder.h"
 
-//#ifdef TARGET_OSX
-//
-//	#ifdef KM_ENABLE_SYPHON
-//		#include "ofxSyphon.h"
-//	#endif
-//
-//#endif
-
-// todo: an overall mask that hides any unwanted projection zones (could be done by an effect too)
+// TODO
 // Ensure shape names are always UNIQUE
 
 class animationController {

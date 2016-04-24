@@ -12,6 +12,8 @@
 #include "ofxGui.h"
 #include "ofxGuiExtended.h"
 #include "animationParams.h"
+//#include "animationControllerEvents.h"
+
 
 #define KMAnimSeasonsYear 20 // (sec) year cycle duration
 
