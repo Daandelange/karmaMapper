@@ -42,7 +42,7 @@ videoShader::~videoShader(){
 // initialises the effect
 bool videoShader::initialise(const animationParams& params){
 	// init values
-	basicEffect::initialise(params);
+	shaderEffect::initialise(params);
 	
 	bIsLoading = true;
 	bInitialised = false;
@@ -688,7 +688,7 @@ bool videoShader::saveToXML(ofxXmlSettings& xml) const{
 bool videoShader::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 	bool ret = shaderEffect::loadFromXML(xml, _scene);
 	
-	ret *= loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
+	ret *= loadShader( effectFolder("videoShader.vert", "videoShader"), effectFolder("videoShader.frag", "videoShader") );
 	
 	bUseShadertoyVariables = true;
 	bUseTextures = true;

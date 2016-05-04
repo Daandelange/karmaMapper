@@ -145,8 +145,6 @@ bool shaderEffect::render(karmaFboLayer& renderLayer, const animationParams &par
 		renderLayer.begin();
 		
 		shader.begin();
-		
-		//shader.begin();
 		//registerShaderVariables(params);
 		
 		shader.setUniform1i("kmIsPingPongPass", 1);
@@ -202,6 +200,8 @@ void shaderEffect::update(karmaFboLayer& renderLayer, const animationParams& par
 	// do basic Effect function
 	basicEffect::update( renderLayer, params );
 	
+	if( !isReady() ) return;
+	
 	ofScopedLock lock(effectMutex);
 	
 	// update shaderToyArgs
@@ -229,8 +229,6 @@ void shaderEffect::update(karmaFboLayer& renderLayer, const animationParams& par
 	if(bUseMirVariables){
 		// todo
 	}
-	
-	if( !isReady() ) return;
 	
 //	
 //	for(auto it=shapes.begin(); it!=shapes.end(); it++){

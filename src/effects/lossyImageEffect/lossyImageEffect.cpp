@@ -22,6 +22,10 @@ lossyImageEffect::~lossyImageEffect(){
 	ofRemoveListener( karmaFboLayer::karmaFboLayerBeforeDraw, this, &lossyImageEffect::beforeDraw );
 	ofRemoveListener( karmaFboLayer::karmaFboLayerAfterDraw, this, &lossyImageEffect::afterDraw );
 	
+	toCompress.close();
+	receiveCompressed.close();
+	waitForThread(true, 1000);
+	
 	if (handleCompress){
 		tjDestroy(handleCompress);
 	}
@@ -31,8 +35,6 @@ lossyImageEffect::~lossyImageEffect(){
 	
 	handleCompress = NULL;
 	handleDecompress = NULL;
-	
-	waitForThread(true);
 }
 
 // - - - - - - -
@@ -128,7 +130,8 @@ void lossyImageEffect::reset(){
 	
 	// init other vars
 	fOpacity = 1.0f;
-	fJpegQuality = 0.1f;
+	fJpegQualityMin = 0.1f;
+	fJpegQualityMax = 0.2f;
 	effectMutex.lock();
 	bHasNewFrameThreaded = true;
 	effectMutex.unlock();
@@ -164,7 +167,8 @@ bool lossyImageEffect::printCustomEffectGui(){
 			
 			ImGui::Separator();
 			
-			ImGui::DragFloat("JPEG Quality", &fJpegQuality, 0.01f, 0.0f, 1.0f);
+			//ImGui::DragFloat("JPEG Quality", &fJpegQuality, 0.01f, 0.0f, 1.0f);
+			ImGui::DragFloatRange2("JPEG Quality", &fJpegQualityMin, &fJpegQualityMax, 0.01f,0,1);
 		
 			ImGui::Separator();
 			ImGui::Separator();
@@ -203,8 +207,8 @@ void lossyImageEffect::threadedFunction(){
 		int h = pixels.getHeight();
 		ofBuffer buffer;
 		
-		int jpegQuality = fJpegQuality*100;//round((1.0+sin(ofGetElapsedTimef()*0.5))*49.0);
-		jpegQuality = ofClamp(jpegQuality, 1,100);
+		int jpegQuality = ofRandom(fJpegQualityMin, fJpegQualityMax)*100;//round((1.0+sin(ofGetElapsedTimef()*0.5))*49.0);
+		jpegQuality = ofClamp(jpegQuality, 0,100);
 		//cout << "encoding with Quality = " << jpegQuality << endl;
 		
 		int pitch = (w*bpp);
@@ -224,7 +228,9 @@ void lossyImageEffect::threadedFunction(){
 				int result = -1; // tmp
 				result = tjCompress(handleCompress, (unsigned char*)(pixels.getData()), w, pitch, h, bpp, output, &size, jpegsubsamp, jpegQuality, flags);
 				
-				buffer.set((const char*)output, size);
+				if(result==0){
+					buffer.set((const char*)output, size);
+				}
 				
 				//cout << jpegQuality << "\t" << jpegsubsamp << "\t" << flags << "\t" << result << "\t" << buf.size() << endl;
 				compressOK = (result==0);
@@ -326,9 +332,6 @@ void lossyImageEffect::beforeDraw(karmaFboLayerDrawEventArgs& _args ){
 			//_args.fbo.swap();
 		}
 	}
-	else {
-		cout << "not drawing..." << endl;
-	}
 	effectMutex.unlock();
 }
 
@@ -340,6 +343,9 @@ void lossyImageEffect::beforeDraw(karmaFboLayerDrawEventArgs& _args ){
 bool lossyImageEffect::saveToXML(ofxXmlSettings& xml) const{
 	bool ret = basicEffect::saveToXML(xml);
 	
+	xml.addValue("fJpegQualityMin", fJpegQualityMin);
+	xml.addValue("fJpegQualityMax", fJpegQualityMax);
+	
 	return ret;
 }
 
@@ -347,6 +353,9 @@ bool lossyImageEffect::saveToXML(ofxXmlSettings& xml) const{
 // xml's cursor is pushed to the root of the <effect> tag to load
 bool lossyImageEffect::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 	bool ret = basicEffect::loadFromXML(xml, _scene);
+	
+	fJpegQualityMin = xml.getValue("fJpegQualityMin", fJpegQualityMin);
+	fJpegQualityMax = xml.getValue("fJpegQualityMax", fJpegQualityMax);
 	
 	//ofLoadImage(threadedTexture, ofToDataPath("ressources/images/collection1/Stronium-Tree-highres.jpg"));
 	

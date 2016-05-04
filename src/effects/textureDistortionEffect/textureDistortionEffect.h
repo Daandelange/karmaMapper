@@ -27,7 +27,8 @@ struct animationParams;
 
 struct distortionPoint {
 	int texCoordIndex = -1;
-	ofPoint texCoordOffset = ofPoint(0,0);
+	ofPoint texCoordOffset = ofPoint(0,0);  // relative
+	ofPoint texCoordOffsetChanging = ofPoint(0,0); // relative
 	basicPoint* shapeCenter = nullptr;
 	int shapeVertIndex = -1;
 	string shapeName = "";
@@ -68,7 +69,7 @@ public:
 	bool randomizePresets();
 	
 protected:
-	
+	bool bReactToMusic;
 	bool bIsInEditMode;
 	map< basicPoint*, distortionPoint> distortedPoints; // pointRef, textCoord, texIndex
 	//ofVbo vbo;

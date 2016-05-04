@@ -102,11 +102,6 @@ void basicEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 	aliveSince = ofGetSystemTime() - startTime;
 }
 
-// Usefull ?
-//void basicEffect::update(){
-//	
-//}
-
 // resets all values
 void basicEffect::reset(){
 	ofScopedLock lock(effectMutex);

@@ -405,7 +405,7 @@ bool animationController::loadConfiguration(const string& _file){
 				if( bypass || configXML.pushTag("layer",l) ){
 					
 					layers.emplace_back(
-						karmaFboLayer(ofGetWidth(),ofGetHeight()),
+						karmaFboLayer(configXML.getValue("layerWidth", (int) ofGetWidth()), configXML.getValue("layerHeight",(int) ofGetHeight()) ),
 						list<basicEffect*>()
 					);
 					
@@ -669,6 +669,8 @@ bool animationController::saveConfiguration( const string& _filePath ){
 				// layer settings
 				sceneXML.addValue("layerName", layerFbo.getName());
 				sceneXML.addValue("layerIndex", layerFbo.getIndex());
+				sceneXML.addValue("layerWidth", (int) layerFbo.getWidth() );
+				sceneXML.addValue("layerHeight", (int) layerFbo.getHeight() );
 				
 				// layer effects
 				sceneXML.addTag("effects");

@@ -138,6 +138,23 @@ void textureDistortionEffect::update(karmaFboLayer& renderLayer, const animation
 			distortedPoints[clicked].texCoordOffset.set(ofVec2f(ofGetMouseX(),ofGetMouseY())- *(distortedPoints[clicked].shapeCenter) - *clicked );
 		}
 	}
+	
+	// distort texturecoorinates ?
+	if(bReactToMusic){
+//		for(auto sh=shapes.begin(); sh!=shapes.end(); ++sh){
+//			
+//		}
+		for(auto dp=distortedPoints.begin(); dp!=distortedPoints.end(); ++dp){
+			//dp->second.
+			
+			dp->second.texCoordOffsetChanging = ofPoint( (cos((ofGetElapsedTimef()+dp->second.texCoordIndex/5.f)))*50.f*mirReceiver::mirCache.zcr, sin(ofGetElapsedTimef()/10.f+(dp->second.texCoordIndex+dp->second.shapeVertIndex))*50.f*mirReceiver::mirCache.zcr);
+			//dp->second.texCoordOffsetChanging = ofPoint( sin(ofGetElapsedTimef()), cos(ofGetElapsedTimef()/3.4f));
+			//triangulation.triangleMesh.setTexCoord(dp->second.texCoordIndex, args);
+			//dp->second.texCoordOffsetChanging *= mirReceiver::mirCache.zcr*10.f+5.f;
+		}
+		
+		reTriangulateFromPoints();
+	}
 }
 
 // resets all values
@@ -158,6 +175,7 @@ void textureDistortionEffect::reset(){
 	clicked = nullptr;
 	//vbo.clear();
 	bIsInEditMode = false;
+	bReactToMusic = false;
 	distortedPoints.clear();
 	
 	// set this when done
@@ -209,6 +227,9 @@ bool textureDistortionEffect::printCustomEffectGui(){
 			}
 			
 			ImGui::Checkbox("Draw Triangulation", &bDrawTriangulation);
+			
+			ImGui::Separator();
+			ImGui::Checkbox("React to music", &bReactToMusic);
 		
 			ImGui::Separator();
 			ImGui::Separator();
@@ -248,6 +269,7 @@ bool textureDistortionEffect::generateGridFromShapes(){
 				int ptOffset = 0;
 				for( auto pt=points.begin(); pt!=points.end(); ++pt ){
 					distortionPoint point;
+					point.texCoordOffsetChanging = ofPoint(0,0);
 					point.texCoordOffset = ofPoint(0,0);
 					point.texCoordIndex = 0;
 					point.shapeName = tmpShape->getName();
@@ -319,7 +341,7 @@ void textureDistortionEffect::reTriangulateFromPoints(){
 	int i=0;
 	for(auto pt=distortedPoints.begin();pt!=distortedPoints.end();++pt){
 		triangulation.addPoint( *pt->first + *pt->second.shapeCenter );
-		textureCoords.push_back(basicPoint(pt->second.texCoordOffset) + *pt->second.shapeCenter + *pt->first);
+		textureCoords.push_back(basicPoint(pt->second.texCoordOffset) + *(pt->second.shapeCenter) + *(pt->first) + pt->second.texCoordOffsetChanging);
 		pt->second.texCoordIndex = i+numScreenPoints;
 		i++;
 	}
@@ -386,6 +408,7 @@ bool textureDistortionEffect::saveToXML(ofxXmlSettings& xml) const{
 	bool ret = shaderEffect::saveToXML(xml);
 	
 	xml.addValue("bDrawTriangulation", bDrawTriangulation);
+	xml.addValue("bReactToMusic", bReactToMusic);
 	
 	if(distortedPoints.size()>0){
 		xml.addTag("distortionPoints");
@@ -422,6 +445,7 @@ bool textureDistortionEffect::loadFromXML(ofxXmlSettings& xml, const shapesDB& _
 	bUseTextures = false;
 	
 	bDrawTriangulation = xml.getValue("bDrawTriangulation", bDrawTriangulation);
+	bReactToMusic = xml.getValue("bReactToMusic", bReactToMusic);
 	
 	if(xml.pushTag("distortionPoints")){
 		if( generateGridFromShapes() ){

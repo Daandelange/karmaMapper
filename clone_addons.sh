@@ -52,8 +52,10 @@ ${PREFIX}atduskgreg/ofxUVC.git
 
 ${PREFIX}tobiasebsen/ofxFps.git
 
-${PREFIX}/obviousjim/ofxDelaunay.git
+${PREFIX}obviousjim/ofxDelaunay.git
 
-${PREFIX}/armadillu/ofxTurboJpeg.git
+${PREFIX}armadillu/ofxTurboJpeg.git
+
+${PREFIX}kylemcdonald/ofxFaceTracker.git
 
 echo "Done cloning addons! :)"

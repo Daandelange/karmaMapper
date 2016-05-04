@@ -55,7 +55,8 @@ public:
 	
 protected:
 	float fOpacity;
-	float fJpegQuality;
+	float fJpegQualityMin;
+	float fJpegQualityMax;
 	
 private:
 	bool bHasNewFrameThreaded;
@@ -68,4 +69,4 @@ private:
 	
 };
 
-#define GUIlossyImageEffectPanel "Texture Distorsion"
+#define GUIlossyImageEffectPanel "Lossy Image Effect"

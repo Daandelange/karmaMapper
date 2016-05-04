@@ -11,6 +11,9 @@ ofxXmlSettings
 ofxFps
 ofxDelaunay
 ofxTurboJpeg
+ofxCv
+ofxOpenCv
+ofxFaceTracker
 ofxSyphon
 # Note: ofxSyphon is Mac only... comment it out to generate a clean project on other platforms
 ofxUVC

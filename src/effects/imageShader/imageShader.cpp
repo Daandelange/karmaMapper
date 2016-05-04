@@ -243,7 +243,7 @@ void imageShader::tempoEventListener(mirTempoEventArgs &_args){
 	
 	if(shapes.size()<=0) return;
 	
-	if(!_args.isTempoBis){
+	if(_args.isTempoBis){
 		bReDrawNextFrame = true;
 //		for(auto s=shapes.begin(); s!=shapes.end(); ++s){
 //			if( (*s)->isType("vertexShape") ){

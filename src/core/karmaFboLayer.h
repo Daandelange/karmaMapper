@@ -193,8 +193,10 @@ public:
 		
 		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + 1);	// write to this texture
 		ofClear(0,_alpha);
+		//ofClearAlpha();
 		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + 0);	// write to this texture
 		ofClear(0,_alpha);
+		//ofClearAlpha();
 		
 		fbo.end();
 		
