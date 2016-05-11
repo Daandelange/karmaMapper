@@ -154,6 +154,7 @@ void videoShader::reset(){
 	effectType = "videoShader";
 	
 	// over-ride shader's reset
+	fVideoVolume = 0.0f;
 	bUseShadertoyVariables = true;
 	bUseTextures = true;
 	setUsePingPong(false);
@@ -362,6 +363,10 @@ bool videoShader::printCustomEffectGui(){
 					player.setPaused( !player.isPaused() );
 					unlock();
 				}
+			}
+			
+			if(ImGui::SliderFloat("Video volume", &fVideoVolume, 0.f, 1.f)){
+				player.setVolume(fVideoVolume);
 			}
 			
 		}
@@ -649,6 +654,7 @@ bool videoShader::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("videoIsPlaying", player.isPlaying());
 	xml.addValue("videoPosition", player.getPosition());
 	xml.addValue("videoIsPaused", player.isPaused());
+	xml.addValue("videoVolume", fVideoVolume);
 	//if( lock() ){
 	xml.addValue("bUseThreadedFileDecoding", bUseThreadedFileDecoding);
 	//unlock();
@@ -692,7 +698,8 @@ bool videoShader::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 	
 	bUseShadertoyVariables = true;
 	bUseTextures = true;
-	playBackSpeed = xml.getValue("playBackSpeed", 1);
+	fVideoVolume = xml.getValue("videoVolume", fVideoVolume);
+	playBackSpeed = xml.getValue("playBackSpeed", playBackSpeed);
 	setVideoMode( static_cast<enum videoMode>(xml.getValue("videoMode", VIDEO_MODE_FILE )) );
 	loadVideoFile( xml.getValue("videoFile", "") );
 	setUseThread( xml.getValue("bUseThreadedFileDecoding", true) );
@@ -700,6 +707,7 @@ bool videoShader::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 	if( player.isLoaded() && xml.getValue("videoIsPlaying", false) ){
 		
 		player.play();
+		player.setVolume(fVideoVolume);
 		
 		// todo: seems not to work properly...
 		player.setPosition( xml.getValue("videoPosition", 0.f) );
@@ -819,7 +827,7 @@ bool videoShader::loadVideoFile(const string &_path) {
 			if( lock() ){
 				player.setUseTexture( !bUseThreadedFileDecoding );
 				player.load(videoFile);
-				player.setVolume(0);
+				player.setVolume(fVideoVolume);
 				player.setSpeed(playBackSpeed);
 				player.setLoopState(OF_LOOP_NORMAL);
 				//player.getTexture().setTextureWrap(GL_REPEAT, GL_REPEAT);

@@ -110,6 +110,7 @@ protected:
 	bool bUseThreadedFileDecoding;
 	ofThreadChannel<ofPixels> images_to_update;
 	virtual void threadedFunction();
+	float fVideoVolume;
 	
 	// UVC webcam
 	ofQTKitGrabber UVCWebcam;
