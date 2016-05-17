@@ -22,6 +22,7 @@ struct liveGrabberTempoEventArgs {
 struct liveGrabberNoteEventArgs {
 	//string track = "unknown";
 	string key = "";
+	bool isMajor = false;
 	
 };
 

@@ -30,13 +30,13 @@ class shaderEffect : public basicEffect {
 public:
 	// constructors
 	shaderEffect();
-	~shaderEffect();
+	virtual ~shaderEffect();
 	
 	// global effect functions
-	bool initialise(const animationParams& params);
-	bool render(karmaFboLayer& renderLayer, const animationParams& params);
-	void update(karmaFboLayer& renderLayer, const animationParams& params);
-	void reset();
+	virtual bool initialise(const animationParams& params);
+	virtual bool render(karmaFboLayer& renderLayer, const animationParams& params);
+	virtual void update(karmaFboLayer& renderLayer, const animationParams& params);
+	virtual void reset();
 	
 	// #########
 	// GUI STUFF

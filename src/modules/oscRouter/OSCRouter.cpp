@@ -265,40 +265,6 @@ bool OSCRouter::clearAllNodes(){
 	return nodes.size()==0;
 }
 
-// tries to let the KMSA know we're live now
-void OSCRouter::reconnectKMSA(){
-    sender.setup(KM_SA_OSC_ADDR, KM_SA_OSC_PORT_IN);
-    ofxOscMessage m;
-	m.setAddress("/km/reconnectKMSA");
-	m.addTriggerArg();
-	sender.sendMessage(m);
-}
-
-void OSCRouter::ImGuiShowOSCRouterConnectionTester() {
-	
-	static bool oscRouterConnection = false;
-	if( ImGui::Button("Test connection with OSC Router" )){
-		oscRouterConnection = OSCRouter::getInstance().isEnabled();
-		ImGui::OpenPopup("oscRouterConnectionResult");
-	}
-	if( ImGui::BeginPopup("oscRouterConnectionResult") ){
-		ImGui::SameLine();
-		
-		if (oscRouterConnection){
-			ImGui::Text("Up & Running! :)");
-		}
-		else {
-			ImGui::Text("Error... Please check if the OSCRouter module is enabled.");
-		}
-		if(ImGui::Button("Ok")){
-			ImGui::CloseCurrentPopup();
-		}
-		
-		ImGui::EndPopup();
-	}
-	
-}
-
 bool OSCRouter::startOSC(int _port){
 	
 	if( !isEnabled() ) return false;
@@ -314,6 +280,8 @@ bool OSCRouter::startOSC(int _port){
 		return false;
 	}
 	OSCListeningPort = _port;
+	
+	sender.setup(KM_SA_OSC_ADDR, KM_SA_OSC_PORT_IN);
 	
 	reconnectKMSA();
 	
@@ -334,7 +302,46 @@ bool OSCRouter::stopOSC(){
 		return true;
 	}
 	
+	// disconnect sender
+	sender.setup(0, -1);
+	
+	// todo: tell kmsa KM stopped ?
+	
 	return !bIsListening;
+}
+
+// tries to let the KMSA know we're live now
+// todo: should not be in OSCRouter.
+void OSCRouter::reconnectKMSA(){
+    ofxOscMessage m;
+	m.setAddress("/km/reconnectKMSA");
+	m.addTriggerArg();
+	sender.sendMessage(m);
+}
+
+void OSCRouter::ImGuiShowOSCRouterConnectionTester() {
+	if( ImGui::CollapsingHeader( "OSC Router Module", "ImGuiShowOSCRouterConnectionTester", true, false ) ){
+		static bool oscRouterConnection = false;
+		if( ImGui::Button("Test connection with OSC Router" )){
+			oscRouterConnection = OSCRouter::getInstance().isEnabled();
+			ImGui::OpenPopup("oscRouterConnectionResult");
+		}
+		if( ImGui::BeginPopup("oscRouterConnectionResult") ){
+			ImGui::SameLine();
+			
+			if (oscRouterConnection){
+				ImGui::Text("Up & Running! :)");
+			}
+			else {
+				ImGui::Text("Error... Please check if the OSCRouter module is enabled.");
+			}
+			if(ImGui::Button("Ok")){
+				ImGui::CloseCurrentPopup();
+			}
+			
+			ImGui::EndPopup();
+		}
+	}
 }
 
 // register module type

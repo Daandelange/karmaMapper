@@ -1,217 +1,365 @@
 //
-//  OSCRouter.cpp
+//  serialControllerV1.cpp
 //  karmaMapper
 //
-//  Created by Daan de Lange on 30/05/2016.
+//  Created by Daan de Lange on 08/05/2016.
 //  Copyright (c) 2014 __MyCompanyName__. All rights reserved.
 //
 
-#include "OSCRouter.h"
+#include "serialController_v1.h"
 #include "ofxImGui.h"
 
 // - - - - - - - -
 // CONSTRUCTORS
 // - - - - - - - -
-OSCRouter::OSCRouter() : singletonModule<OSCRouter>() {
-	
-	//if(!isSingleton) getInstance() = this;
+serialControllerV1::serialControllerV1() : singletonModule<serialControllerV1>() {
 	
 	// init essential variables
-	moduleType = "OSCRouter";
-	moduleName = "OSCRouter";
-	nodes.clear();
-	bIsListening = false;
+	moduleType = "serialControllerV1";
+	moduleName = "serialControllerV1";
+	
+	serialControllerV1::reset();
 	
 }
 
-OSCRouter::~OSCRouter() {
+serialControllerV1::~serialControllerV1() {
 	
 	//ofScopedLock( oscMutex );
-	bIsListening = false;
+	bIsConnected = false;
+	
+	outgoingMessages.close();
+	incomingMessages.close();
 	
 	disable();
-	
-	clearAllNodes();
 }
 
 // - - - - - - - -
 // karmaModule methods
 // - - - - - - - -
-bool OSCRouter::enable(){
+bool serialControllerV1::enable(){
+	//singletonModule<serialControllerV1>::enable();
 	bool ret = karmaModule::enable();
 	
-	// OSC
-	ret *= startOSC();
+	tryConnect(hardwareID);
 	
 	return ret;
 }
 
-bool OSCRouter::disable(){
+bool serialControllerV1::disable(){
 	bool ret = karmaModule::disable();
 	
-	ret *= stopOSC();
+	disconnectDevice();
 	
 	return ret;
 }
 
-void OSCRouter::draw(const animationParams &params){
+void serialControllerV1::draw(const animationParams &params){
 	
 }
 
-void OSCRouter::update(const animationParams &params){
+void serialControllerV1::update(const animationParams &params){
 	
+	// get new serial messages from thread
+	static karmaSerialMsg<string> message("","");
+	while(incomingMessages.tryReceive(message)){
+		availableMessages.push_back(message);
+	}
 }
 
-bool OSCRouter::reset(){
+bool serialControllerV1::reset(){
 	disable();
-        return true;
+	
+	availableMessages.clear();
+	
+	bIsConnected = false;
+	hardwareID = "";
+	
+	enable();
+	
+	return true;
 }
 
-void OSCRouter::showGuiWindow(){
+void serialControllerV1::showGuiWindow(){
 	if(!bShowGuiWindow) return;
 	
 	ImGui::SetNextWindowSize(ImVec2(400,ofGetHeight()*0.8));
 	ImGui::Begin( ((string)"Module: ").append(getName()).append("###module-").append( ofToString(this) ).c_str() , &bShowGuiWindow );
-	if( ImGui::InputInt("OSC Listening port", &OSCListeningPort , 1, 10, ImGuiInputTextFlags_EnterReturnsTrue)){
-		startOSC(OSCListeningPort);
-	}
-	if( ImGui::Checkbox("OSC Listening", &bIsListening)){
-		if (bIsListening) startOSC(OSCListeningPort);
-		else stopOSC();
+	
+	ImGui::TextWrapped("This module enables effects to easily do threaded serial communication with the karmaMapper Arduino Leonardo / Olimex hardware controller.");
+	
+	if (ImGui::CollapsingHeader( "Devices", "Devices", true, true)){
+		
+		if( ImGui::Checkbox("Connected to a device", &bIsConnected)){
+			// click refreshes status
+			bIsConnected = device.isOpen();
+		}
+		
+		if(ImGui::Button("Disconnect")){
+			disconnectDevice();
+		}
+		ImGui::SameLine();
+		if(ImGui::Button("Reconnect")){
+			if(!tryConnect()){
+				ImGui::OpenPopup("sc_reconnect_failed");
+			}
+		}
+		
+		if(bIsConnected){
+			ImGui::TextWrapped("Hardware ID: %s", hardwareID.c_str() );
+			ImGui::TextWrapped("Port: %s", device.getPortName().c_str() );
+			ImGui::Text("Thread running: %d", isThreadRunning());
+		}
+		
+		if(ImGui::BeginPopup("sc_reconnect_failed")){
+			ImGui::TextWrapped("Failed to connect... :(");
+			if(ImGui::Button("Ok")){
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+		
+		static std::vector<ofx::IO::SerialDeviceInfo> availableDevices = ofx::IO::SerialDeviceUtils::listDevices();
+		
+		ImGui::Separator();
+		ImGui::Separator();
+		ImGui::ListBoxHeader("");
+		for(auto d=availableDevices.begin(); d!=availableDevices.end(); ++d){
+			if(ImGui::Selectable( (((hardwareID.compare((*d).getHardwareId())==0)?"[x] ":"[ ] ")+(*d).getDescription()+" ("+(*d).getPort()+")").c_str()) ){
+				tryConnect((string)(*d).getHardwareId());
+			}
+		}
+		ImGui::ListBoxFooter();
+		ImGui::SameLine();
+		if(ImGui::Button("Refresh")){
+			availableDevices = ofx::IO::SerialDeviceUtils::listDevices();
+		}
 	}
 	
 	ImGui::Separator();
-	ImGui::Text("Number of nodes: %lu", nodes.size() );
+	ImGui::Separator();
 	
-	if(nodes.size()>0){
-		ImGui::Separator();
-		ImGui::Separator();
-		ImGui::TextWrapped("Connected OSC Nodes:");
-		ImGui::Indent();
+	if (ImGui::CollapsingHeader( "Messages", "Messages", true, true)){
 		
-		for(auto n=nodes.begin(); n!=nodes.end(); ++n){
-			if(ImGui::Button( ((string)("Unbind###node-"+ ofToString(&*n))).c_str())) {
-				(*n)->detachNode();
-				removeNode(*n);
-				break;
-			}
-			ImGui::SameLine();
-			ImGui::TextWrapped("%s (%s)", (*n)->getName().c_str(), ofToString(&*n).c_str());
+		if(ImGui::Button("Send Ping")){
+			karmaSerialMsg<string> msg("ping", "From ImGui");
+			outgoingMessages.send(std::move(msg));
 		}
+		
+		//ImGui::Text("Number of queued outgoing messages: %lu", outgoingMessages.size() );
+		ImGui::Text("Number of queued incoming messages: %lu", availableMessages.size() );
+		
+		ImGui::Separator();
+		ImGui::Separator();
+		
+		ImGui::Text("Most recent messages: ");
+		ImGui::Indent();
+		ImGui::Columns(2);
+		ImGui::Text("Address");
+		ImGui::NextColumn();
+		ImGui::Text("Value");
+		ImGui::NextColumn();
+		
+		if(availableMessages.size()>0){
+			int limit=20;
+			for(auto m=availableMessages.rbegin(); m!=availableMessages.rend(); m++){
+				
+				ImGui::Selectable(m->getAddress().c_str());
+				ImGui::NextColumn();
+				ImGui::Selectable(m->getValue().c_str());
+				ImGui::NextColumn();
+				
+				if(limit==0){
+					break;
+				}
+				else{
+					--limit;
+				}
+			}
+		}
+		else {
+			ImGui::Text("[ None ]");
+		}
+		ImGui::Columns(1);
 		ImGui::Unindent();
 	}
+	
+	ImGui::Separator();
+	ImGui::Separator();
+	
+//	if(nodes.size()>0){
+//		ImGui::Separator();
+//		ImGui::Separator();
+//		ImGui::TextWrapped("Connected OSC Nodes:");
+//		ImGui::Indent();
+//		
+//		for(auto n=nodes.begin(); n!=nodes.end(); ++n){
+//			if(ImGui::Button( ((string)("Unbind###node-"+ ofToString(&*n))).c_str())) {
+//				(*n)->detachNode();
+//				removeNode(*n);
+//				break;
+//			}
+//			ImGui::SameLine();
+//			ImGui::TextWrapped("%s (%s)", (*n)->getName().c_str(), ofToString(&*n).c_str());
+//		}
+//		ImGui::Unindent();
+//	}
 	
 	ImGui::End();
 }
 
-void OSCRouter::drawMenuEntry() {
+void serialControllerV1::drawMenuEntry() {
 	karmaModule::drawMenuEntry();
 }
 
 // writes the module data to XML. xml's cursor is already pushed into the right <module> tag.
-bool OSCRouter::saveToXML(ofxXmlSettings& xml) const{
+bool serialControllerV1::saveToXML(ofxXmlSettings& xml) const{
 	bool ret = karmaModule::saveToXML(xml);
 	
-	xml.addValue("OSCListeningPort", OSCListeningPort);
+	//xml.addValue("OSCListeningPort", OSCListeningPort);
+	xml.addValue("hwID", hardwareID);
 	
 	return ret;
 }
 
 // load module settings from xml
 // xml's cursor is pushed to the root of the <module> tag to load
-bool OSCRouter::loadFromXML(ofxXmlSettings& xml){
+bool serialControllerV1::loadFromXML(ofxXmlSettings& xml){
+	
+	reset();
 	
 	bool ret=karmaModule::loadFromXML(xml);
 	
-	clearAllNodes();
+	//OSCListeningPort = xml.getValue("OSCListeningPort", KM_OSC_PORT_IN );
+	tryConnect(xml.getValue("hwID", hardwareID) );
 	
-	OSCListeningPort = xml.getValue("OSCListeningPort", KM_OSC_PORT_IN );
-	
-	//initialise(animationParams.params);
-	
-	return ret; // todo
+	return ret;
 }
 
 // - - - - - - - -
-// PARENT FUNCTION (ofxOscReceiver)
+// serialControllerV1 FUNCTIONS
 // - - - - - - - -
-void OSCRouter::ProcessMessage(const osc::ReceivedMessage &m, const osc::IpEndpointName &remoteEndpoint){
-	// first part is the same as parent class
-	// convert the message to an ofxOscMessage
+bool serialControllerV1::tryConnect(string _hwID){
 	
-	if (!isEnabled()) return;
-	// todo: we need a mutex here....
+	std::vector<ofx::IO::SerialDeviceInfo> devicesInfo = ofx::IO::SerialDeviceUtils::listDevices();
 	
-	// set the address
-	ofxOscMessage ofMsg;
-	ofMsg.setAddress( m.AddressPattern() );
+#ifdef KM_DEBUG
+	ofLogVerbose("serialControllerV1::tryConnect") << "Connected Devices: ";
 	
-	// set the sender ip/host
-	char endpoint_host[ osc::IpEndpointName::ADDRESS_STRING_LENGTH ];
-	remoteEndpoint.AddressAsString( endpoint_host );
-	ofMsg.setRemoteEndpoint( endpoint_host, remoteEndpoint.port );
+	for (std::size_t i = 0; i < devicesInfo.size(); ++i)
+	{
+		ofLogVerbose("serialControllerV1::tryConnect") << "\t" << devicesInfo[i];
+	}
+#endif
 	
-	// transfer the arguments
-	for ( osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
-		 arg != m.ArgumentsEnd();
-		 ++arg ){
-		if ( arg->IsInt32() )
-			ofMsg.addIntArg( arg->AsInt32Unchecked() );
-		else if ( arg->IsInt64() )
-			ofMsg.addInt64Arg( arg->AsInt64Unchecked() );
-		else if ( arg->IsFloat() )
-			ofMsg.addFloatArg( arg->AsFloatUnchecked() );
-		else if ( arg->IsString() )
-			ofMsg.addStringArg( arg->AsStringUnchecked() );
-		else if ( arg->IsBlob() ){
-			const char * dataPtr;
-			osc::osc_bundle_element_size_t len = 0;
-			arg->AsBlobUnchecked((const void*&)dataPtr, len);
-			ofBuffer buffer(dataPtr, len);
-			ofMsg.addBlobArg( buffer );
+	// already connected ?
+	if(bIsConnected){
+		if(hardwareID.compare(_hwID)==0){
+			
+			if(!isThreadRunning()){
+				startThread();
+			}
+			
+			bIsConnected = true;
+			
+			// already connected
+			return true;
 		}
-		else ofLogError("OSCRouter") << "ProcessMessage: argument in message " << m.AddressPattern() << " is not an int, float, or string";
+		
+		// disconnect from device
+		disconnectDevice();
 	}
 	
-	bool handled = false;
-	if( !nodes.empty() ){
+	if (!devicesInfo.empty()){
+		unsigned int deviceID = 0;
 		
-		
-		for(list<OSCNode*>::iterator it=nodes.begin(); it!=nodes.end(); it++){
-			if((*it)->canHandle(ofMsg)){
-				handled = (*it)->handle(ofMsg);
-				//if(handled==true) return;
+		// try to match device name
+		for (std::size_t i = 0; i < devicesInfo.size(); ++i){
+			//ofLogVerbose("serialControllerV1::tryConnect") << "\t" << devicesInfo[i];
+			if(devicesInfo[i].getHardwareId().compare(_hwID)==0){
+				deviceID = i;
+				break;
 			}
 		}
-	}
-	
-	/* cycle trough arguments:
-	 for(int i = 0; i < m.getNumArgs(); i++){
-		// get the argument type
-		msg_string += m.getArgTypeName(i);
-		msg_string += ":";
-		// display the argument - make sure we get the right type
-		if(m.getArgType(i) == OFXOSC_TYPE_INT32){
-	 msg_string += ofToString(m.getArgAsInt32(i));
+		
+		// Connect to it
+		bool success = false;
+		try {
+			success = device.setup(devicesInfo[deviceID], KM_SERIAL_BAUD_RATE);
 		}
-		else if(m.getArgType(i) == OFXOSC_TYPE_FLOAT){
-	 msg_string += ofToString(m.getArgAsFloat(i));
+		catch (const serial::IOException& exc){
+			ofLogNotice("serialControllerV1::tryConnect()") << "Could not connect to device ["<< devicesInfo[deviceID].getDescription() <<" / "<< _hwID <<"] : " << exc.what();
 		}
-		else if(m.getArgType(i) == OFXOSC_TYPE_STRING){
-	 msg_string += m.getArgAsString(i);
+		
+		if(success){
+			bIsConnected = true;
+			hardwareID = devicesInfo[deviceID].getHardwareId();
+			
+			device.registerAllEvents(this);
+			if(!isThreadRunning()) startThread();
+			
+			// tmp
+			karmaSerialMsg<string> msg("ping", "karmaMapper connected");
+			outgoingMessages.send(std::move(msg));
+			
+			ofLogNotice("serialControllerV1::tryConnect") << "Successfully setup " << devicesInfo[deviceID].getDescription() << "(device id=" << deviceID << ")";
+			
+			return true;
 		}
 		else{
-	 msg_string += "unknown";
+			bIsConnected = false;
+			ofLogNotice("serialControllerV1::tryConnect") << "Unable to setup " << devicesInfo[0];
 		}
-	 }*/
-	// notify all matching routes
-	//ofLogNotice("OSCRouter") << "ProcessMessage: massage [" << ofMsg.getAddress() << "] with "<< ofMsg.getNumArgs() << "args."; //ofMessage.getArgName(0);
+	}
+	else
+	{
+		ofLogNotice("serialControllerV1::tryConnect") << "No devices connected.";
+	}
+	return false;
 }
 
-// - - - - - - - -
-// OSCRouter FUNCTIONS
-// - - - - - - - -
-bool OSCRouter::addNode(OSCNode* _node){
+bool serialControllerV1::disconnectDevice(){
+	device.unregisterAllEvents(this);
+	
+	if(device.isOpen()){
+		// disconnects
+		device.setup("");
+	}
+	
+	// strop threads
+	//if(isThreadRunning()) waitForThread(true);
+	
+	bIsConnected = false;
+}
+
+void serialControllerV1::threadedFunction(){
+	
+	static karmaSerialMsg<string> tmpMessage("","");
+	while(outgoingMessages.receive(tmpMessage)){
+		
+		ofx::IO::ByteBuffer textBuffer(tmpMessage.getAddress()+":"+tmpMessage.getValue());
+		
+		device.send(textBuffer);
+	}
+}
+
+void serialControllerV1::onSerialBuffer(const ofx::IO::SerialBufferEventArgs& args){
+	// Buffers will show up here when the marker character is found.
+	karmaSerialMsg<string> message("addr", args.getBuffer().toString());
+	incomingMessages.send( std::move(message) );
+	//cout << "onSerialBuffer! : " << message.getValue() << endl;
+}
+
+void serialControllerV1::onSerialError(const ofx::IO::SerialBufferErrorEventArgs& args)
+{
+	// Errors and their corresponding buffer (if any) will show up here.
+	//SerialMessage message(args.getBuffer().toString(),
+						  //args.getException().displayText(),
+						 // 500);
+	//serialMessages.push_back(message);
+}
+
+/*
+bool serialControllerV1::addNode(OSCNode* _node){
 	if( _node==NULL ) return false;
 	
 	ofScopedLock( oscMutex );
@@ -219,7 +367,7 @@ bool OSCRouter::addNode(OSCNode* _node){
 	
 	// no duplicates
 	if( std::find(nodes.begin(), nodes.end(), _node)!=nodes.end()){
-		ofLogNotice("OSCRouter::addNode("+ ofToString(&*_node) +")") << "Node already exists, not adding.";
+		ofLogNotice("serialControllerV1::addNode("+ ofToString(&*_node) +")") << "Node already exists, not adding.";
 		return true;
 	}
 	
@@ -228,7 +376,7 @@ bool OSCRouter::addNode(OSCNode* _node){
 	return true;
 }
 
-bool OSCRouter::removeNode(OSCNode* _node){
+bool serialControllerV1::removeNode(OSCNode* _node){
 	if( _node==NULL ) return false;
 	
 	ofScopedLock( oscMutex );
@@ -242,7 +390,7 @@ bool OSCRouter::removeNode(OSCNode* _node){
 	return true; // guarantees the node doesnt exist
 }
 
-bool OSCRouter::clearAllNodes(){
+bool serialControllerV1::clearAllNodes(){
 	
 	ofScopedLock( oscMutex );
 
@@ -266,7 +414,7 @@ bool OSCRouter::clearAllNodes(){
 }
 
 // tries to let the KMSA know we're live now
-void OSCRouter::reconnectKMSA(){
+void serialControllerV1::reconnectKMSA(){
     sender.setup(KM_SA_OSC_ADDR, KM_SA_OSC_PORT_IN);
     ofxOscMessage m;
 	m.setAddress("/km/reconnectKMSA");
@@ -274,21 +422,21 @@ void OSCRouter::reconnectKMSA(){
 	sender.sendMessage(m);
 }
 
-void OSCRouter::ImGuiShowOSCRouterConnectionTester() {
+void serialControllerV1::ImGuiShowserialControllerV1ConnectionTester() {
 	
-	static bool oscRouterConnection = false;
+	static bool serialControllerV1Connection = false;
 	if( ImGui::Button("Test connection with OSC Router" )){
-		oscRouterConnection = OSCRouter::getInstance().isEnabled();
-		ImGui::OpenPopup("oscRouterConnectionResult");
+		serialControllerV1Connection = serialControllerV1::getInstance().isEnabled();
+		ImGui::OpenPopup("serialControllerV1ConnectionResult");
 	}
-	if( ImGui::BeginPopup("oscRouterConnectionResult") ){
+	if( ImGui::BeginPopup("serialControllerV1ConnectionResult") ){
 		ImGui::SameLine();
 		
-		if (oscRouterConnection){
+		if (serialControllerV1Connection){
 			ImGui::Text("Up & Running! :)");
 		}
 		else {
-			ImGui::Text("Error... Please check if the OSCRouter module is enabled.");
+			ImGui::Text("Error... Please check if the serialControllerV1 module is enabled.");
 		}
 		if(ImGui::Button("Ok")){
 			ImGui::CloseCurrentPopup();
@@ -298,45 +446,8 @@ void OSCRouter::ImGuiShowOSCRouterConnectionTester() {
 	}
 	
 }
-
-bool OSCRouter::startOSC(int _port){
-	
-	if( !isEnabled() ) return false;
-	
-	// OSC
-	try {
-		ofxOscReceiver::setup( _port );
-		bIsListening = true;
-	} catch(const std::exception& e) {
-		ofLogWarning("OSCRouter::startOSC") << "Could not connect: " << e.what() << endl;
-		bIsListening = false;
-		
-		return false;
-	}
-	OSCListeningPort = _port;
-	
-	reconnectKMSA();
-	
-	return bIsListening;
-}
-
-bool OSCRouter::stopOSC(){
-	
-	if(!isEnabled()) return false;
-	
-	// OSC
-	try {
-		ofxOscReceiver::setup( -1 );
-		bIsListening = false;
-	} catch(const std::exception& e) {
-		ofLogNotice("OSCRouter::stopOSC") << "Disconnect failed somehow... : " << e.what() << endl;
-		bIsListening = false;
-		return true;
-	}
-	
-	return !bIsListening;
-}
+ */
 
 // register module type
-const static ::module::factory::moduleDependencies  OSCRouterDependencies({});
-MODULE_REGISTER( OSCRouter , "OSCRouter", OSCRouterDependencies );
+const static ::module::factory::moduleDependencies  serialControllerV1Dependencies({});
+MODULE_REGISTER( serialControllerV1 , "serialControllerV1", serialControllerV1Dependencies );

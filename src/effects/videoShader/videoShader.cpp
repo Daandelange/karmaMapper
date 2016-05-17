@@ -1004,7 +1004,6 @@ void videoShader::setUseThread(const bool& _useThread){
 			else if (!isThreadRunning()) {
 				startThread();
 			}
-			
 		}
 	}
 	else {

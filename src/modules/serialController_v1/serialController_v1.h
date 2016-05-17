@@ -1,42 +1,26 @@
 //
-//  Created by Daan de Lange on 30/04/2016.
+//  Created by Daan de Lange on 08/05/2016.
 //
-//	This class routes OSC messages (to ofEvents and other)
-//  Routes register using a factory design pattern.
+//	This class enables effects to easily do threaded serial communication with the karmaMapper Arduino Leonardo / Olimex hardware controller.
 //
 
 #pragma once
 
 #include "ofMain.h"
 #include "singletonModule.h"
-#include "ofxOsc.h"
-#include "OSCNode.h"
+#include "karmaSerialMsg.h"
+#include "ofxSerial.h"
 
-#define KM_OSC_PORT_IN 12000
-#define KM_SA_OSC_PORT_IN 12001
-#define KM_SA_OSC_ADDR "localhost"
+#define KM_SERIAL_BAUD_RATE 115200
 
-// based upon this model to register an OSC router
-// http://gamedev.stackexchange.com/a/17759
+// todo: (var) device should have a mutex ?
 
-class OSCRouter : public singletonModule<OSCRouter>, public ofxOscReceiver {
+class serialControllerV1 : public singletonModule<serialControllerV1>, public ofThread {
 	friend class ofxImGui;
 	
 public:
-	OSCRouter();
-	~OSCRouter();
-	
-	// fix for no default constructor
-	//OSCRouter& operator=( const OSCRouter& crap ) { return *this; }
-	
-	// singleton stuff
-//	static OSCRouter& getInstance(){
-//		static OSCRouter instance(true); // Guaranteed to be destroyed and instantiated on first use
-//		return instance;
-//	}
-	// prevents accidentally creating copies of your singleton
-	//OSCRouter(OSCRouter const&)     = delete;
-	//void operator=(OSCRouter const&)  = delete;
+	serialControllerV1();
+	virtual ~serialControllerV1();
 	
 	
 	// virtual methods from karmaModule
@@ -50,51 +34,48 @@ public:
 	virtual bool saveToXML(ofxXmlSettings& xml) const;
 	virtual bool loadFromXML(ofxXmlSettings& xml);
 	
-	// virtual methods from ofxOscReceiver
-	void ProcessMessage( const osc::ReceivedMessage &m, const osc::IpEndpointName& remoteEndpoint );
+	// serialControllerV1 methods
+	bool tryConnect(string _hwID="");
+	bool disconnectDevice();
+	virtual void threadedFunction();
+	
+	// serial communication
+	void onSerialBuffer(const ofx::IO::SerialBufferEventArgs& args);
+	void onSerialError(const ofx::IO::SerialBufferErrorEventArgs& args);
 	
 	// OSC Router methods
-	bool addNode( OSCNode* _node );
-	bool removeNode( OSCNode* _node );
-	bool clearAllNodes();
-	bool startOSC( int _port = KM_OSC_PORT_IN );
-	bool stopOSC();
-	void reconnectKMSA();
-	static void ImGuiShowOSCRouterConnectionTester();
+//	bool addNode( OSCNode* _node );
+//	bool removeNode( OSCNode* _node );
+//	bool clearAllNodes();
+//	bool startOSC( int _port = KM_OSC_PORT_IN );
+//	bool stopOSC();
+//	void reconnectKMSA();
+//	static void ImGuiShowserialControllerV1ConnectionTester();
 	
 protected:
-	// gui
-	//ofxGuiGroup gui;
-	//ofParameter<string> guiNumRoutes;
-	//ofParameter<string> guiStatus;
-	//ofParameter<bool> bGuiEnabled;
-	list<OSCNode* > nodes;
-	ofMutex oscMutex;
-	int OSCListeningPort;
-	bool bIsListening;
-    
-    
-    ofxOscSender sender;
+	
+	ofThreadChannel<karmaSerialMsg<string> > incomingMessages;
+	ofThreadChannel<karmaSerialMsg<string> > outgoingMessages;
+	
+	list<karmaSerialMsg<string> > availableMessages;
+	
+	//int OSCListeningPort;
+	bool bIsConnected;
+	string hardwareID;
+	
+	// remember connected device interface
+	ofx::IO::PacketSerialDevice device;
+	//ofx::IO::SerialDevice device;
 	
 private:
-	
 	// prevents accidentally creating copies of your singleton
-	OSCRouter(OSCRouter const&)     = delete;
-	void operator=(OSCRouter const&)  = delete;
-//	OSCRouter& operator=(const OSCRouter& other){
-//		// always keep the singleton version
-//		// todo: could be a better condition...
-//		if (isSingleton ||  other.isSingleton) {
-//			return getInstance();
-//		}
-//		else return *this;
-//	}
+	serialControllerV1(serialControllerV1 const&)     = delete;
+	void operator=(serialControllerV1 const&)  = delete;
 	
 	// called by getInstance()
-	OSCRouter(bool _isSingleton);
+	serialControllerV1(bool _isSingleton);
 };
 
 
 // GUI translations
-#define GUIOSCRouterStatus		("Status")
-#define GUIOSCRouterNumRoutes	("Nb Routes")
+#define GUIserialControllerV1Status		("Status")

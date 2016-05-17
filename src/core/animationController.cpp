@@ -70,9 +70,12 @@ animationController::~animationController(){
 // - - - - - - - -
 bool animationController::start(){
 	
+	// todo: move this to init ?
 	// all black! xD
 	ofSetBackgroundAuto(false);
 	ofClear(0,0,0,255);
+	
+	ofSetFrameRate(60);
 	
 	// play music
 	//sound.loadSound("TEST MIX V0.1.wav");
@@ -1484,6 +1487,15 @@ void animationController::draw(ofEventArgs& event){
 											e->initialise(animationParams.params);
 											layerEffects.push_front( e );
 											e->enable();
+											
+											// correct ordering
+											for(auto tmpEffect=layerEffects.begin(); tmpEffect!=layerEffects.end(); ++tmpEffect){
+												if(tmpEffect==layerEffects.begin()){
+													continue;
+												}
+												
+												(*tmpEffect)->setIndex( (*tmpEffect)->getIndex()+1 );
+											}
 										}
 									}
 								}

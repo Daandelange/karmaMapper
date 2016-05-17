@@ -18,6 +18,9 @@
 // this class handles OSC events comming from liveGrabberOSC.pd, caches the data and calculate some more with it.
 // also fires MIR events
 
+#define KM_LG_OSC_ADDR "localhost"
+#define KM_LG_OSC_PORT_OUT 2345
+
 class liveGrabberOSC : public OSCNode, public singletonModule<liveGrabberOSC> {
 	
 public:
@@ -25,14 +28,14 @@ public:
 	~liveGrabberOSC();
 	
 	// singleton stuff
-	static liveGrabberOSC& getInstance(){
-		static liveGrabberOSC instance; // Guaranteed to be destroyed and instantiated on first use
-		return instance;
-	}
+//	static liveGrabberOSC& getInstance(){
+//		static liveGrabberOSC instance; // Guaranteed to be destroyed and instantiated on first use
+//		return instance;
+//	}
 	
 	// prevents accidentally creating copies of your singleton
-	liveGrabberOSC(liveGrabberOSC const&)     = delete;
-	void operator=(liveGrabberOSC const&)  = delete;
+//	liveGrabberOSC(liveGrabberOSC const&)     = delete;
+//	void operator=(liveGrabberOSC const&)  = delete;
 	
 	// Parent functions from OSCNode
 	bool canHandle( const ofxOscMessage &_msg ) const;
@@ -52,7 +55,10 @@ public:
 	// basic functions
 	//bool startListening();
 	//bool stopListening();
-	bool connectToOSCRouter(){return false;};
+	//bool connectToOSCRouter(){return false;};
+	bool connectOSCSender();
+	bool sendOscMessage(ofxOscMessage& _msg);
+	bool sendOscMessage(const string& _addr, const string& _value);
 	
 	// listeners
 	//void oscIn();
@@ -75,6 +81,13 @@ protected:
 	string lastReceivedParamName;
 	
 	ofMutex oscMutex; // needed because audioIn() runs on a separate thread
+	ofxOscSender sender;
+	bool bSenderIsConnected;
+	
+	// tmp variables to send
+	float noise;
+	float random;
+	float manualFloat;
 	
 private:
 	

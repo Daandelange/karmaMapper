@@ -54,8 +54,15 @@ ${PREFIX}tobiasebsen/ofxFps.git
 
 ${PREFIX}obviousjim/ofxDelaunay.git
 
+echo "Please read ofxTurboJpeg's installation notes to install libTurboJpeg."
 ${PREFIX}armadillu/ofxTurboJpeg.git
 
 ${PREFIX}kylemcdonald/ofxFaceTracker.git
+
+${PREFIX}bakercp/ofxSerial.git
+# dependency of ofxSerial
+${PREFIX}bakercp/ofxIO.git
+
+${PREFIX}tado/ofxLiquidFun.git
 
 echo "Done cloning addons! :)"

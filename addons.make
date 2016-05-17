@@ -14,7 +14,11 @@ ofxTurboJpeg
 ofxCv
 ofxOpenCv
 ofxFaceTracker
+ofxSerial
+# Note: Dependency of ofxSerial
+ofxIO
+ofxLiquidFun
+
+# MAC ONLY Addons (comment them out on other platforms and edit karmaSettings.h apropriately)
 ofxSyphon
-# Note: ofxSyphon is Mac only... comment it out to generate a clean project on other platforms
 ofxUVC
-# Note: ofxUVC is Mac only... comment it out to generate a clean project on other platforms

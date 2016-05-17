@@ -6,9 +6,6 @@
 #include "shapesDB.h"
 #include "animationController.h"
 #include "effects.h"
-//#include "ofxAbletonLiveSet.h"
-//#include "karmaSoundAnalyser.h"
-#include "OSCRouter.h"
 
 // note:
 // first we load shapes which are attached to effects. Destroy basicEffect instances before destroying basicShape instances; unless coding the complicated way.
@@ -45,9 +42,6 @@ private:
 	//ofx::AbletonLiveSet::EventHandler liveSetEvents;
 	shapesDB scene;
 	animationController controller;
-	//karmaSoundAnalyser analyser;
-	//ofSoundStream soundStream;
-	//OSCRouter osc;
 	
 	bool mouseHidden = true;
 	

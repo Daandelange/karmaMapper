@@ -72,9 +72,10 @@ protected:
 	ofMutex oscMutex;
 	int OSCListeningPort;
 	bool bIsListening;
-    
-    
+	
+	// todo: should not be here...
     ofxOscSender sender;
+	
 	
 private:
 	

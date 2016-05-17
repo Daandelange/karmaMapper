@@ -24,6 +24,7 @@ liveGrabberOSC::liveGrabberOSC() {
 	// karmaModule setup
 	bInitialised = true;
 	bEnabled = false;
+	bSenderIsConnected = false;
 	moduleName = "liveGrabberOSC";
 	moduleType = "liveGrabberOSC";
 }
@@ -78,7 +79,9 @@ bool liveGrabberOSC::handle(const ofxOscMessage &_msg) {
 			ret = true;
 		}
 		
-		if( subAddr.substr(0,8).compare("/Trigger") == 0 ){
+		// /allg/TriggeredClipName"
+		
+		else if( subAddr.length()==8 && subAddr.substr(0,8).compare("/Trigger") == 0 ){
 			
 			if(_msg.getNumArgs()>0){
 				
@@ -101,41 +104,25 @@ bool liveGrabberOSC::handle(const ofxOscMessage &_msg) {
 			}
 		}
 		
-		else if( subAddr.substr(0,6).compare("/note-") == 0 ){
-			subAddr = subAddr.substr(6,addr.npos);
+		else if( subAddr.substr(0,7).compare("/piano/") == 0 ){
+			subAddr = subAddr.substr(7,addr.npos);
 			
-			if( subAddr.compare("A0") == 0 ){
+			if(subAddr.length()==2 || subAddr.length()==3){
 				{
 					// send bangEvent
 					liveGrabberBangEventArgs args;
-					args.what="Note-A0";
+					args.what="Note-"+subAddr;
 					ofNotifyEvent(liveGrabberBangEvent, args);
 				}
 				{
 					// send bangEvent
 					liveGrabberNoteEventArgs args;
-					args.key = "A0";
+					args.key = subAddr;
+					args.isMajor = (subAddr.length()==3);
 					//args.isTempoBis=false;
 					ofNotifyEvent(liveGrabberNoteEvent, args);
 				}
-				tmpLastMsg = "Note A0";
-				ret = true;
-			}
-			else if( subAddr.compare("A0m") == 0 ){
-				{
-					// send bangEvent
-					liveGrabberBangEventArgs args;
-					args.what="Note-A#0";
-					ofNotifyEvent(liveGrabberBangEvent, args);
-				}
-				{
-					// send bangEvent
-					liveGrabberNoteEventArgs args;
-					args.key = "A#0";
-					//args.isTempoBis=false;
-					ofNotifyEvent(liveGrabberNoteEvent, args);
-				}
-				tmpLastMsg = "Note A#0";
+				tmpLastMsg = "Piano "+subAddr;
 				ret = true;
 			}
 		}
@@ -175,6 +162,7 @@ bool liveGrabberOSC::enable(){
 	
 	// try connect
 	ret *= OSCRouter::getInstance().addNode(this);
+	connectOSCSender();
 	
 	bHasError = ret;
 	
@@ -192,6 +180,30 @@ bool liveGrabberOSC::disable(){
 
 void liveGrabberOSC::update(const animationParams &params){
 	karmaModule::update(params);
+	
+	if(bSenderIsConnected && (ofGetFrameNum()%2==0) ){
+		noise = ofNoise(ofGetElapsedTimef());
+		random = ofRandom(0.f, 1.f);
+		
+		ofxOscMessage m;
+		m.setAddress("noise");
+		//m.addInt32Arg(noise);
+		m.addFloatArg(noise);
+		//m.addStringArg(ofToString(noise));
+		sendOscMessage(m);
+		
+		m.setAddress("random");
+		m.addFloatArg(random);
+		sendOscMessage(m);
+		
+		if(ofGetFrameNum()%((int)ofRandom(100, 300))==0){
+			m.setAddress("trigger");
+			m.addFloatArg(manualFloat);
+			sendOscMessage(m);
+		}
+	}
+	
+	
 }
 
 void liveGrabberOSC::draw(const animationParams &params){
@@ -200,6 +212,8 @@ void liveGrabberOSC::draw(const animationParams &params){
 
 bool liveGrabberOSC::reset(){
 	lastReceivedParamName="";
+	
+	connectOSCSender();
 }
 
 void liveGrabberOSC::showGuiWindow(){
@@ -218,11 +232,64 @@ void liveGrabberOSC::showGuiWindow(){
 	ImGui::TextWrapped("Last Received Param: %s", lastReceivedParamName.c_str());
 	oscMutex.unlock();
 	
+	if( ImGui::CollapsingHeader( "Params", "liveGrabberOSC", true, true ) ){
+		ImGui::SliderFloat("noise", &noise, 0.0, 1.0);
+		ImGui::SliderFloat("random", &random, 0.0, 1.0);
+		if(ImGui::SliderFloat("manualFloat", &manualFloat, 0.0, 1.0)){
+			ofxOscMessage m;
+			m.setAddress("manualFloat");
+			m.addFloatArg(manualFloat);
+			sendOscMessage(m);
+		}
+		if(ImGui::Button("manualTrigger")){
+			ofxOscMessage m;
+			m.setAddress("manualTrigger");
+			m.addTriggerArg();
+			//m.addImpulseArg();
+			sendOscMessage(m);
+		}
+	}
+	
 	ImGui::End();
 }
 
 void liveGrabberOSC::drawMenuEntry() {
 	karmaModule::drawMenuEntry();
+}
+
+bool liveGrabberOSC::connectOSCSender(){
+	//sender.setup(KM_LG_OSC_ADDR, KM_LG_OSC_PORT_OUT);
+	//sender.setup("192.168.0.15", 2345); // antoine
+	sender.setup("localhost", 2345);
+	bSenderIsConnected = true;
+}
+
+bool liveGrabberOSC::sendOscMessage(ofxOscMessage& _msg){
+	if( bSenderIsConnected ){
+		sender.sendMessage(_msg);
+		return true;
+	}
+	
+	return false;
+}
+
+// (addr starts with a slash)
+bool liveGrabberOSC::sendOscMessage(const string& _addr, const string& _value){
+	if( bSenderIsConnected && !_addr.empty() ){
+		ofxOscMessage m;
+		m.setAddress(_addr);
+		
+		if(_value.empty()){
+			m.addTriggerArg();
+		}
+		else {
+			m.addSymbolArg(_addr);
+		}
+		
+		return sendOscMessage(m);
+	}
+	
+	return false;
 }
 
 

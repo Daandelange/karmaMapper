@@ -1,11 +1,11 @@
 //
-//  OSCNode.h
+//  karmaSerialMsg.h
 //  karmaMapper
 //
-//  OSCNode.h
+//  karmaSerialMsg.h
 //  karmaMapper
 //
-//  Created by Daan de Lange on 30/04/2016.
+//  Created by Daan de Lange on 08/05/2016.
 //
 //	This class routes OSC messages (to ofEvents and other)
 //
@@ -14,32 +14,36 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxOscMessage.h"
+#include "karmaSerialMsg.h"
 
-// based upon this model to register an OSC router
-// http://gamedev.stackexchange.com/a/17759
-
-class OSCNode {
+template<typename T>
+class karmaSerialMsg {
 	
 public:
-	OSCNode( );
-	~OSCNode();
+	karmaSerialMsg(string _addr, T _value): address(_addr), value(_value) {
+	}
+	~karmaSerialMsg(){
+		age = ofGetElapsedTimef();
+	};
+	
 	// fix for no default constructor
-	OSCNode& operator=(const OSCNode& crap) { return *this; }
+//	karmaSerialMsg& operator=(const karmaSerialMsg& crap) {
+//		return *this;
+//	}
 	
-	virtual bool canHandle( const ofxOscMessage &_msg ) const = 0;
-	virtual bool handle( const ofxOscMessage &_msg ) = 0;
-	virtual void detachNode() = 0;
-	virtual void notifyDetached(){};
-	
-	//bool isEnabled() const;
-	string getName() const;
-	
+	//string getAddress() const;
+	string getAddress() const{
+		return address;
+	}
+	//T getValue() const;
+	T getValue() const{
+		return value;
+	}
 	
 protected:
-	//bool bLoaded;
-	string nodeName;
-	ofMutex oscMutex;
+	string address;
+	T value;
+	float age; // relative to ofGetElapsedTimef()
 	
 private:
 	

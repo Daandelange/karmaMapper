@@ -28,6 +28,7 @@ public:
 	virtual bool disable();
 	virtual void update(const animationParams& params);
 	virtual void draw(const animationParams& params);
+	// todo: add reset();
 	
 	// UTILITIES
 	string getName() const;
