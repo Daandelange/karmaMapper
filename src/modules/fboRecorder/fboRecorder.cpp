@@ -237,9 +237,9 @@ bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 #ifdef KM_ENABLE_SYPHON
 		case VIDEOREC_MODE_SYPHON : {
 			fbo.getTexture().getTextureData().bFlipTexture = false;
-			fbo.begin();
+			//fbo.begin();
 			//ofDisableArbTex();
-			fbo.end();
+			//fbo.end();
 			syphonServer.setName("fboRecorder Output");
 			bRecording = true;
 			break;
@@ -360,14 +360,18 @@ bool fboRecorder::endFrame(bool _showBuffer){
 		case VIDEOREC_MODE_FILE_H264 :
 		case VIDEOREC_MODE_FILE_PNG : {
 			ofPixels pix;
-			pix.allocate(fbo.getWidth(),fbo.getHeight(), ofGetImageTypeFromGLType(GL_RGB));
+			pix.allocate(fbo.getWidth(),fbo.getHeight(), ofGetImageTypeFromGLType(GL_RGBA));
 			
 			if(useGrabScreen){
-				tmpTex.loadScreenData(0, 0, w, h);
+				tmpTex.loadScreenData(0, 0, fbo.getWidth(), fbo.getHeight());
 				tmpTex.readToPixels(pix);
 			}
 			else {
-				fbo.readToPixels(pix);
+                //fbo.flagDirty();
+                //xfbo.updateTexture(0);
+                //fbo.getTexture().readToPixels(pix);
+                fbo.readToPixels(pix);
+				//fbo.readToPixels(pix);
 			}
 			ofxVideoRecorder::addFrame(pix);
 			
@@ -379,7 +383,7 @@ bool fboRecorder::endFrame(bool _showBuffer){
 			//fbo.updateTexture( fbo.getTexture().texData.textureID );
 			if( useGrabScreen ){
 				//syphonServer.publishScreen();
-				tmpTex.loadScreenData(0, 0, ofGetWidth(), ofGetHeight());
+				tmpTex.loadScreenData(0, 0, w, h);
 				//tmpTex = fbo.getTexture();
 				syphonServer.publishTexture( &tmpTex );
 			}
@@ -427,7 +431,6 @@ void fboRecorder::beforeDraw(  karmaControllerDrawEventArgs& _args ){
 }
 
 void fboRecorder::afterDraw(  karmaControllerDrawEventArgs& _args ){
-	
 	endFrame(videoRecShowOutput);
 }
 

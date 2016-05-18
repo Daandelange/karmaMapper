@@ -60,6 +60,33 @@ bool durationReceiver::handle(const ofxOscMessage &_msg) {
 		
 		ofxOscArgType type = OFXOSC_TYPE_NONE;
 		if( _msg.getNumArgs() > 0 ) type = _msg.getArgType(0);
+        
+        
+        if( type == OFXOSC_TYPE_FLOAT){
+            float value = 0;
+            if(_msg.getNumArgs()>0) value=_msg.getArgAsFloat(0);
+            durationFloatEventArgs args;
+            args.track=track;
+            //args.type="curve";
+            args.value=value;
+            ofNotifyEvent(durationFloatEvent, args);
+        }
+        else if(type == OFXOSC_TYPE_INT32){
+            
+        }
+        else if(type == OFXOSC_TYPE_STRING){
+            durationFlagEventArgs args;
+            args.track=track;
+            args.flag = _msg.getArgAsString(0);
+            ofNotifyEvent(durationFlagEvent, args);
+        }
+        // handle bangs
+        else if(type == OFXOSC_TYPE_NONE){
+            durationBangEventArgs args;
+            args.track=track;
+            ofNotifyEvent(durationBangEvent, args);
+        }
+        
 		
 		//	- - - - - - - - - -
 		//	Notice:
@@ -270,7 +297,9 @@ void durationReceiver::showGuiWindow(){
 	ImGui::Separator();
 	
 	if( ImGui::CollapsingHeader( "Params", "liveGrabberOSC", true, true ) ){
-		ImGui::InputInt("Duration sending port", &oscSendParams.port);
+        if(ImGui::InputInt("Duration sending port", &oscSendParams.port)){
+             connectOSCSender();
+        }
 		static char addrBuffer[64];
 		for(int i=0; i<64; ++i){
 			if(i < oscSendParams.host.size()){
@@ -282,6 +311,7 @@ void durationReceiver::showGuiWindow(){
 		}
 		if(ImGui::InputText("Duration remote host", &addrBuffer[0], 64, ImGuiInputTextFlags_EnterReturnsTrue)){
 			oscSendParams.host = ofToString(addrBuffer);
+            connectOSCSender();
 		}
 	}
 	
@@ -310,6 +340,7 @@ bool durationReceiver::loadFromXML(ofxXmlSettings& xml){
 	
 	oscSendParams.port = xml.getValue("OSCListeningPort", (int) oscSendParams.port );
 	oscSendParams.host = xml.getValue("OSCListeningHost", oscSendParams.host);
+    connectOSCSender();
 	
 	//initialise(animationParams.params);
 	

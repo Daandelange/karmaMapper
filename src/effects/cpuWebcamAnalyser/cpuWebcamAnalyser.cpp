@@ -117,7 +117,7 @@ bool cpuWebcamAnalyser::render(karmaFboLayer& renderLayer, const animationParams
 				
 				
 				ofTranslate(thirdEye);
-				ofScale(1.f/maskScale);
+				ofScale(1.f/maskScale, 1.f/maskScale);
 				ofRotateZ( (rightEye-leftEye).angle( ofPoint(1,0,0) ) );
 				ofTranslate(-thirdEye);
 				

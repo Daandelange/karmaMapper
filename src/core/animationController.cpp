@@ -989,8 +989,8 @@ void animationController::draw(ofEventArgs& event){
 	ofClear(0,1);
 	
 	//karmaControllerDrawEventArgs tmp;
-	static karmaControllerDrawEventArgs drawEventArgs(animationParams.params);
-	drawEventArgs.params = animationParams.params;
+	static karmaControllerDrawEventArgs drawEventArgs( animationParams.params);
+	//drawEventArgs.params = animationParams.params;
 	drawEventArgs.stage = DRAW_EVENT_BEFORE_DRAW;
 	ofNotifyEvent(animationController::karmaControllerBeforeDraw, drawEventArgs, this);
 	

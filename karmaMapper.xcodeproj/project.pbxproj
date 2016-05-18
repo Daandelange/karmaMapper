@@ -3809,8 +3809,8 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Developer/openFrameworks/addons/ofxTurboJpeg/libs/turbo-jpeg/lib/osx",
-					/Developer/openFrameworks/addons/ofxOpenCv/libs/opencv/lib/osx,
+					"../../../addons/ofxTurboJpeg/libs/turbo-jpeg/lib/osx",
+					../../../addons/ofxOpenCv/libs/opencv/lib/osx,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
@@ -3911,8 +3911,8 @@
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Developer/openFrameworks/addons/ofxTurboJpeg/libs/turbo-jpeg/lib/osx",
-					/Developer/openFrameworks/addons/ofxOpenCv/libs/opencv/lib/osx,
+					"../../../addons/ofxTurboJpeg/libs/turbo-jpeg/lib/osx",
+					../../../addons/ofxOpenCv/libs/opencv/lib/osx,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;

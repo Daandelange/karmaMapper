@@ -9,9 +9,11 @@
 #pragma once
 
 #include "animationParamsServer.h"
+//#include "karmaFboLayer.h"
 
 // forward declaration ?
 struct animationParams;
+//class karmaFboLayer;
 
 enum karmaControllerDrawEventStage {
 	DRAW_EVENT_BEFORE_DRAW,
@@ -21,8 +23,9 @@ enum karmaControllerDrawEventStage {
 struct karmaControllerDrawEventArgs {
 	animationParams& params;
 	enum karmaControllerDrawEventStage stage;
+    //karmaFboLayer& fbo;
 	
-	karmaControllerDrawEventArgs(animationParams& _p) : params(_p), stage(DRAW_EVENT_BEFORE_DRAW) {
+	karmaControllerDrawEventArgs(/*karmaFboLayer& _fbo,*/ animationParams& _p) : params(_p), stage(DRAW_EVENT_BEFORE_DRAW) /*, fbo(_fbo)*/ {
 		
 	}
 };

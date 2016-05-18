@@ -27,7 +27,6 @@ void ofApp::setup(){
 	//scene.loadLastUsedScene();
 	//scene.loadScene("Vendome_1500_1200.xml");
 	
-	
 	// enable animation controller
 	controller.start();
 	controller.loadLastConfiguration();
