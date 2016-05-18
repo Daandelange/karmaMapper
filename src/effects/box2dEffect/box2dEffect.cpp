@@ -86,6 +86,7 @@ bool box2dEffect::render(karmaFboLayer& renderLayer, const animationParams &para
 	//ofEnableBlendMode(OF_BLENDMODE_ADD);
 	//ofEnableAlphaBlending();
 	//ofEnableBlendMode(OF_BLENDMODE_ADD);
+	ofSetColor(mainColor[0], mainColor[1], mainColor[2], mainColor[3]);
 	particles.draw();
 	//ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	
@@ -218,6 +219,11 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 		
 		//UpdatePairsAndTriadsWithReactiveParticles
 	//}
+	
+	// delete particles for quicker removal ?
+	if(bDisableMeSoon && particles.getParticleCount()>0){
+		particles.particleSystem->DestroyOldestParticle(0, true);
+	}
 }
 
 // resets all values
@@ -397,6 +403,12 @@ bool box2dEffect::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 // - - - - - - -
 // CONTROLLER FUNCTIONS
 // - - - - - - -
+
+// return false if effect should ramain a little before deletion
+bool box2dEffect::disableSoonIsNow() {
+	return (particles.getParticleCount() >= 0);
+}
+
 bool box2dEffect::randomizePresets(){
 	if(!shaderEffect::randomizePresets() ) return false;
 	

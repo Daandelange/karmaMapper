@@ -12,6 +12,9 @@
 
 #include "basicEffect.h"
 
+// forward declarations are needed for event listening
+ofEvent<effectCmdEventArgs> basicEffect::effectCommandEvent;
+
 // - - - - - - -
 // CONSTRUCTORS
 // - - - - - - -
@@ -100,6 +103,14 @@ void basicEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 	
 	if( !isReady() ) return;
 	aliveSince = ofGetSystemTime() - startTime;
+	
+	// disable ?
+	if(bDisableMeSoon){
+		// basicEffect disables instantly
+		if(disableSoonIsNow()){
+			disable();
+		}
+	}
 }
 
 // resets all values
@@ -122,16 +133,30 @@ void basicEffect::reset(){
 	bShowGuiWindow = false;
 	effectName = effectType;
 	bUsePingpong = false;
+	bDisableMeSoon = false;
 	
 	overallBoundingBox = ofRectangle(0,0,0,0);
+	
+	ofAddListener(basicEffect::effectCommandEvent, this, &basicEffect::receiveEffectCommand );
 }
 
 void basicEffect::enable(){
 	bEnabled=true;
+	bDisableMeSoon = false;
 }
 
-void basicEffect::disable(){
-	bEnabled=false;
+void basicEffect::disable(bool letEffectDisapearFirst){
+	if(bEnabled==false){
+		return;
+	}
+	
+	if(letEffectDisapearFirst){
+		bDisableMeSoon = true;
+	}
+	else {
+		bEnabled=false;
+		bDisableMeSoon=false;
+	}
 }
 
 void basicEffect::setShowGuiWindow(const bool &_b){
@@ -407,6 +432,13 @@ const int& basicEffect::getIndex() const {
 // CONTROLLER FUNCTIONS
 // - - - - - - -
 
+// return false if effect should ramain a little before deletion
+// todo: rename ? (isDoneAnimating)
+bool basicEffect::disableSoonIsNow() {
+	// dont hold for any longer
+	return true;
+}
+
 bool basicEffect::randomizePresets(){
 	return true;
 }
@@ -570,6 +602,26 @@ int basicEffect::getNumShapes() const{
 void basicEffect::setError(const bool& _hasError, const string& _errorMsg){
     bHasError = _hasError;
     shortStatus = _errorMsg;
+}
+
+void basicEffect::receiveEffectCommand(effectCmdEventArgs& _args){
+	
+	// is this instance the target of this command ?
+	if(_args.targetEffectName == effectName){
+		
+		if(_args.command.compare("enable")==0){
+			if(_args.boolValue==true){
+				enable();
+			}
+			else {
+				// true lets effect finish animations first
+				disable(true);
+			}
+		}
+		else if(_args.command.compare("alpha")==0){
+			mainColor[3] = ofClamp(_args.floatValue, 0.f, 1.f);
+		}
+	}
 }
 
 

@@ -7,6 +7,7 @@
 //
 
 #include "durationReceiver.h"
+#include "basicEffect.h"
 
 // forward declarations are needed for event listening
 ofEvent<durationBangEventArgs> durationReceiver::durationBangEvent;
@@ -60,9 +61,40 @@ bool durationReceiver::handle(const ofxOscMessage &_msg) {
 		
 		ofxOscArgType type = OFXOSC_TYPE_NONE;
 		if( _msg.getNumArgs() > 0 ) type = _msg.getArgType(0);
+		
+		if(_msg.getNumArgs()>0 && (type == OFXOSC_TYPE_INT32 || type == OFXOSC_TYPE_FLOAT) ){
+			// /dt/cmd/effect-*
+			#define cmpEffectCmd "cmd/effect-"
+			if( track.compare(0, sizeof(cmpEffectCmd)-1, cmpEffectCmd) == 0  ) {
+				
+				track=track.substr(sizeof(cmpEffectCmd)-1,track.npos);
+				
+				// enable / disable an effect
+				// /dt/cmd/effect-enable-effectName
+				#define cmpEffectCmdEnable "enable-"
+				if( track.compare(0, sizeof(cmpEffectCmdEnable)-1, cmpEffectCmdEnable) == 0  ) {
+					
+					effectCmdEventArgs args;
+					args.command = "enable";
+					args.targetEffectName = track.substr(sizeof(cmpEffectCmdEnable)-1, track.npos);
+					args.boolValue = _msg.getArgAsInt32(0);
+					
+					ofNotifyEvent(basicEffect::effectCommandEvent, args);
+				}
+				#define cmpEffectCmdAlpha "alpha-"
+				else if( track.compare(0, sizeof(cmpEffectCmdAlpha)-1, cmpEffectCmdAlpha) == 0  ) {
+					
+					effectCmdEventArgs args;
+					args.command = "alpha";
+					args.targetEffectName = track.substr(sizeof(cmpEffectCmdAlpha)-1, track.npos);
+					args.floatValue = _msg.getArgAsFloat(0);
+					
+					ofNotifyEvent(basicEffect::effectCommandEvent, args);
+				}
+			}
+		}
         
-        
-        if( type == OFXOSC_TYPE_FLOAT){
+        else if( type == OFXOSC_TYPE_FLOAT){
             float value = 0;
             if(_msg.getNumArgs()>0) value=_msg.getArgAsFloat(0);
             durationFloatEventArgs args;
@@ -169,7 +201,7 @@ bool durationReceiver::handle(const ofxOscMessage &_msg) {
 		// unknown track, could not get information
 		else {
 			// todo: try to add the signal here
-			ofLogNotice();
+			//ofLogNotice();
 		}
 		return true;
 	}/*

@@ -13,6 +13,7 @@
 #include "animationParams.h"
 #include "ofxImGui.h"
 #include "moduleFactory.h"
+//#include "animationController.h"
 
 class karmaModule {
 	
@@ -55,6 +56,8 @@ protected:
 	bool bIsLoading;
 	bool bShowGuiWindow;
 	//bool isSingleton;
+	
+	//const animationController& animationControllerRef;
 	
 private:
 	

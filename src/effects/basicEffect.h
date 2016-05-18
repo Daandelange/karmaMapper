@@ -17,10 +17,6 @@
 #include "karmaFboLayer.h"
 //#include "shapesServer.h"
 
-namespace karmaThreadsSharedMemory {
-	
-}
-
 // Basic parent class for effects
 
 // todo: make a better hasError collection + notification system
@@ -70,6 +66,12 @@ namespace karmaThreadsSharedMemory {
 
 // forward declaration
 struct animationParams;
+struct effectCmdEventArgs {
+	string targetEffectName = "";
+	string command = "";
+	float floatValue = 0;
+	bool boolValue = false;
+};
 
 class basicEffect {
 	
@@ -86,7 +88,7 @@ public:
 	//virtual void update();
 	virtual void reset();
 	void enable();
-	void disable();
+	void disable(bool letEffectDisapearFirst=false);
 	
 	// #########
 	// GUI stuff
@@ -112,6 +114,7 @@ public:
 	const int& getIndex() const;
 	
 	// controller functions
+	virtual bool disableSoonIsNow();
 	virtual bool randomizePresets();
 	//virtual void transitionIn();
 	//virtual void transitionOut();
@@ -144,6 +147,10 @@ public:
 		return ( first->getIndex() < second->getIndex() );
 	}
 	
+	static ofEvent<effectCmdEventArgs> effectCommandEvent;
+	
+	virtual void receiveEffectCommand(effectCmdEventArgs& _args);
+	
 protected:
     void setError(const bool& _hasError, const string& _errorMsg="");
     
@@ -160,6 +167,7 @@ protected:
 	bool bUsePingpong;
 	string effectName; // must stay unique
 	string shortStatus;
+	bool bDisableMeSoon;
 	
 	float mainColor[4] {1.0,1.0,1.0,1.0};
 	
@@ -172,6 +180,7 @@ protected:
 	//ofPlanePrimitive
 	ofMutex effectMutex;
 	
+	
 //private:
 	// todo: implement something to make threads safer
 	// maybe a class like this to hold any shared data ?
@@ -179,6 +188,7 @@ protected:
 	// or rather use ofThreadChannel ?
 };
 
+// effect events for (remote) control
 
 namespace effect
 {

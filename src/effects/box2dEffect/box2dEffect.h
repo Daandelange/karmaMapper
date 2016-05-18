@@ -51,6 +51,7 @@ public:
 	virtual bool loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene);
 	
 	// controller functions
+	virtual bool disableSoonIsNow() ;
 	bool randomizePresets();
 	
 	// #########
