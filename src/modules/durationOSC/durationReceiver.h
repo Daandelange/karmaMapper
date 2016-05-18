@@ -11,8 +11,10 @@
 
 #include "ofMain.h"
 #include "OSCNode.h"
+#include "OSCRouter.h"
 #include "ofEvents.h"
 #include "durationEvents.h"
+#include "singletonModule.h"
 
 // this class handles OSC events comming from Duration and fires internal ofEvents
 // handles OSC adresses prefixed with /duration (name them like that in duration)
@@ -28,7 +30,7 @@
 #define DURATION_TIMELINE_PREFIX "/dt/"
 #define DT_PREFIX_LEN sizeof(DURATION_TIMELINE_PREFIX)-1
 
-class durationReceiver : public OSCNode {
+class durationReceiver : public OSCNode, public singletonModule<durationReceiver> {
 	
 public:
 	durationReceiver( );
@@ -38,14 +40,34 @@ public:
 	durationReceiver(durationReceiver const&)     = delete;
 	void operator=(durationReceiver const&)  = delete;
 	
-	// Parent functions
-	bool canHandle( const ofxOscMessage &_msg ) const;
-	bool handle( const ofxOscMessage &_msg );
-	void detachNode();
+	// virtuals from OSCNode
+	virtual bool canHandle( const ofxOscMessage &_msg ) const;
+	virtual bool handle( const ofxOscMessage &_msg );
+	virtual void detachNode();
+	
+	// VIRTUALS FROM karmaModule
+	virtual bool enable();
+	virtual bool disable();
+	virtual void update(const animationParams& params);
+	virtual void draw(const animationParams& params);
+	virtual bool reset();
+	virtual void showGuiWindow();
+	virtual void drawMenuEntry();
+	virtual bool saveToXML(ofxXmlSettings& xml) const;
+	virtual bool loadFromXML(ofxXmlSettings& xml);
 	
 	// basic functions
 	bool start();
 	bool stop();
+	
+	// OSC sending stuff
+	bool connectOSCSender();
+	struct oscParams {
+		string host="localhost";
+		int port = 2345;
+	} oscSendParams;
+	bool sendOscMessage(ofxOscMessage& _msg);
+	bool sendOscMessage(const string& _addr, const string& _value);
 	
 	// listeners
 	//void oscIn();
@@ -60,13 +82,15 @@ protected:
 	
 	bool bEnabled;
 	
+	// communicate back with duration
+	ofxOscSender sender;
+	bool bSenderIsConnected;
+	
 	// setting variables
 	
 	
 	// analysis variables
 	
-	
-	ofMutex oscMutex; // needed because audioIn() runs on a separate thread
 	
 private:
 	

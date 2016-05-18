@@ -151,7 +151,7 @@ void liveGrabberOSC::detachNode() {
 }
 
 void liveGrabberOSC::notifyDetached(){
-	ofScopedLock(oscMutex);
+	//ofScopedLock(oscMutex);
 }
 
 // - - - - - - - -
@@ -192,11 +192,13 @@ void liveGrabberOSC::update(const animationParams &params){
 		//m.addStringArg(ofToString(noise));
 		sendOscMessage(m);
 		
+		m.clear();
 		m.setAddress("random");
 		m.addFloatArg(random);
 		sendOscMessage(m);
 		
 		if(ofGetFrameNum()%((int)ofRandom(100, 300))==0){
+			m.clear();
 			m.setAddress("trigger");
 			m.addFloatArg(manualFloat);
 			sendOscMessage(m);
@@ -262,6 +264,7 @@ bool liveGrabberOSC::connectOSCSender(){
 	//sender.setup("192.168.0.15", 2345); // antoine
 	sender.setup("localhost", 2345);
 	bSenderIsConnected = true;
+	return bSenderIsConnected;
 }
 
 bool liveGrabberOSC::sendOscMessage(ofxOscMessage& _msg){

@@ -98,6 +98,8 @@ protected:
 	bool bGuiShowPlugins;
 	bool bGuiShowModules;
 	bool bGuiShowConsole;
+	bool bDisplayFullSize;
+	int displayFullSizeOffset[2];
 	
 	// gui
 	ofxImGui gui;

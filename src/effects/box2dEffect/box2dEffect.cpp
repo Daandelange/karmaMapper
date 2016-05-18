@@ -158,9 +158,11 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 			m.addFloatArg(box2dGlobalRotation/360.f);
 			liveGrabberOSC::getInstance().sendOscMessage(m);
 			
+			m.clear();
 			m.setAddress("box2dVelocityX");
 			m.addFloatArg((float)(box2dGlobalVelocity.x/((float)renderLayer.getWidth()))/4.f);
 			liveGrabberOSC::getInstance().sendOscMessage(m);
+			m.clear();
 			m.setAddress("box2dVelocityY");
 			m.addFloatArg((float)(box2dGlobalVelocity.y/(float)renderLayer.getHeight())/4.f);
 			liveGrabberOSC::getInstance().sendOscMessage(m);
@@ -168,13 +170,16 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 //			m.setAddress("box2dSpeed");
 //			m.addFloatArg(box2dGlobalVelocity.x/(float)renderLayer.getWidth()/4.f);
 			
+			m.clear();
 			m.setAddress("box2dPositionX");
 			m.addFloatArg((float)box2dAveragePosition.x/(float)renderLayer.getHeight());
 			liveGrabberOSC::getInstance().sendOscMessage(m);
+			m.clear();
 			m.setAddress("box2dPositionY");
 			m.addFloatArg((float)box2dAveragePosition.y/(float)renderLayer.getHeight());
 			liveGrabberOSC::getInstance().sendOscMessage(m);
 			
+			m.clear();
 			m.setAddress("box2dNumParticles");
 			m.addFloatArg((float)box2dShapeItems.size());
 			liveGrabberOSC::getInstance().sendOscMessage(m);
@@ -183,6 +188,36 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 	
 	// call the shaderEffect update
 	//shaderEffect::update( renderLayer, params );
+	
+	//for(int p=0; p<particles.getParticleCount(); ++p){
+		//particles.particleSystem->GetParticleGroupCount();
+	//if(particles.getParticleCount()>0){
+		//cout << particles.particleSystem->GetParticleGroupCount() << endl;
+		//particles.particleSystem->GetDensity()
+		//cout << particles.particleSystem->GetContactCount() <<  endl;
+		
+		
+	if( ofGetFrameNum()%2==0){
+		//static
+		ofxOscMessage m;
+		
+		m.setAddress("box2dParticlesNum");
+		m.addFloatArg((float)particles.getParticleCount()/(float)particles.particleSystem->GetMaxParticleCount());
+		liveGrabberOSC::getInstance().sendOscMessage(m);
+		
+		m.clear();
+		m.setAddress("box2dParticlesCollisionEnergy");
+		m.addFloatArg( particles.particleSystem->ComputeCollisionEnergy() );
+		liveGrabberOSC::getInstance().sendOscMessage(m);
+		
+		m.clear();
+		m.setAddress("box2dParticlesGroupedPercentage");
+		m.addFloatArg( (float) particles.particleSystem->GetContactCount() / (float) particles.getParticleCount() / 10.f );
+		liveGrabberOSC::getInstance().sendOscMessage(m);
+	}
+		
+		//UpdatePairsAndTriadsWithReactiveParticles
+	//}
 }
 
 // resets all values
@@ -388,11 +423,11 @@ void box2dEffect::initBox2d(){
 	
 	ofColor color;
 	color.set(255);
-	particles.destroy();
+	//particles.destroy();
 	particles = ofxBox2dParticleSystem();
 	particles.setParticleFlag(b2_tensileParticle);
 	particles.loadImage(effectFolder("particle32.png", "box2dEffect"));
-	particles.setup(box2d.getWorld(), 20000, 60.0, 8.0, 12.0, color);
+	particles.setup(box2d.getWorld(), 20000, 60.0, 8.0, 32.0, color);
 	
 	//newparticlesFromThread = ofThreadChannel< box2DParticleProperties >();
 }

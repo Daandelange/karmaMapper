@@ -20,6 +20,9 @@ durationReceiver::durationReceiver( ){
 	
 	//
 	bEnabled = false;
+	
+	moduleName = "durationReceiver";
+	moduleType = "durationReceiver";
 }
 
 durationReceiver::~durationReceiver(){
@@ -32,7 +35,8 @@ durationReceiver::~durationReceiver(){
 
 // tell router if a message can be handled by this OSCNode instance
 bool durationReceiver::canHandle(const ofxOscMessage &_msg) const {
-	return (_msg.getAddress().compare(0,DT_PREFIX_LEN,DURATION_TIMELINE_PREFIX) == 0);
+	//string tmp = _msg.getAddress().substr(0,DT_PREFIX_LEN)+" • " + ofToString(DT_PREFIX_LEN);
+	return (_msg.getAddress().compare(0,DT_PREFIX_LEN, DURATION_TIMELINE_PREFIX) == 0);
 }
 
 // proceed the message
@@ -43,7 +47,7 @@ bool durationReceiver::handle(const ofxOscMessage &_msg) {
 	ofScopedLock myLock(oscMutex);
 	
 	// get incoming track info
-	if( _msg.getAddress().compare("/duration/info") == 0 ){
+	if( _msg.getAddress().compare("/dt/info") == 0 ){
 		
 		// todo: register incomming variable types // tracks and let them be synchronised automatically with inter variables + getters
 		
@@ -212,6 +216,107 @@ void durationReceiver::detachNode() {
 }
 
 // - - - - - - - -
+// VIRTUALS FROM karmaModule
+// - - - - - - - -
+bool durationReceiver::enable(){
+	bool ret = karmaModule::enable();
+	
+	// try connect
+	ret *= OSCRouter::getInstance().addNode(this);
+	connectOSCSender();
+	
+	bHasError = ret;
+	bEnabled = true;
+	
+	return ret;
+}
+
+bool durationReceiver::disable(){
+	bool ret = karmaModule::disable();
+	
+	// disconnect
+	ret *= OSCRouter::getInstance().removeNode(this);
+	bEnabled = false;
+	
+	return ret;
+}
+
+void durationReceiver::update(const animationParams &params){
+	
+	karmaModule::update(params);
+	
+}
+
+void durationReceiver::draw(const animationParams &params){
+	karmaModule::draw(params);
+}
+
+bool durationReceiver::reset(){
+	
+	
+	connectOSCSender();
+}
+
+void durationReceiver::showGuiWindow(){
+	if(!bShowGuiWindow) return;
+	
+	ImGui::SetNextWindowSize(ImVec2(400,ofGetHeight()*0.8), ImGuiSetCond_Once);
+	ImGui::Begin( ((string)"Module: ").append(karmaModule::getName()).append("###module-").append( ofToString(this) ).c_str() , &bShowGuiWindow );
+	ImGui::TextWrapped("This module receives OSC messages trough the OSCRouter module and forwards them to effects and other components.");
+	ImGui::TextWrapped("Duration");
+	
+	ImGui::Separator();
+	OSCRouter::ImGuiShowOSCRouterConnectionTester();
+	ImGui::Separator();
+	
+	if( ImGui::CollapsingHeader( "Params", "liveGrabberOSC", true, true ) ){
+		ImGui::InputInt("Duration sending port", &oscSendParams.port);
+		static char addrBuffer[64];
+		for(int i=0; i<64; ++i){
+			if(i < oscSendParams.host.size()){
+				addrBuffer[i]=oscSendParams.host[i];
+			}
+			else {
+				addrBuffer[i]=0;
+			}
+		}
+		if(ImGui::InputText("Duration remote host", &addrBuffer[0], 64, ImGuiInputTextFlags_EnterReturnsTrue)){
+			oscSendParams.host = ofToString(addrBuffer);
+		}
+	}
+	
+	ImGui::End();
+}
+
+void durationReceiver::drawMenuEntry() {
+	karmaModule::drawMenuEntry();
+}
+
+// writes the module data to XML. xml's cursor is already pushed into the right <module> tag.
+bool durationReceiver::saveToXML(ofxXmlSettings& xml) const{
+	bool ret = karmaModule::saveToXML(xml);
+	
+	xml.addValue("OSCListeningPort", (int) oscSendParams.port);
+	xml.addValue("OSCListeningHost", oscSendParams.host);
+	
+	return ret;
+}
+
+// load module settings from xml
+// xml's cursor is pushed to the root of the <module> tag to load
+bool durationReceiver::loadFromXML(ofxXmlSettings& xml){
+	
+	bool ret=karmaModule::loadFromXML(xml);
+	
+	oscSendParams.port = xml.getValue("OSCListeningPort", (int) oscSendParams.port );
+	oscSendParams.host = xml.getValue("OSCListeningHost", oscSendParams.host);
+	
+	//initialise(animationParams.params);
+	
+	return ret; // todo
+}
+
+// - - - - - - - -
 // BASIC FUNCTIONS
 // - - - - - - - -
 bool durationReceiver::start(){
@@ -231,6 +336,43 @@ bool durationReceiver::stop(){
 	return isEnabled()==false;
 }
 
+bool durationReceiver::connectOSCSender(){
+	//sender.setup(KM_LG_OSC_ADDR, KM_LG_OSC_PORT_OUT);
+	//sender.setup("192.168.0.15", 2345); // antoine
+	sender.setup(oscSendParams.host, oscSendParams.port);
+	bSenderIsConnected = true;
+	return bSenderIsConnected;
+}
+
+bool durationReceiver::sendOscMessage(ofxOscMessage& _msg){
+	if( bSenderIsConnected ){
+		sender.sendMessage(_msg);
+		return true;
+	}
+	
+	return false;
+}
+
+// (addr starts with a slash)
+bool durationReceiver::sendOscMessage(const string& _addr, const string& _value){
+	if( bSenderIsConnected && !_addr.empty() ){
+		ofxOscMessage m;
+		m.setAddress(_addr);
+		
+		if(_value.empty()){
+			m.addTriggerArg();
+		}
+		else {
+			m.addSymbolArg(_addr);
+		}
+		
+		return sendOscMessage(m);
+	}
+	
+	return false;
+}
+
+
 // - - - - - - - -
 // EVENT LISTENERS
 /*/ - - - - - - - -
@@ -242,3 +384,7 @@ void durationReceiver::oscIn(){
 bool durationReceiver::isEnabled() const {
 	return bEnabled;
 }
+
+
+const static ::module::factory::moduleDependencies  durationReceiverDependencies({"OSCRouter"});
+MODULE_REGISTER( durationReceiver , "durationReceiver", durationReceiverDependencies );

@@ -37,6 +37,9 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	bGuiShowConsole = false;
 	bGuiShowModules = false;
 	bGuiShowMainWindow = true;
+	bDisplayFullSize = false;
+	displayFullSizeOffset[0]=0;
+	displayFullSizeOffset[1]=0;
 	
 	ofAddListener( ofEvents().draw , this, &animationController::draw, OF_EVENT_ORDER_APP );
 	ofAddListener( ofEvents().update , this, &animationController::update, OF_EVENT_ORDER_APP );
@@ -378,6 +381,7 @@ bool animationController::loadConfiguration(const string& _file){
 			bGuiShowPlugins = configXML.getValue("bGuiShowPlugins", bGuiShowPlugins );
 			bGuiShowModules = configXML.getValue("bGuiShowModules", bGuiShowModules );
 			bGuiShowConsole = configXML.getValue("bGuiShowConsole", bGuiShowConsole );
+			bDisplayFullSize = configXML.getValue("bDisplayFullSize", bDisplayFullSize);
 			configXML.popTag();
 		}
 		
@@ -651,6 +655,7 @@ bool animationController::saveConfiguration( const string& _filePath ){
 		sceneXML.setValue("bGuiShowPlugins", bGuiShowPlugins );
 		sceneXML.setValue("bGuiShowModules", bGuiShowModules );
 		sceneXML.setValue("bGuiShowConsole", bGuiShowConsole );
+		sceneXML.setValue("bDisplayFullSize", bDisplayFullSize);
 		sceneXML.popTag();
 	}
 	
@@ -980,15 +985,14 @@ void animationController::draw(ofEventArgs& event){
 	// set idle time
 	animationParams.params.idleTimeMillis = idleTimeTimer.getElapsedMillis();
 	
+	// clear BG
+	ofClear(0,1);
+	
 	//karmaControllerDrawEventArgs tmp;
 	static karmaControllerDrawEventArgs drawEventArgs(animationParams.params);
 	drawEventArgs.params = animationParams.params;
 	drawEventArgs.stage = DRAW_EVENT_BEFORE_DRAW;
 	ofNotifyEvent(animationController::karmaControllerBeforeDraw, drawEventArgs, this);
-	
-	// clear BG
-	ofClear(0,1);
-	//ofBackground(255,0,0);
 	
 	// draw modules
 	for(auto m=modules.begin(); m!=modules.end(); ++m){
@@ -1028,7 +1032,36 @@ void animationController::draw(ofEventArgs& event){
 //			}
 		}
 		//cout << "DONE --- Drawing fbo.texture: "<<" // " << layer->first.getFBO().getIdDrawBuffer()<<endl;
-		layer->first.getSrcTexture().draw(0,0);
+		if(bDisplayFullSize){
+			layer->first.getSrcTexture().draw(displayFullSizeOffset[0],displayFullSizeOffset[1]);
+		}
+		else {
+			// calc cover mode
+			ofVec2f scale = ofVec2f(layer->first.getWidth(), layer->first.getHeight());
+			scale /= ofVec2f( ofGetWidth(), ofGetHeight());
+			
+			ofVec2f offset(0,0);
+			if(scale.x<scale.y){
+				scale.x=scale.y;
+				
+				offset.x=-1.f*(((layer->first.getWidth()/scale.x)-((float)ofGetWidth()))/2.0f);
+			}
+			else{
+				scale.y=scale.x;
+				offset.y=-1.f*(((layer->first.getHeight()/scale.y)-((float)ofGetHeight()))/2.0f);
+			}
+			
+			if(scale.x <= 1.f){
+				layer->first.getSrcTexture().draw(0, 0, layer->first.getWidth(), layer->first.getHeight());
+			}
+			
+			else {
+				
+				if(scale.x<scale.y?(ofGetWidth()-(layer->first.getWidth())):0,0);
+				
+				layer->first.getSrcTexture().draw(offset.x, offset.y, layer->first.getWidth()/scale.x, layer->first.getHeight()/scale.y);
+			}
+		}
 		
 		
 		
@@ -1070,7 +1103,7 @@ void animationController::draw(ofEventArgs& event){
 			static int int2[2] = { ofGetWidth(),ofGetHeight() };
 			if(ImGui::BeginMenu( buffer )){
 				
-				ImGui::InputInt2("", int2);
+				ImGui::InputInt2("###int2", int2);
 				ImGui::SameLine();
 				if( ImGui::Button("Set") ){
 					ofSetWindowShape(int2[0], int2[1]);
@@ -1090,7 +1123,15 @@ void animationController::draw(ofEventArgs& event){
 				ofSetVerticalSync(useVsync);
 			}
 			ImGui::SameLine();
-			ImGui::Checkbox("", &useVsync);
+			ImGui::Checkbox("###useVSync", &useVsync);
+			
+			ImGui::MenuItem("Don't scale fbos", NULL, &bDisplayFullSize);
+			ImGui::SameLine();
+			ImGui::Checkbox("###displayFullSize", &bDisplayFullSize);
+			
+			if(bDisplayFullSize){
+				ImGui::DragInt2("Viewport offset", &displayFullSizeOffset[0]);
+			}
 			
 			ImGui::EndMenu();
 		}
