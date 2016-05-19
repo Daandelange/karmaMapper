@@ -18,9 +18,6 @@ ofEvent<liveGrabberNoteEventArgs> liveGrabberOSC::liveGrabberNoteEvent;
 // - - - - - - - -
 liveGrabberOSC::liveGrabberOSC() {
 	
-	// OSCNode setup
-	nodeName = "liveGrabberOSC";
-	
 	// karmaModule setup
 	bInitialised = true;
 	bEnabled = false;
@@ -261,8 +258,8 @@ void liveGrabberOSC::drawMenuEntry() {
 
 bool liveGrabberOSC::connectOSCSender(){
 	//sender.setup(KM_LG_OSC_ADDR, KM_LG_OSC_PORT_OUT);
-	//sender.setup("192.168.0.15", 2345); // antoine
-	sender.setup("localhost", 2345);
+	//sender.setup("192.168.9.26", 2345); // antoine
+	sender.setup(oscSendParams.host, oscSendParams.port);
 	bSenderIsConnected = true;
 	return bSenderIsConnected;
 }

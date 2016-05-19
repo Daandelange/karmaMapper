@@ -104,6 +104,8 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 	if(!isReady()){
 		return false;
 	}
+    
+    basicEffect::update(renderLayer, params);
 	
 	// got particles to remove ?
 	ofRemove(box2dShapeItems, ofxBox2dBaseShape::shouldRemoveOffScreen);
@@ -202,13 +204,19 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 		//static
 		ofxOscMessage m;
 		
+        static float maxParticles = 10.f;
+        float numParticles = particles.getParticleCount();
+        maxParticles *= 0.99;
+        if(maxParticles < numParticles ) {
+            maxParticles = numParticles;
+        }
 		m.setAddress("box2dParticlesNum");
-		m.addFloatArg((float)particles.getParticleCount()/(float)particles.particleSystem->GetMaxParticleCount());
+        m.addFloatArg( numParticles / maxParticles );
 		liveGrabberOSC::getInstance().sendOscMessage(m);
 		
 		m.clear();
 		m.setAddress("box2dParticlesCollisionEnergy");
-		m.addFloatArg( particles.particleSystem->ComputeCollisionEnergy() );
+		m.addFloatArg( particles.particleSystem->ComputeCollisionEnergy()/5.f);
 		liveGrabberOSC::getInstance().sendOscMessage(m);
 		
 		m.clear();
@@ -406,7 +414,8 @@ bool box2dEffect::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 
 // return false if effect should ramain a little before deletion
 bool box2dEffect::disableSoonIsNow() {
-	return (particles.getParticleCount() >= 0);
+    //cout << (particles.getParticleCount() >= 0) << endl;
+	return (particles.getParticleCount() <= 0);
 }
 
 bool box2dEffect::randomizePresets(){

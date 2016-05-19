@@ -137,6 +137,7 @@ void basicEffect::reset(){
 	
 	overallBoundingBox = ofRectangle(0,0,0,0);
 	
+    ofRemoveListener(basicEffect::effectCommandEvent, this, &basicEffect::receiveEffectCommand );
 	ofAddListener(basicEffect::effectCommandEvent, this, &basicEffect::receiveEffectCommand );
 }
 

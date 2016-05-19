@@ -83,6 +83,10 @@ protected:
 	ofMutex oscMutex; // needed because audioIn() runs on a separate thread
 	ofxOscSender sender;
 	bool bSenderIsConnected;
+    struct oscParams {
+        string host = KM_LG_OSC_ADDR;
+        int port = KM_LG_OSC_PORT_OUT;
+    } oscSendParams;
 	
 	// tmp variables to send
 	float noise;
