@@ -40,7 +40,7 @@ bool shaderEffect::initialise(const animationParams& params){
 	
 	bIsLoading = true;
 	bInitialised = false;
-	onSetCalls = 0;
+	//onSetCalls = 0;
 	fTimeFactor = 1.0f;
 	bUseShadertoyVariables = false;
 	bUseMirVariables = false;
@@ -100,13 +100,13 @@ bool shaderEffect::render(karmaFboLayer& renderLayer, const animationParams &par
 	registerShaderVariables(params);
 	
 	ofPushStyle();
-	ofSetColor(mainColor[0]*255, mainColor[1]*255, mainColor[2]*255, mainColor[3]*255);
+	ofSetColor(mainColor[0], mainColor[1], mainColor[2], mainColor[3]);
 	ofFill();
 	
 	// tmp
-	effectMutex.lock();
-	onSetCalls = 0;
-	effectMutex.unlock();
+//	effectMutex.lock();
+//	onSetCalls = 0;
+//	effectMutex.unlock();
 	
 	// draw shape so GPU gets their vertex data
 	for(auto it=shapes.begin(); it!=shapes.end(); ++it){
@@ -614,7 +614,7 @@ void shaderEffect::registerMirVariables() {
 	shader.setUniform1f("mirBalance", mirReceiver::mirCache.balance);
 	shader.setUniform1f("mirVolume", mirReceiver::mirCache.volumeMono);
 	shader.setUniform1i("mirSilence", mirReceiver::mirCache.silence);
-	shader.setUniform1f("mirOnSetCalls", onSetCalls );
+	//shader.setUniform1f("mirOnSetCalls", onSetCalls );
 }
 
 void shaderEffect::setUseCustomFbo(const bool &_useCustomFbo){
@@ -737,9 +737,9 @@ void shaderEffect::onSetEventListener(mirOnSetEventArgs &_args){
 	
 	if(shapes.size()<=0) return;
 	
-	if(_args.source.compare("aubioOnSet")==0){
-		onSetCalls++;
-	}
+//	if(_args.source.compare("aubioOnSet")==0){
+//		onSetCalls++;
+//	}
 	
 	//else if(_args.source.compare("")==0){}
 }

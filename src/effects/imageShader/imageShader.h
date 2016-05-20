@@ -36,6 +36,7 @@ public:
 	// #########
 	// CUSTOM METHODS
 	bool loadFromImage(string _imagePath);
+	void ImguiShowTextureMode();
 	
 	// #########
 	// LOAD & SAVE FUNCTIONS
@@ -43,18 +44,22 @@ public:
 	virtual bool loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene);
 	
 	// controller functions
+	bool disableSoonIsNow();
 	bool randomizePresets();
 	
 	virtual void tempoEventListener(mirTempoEventArgs &_args);
 	virtual void liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args);
+	virtual void liveGrabberFloatEventListener(liveGrabberFloatEventArgs &_args);
 	
 protected:
 	
 	string imagePath;
-	bool bReDrawNextFrame;
+	float musicalAlpha;
 	bool bDrawAlways;
 	bool bReactToMusic;
 	//bool bUseThreadedFileDecoding;
+	
+	ofThreadChannel<float> alphaFromThread;
 	
 private:
 	

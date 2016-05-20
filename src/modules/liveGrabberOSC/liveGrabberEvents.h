@@ -26,6 +26,12 @@ struct liveGrabberNoteEventArgs {
 	
 };
 
+struct liveGrabberFloatEventArgs {
+	string what = "";
+	float value = 0.f;
+	
+};
+
 struct liveGrabberAnalysisData {
 	
 public:

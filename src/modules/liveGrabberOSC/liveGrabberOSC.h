@@ -65,6 +65,7 @@ public:
 	static ofEvent<liveGrabberBangEventArgs> liveGrabberBangEvent;
 	static ofEvent<liveGrabberTempoEventArgs> liveGrabberTempoEvent;
 	static ofEvent<liveGrabberNoteEventArgs> liveGrabberNoteEvent;
+	static ofEvent<liveGrabberFloatEventArgs> liveGrabberFloatEvent;
 	
 	// mir getter
 	static liveGrabberAnalysisData liveGrabberAnalysis;

@@ -20,10 +20,16 @@
 
 struct animationParams;
 
-struct box2DParticleProperties {
+struct box2dItemProperties {
 	ofVec3f physics = ofVec3f(1.0, 0.5, 0.3);
 	ofVec2f position = ofVec2f(0);
 	float radius = 5;
+	ofVec2f velocity = ofVec2f(0,0);
+};
+struct box2dParticleProperties {
+	ofColor color = ofColor(255);
+	ofVec2f position = ofVec2f(0);
+	//float radius = 5;
 	ofVec2f velocity = ofVec2f(0,0);
 };
 
@@ -73,7 +79,8 @@ protected:
 	//vector <shared_ptr<ofxBox2dEdge> > box2dWorld;
 	vector <shared_ptr<ofxBox2dCircle> > box2dShapeItems;
 	ofxBox2dParticleSystem particles;
-	ofThreadChannel< box2DParticleProperties > newparticlesFromThread;
+	ofThreadChannel< box2dItemProperties > newBox2dItemsFromThread;
+	ofThreadChannel< box2dParticleProperties > newBox2dParticlesFromThread;
 	//ofThreadChannel< shared_ptr<ofxBox2dCircle> > newparticlesForThread;
 	vector <shared_ptr<ofxBox2dEdge> >   box2dEdges;
 	struct box2dWorldProperties {
@@ -97,6 +104,10 @@ protected:
 	ofVec2f box2dGlobalVelocity;
 	ofVec2f box2dAveragePosition;
 	ofVec3f box2dSpeed; // avg, min, max
+	ofVec2f box2dParticlesAveragePosition;
+	ofVec2f box2dParticlesAverageVelocity;
+	float box2dParticlesSpeed;
+	float box2dParticlesCollisionEnergy;
 	
 private:
 	

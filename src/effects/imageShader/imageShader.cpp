@@ -22,6 +22,9 @@ imageShader::imageShader(){
 imageShader::~imageShader(){
 	ofRemoveListener(mirReceiver::mirTempoEvent, this, &imageShader::tempoEventListener);
 	ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &imageShader::liveGrabberNoteEventListener);
+	ofRemoveListener(liveGrabberOSC::liveGrabberFloatEvent, this, &imageShader::liveGrabberFloatEventListener);
+	
+	alphaFromThread.close();
 }
 
 // - - - - - - -
@@ -31,7 +34,7 @@ imageShader::~imageShader(){
 // initialises the effect
 bool imageShader::initialise(const animationParams& params){
 	// init values
-	basicEffect::initialise(params);
+	shaderEffect::initialise(params);
 	
 	bIsLoading = true;
 	bInitialised = false;
@@ -43,13 +46,18 @@ bool imageShader::initialise(const animationParams& params){
 
 bool imageShader::render(karmaFboLayer& renderLayer, const animationParams &params){
 	
-	if(!bReDrawNextFrame && !bDrawAlways) return true;
+	if(!bDrawAlways && bReactToMusic && musicalAlpha==0) return true;
 	
+	// change alpha
+	float originalAlpha = mainColor[3];
+	mainColor[3] *= musicalAlpha;
+	
+	// render
 	if(!shaderEffect::render(renderLayer, params)){
+		mainColor[3] = originalAlpha;
 		return false;
 	}
-	
-	bReDrawNextFrame = false;
+	mainColor[3] = originalAlpha;
 	
 	return true;
 }
@@ -58,8 +66,19 @@ bool imageShader::render(karmaFboLayer& renderLayer, const animationParams &para
 void imageShader::update(karmaFboLayer& renderLayer, const animationParams& params){
 	
 	// do basic Effect function
-	basicEffect::update( renderLayer, params );
+	shaderEffect::update( renderLayer, params );
 	
+	float newMusicalAlpha;
+	bool gotNew;
+	while( alphaFromThread.tryReceive(newMusicalAlpha)){
+		gotNew = true;
+	}
+	if(gotNew){
+		musicalAlpha = newMusicalAlpha;
+	}
+	else {
+		musicalAlpha -= 0.01f;// todo: make this time-dependent
+	}
 //	effectMutex.lock();
 //	if(bReactToMusic ){
 //		// todo: maincolor has to become a changeable color parameter so we don't have to alter it's original value // nodes
@@ -83,12 +102,16 @@ void imageShader::reset(){
 	ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &imageShader::liveGrabberNoteEventListener);
 	ofAddListener(liveGrabberOSC::liveGrabberNoteEvent, this, &imageShader::liveGrabberNoteEventListener);
 	
+	ofRemoveListener(liveGrabberOSC::liveGrabberFloatEvent, this, &imageShader::liveGrabberFloatEventListener);
+	ofAddListener(liveGrabberOSC::liveGrabberFloatEvent, this, &imageShader::liveGrabberFloatEventListener);
+	
+	musicalAlpha = 1.f;
+	
 	bool tmp = loadShader( effectFolder("videoShader.vert", "videoShader"), effectFolder("videoShader.frag", "videoShader") );
 	
 	bDrawAlways = true;
 	bReactToMusic = false;
 	imagePath = "";
-	bReDrawNextFrame = false;
 	
 	bUseTextures = true;
 	
@@ -119,6 +142,8 @@ bool imageShader::printCustomEffectGui(){
 			}
 		}
 		
+		ImguiShowTextureMode();
+		
 		ImGui::Separator();
 		ImGui::Checkbox("Draw always", &bDrawAlways);
 		
@@ -127,17 +152,20 @@ bool imageShader::printCustomEffectGui(){
 			// disable this param so this one is visible
 			if(bReactToMusic && bDrawAlways) bDrawAlways = false;
 		}
+		effectMutex.unlock();
 		ImGui::Unindent();
 		
 		ImGui::Separator();
 		ImGui::Separator();
 		ImGui::Text("Controls");
 		
+		ImGui::SliderFloat("musical Alpha", &musicalAlpha, 0.f, 1.f);
+		
 		ImGui::Indent();
 		if(ImGui::Button("Re-draw image")){
-			bReDrawNextFrame = true;
+			musicalAlpha = 1.f;
 		}
-		effectMutex.unlock();
+		
 		
 		ImGui::Separator();
 		ImGui::Separator();
@@ -155,6 +183,27 @@ bool imageShader::printCustomEffectGui(){
 	shaderEffect::printCustomEffectGui();
 	
 	return true;
+}
+
+void imageShader::ImguiShowTextureMode(){
+	if( ImGui::ListBoxHeader("Texture Mode...", 2) ){
+		if(ImGui::Selectable("Fill Shape", textureMode==0)){
+			setTextureMode(0);
+		}
+		if(ImGui::Selectable("Cover", textureMode==1)){
+			setTextureMode(1);
+		}
+		if(ImGui::Selectable("Fit (clamped)", textureMode==2)){
+			setTextureMode(2);
+		}
+		if(ImGui::Selectable("Fit (repeat)", textureMode==3)){
+			setTextureMode(3);
+		}
+		if(ImGui::Selectable("Multiple shapes", textureMode==4)){
+			setTextureMode(4);
+		}
+		ImGui::ListBoxFooter();
+	}
 }
 
 // - - - - - - -
@@ -199,7 +248,7 @@ bool imageShader::loadFromImage(string _imagePath){
 
 // writes the effect data to XML. xml's cursor is already pushed into the right <effect> tag.
 bool imageShader::saveToXML(ofxXmlSettings& xml) const{
-	bool ret = basicEffect::saveToXML(xml);
+	bool ret = shaderEffect::saveToXML(xml);
 
 	xml.addValue("bReactToMusic", bReactToMusic);
 	xml.addValue("bDrawAlways", bDrawAlways);
@@ -225,6 +274,12 @@ bool imageShader::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 // CONTROLLER FUNCTIONS
 // - - - - - - -
 
+// return false if effect should remain a little before deletion
+bool imageShader::disableSoonIsNow() {
+	//cout << (particles.getParticleCount() >= 0) << endl;
+	return ( (bReactToMusic && musicalAlpha==0) || !bReactToMusic);
+}
+
 bool imageShader::randomizePresets(){
 	if(!shaderEffect::randomizePresets() ) return false;
 	
@@ -244,7 +299,7 @@ void imageShader::tempoEventListener(mirTempoEventArgs &_args){
 	if(shapes.size()<=0) return;
 	
 	if(_args.isTempoBis){
-		bReDrawNextFrame = true;
+		//bReDrawNextFrame = true;
 //		for(auto s=shapes.begin(); s!=shapes.end(); ++s){
 //			if( (*s)->isType("vertexShape") ){
 //				
@@ -261,7 +316,23 @@ void imageShader::liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args){
 	if(shapes.size()<=0) return;
 	
 	if(_args.key.compare("A0")==0){
-		bReDrawNextFrame = true;
+		//bReDrawNextFrame = true;
+		alphaFromThread.send(std::move(1.f));
+	}
+}
+
+void imageShader::liveGrabberFloatEventListener(liveGrabberFloatEventArgs &_args){
+	//ofScopedLock lock(effectMutex);
+	
+	if(!isReady()) return;
+	
+	if(!bReactToMusic) return;
+	
+	if(shapes.size()<=0) return;
+	
+	if(_args.what.compare("Criquet")==0){
+		float value = _args.value;
+		alphaFromThread.send(std::move(value));
 	}
 }
 

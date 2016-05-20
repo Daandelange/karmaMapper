@@ -1215,7 +1215,7 @@ void animationController::draw(ofEventArgs& event){
 				//bShowGui = !bShowGui;
 				//tmp_show_gui = bShowGui;
 			}
-			if (ImGui::MenuItem("Show Mouse Cursor", ofToString(KM_CTRL_KEY_NAME).append( " + M" ).c_str(), &bShowMouse )){
+			if (ImGui::MenuItem("Show Mouse Cursor", ofToString(KM_CTRL_KEY_NAME).append( " + /" ).c_str(), &bShowMouse )){
 				setShowMouse(bShowMouse);
 			}
 			ImGui::EndMenu();
@@ -1889,7 +1889,7 @@ void animationController::setFullScreen(bool _fullScreen){
 }
 
 void animationController::setShowMouse(bool _showMouse){
-	bIsFullScreen = _showMouse;
+	bShowMouse = _showMouse;
 	bShowMouse ? ofShowCursor() : ofHideCursor();
 }
 
@@ -1952,7 +1952,7 @@ void animationController::_keyPressed(ofKeyEventArgs &e){
 			newConfiguration();
 		}
 		
-		else if ( 'm' == keyToLower ){
+		else if ( '/' == keyToLower ){
 			setShowMouse( !bShowMouse );
 		}
 		

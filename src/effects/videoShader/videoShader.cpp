@@ -274,24 +274,7 @@ bool videoShader::printCustomEffectGui(){
 		ImGui::SliderFloat("Opacity", &mainColor[3], 0, 1);
 		
 		ImGui::Separator();
-		if( ImGui::ListBoxHeader("Texture Mode...", 2) ){
-			if(ImGui::Selectable("Fill Shape", textureMode==0)){
-				setTextureMode(0);
-			}
-			if(ImGui::Selectable("Cover", textureMode==1)){
-				setTextureMode(1);
-			}
-			if(ImGui::Selectable("Fit (clamped)", textureMode==2)){
-				setTextureMode(2);
-			}
-			if(ImGui::Selectable("Fit (repeat)", textureMode==3)){
-				setTextureMode(3);
-			}
-			if(ImGui::Selectable("Multiple shapes", textureMode==4)){
-				setTextureMode(4);
-			}
-			ImGui::ListBoxFooter();
-		}
+		ImguiShowTextureMode();
 		
 		if (ImGui::ListBoxHeader("Video Mode", 2)){
 			
@@ -637,6 +620,27 @@ bool videoShader::printCustomEffectGui(){
 	shaderEffect::printCustomEffectGui();
 	
 	return true;
+}
+
+void videoShader::ImguiShowTextureMode(){
+	if( ImGui::ListBoxHeader("Texture Mode...", 2) ){
+		if(ImGui::Selectable("Fill Shape", textureMode==0)){
+			setTextureMode(0);
+		}
+		if(ImGui::Selectable("Cover", textureMode==1)){
+			setTextureMode(1);
+		}
+		if(ImGui::Selectable("Fit (clamped)", textureMode==2)){
+			setTextureMode(2);
+		}
+		if(ImGui::Selectable("Fit (repeat)", textureMode==3)){
+			setTextureMode(3);
+		}
+		if(ImGui::Selectable("Multiple shapes", textureMode==4)){
+			setTextureMode(4);
+		}
+		ImGui::ListBoxFooter();
+	}
 }
 
 // - - - - - - -

@@ -61,7 +61,7 @@ public:
 	void onResizeListener( ofResizeEventArgs& resize );
 	
 protected:
-	int onSetCalls;
+	//int onSetCalls;
 	string vertexShader, fragmentShader;
 	ofShader shader;
 	ofFbo fbo; // tmp, until there's a layering system

@@ -49,7 +49,12 @@ void main()
 {
     // do a ping-pong pass ?
     if( kmIsPingPongPass == 1 ){
+        // glsl 120
+        //gl_FragColor = texture( pingPongTexture,  (vec2(1,1)* (gl_FragCoord.xy + vec2(0, 0)) ) );
+
+        // ok glsl 330 // 150
         outputColor = texture( pingPongTexture,  (vec2(1,1)* (gl_FragCoord.xy + vec2(0, 0)) ) );
+        
         //outputColor *= effectColor;
         //outputColor *= vec4(1,0,0,1); // make this pass red (debugging)
     }
@@ -128,12 +133,19 @@ void main()
         //outputColor = vec4( texture( iChannel0, pos ).rgb, 1);
         
         //outputColor *= vec4( mod( ((texCoordVarying.xy+offset)+vec2(shapeBoundingBox.zw*vec2(0.5)-shapeBoundingBox.xy))/shapeBoundingBox.zw, 1.0)*vec2(1,1), 0, 1 );
-    	outputColor = vec4( texture( iChannel0, pos*iChannelResolution[0].xy ).rgb, 1);
+    	
+        // for glsl version 120 // opengl 2.1
+        //gl_FragColor = vec4( texture( iChannel0, pos*iChannelResolution[0].xy ).rgb, 1);
+        //gl_FragColor *= effectColor;
+
+        // 2 lines OK for version 150 // opengl 3.2
+        outputColor = vec4( texture( iChannel0, pos*iChannelResolution[0].xy ).rgb, 1);
         outputColor *= effectColor;
+
         //outputColor *= vec4(0,1,0,1);  // make this pass green (debugging)
     	//outputColor *= vec4( pos, 0, 1 );
     	//outputColor = vec4( texture(iChannel0, ( (texCoordVarying-shapeCenterOffset)/iResolution.xy*iChannelResolution[0].xy*textureScale) ).rgb, 1);//outputColor.a);
-    	//outputColor.r += 0.5f; // debugging
+    	outputColor.r = 1.0; // debugging
     	//outputColor = vec4(1, 0, 0, 1);
         //outputColor = vec4(iResolution.x,iResolution.x,iResolution.y, 1);
         //outputColor = vec4( gl_FragCoord.xy / fboCanvas.xy,1,1);

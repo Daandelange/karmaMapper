@@ -81,6 +81,7 @@ public:
 	// #########
 	// GUI STUFF
 	virtual bool printCustomEffectGui();
+	void ImguiShowTextureMode();
 	
 	// #########
 	// LOAD & SAVE FUNCTIONS

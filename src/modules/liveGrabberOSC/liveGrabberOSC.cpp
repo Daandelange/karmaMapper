@@ -12,6 +12,7 @@
 ofEvent<liveGrabberBangEventArgs> liveGrabberOSC::liveGrabberBangEvent;
 ofEvent<liveGrabberTempoEventArgs> liveGrabberOSC::liveGrabberTempoEvent;
 ofEvent<liveGrabberNoteEventArgs> liveGrabberOSC::liveGrabberNoteEvent;
+ofEvent<liveGrabberFloatEventArgs> liveGrabberOSC::liveGrabberFloatEvent;
 
 // - - - - - - - -
 // CONSTRUCTORS
@@ -53,6 +54,7 @@ bool liveGrabberOSC::handle(const ofxOscMessage &_msg) {
 		string tmpLastMsg = "";
 		string subAddr = addr.substr(5,addr.npos);
 		bool ret = false;
+		
 		
 		if( subAddr.substr(0,9).compare("/Follower") == 0 ){
 			
@@ -122,6 +124,33 @@ bool liveGrabberOSC::handle(const ofxOscMessage &_msg) {
 				tmpLastMsg = "Piano "+subAddr;
 				ret = true;
 			}
+		}
+		
+		else if( subAddr.substr(0,8).compare("/Criquet") ){
+			
+			if(_msg.getNumArgs()>0){
+				
+				subAddr = subAddr.substr(8,addr.npos);
+				
+				liveGrabberFloatEventArgs args;
+				args.what = "Criquet";
+				args.value = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);;
+				ofNotifyEvent(liveGrabberFloatEvent, args);
+			}
+			
+		}
+		
+		else if( subAddr.substr(0,5).compare("/kick") ){
+			
+			if(_msg.getNumArgs()>0){
+				
+				subAddr = subAddr.substr(5,addr.npos);
+				
+				liveGrabberBangEventArgs args;
+				args.what = "Kick";
+				ofNotifyEvent(liveGrabberBangEvent, args);
+			}
+			
 		}
 	
 		//...else if(){}
@@ -225,6 +254,27 @@ void liveGrabberOSC::showGuiWindow(){
 	
 	ImGui::Separator();
 	OSCRouter::ImGuiShowOSCRouterConnectionTester();
+	ImGui::Separator();
+	
+	
+	if(ImGui::InputInt("LiveGrabber sending port", &oscSendParams.port)){
+		connectOSCSender();
+	}
+	static char addrBuffer[64];
+	for(int i=0; i<64; ++i){
+		if(i < oscSendParams.host.size()){
+			addrBuffer[i]=oscSendParams.host[i];
+		}
+		else {
+			addrBuffer[i]=0;
+		}
+	}
+	if(ImGui::InputText("LiveGrabber remote host", &addrBuffer[0], 64, ImGuiInputTextFlags_EnterReturnsTrue)){
+		oscSendParams.host = ofToString(addrBuffer);
+		connectOSCSender();
+	}
+	
+	ImGui::Separator();
 	ImGui::Separator();
 	
 	oscMutex.lock();
