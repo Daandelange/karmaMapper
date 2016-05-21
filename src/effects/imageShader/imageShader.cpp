@@ -69,15 +69,15 @@ void imageShader::update(karmaFboLayer& renderLayer, const animationParams& para
 	shaderEffect::update( renderLayer, params );
 	
 	float newMusicalAlpha;
-	bool gotNew;
+	bool gotNew = false;
 	while( alphaFromThread.tryReceive(newMusicalAlpha)){
 		gotNew = true;
 	}
 	if(gotNew){
 		musicalAlpha = newMusicalAlpha;
 	}
-	else {
-		musicalAlpha -= 0.01f;// todo: make this time-dependent
+	else if(musicalAlpha > 0) {
+		musicalAlpha -= alphaReducer;// todo: make this time-dependent
 	}
 //	effectMutex.lock();
 //	if(bReactToMusic ){
@@ -106,6 +106,7 @@ void imageShader::reset(){
 	ofAddListener(liveGrabberOSC::liveGrabberFloatEvent, this, &imageShader::liveGrabberFloatEventListener);
 	
 	musicalAlpha = 1.f;
+	alphaReducer = 0.01f;//
 	
 	bool tmp = loadShader( effectFolder("videoShader.vert", "videoShader"), effectFolder("videoShader.frag", "videoShader") );
 	
@@ -160,12 +161,12 @@ bool imageShader::printCustomEffectGui(){
 		ImGui::Text("Controls");
 		
 		ImGui::SliderFloat("musical Alpha", &musicalAlpha, 0.f, 1.f);
+		ImGui::SliderFloat("alpha reducer", &alphaReducer, 0.f, 0.1f);
 		
 		ImGui::Indent();
 		if(ImGui::Button("Re-draw image")){
 			musicalAlpha = 1.f;
 		}
-		
 		
 		ImGui::Separator();
 		ImGui::Separator();
@@ -219,7 +220,7 @@ bool imageShader::loadFromImage(string _imagePath){
 		if( tmpImage.load( file.getAbsolutePath() ) ){
 			textures.clear();
 			textures.push_back( ofTexture() );
-			textures.back().allocate(tmpImage.getWidth(), tmpImage.getHeight(), GL_RGBA);
+			textures.back().allocate(tmpImage.getWidth(), tmpImage.getHeight(), GL_RGB);
 			textures.back().loadData( tmpImage.getPixels() );
 			
 			shaderToyArgs.iChannelResolution[0*3+0] = tmpImage.getWidth();
@@ -305,6 +306,7 @@ void imageShader::tempoEventListener(mirTempoEventArgs &_args){
 //				
 //			}
 //		}
+		alphaFromThread.send(std::move(1.f));
 	}
 }
 

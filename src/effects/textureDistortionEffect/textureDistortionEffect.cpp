@@ -57,15 +57,15 @@ bool textureDistortionEffect::render(karmaFboLayer& renderLayer, const animation
 		ofPushStyle();
 		
 		shader.begin();
-		//registerShaderVariables(params);
+		registerShaderVariables(params);
 		
 		shader.setUniform1i("kmIsPingPongPass", 1);
 		if(bUseCustomFbo){
-			shader.setUniformTexture("pingPongTexture", fbo.getTexture(),5);
+			shader.setUniformTexture("pingPongTexture", fbo.getTexture(),2);
 		}
 		else {
 			// note: between begin() and end() SRC is DST
-			shader.setUniformTexture("pingPongTexture", renderLayer.getDstTexture(),5);
+			shader.setUniformTexture("pingPongTexture", renderLayer.getDstTexture(),2);
 		}
 		
 		//ofSetColor(255,255,255,255);

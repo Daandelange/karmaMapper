@@ -89,6 +89,7 @@ protected:
 		float gravityIntensity = 5.f;
 		int iterationsVelocityTimes = 10;
 		int iterationsPositionTimes = 2;
+		float particlesLifeSpan = 60;
 	} box2dWorldProperties;
 	
 	//bool bFlagBox2dReset;
@@ -98,6 +99,7 @@ protected:
 	int mouseAddAmount;
 	bool bDrawBox2dEdges;
 	bool bSyncBox2dOnUpdate;
+	float box2dParticleLifeSpan; // in seconds
 	
 	// for stats
 	float box2dGlobalRotation;

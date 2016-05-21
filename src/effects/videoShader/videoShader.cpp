@@ -49,15 +49,22 @@ bool videoShader::initialise(const animationParams& params){
 	
 	videoShader::reset();
 	
+	bIsLoading = false;
+	bInitialised = true;
+	
 	return bInitialised;
 }
 
 bool videoShader::render(karmaFboLayer& renderLayer, const animationParams &params){
-	if( !shaderEffect::render(renderLayer, params) ) return false;
+	if( !shaderEffect::render(renderLayer, params) ){
+		return false;
+	}
 	
+//	renderLayer.begin();
 //	if(textures.size()>0 ){
 //		textures[0].draw(0,0);
 //	}
+//	renderLayer.end();
 //	if(videoMode==VIDEO_MODE_FILE){
 //		// tmp
 //		if (lock()) {
@@ -771,6 +778,8 @@ bool videoShader::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 		xml.getValue("syphonApp", syphonAddr.appName)
 	));
 #endif
+	
+	bIsLoading = false;
 	
 	return ret;
 }

@@ -17,6 +17,8 @@ int main( ){
 	// Useful for debugging shaders and other inner-OF things
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	//ofSetLogLevel("ofThread", OF_LOG_ERROR);
+#else
+	ofSetLogLevel(OF_LOG_SILENT);
 #endif
 	
 #ifdef TARGET_OPENGLES
@@ -36,8 +38,8 @@ int main( ){
 #else
 	ofGLWindowSettings s;
 	//s.setGLVersion(2,1); // needed for box2d//liquidfun textured particles
-	s.setGLVersion(3,2);
-	//s.setGLVersion(4,3);
+	//s.setGLVersion(3,2);
+	s.setGLVersion(4,1);
 	ofCreateWindow(s);
 #endif
 	

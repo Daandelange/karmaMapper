@@ -33,7 +33,7 @@ uniform int       		iFrame;                // shader playback frame
 uniform float     		iChannelTime[4];       // channel playback time (in seconds)
 uniform vec3      		iChannelResolution[4]; // channel resolution (in pixels)
 uniform vec4     		iMouse;                // mouse pixel coords. xy: current (if MLB down), zw: click
-uniform sampler2DRect 	iChannel0;             // input channel. XX = 2D/Cube
+uniform sampler2D 	iChannel0;             // input channel. XX = 2D/Cube
 uniform vec4      		iDate;                 // (year, month, day, time in seconds)
 uniform float     		iSampleRate;           // sound sample rate (i.e., 44100)
 
@@ -42,15 +42,25 @@ in vec4 gl_FragCoord;
 
 out vec4 outputColor;
 
-// ### karmaMapper dont request pingPong
+// ### karmaMapper request pingPong
 uniform sampler2DRect pingPongTexture;
 
 void main()
 {
     // do a ping-pong pass ?
     if( kmIsPingPongPass == 1 ){
-        outputColor = texture( pingPongTexture,  (vec2(1,1)* (texCoordVarying.xy + vec2(0, 0)) ) );
+        vec2 pos;// = gl_FragCoord.xy/shapeBoundingBox.zw;
+        pos = texCoordVarying.xy;
+
+        // pos = (vec2(1,1)* (texCoordVarying.xy + vec2(0, 0)) ); // Used to be fine work
+
+        outputColor = vec4(texture( pingPongTexture,  pos ).rgb, 1);
+        //outputColor.r += 0.2;
         //outputColor *= effectColor;
         //outputColor *= vec4(1,0,0,1); // make this pass red (debugging)
+        //outputColor = vec4(pos,0,1);
+    }
+    else {
+        outputColor = vec4(0,1,0,1);
     }
 }

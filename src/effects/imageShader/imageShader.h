@@ -55,6 +55,7 @@ protected:
 	
 	string imagePath;
 	float musicalAlpha;
+	float alphaReducer;
 	bool bDrawAlways;
 	bool bReactToMusic;
 	//bool bUseThreadedFileDecoding;

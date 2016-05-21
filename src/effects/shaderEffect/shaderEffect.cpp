@@ -58,7 +58,10 @@ bool shaderEffect::initialise(const animationParams& params){
 }
 
 bool shaderEffect::render(karmaFboLayer& renderLayer, const animationParams &params){
-	if(!isReady() || !shader.isLoaded()) return false;
+	if(!isReady() || !shader.isLoaded()){
+		//cout << isReady() << " • " << shader.isLoaded() << " • " << bIsLoading <<  << endl;
+		return false;
+	}
 	
 	if(bUseCustomFbo){
 		fbo.begin();
@@ -96,11 +99,16 @@ bool shaderEffect::render(karmaFboLayer& renderLayer, const animationParams &par
 		glDisable(GL_BLEND);
 	}
 	
+	// tmp tmp tmp
+//	if(textures.size()>0){
+//		textures[0].draw(0,0);
+//	}
+	
 	shader.begin();
 	registerShaderVariables(params);
 	
 	ofPushStyle();
-	ofSetColor(mainColor[0], mainColor[1], mainColor[2], mainColor[3]);
+	ofSetColor(mainColor[0]*255, mainColor[1]*255, mainColor[2]*255, mainColor[3]*255);
 	ofFill();
 	
 	// tmp
@@ -503,6 +511,8 @@ bool shaderEffect::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 		xml.popTag();
 	}
 	
+	bIsLoading = false;
+	
 	return shader.isLoaded();
 }
 
@@ -651,6 +661,7 @@ bool shaderEffect::loadShader(string _vert, string _frag){
 	
 	if( shader.load(_vert, _frag) ){
 		if( shader.isLoaded() ){
+			bIsLoading = false;
 			bHasError = false;
 			fragmentShader = _frag;
 			vertexShader = _vert;

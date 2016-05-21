@@ -206,11 +206,11 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 			
 			m.clear();
 			m.setAddress("box2dPositionX");
-			m.addFloatArg((float)box2dAveragePosition.x/(float)renderLayer.getHeight());
+			m.addFloatArg((float)box2dAveragePosition.x/((float)renderLayer.getWidth()*0.5f));
 			liveGrabberOSC::getInstance().sendOscMessage(m);
 			m.clear();
 			m.setAddress("box2dPositionY");
-			m.addFloatArg((float)box2dAveragePosition.y/(float)renderLayer.getHeight());
+			m.addFloatArg((float)box2dAveragePosition.y/((float)renderLayer.getHeight()*0.5f));
 			liveGrabberOSC::getInstance().sendOscMessage(m);
 			
 			m.clear();
@@ -248,6 +248,7 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 		
 		box2dParticlesCollisionEnergy *= 0.8;
 		box2dParticlesCollisionEnergy += (particles.particleSystem->ComputeCollisionEnergy()/10.f) * 0.2f;
+		box2dParticlesCollisionEnergy = ofClamp(box2dParticlesCollisionEnergy, 0.f,1.f);
 		m.clear();
 		m.setAddress("box2dParticlesCollisionEnergy");
 		m.addFloatArg( box2dParticlesCollisionEnergy );
@@ -330,6 +331,7 @@ void box2dEffect::reset(){
 	bSyncBox2dOnUpdate = true;
 	bDrawBox2dEdges = false;
 	mouseAddAmount = 10;
+	box2dParticleLifeSpan = 60.f;
 	
 	if( !loadShader(effectFolder("box2dShader.vert", "box2dEffect"), effectFolder("box2dShader.frag", "box2dEffect") ) ){
 		setError(true, "Box2D shader (default shader) not loaded. (error)");
@@ -418,6 +420,10 @@ bool box2dEffect::printCustomEffectGui(){
 			// todo: (un)bind mouse listeners
 		}
 		ImGui::DragInt("Mouse add amount", &mouseAddAmount, 1, 1, 300);
+		if(ImGui::DragFloat("Particles life span", &box2dParticleLifeSpan, 0.5f, 1.f, 300.f)){
+			particles.setParticleLifetime(box2dParticleLifeSpan);
+		}
+		
 		if(ImGui::Checkbox("Show Box2D world", &bDrawBox2dEdges)){
 			
 		}
@@ -483,6 +489,7 @@ bool box2dEffect::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("box2dGravityIntensity", box2dWorldProperties.gravityIntensity);
 	xml.addValue("box2dIterationsVelocityTimes", box2dWorldProperties.iterationsVelocityTimes);
 	xml.addValue("box2dIterationsPositionTimes", box2dWorldProperties.iterationsPositionTimes);
+	xml.addValue("box2dParticlesLifeSpan", box2dWorldProperties.particlesLifeSpan);
 	
 	return ret;
 }
@@ -496,14 +503,15 @@ bool box2dEffect::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 	bAddParticlesWithMouse = xml.getValue("bAddParticlesWithMouse", bAddParticlesWithMouse);
 	mouseAddAmount = xml.getValue("mouseAddAmount", mouseAddAmount);
 	bSyncBox2dOnUpdate = xml.getValue("bSyncBox2dOnUpdate", bSyncBox2dOnUpdate);
-	bDrawBox2dEdges= xml.getValue("bDrawBox2dEdges", bDrawBox2dEdges);
+	bDrawBox2dEdges = xml.getValue("bDrawBox2dEdges", bDrawBox2dEdges);
 	
 	box2dWorldProperties.fps = xml.getValue("box2dFPS", box2dWorldProperties.fps);
 	box2dWorldProperties.gravityAngleDeg = xml.getValue("box2dGravityAngle", box2dWorldProperties.gravityAngleDeg);
 	box2dWorldProperties.gravityIntensity = xml.getValue("box2dGravityIntensity", box2dWorldProperties.gravityIntensity);
 	box2dWorldProperties.iterationsVelocityTimes = xml.getValue("box2dIterationsVelocityTimes", box2dWorldProperties.iterationsVelocityTimes);
 	box2dWorldProperties.iterationsPositionTimes =
-	xml.getValue("box2dIterationsPositionTimes", box2dWorldProperties.iterationsPositionTimes);
+	box2dWorldProperties.iterationsPositionTimes = xml.getValue("box2dIterationsPositionTimes", box2dWorldProperties.iterationsPositionTimes);
+	box2dWorldProperties.particlesLifeSpan = xml.getValue("box2dParticlesLifeSpan", box2dWorldProperties.particlesLifeSpan);
 	
 	initBox2d();
 	//syncBox2dWorldSettings();

@@ -15,6 +15,7 @@
 #include "basicEffect.h"
 #include "animationParams.h"
 #include "mirReceiver.h"
+#include "liveGrabberOSC.h"
 
 struct animationParams;
 

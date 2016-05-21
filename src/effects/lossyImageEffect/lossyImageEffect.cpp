@@ -325,7 +325,8 @@ void lossyImageEffect::beforeDraw(karmaFboLayerDrawEventArgs& _args ){
 		if(_args.fbo.isAllocated()){
 			_args.fbo.begin();
 			ofPushStyle();
-			ofSetColor(255,fOpacity*255);
+			//ofSetColor(255,fOpacity*255);
+			ofSetColor(mainColor[0],mainColor[1],mainColor[2],mainColor[3]);
 			compressedTexture.draw(0,0);
 			ofPopStyle();
 			_args.fbo.end();

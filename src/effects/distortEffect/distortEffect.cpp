@@ -91,6 +91,14 @@ void distortEffect::update(karmaFboLayer& renderLayer, const animationParams& pa
 	// do basic Effect function
 	basicEffect::update( renderLayer, params );
 	
+	if( ofGetFrameNum()%2==0){
+		//static
+		ofxOscMessage m;
+		m.setAddress("windowDistorsion");
+		m.addFloatArg(BPMCurrentMagnitude);
+		liveGrabberOSC::getInstance().sendOscMessage(m);
+	}
+	
 	ofScopedLock lock(effectMutex);
 	
 	if(shapes.size()<1) return;
@@ -120,7 +128,7 @@ void distortEffect::update(karmaFboLayer& renderLayer, const animationParams& pa
 					(*itb) *= 1+0.1*BPMCurrentMagnitude;
 				}
 				
-				BPMCurrentMagnitude -= 0.01f; // todo: make this time-based ?
+				BPMCurrentMagnitude -= 0.005f; // todo: make this time-based ?
 			}
 			
 			(*it)->onShapeModified();
@@ -136,6 +144,7 @@ void distortEffect::reset(){
 	seasonVariation = 1;
 	bReactToBpm = true;
 	BPMMetronom = 1;
+	BPMMagnitude = 10;
 	BPMCurrentMagnitude = 0;
 	
 	ofRemoveListener(mirReceiver::mirTempoEvent, this, &distortEffect::tempoEventListener);
@@ -164,6 +173,8 @@ bool distortEffect::printCustomEffectGui(){
 			ImGui::DragFloat("BPM Magnitude", &BPMMagnitude, 0.05);
 			
 		}
+		
+		ImGui::SliderFloat("BPM Cur Magnitude", &BPMCurrentMagnitude, 0.f, BPMMagnitude);
 	}
 	
 	return true;
@@ -196,8 +207,8 @@ bool distortEffect::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 	seasonVariation = xml.getValue("SeasonNb", 0);
 	
 	bReactToBpm = xml.getValue("ReactToBPM", true);
-	BPMMetronom = xml.getValue("BPMMetronom", 1);
-	BPMMagnitude = xml.getValue("BPMMagnitude", 1);
+	BPMMetronom = xml.getValue("BPMMetronom", BPMMetronom);
+	BPMMagnitude = xml.getValue("BPMMagnitude", BPMMagnitude);
 	BPMCurrentMagnitude = 0;
 	
 	return ret;
@@ -215,12 +226,21 @@ bool distortEffect::randomizePresets(){
 	return true;
 }
 
+// note: threaded function
 void distortEffect::tempoEventListener(mirTempoEventArgs &_args){
+	
 	ofScopedLock( effectMutex );
-	if(BPMCurrentMagnitude < BPMMetronom*-1.f){
-		BPMCurrentMagnitude = BPMMagnitude;
+	if(!_args.isTempoBis){
+	//if(BPMCurrentMagnitude < BPMMetronom*-1.f){
+		if(mirReceiver::getInstance().isEnabled()){
+			BPMCurrentMagnitude = BPMMagnitude*mirReceiver::mirCache.zcr;
+		}
+		else {
+			BPMCurrentMagnitude = BPMMagnitude;
+		}
 	}
-	else BPMCurrentMagnitude -= 1.f;
+	//}
+	//else BPMCurrentMagnitude -= 1.f;
 }
 
 // register effect type

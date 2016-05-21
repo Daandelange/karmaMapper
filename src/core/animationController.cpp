@@ -1561,10 +1561,10 @@ void animationController::draw(ofEventArgs& event){
 							if( firstTime ){
 								ImGui::SetColumnOffset(0, 00);
 								ImGui::SetColumnOffset(1, 50);
-								ImGui::SetColumnOffset(2, 220);
-								ImGui::SetColumnOffset(3, 300);
-								ImGui::SetColumnOffset(4, 350);
-								ImGui::SetColumnOffset(5, 400);
+								ImGui::SetColumnOffset(2, 200);
+								ImGui::SetColumnOffset(3, 250);
+								ImGui::SetColumnOffset(4, 300);
+								ImGui::SetColumnOffset(5, 350);
 								firstTime = false;
 							}
 							

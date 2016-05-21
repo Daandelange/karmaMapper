@@ -181,6 +181,9 @@ bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 		effectName = nameBuffer;
 	}
 	ImGui::TextWrapped("Status: %s", getShortStatus().c_str() );
+	ImGui::TextWrapped("Initialised: %d", bInitialised);
+	ImGui::TextWrapped("IsLoading: %d", bIsLoading);
+	
 	if( ImGui::Button("Reset effect") ){
 		reset();
 	}

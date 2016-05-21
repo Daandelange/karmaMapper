@@ -1,5 +1,7 @@
 #version 150
 
+// #extension GL_ARB_texture_rectangle : enable
+
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -33,7 +35,7 @@ uniform int       		iFrame;                // shader playback frame
 uniform float     		iChannelTime[4];       // channel playback time (in seconds)
 uniform vec3      		iChannelResolution[4]; // channel resolution (in pixels)
 uniform vec4     		iMouse;                // mouse pixel coords. xy: current (if MLB down), zw: click
-uniform sampler2DRect 	iChannel0;             // input channel. XX = 2D/Cube
+uniform sampler2D 	    iChannel0;             // input channel. XX = 2D/Cube
 uniform vec4      		iDate;                 // (year, month, day, time in seconds)
 uniform float     		iSampleRate;           // sound sample rate (i.e., 44100)
 
@@ -43,18 +45,26 @@ in vec4 gl_FragCoord;
 out vec4 outputColor;
 
 // ### karmaMapper dont request pingPong
-uniform sampler2DRect pingPongTexture;
+uniform sampler2D pingPongTexture;
 
 void main()
 {
     // do a ping-pong pass ?
     if( kmIsPingPongPass == 1 ){
+
+        vec2 pos;// = (((texCoordVarying.xy-offset+globalTextureTransform.xy))/shapeBoundingBox.zw );
+
+        // used to work with sampler2DRect:
+        //pos = (vec2(1,1)* (gl_FragCoord.xy + vec2(0, 0)) );
+
+        pos = texCoordVarying;
+
         // glsl 120
         //gl_FragColor = texture( pingPongTexture,  (vec2(1,1)* (gl_FragCoord.xy + vec2(0, 0)) ) );
 
         // ok glsl 330 // 150
-        outputColor = texture( pingPongTexture,  (vec2(1,1)* (gl_FragCoord.xy + vec2(0, 0)) ) );
-        
+        outputColor = texture( pingPongTexture, gl_FragCoord.xy/shapeBoundingBox.zw);// );
+        //outputColor.r += 1.0;
         //outputColor *= effectColor;
         //outputColor *= vec4(1,0,0,1); // make this pass red (debugging)
     }
@@ -62,7 +72,7 @@ void main()
 
     	float textureScale = 1.0;
     	//outputColor = vec4( texture(iChannel0, gl_FragCoord.xy/iResolution.xy ).rgb, 1);
-    	//outPutColor = vec4(0.5, gl_FragCoord.x, gl_FragCoord.y);
+    	//outputColor = vec4(0.5, gl_FragCoord.x, gl_FragCoord.y);
     	//vec2 q = gl_FragCoord.xy*iChannelResolution[0].xy/iResolution.xy;
     	//outputColor = vec4( texture( iChannel0, vec2(q.x,1.0-q.y) ).rgb, 1);
 
@@ -139,16 +149,23 @@ void main()
         //gl_FragColor *= effectColor;
 
         // 2 lines OK for version 150 // opengl 3.2
-        outputColor = vec4( texture( iChannel0, pos*iChannelResolution[0].xy ).rgb, 1);
+        //outputColor = vec4( texture( iChannel0, pos*iChannelResolution[0].xy ).rgb, 1);
+        outputColor = vec4( texture( iChannel0, pos.xy ).rgb, 1);
         outputColor *= effectColor;
 
         //outputColor *= vec4(0,1,0,1);  // make this pass green (debugging)
     	//outputColor *= vec4( pos, 0, 1 );
     	//outputColor = vec4( texture(iChannel0, ( (texCoordVarying-shapeCenterOffset)/iResolution.xy*iChannelResolution[0].xy*textureScale) ).rgb, 1);//outputColor.a);
-    	outputColor.r = 1.0; // debugging
+    	
     	//outputColor = vec4(1, 0, 0, 1);
         //outputColor = vec4(iResolution.x,iResolution.x,iResolution.y, 1);
         //outputColor = vec4( gl_FragCoord.xy / fboCanvas.xy,1,1);
+        //outputColor = vec4( iChannelResolution[0].xy/fboCanvas.xy,1,1);
+        //outputColor = texture( iChannel0, pos*iChannelResolution[0].xy );
+        //outputColor = vec4( pos.xy, 1, 1 );
+        
+        //outputColor.a=1;
+        //outputColor.r += 1.0; // debugging
         //outputColor = vec4(vec2(gl_FragCoord.x/fboCanvas.x),1,1);
     }
 }

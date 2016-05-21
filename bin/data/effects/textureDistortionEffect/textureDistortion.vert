@@ -1,4 +1,4 @@
-#version 330
+#version 150
 
 // these are for the programmable pipeline system and are passed in
 // by default from OpenFrameworks
@@ -20,7 +20,7 @@ void main()
 	// Absolute window position: gl_FragCoord.x / windowWidth
 	//gl_Position.xy;//	
 	if(kmIsPingPongPass == 1){
-		texCoordVarying = texcoord;
+		texCoordVarying = texcoord.xy;
 		//texCoordVarying = position.xy;
 	}
 	else {
