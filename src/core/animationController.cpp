@@ -1098,25 +1098,27 @@ void animationController::draw(ofEventArgs& event){
 			// https://github.com/armadillu/ofxTimeMeasurements.git
 			ImGui::MenuItem("Application load", "#todo" );
 			
-			char buffer[26];
-			snprintf(buffer, 26, "Resolution: %d x %i", ofGetWidth(), ofGetHeight() );
-			static int int2[2] = { ofGetWidth(),ofGetHeight() };
-			if(ImGui::BeginMenu( buffer )){
-				
-				ImGui::InputInt2("###int2", int2);
-				ImGui::SameLine();
-				if( ImGui::Button("Set") ){
-					ofSetWindowShape(int2[0], int2[1]);
-					
-					//int2[0] = ofGetWidth();
-					//int2[1] = ofGetHeight();
-					
-					for(auto l=layers.begin(); l!=layers.end(); ++l){
-						l->first.allocate(int2[0], int2[1]);
-					}
-				}
-				ImGui::EndMenu();
-			}
+            if(layers.size()>0){
+                char buffer[26];
+                snprintf(buffer, 26, "Resolution: %d x %i", layers.begin()->first.getWidth(), layers.begin()->first.getHeight() );
+                static int int2[2] = { layers.begin()->first.getWidth() , layers.begin()->first.getHeight() };
+                if(ImGui::BeginMenu( buffer )){
+                    
+                    ImGui::InputInt2("###int2", int2);
+                    ImGui::SameLine();
+                    if( ImGui::Button("Set") ){
+                        ofSetWindowShape(int2[0], int2[1]);
+                        
+                        //int2[0] = ofGetWidth();
+                        //int2[1] = ofGetHeight();
+                        
+                        for(auto l=layers.begin(); l!=layers.end(); ++l){
+                            l->first.allocate(int2[0], int2[1]);
+                        }
+                    }
+                    ImGui::EndMenu();
+                }
+            }
 			
 			static bool useVsync;
 			if( ImGui::MenuItem("Enable v-sync", NULL, &useVsync) ) {
@@ -1383,11 +1385,14 @@ void animationController::draw(ofEventArgs& event){
 				// new layer button
 				ImGui::Separator();
 				if( ImGui::Button("Add new layer") ){
-				
-					layers.emplace_back(
-						karmaFboLayer(ofGetWidth(),ofGetHeight()),
-						list<basicEffect*>()
-					);
+                    
+                    if(layers.size()>0){
+                        layers.emplace_back( karmaFboLayer(layers.begin()->first.getWidth() , layers.begin()->first.getHeight()),list<basicEffect*>() );
+                    }
+                    else {
+                        layers.emplace_back(
+                            karmaFboLayer(ofGetWidth(),ofGetHeight()), list<basicEffect*>() );
+                    }
 					
 					// setup karmaFboLayer
 					layers.back().second.clear();

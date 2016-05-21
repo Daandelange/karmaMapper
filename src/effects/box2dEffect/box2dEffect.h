@@ -69,7 +69,7 @@ public:
 	// listeners
 	void _mousePressed( ofMouseEventArgs& args );
 	void liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args);
-	
+    void liveGrabberBangEventListener(liveGrabberBangEventArgs &_args);
 
 	
 protected:

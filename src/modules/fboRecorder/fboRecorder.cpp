@@ -179,8 +179,12 @@ bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 	
 	// prepare FBO
 	if( _w==0 || _h==0 ){
-		_w = ofGetWindowWidth();
-		_h = ofGetWindowHeight();
+		//_w = ofGetWindowWidth();
+		//_h = ofGetWindowHeight();
+        
+        // tmp tmp tmp tmp tmp !!!!
+        _w = 1500;
+        _h = 1200;
 	}
 	fbo.allocate(_w, _h, GL_RGBA, videoRecAA);
 	//ofSetWindowShape(_w, _h);
@@ -350,8 +354,16 @@ bool fboRecorder::endFrame(bool _showBuffer){
 	}
 	
 	static ofTexture tmpTex;
-	int w = ofGetWidth();
-	int h = ofGetHeight();
+    int w, h;
+    if(fbo.isAllocated()){
+        w = fbo.getWidth();
+        h = fbo.getHeight();
+    }
+    else {
+        w = ofGetWidth();
+        h = ofGetHeight();
+    }
+    
 	if(!tmpTex.isAllocated()){
 		tmpTex.allocate( w, h, GL_RGBA );
 	}

@@ -37,7 +37,7 @@ liveGrabberOSC::~liveGrabberOSC(){
 
 // tell router if a message can be handled by this OSCNode instance
 bool liveGrabberOSC::canHandle(const ofxOscMessage &_msg) const {
-	return true; // todo
+	return (_msg.getAddress().compare(0,ALLG_PREFIX_LEN, KM_ALLG_PREFIX) == 0);
 }
 
 // proceed the message
@@ -54,7 +54,6 @@ bool liveGrabberOSC::handle(const ofxOscMessage &_msg) {
 		string tmpLastMsg = "";
 		string subAddr = addr.substr(5,addr.npos);
 		bool ret = false;
-		
 		
 		if( subAddr.substr(0,9).compare("/Follower") == 0 ){
 			
@@ -77,6 +76,38 @@ bool liveGrabberOSC::handle(const ofxOscMessage &_msg) {
 			}
 			ret = true;
 		}
+        
+        else if( subAddr.substr(0,13).compare("/clipNameHang") == 0 ){
+            
+            if(_msg.getNumArgs()>0){
+                subAddr = subAddr.substr(13,addr.npos);
+                string value = _msg.getArgTypeName(0); // tmp
+                
+                liveGrabberBangEventArgs args;
+                args.what = "hangDrum";//_msg.getArgAsString(0);
+                ofNotifyEvent(liveGrabberBangEvent, args);
+            }
+            ret = true;
+        }
+        
+        
+        else if( subAddr.substr(0,8).compare("/criquet") == 0 ){
+            
+            if(_msg.getNumArgs()>0){
+                
+                subAddr = subAddr.substr(8,addr.npos);
+                
+                liveGrabberFloatEventArgs args;
+                args.what = "criquet";
+                args.value = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);;
+                ofNotifyEvent(liveGrabberFloatEvent, args);
+                
+                tmpLastMsg = "criquet";
+                ret = true;
+            }
+            
+        }
+        
 		
 		// /allg/TriggeredClipName"
 		
@@ -126,28 +157,14 @@ bool liveGrabberOSC::handle(const ofxOscMessage &_msg) {
 			}
 		}
 		
-		else if( subAddr.substr(0,8).compare("/Criquet") ){
-			
-			if(_msg.getNumArgs()>0){
-				
-				subAddr = subAddr.substr(8,addr.npos);
-				
-				liveGrabberFloatEventArgs args;
-				args.what = "Criquet";
-				args.value = _msg.getArgTypeName(0)=="int32"?_msg.getArgAsInt32(0):_msg.getArgAsFloat(0);;
-				ofNotifyEvent(liveGrabberFloatEvent, args);
-			}
-			
-		}
-		
-		else if( subAddr.substr(0,5).compare("/kick") ){
+		else if( subAddr.substr(0,5).compare("/kick") == 0 ){
 			
 			if(_msg.getNumArgs()>0){
 				
 				subAddr = subAddr.substr(5,addr.npos);
 				
 				liveGrabberBangEventArgs args;
-				args.what = "Kick";
+				args.what = "kick";
 				ofNotifyEvent(liveGrabberBangEvent, args);
 			}
 			
@@ -211,24 +228,24 @@ void liveGrabberOSC::update(const animationParams &params){
 		noise = ofNoise(ofGetElapsedTimef());
 		random = ofRandom(0.f, 1.f);
 		
-		ofxOscMessage m;
-		m.setAddress("noise");
-		//m.addInt32Arg(noise);
-		m.addFloatArg(noise);
-		//m.addStringArg(ofToString(noise));
-		sendOscMessage(m);
+//		ofxOscMessage m;
+//		m.setAddress("noise");
+//		//m.addInt32Arg(noise);
+//		m.addFloatArg(noise);
+//		//m.addStringArg(ofToString(noise));
+//		sendOscMessage(m);
 		
-		m.clear();
-		m.setAddress("random");
-		m.addFloatArg(random);
-		sendOscMessage(m);
+//		m.clear();
+//		m.setAddress("random");
+//		m.addFloatArg(random);
+//		sendOscMessage(m);
 		
-		if(ofGetFrameNum()%((int)ofRandom(100, 300))==0){
-			m.clear();
-			m.setAddress("trigger");
-			m.addFloatArg(manualFloat);
-			sendOscMessage(m);
-		}
+//		if(ofGetFrameNum()%((int)ofRandom(100, 300))==0){
+//			m.clear();
+//			m.setAddress("trigger");
+//			m.addFloatArg(manualFloat);
+//			sendOscMessage(m);
+//		}
 	}
 	
 	
@@ -306,11 +323,41 @@ void liveGrabberOSC::drawMenuEntry() {
 	karmaModule::drawMenuEntry();
 }
 
+// writes the module data to XML. xml's cursor is already pushed into the right <module> tag.
+bool liveGrabberOSC::saveToXML(ofxXmlSettings& xml) const{
+    bool ret = karmaModule::saveToXML(xml);
+    
+    xml.addValue("OSCListeningPort", (int) oscSendParams.port);
+    xml.addValue("OSCListeningHost", oscSendParams.host);
+    
+    return ret;
+}
+
+// load module settings from xml
+// xml's cursor is pushed to the root of the <module> tag to load
+bool liveGrabberOSC::loadFromXML(ofxXmlSettings& xml){
+    
+    bool ret=karmaModule::loadFromXML(xml);
+    
+    oscSendParams.port = xml.getValue("OSCListeningPort", (int) oscSendParams.port );
+    oscSendParams.host = xml.getValue("OSCListeningHost", oscSendParams.host);
+    connectOSCSender();
+    
+    //initialise(animationParams.params);
+    
+    return ret; // todo
+}
+
 bool liveGrabberOSC::connectOSCSender(){
 	//sender.setup(KM_LG_OSC_ADDR, KM_LG_OSC_PORT_OUT);
 	//sender.setup("192.168.9.26", 2345); // antoine
-	sender.setup(oscSendParams.host, oscSendParams.port);
-	bSenderIsConnected = true;
+    try {
+        sender.setup(oscSendParams.host, oscSendParams.port);
+        bSenderIsConnected = true;
+    } catch (...) {
+        bSenderIsConnected = false;
+    }
+	
 	return bSenderIsConnected;
 }
 

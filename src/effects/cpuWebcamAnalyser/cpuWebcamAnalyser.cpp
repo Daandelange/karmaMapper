@@ -87,7 +87,7 @@ bool cpuWebcamAnalyser::render(karmaFboLayer& renderLayer, const animationParams
 				ofVec2f camPosition = faceTracker.getPosition();
 				float camScale = faceTracker.getScale();
 				//ofMesh reference = faceTracker.getImageMesh();
-				int meshRectPts[4] = {ofGetWidth(),ofGetHeight(),0,0};
+				int meshRectPts[4] = { renderLayer.getWidth(), renderLayer.getHeight() ,0,0};
 				for(int i = 0; i < faceMesh.getNumVertices(); i++) {
 					ofVec2f point = faceMesh.getVertices()[i];
 					if( point.x < meshRectPts[0] ) meshRectPts[0] = point.x;

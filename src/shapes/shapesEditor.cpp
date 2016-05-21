@@ -33,7 +33,7 @@ shapesEditor::shapesEditor( ) : multiShapesHandler(selectedShapes) {
 	buildMenus();
 	
 	// tmp : load image
-	background.load("vendome_full_small.jpeg");
+	background.load("vendome_full.jpg");
 }
 
 shapesEditor::~shapesEditor(){

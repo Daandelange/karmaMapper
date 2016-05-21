@@ -332,7 +332,7 @@ void imageShader::liveGrabberFloatEventListener(liveGrabberFloatEventArgs &_args
 	
 	if(shapes.size()<=0) return;
 	
-	if(_args.what.compare("Criquet")==0){
+	if(_args.what.compare("criquet")==0){
 		float value = _args.value;
 		alphaFromThread.send(std::move(value));
 	}

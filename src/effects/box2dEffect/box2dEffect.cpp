@@ -30,6 +30,7 @@ box2dEffect::~box2dEffect(){
 	// unbind listeners
 	ofRemoveListener( ofEvents().mousePressed, this, &box2dEffect::_mousePressed);
 	ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &box2dEffect::liveGrabberNoteEventListener);
+    ofRemoveListener(liveGrabberOSC::liveGrabberBangEvent, this, &box2dEffect::liveGrabberBangEventListener);
 	
 //	if(isThreadRunning()){
 //		waitForThread(true);
@@ -238,7 +239,7 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 		
         static float maxParticles = 10.f;
         float numParticles = particles.getParticleCount();
-        maxParticles *= 0.99;
+        maxParticles -= 0.1f;
         if(maxParticles < numParticles ) {
             maxParticles = numParticles;
         }
@@ -275,6 +276,10 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 			
 			box2dParticlesAveragePosition /= ofVec2f(particles.getParticleCount());
 			box2dParticlesAveragePosition /= ofVec2f(renderLayer.getWidth()/particles.particleSize, renderLayer.getHeight()/particles.particleSize );
+            
+            if(box2dParticlesAveragePosition==ofVec2f::zero()){
+                box2dParticlesAveragePosition = ofVec2f(.5f);
+            }
 			
 			box2dParticlesSpeed = abs(box2dParticlesAveragePosition.distance(ofVec2f(0)));
 		}
@@ -314,7 +319,9 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
 			particles.particleSystem->DestroyOldestParticle(i, true);
 		}
 		
-		box2dShapeItems.erase( box2dShapeItems.begin() );
+        if(particles.getParticleCount()>0){
+            box2dShapeItems.erase( box2dShapeItems.begin() );
+        }
 	}
 }
 
@@ -352,6 +359,9 @@ void box2dEffect::reset(){
 	ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &box2dEffect::liveGrabberNoteEventListener);
 	ofAddListener(liveGrabberOSC::liveGrabberNoteEvent, this, &box2dEffect::liveGrabberNoteEventListener);
 	
+    ofAddListener(liveGrabberOSC::liveGrabberBangEvent, this, &box2dEffect::liveGrabberBangEventListener);
+    ofAddListener(liveGrabberOSC::liveGrabberBangEvent, this, &box2dEffect::liveGrabberBangEventListener);
+    
 //	if(!isThreadRunning()){
 //		startThread();
 //	}
@@ -549,7 +559,7 @@ void box2dEffect::initBox2d(){
 	
 	box2d = ofxBox2d();
 	box2d.init();
-	box2d.createBounds();
+	box2d.createBounds(0,0,1500,1200); // tmp tmp tmp
 	//
 	syncBox2dWorldSettings();
 	syncBox2dWithShapes();
@@ -691,12 +701,61 @@ void box2dEffect::liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args){
 	}
 	int numericKey = ofToInt(_args.key.substr(1));
 	
-	box2dParticleProperties settings;
-	settings.color = ofColor( numericKey, ((numericKey+255/3))%255, ((numericKey+(255/3)*2))%255);
-	settings.position = ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
-	settings.velocity = ofVec2f(ofRandom(-30, 30), ofRandom(-30, 30));
-	
-	newBox2dParticlesFromThread.send(std::move(settings));
+    for(int i=0; i<(numericKey+2)*10; i++){
+        box2dParticleProperties settings;
+        settings.color = ofColor( numericKey, ((numericKey+255/3))%255, ((numericKey+(255/3)*2))%255);
+        settings.position = ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
+        settings.velocity = ofVec2f(ofRandom(-30, 30), ofRandom(-30, 30));
+        
+        newBox2dParticlesFromThread.send(std::move(settings));
+    }
+}
+
+// note: this function is threaded!
+void box2dEffect::liveGrabberBangEventListener(liveGrabberBangEventArgs &_args){
+    //ofScopedLock lock(effectMutex);
+
+    if(_args.what.compare("hangDrum") == 0 ){
+        
+        if(!bReactWithLiveGrabber || bDisableMeSoon) return;
+        
+        ofVec2f tmpPos(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
+        
+        for(int i=0; i<60; i++){
+            box2dParticleProperties settings;
+            ofColor color;
+            int hue = int(ofGetFrameNum() / 4.0) % 255;
+            color.setHsb(hue, 180, 200);
+            settings.color = color;
+            settings.position = ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
+            settings.velocity = ofVec2f(ofRandom(-60, 60), ofRandom(-60, 60));
+            
+            newBox2dParticlesFromThread.send(std::move(settings));
+        }
+        
+        return;
+    }
+    
+    if(_args.what.compare("kick") == 0 ){
+        
+        if(!bReactWithLiveGrabber || bDisableMeSoon) return;
+        
+        ofVec2f tmpPos(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
+        
+        for(int i=0; i<20; i++){
+            box2dParticleProperties settings;
+            ofColor color;
+            int hue = int(ofGetFrameNum() / 4.0) % 255;
+            color.setHsb(hue, 180, 200);
+            settings.color = color;
+            settings.position = ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
+            settings.velocity = ofVec2f(ofRandom(-20, 20), ofRandom(-20, 20));
+            
+            newBox2dParticlesFromThread.send(std::move(settings));
+        }
+        
+        return;
+    }
 }
 
 // register effect type

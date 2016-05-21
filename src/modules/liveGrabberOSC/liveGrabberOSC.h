@@ -20,6 +20,8 @@
 
 #define KM_LG_OSC_ADDR "localhost"
 #define KM_LG_OSC_PORT_OUT 2345
+#define KM_ALLG_PREFIX "/allg/"
+#define ALLG_PREFIX_LEN sizeof(KM_ALLG_PREFIX)-1
 
 class liveGrabberOSC : public OSCNode, public singletonModule<liveGrabberOSC> {
 	
@@ -51,6 +53,8 @@ public:
 	virtual bool reset();
 	void showGuiWindow();
 	void drawMenuEntry();
+    virtual bool saveToXML(ofxXmlSettings& xml) const;
+    virtual bool loadFromXML(ofxXmlSettings& xml);
 	
 	// basic functions
 	//bool startListening();
