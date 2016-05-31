@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "ofMain.h"
+
 struct seasonsYear{
 	seasonsYear(): winter(0), spring(0), summer(0), autumn(0){};
 	

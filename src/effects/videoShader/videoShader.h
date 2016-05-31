@@ -12,7 +12,7 @@
 #include "ofMain.h"
 #include "shapes.h"
 #include "shaderEffect.h"
-#include "animationParams.h"
+#include "karmaParam.h"
 #include "mirReceiver.h"
 #include "ofxFPS.h"
 
@@ -29,7 +29,7 @@
 struct animationParams;
 
 // todo: make video decoding threaded
-// todo: 
+// todo:
 
 enum videoMode {
 	// note: each mode must have a unique key, never replace the one of another
@@ -63,6 +63,70 @@ struct webcamSettingsStruct {
 	
 };
 
+struct kmNewVideoFrameStruct {
+	
+	kmNewVideoFrameStruct(){
+		//newPixels( ofPixels() );
+	}
+	
+	kmNewVideoFrameStruct(ofPixels& _pix) : newPixels(_pix) {
+		
+	}
+	
+	ofPixels newPixels;
+	float position = 0.f;
+};
+
+struct karmaVideoPlaybackSettingsStruct {
+	
+	bool isPlaying = false;
+	bool isPaused = false;
+	float seekerPosition = -1.f;
+	float playbackSpeed = 1.f;
+	float volume = 0.f;
+	ofLoopType loopState = OF_LOOP_NORMAL;
+	
+};
+
+// (todo)
+struct karmaVideoMediaInformationStruct {
+	
+	// empty constructor
+	karmaVideoMediaInformationStruct(){
+		isVideoFile = false;
+	}
+	
+	karmaVideoMediaInformationStruct( string fullPath ){
+		ofFile tmpFile(fullPath);
+		if(tmpFile && tmpFile.exists()){
+			path = tmpFile.getEnclosingDirectory();
+			fileName = tmpFile.getFileName();
+			
+			// todo: check if it really is ?
+			isVideoFile = true;
+		}
+	}
+	
+	string path = "";
+	string fileName = "";
+	bool isVideoFile = false;
+	struct karmaVideoPlaybackSettingsStruct playBackSettings;
+	
+	// todo:
+	float mediaDuration = 0.f;
+	int mediaDimensions[2] = {0,0};
+	//float aspectRatio = 1.f; // width/height
+	
+	string getFullPath() const {
+		if( path.length()>1 && path.compare(path.length()-1, 1, KM_DIRECTORY_SEPARATOR )==0 ){
+			return path + fileName;
+		}
+		else {
+			return path + KM_DIRECTORY_SEPARATOR + fileName;
+		}
+	}
+};
+
 // Important: lock() when accessing player or bUseThreadedFileDecoding
 
 class videoShader : public shaderEffect, public ofThread {
@@ -93,25 +157,34 @@ public:
 	
 	// #########
 	// videoEffect FUNCTIONS
-	void setVideoMode(const enum videoMode& mode);
-	bool loadVideoFile( const string &_path);
-	bool selectUVCWebcam(string _cam="");
+	void setVideoMode( const enum videoMode& mode );
+	bool loadVideoFile( const karmaVideoMediaInformationStruct &_media, bool forceRemember=false );
+	bool selectUVCWebcam( string _cam="" );
 #ifdef KM_ENABLE_SYPHON
 	bool connectToSyphonServer( const ofxSyphonServerDescription& _addr );
 #endif
 	void setUseThread( const bool& _useThread );
+	static void setVideoFilePlaybackInformation(ofVideoPlayer& _player, karmaVideoPlaybackSettingsStruct _settings);
+	void startVideoMedia();
+	void stopVideoMedia();
+	void pauseVideoMedia(const bool& paused);
+	void seekVideoMedia(const float& _pos);
+	void setVideoMediaVolume(const float& _vol);
+	void setVideoMediaSpeed(const float& _speed);
 	
 protected:
 	videoMode videoMode;
 	
 	// VIDEO FILES
-	float playBackSpeed;
+	//float playBackSpeed;
 	ofVideoPlayer player;
-	string videoFile;
-	bool bUseThreadedFileDecoding;
-	ofThreadChannel<ofPixels> images_to_update;
+	ofVideoPlayer threadedPlayer;
+	ofxFps videoPlayerFPSCounter;
+	float videoPlayerFPSHistory[WEBCAM_FPS_HISTORY_SIZE];
+	karmaThreadedParam<struct karmaVideoMediaInformationStruct> videoMedia;
+	karmaThreadedParam<bool> bUseThreadedFileDecoding;
+	ofThreadChannel<kmNewVideoFrameStruct> newImagesFromThread;
 	virtual void threadedFunction();
-	float fVideoVolume;
 	
 	// UVC webcam
 	ofQTKitGrabber UVCWebcam;

@@ -225,7 +225,7 @@ bool shapesScene::unloadShapes(){
 	// file is not loaded anymore
 	loadedConfiguration = "";
 
-        return true;
+	return true;
 }
 
 // - - - - - - -

@@ -99,7 +99,7 @@ bool shaderEffect::render(karmaFboLayer& renderLayer, const animationParams &par
 		glDisable(GL_BLEND);
 	}
 	
-	// tmp tmp tmp
+	// for debugging
 //	if(textures.size()>0){
 //		textures[0].draw(0,0);
 //	}
@@ -582,12 +582,15 @@ void shaderEffect::registerShaderToyVariables(){
 			//iChannelResolution[(3*i+0)] = t->getWidth();
 			//iChannelResolution[(3*i+1)] = t->getHeight();
 			//iChannelResolution[(3*i+2)] = t->getWidth() / t->getHeight();
-			if(i<4) iChannelTime[i] = shaderToyArgs.iChannelTime[i];
+			if(i<4){
+				iChannelTime[i] = shaderToyArgs.iChannelTime[i];
+			}
 			
 			//t->setTextureWrap(GL_REPEAT, GL_REPEAT );
 			//glTexParameterf(t->getTextureData().textureID, GL_REPEAT, GL_REPEAT);
 			//t->setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 			shader.setUniformTexture(((string)"iChannel").append( ofToString(i) ), *t, t->getTextureData().textureID );
+			//cout << "tex: " << t->getTextureData().textureID << endl;
 			//cout << t->getTextureData().wrapModeHorizontal << " - "<< GL_CLAMP_TO_EDGE << endl;
 		}
 		//cout << iChannelResolution[0] << endl;

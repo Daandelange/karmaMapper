@@ -35,7 +35,7 @@ uniform int       		iFrame;                // shader playback frame
 uniform float     		iChannelTime[4];       // channel playback time (in seconds)
 uniform vec3      		iChannelResolution[4]; // channel resolution (in pixels)
 uniform vec4     		iMouse;                // mouse pixel coords. xy: current (if MLB down), zw: click
-uniform sampler2D 	    iChannel0;             // input channel. XX = 2D/Cube
+uniform sampler2DRect 	    iChannel0;             // input channel. XX = 2D/Cube
 uniform vec4      		iDate;                 // (year, month, day, time in seconds)
 uniform float     		iSampleRate;           // sound sample rate (i.e., 44100)
 
@@ -150,8 +150,9 @@ void main()
 
         // 2 lines OK for version 150 // opengl 3.2
         //outputColor = vec4( texture( iChannel0, pos*iChannelResolution[0].xy ).rgb, 1);
-        outputColor = vec4( texture( iChannel0, pos.xy ).rgb, 1);
-        outputColor *= effectColor;
+        outputColor = vec4( texture( iChannel0, pos.xy*iChannelResolution[0].xy ).rgb, 1);
+        //outputColor *= effectColor;
+        //outputColor += vec4(0, pos.xy/vec2(2), 1);
 
         //outputColor *= vec4(0,1,0,1);  // make this pass green (debugging)
     	//outputColor *= vec4( pos, 0, 1 );
@@ -165,7 +166,7 @@ void main()
         //outputColor = vec4( pos.xy, 1, 1 );
         
         //outputColor.a=1;
-        //outputColor.r += 1.0; // debugging
+        //outputColor.r += 0.2; // debugging
         //outputColor = vec4(vec2(gl_FragCoord.x/fboCanvas.x),1,1);
     }
 }

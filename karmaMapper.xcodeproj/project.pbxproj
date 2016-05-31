@@ -245,6 +245,8 @@
 		85999DD41C537F6600786707 /* fullScreenShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85999DD21C537F6600786707 /* fullScreenShape.cpp */; };
 		85999DD51C537F6600786707 /* fullScreenShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85999DD21C537F6600786707 /* fullScreenShape.cpp */; };
 		85AC0C2F1CA4604800DD2962 /* liveGrabberOSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AC0C2D1CA4604800DD2962 /* liveGrabberOSC.cpp */; };
+		85AD75D01CFCBE320077F59A /* animationParams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AD75CF1CFCBE320077F59A /* animationParams.cpp */; };
+		85AD75D31CFCCABC0077F59A /* karmaParam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AD75D11CFCCABC0077F59A /* karmaParam.cpp */; };
 		85BE66B91CA5A4D30024C10F /* ofxUVC.mm in Sources */ = {isa = PBXBuildFile; fileRef = 85BE66B61CA5A4D30024C10F /* ofxUVC.mm */; };
 		85BE66BA1CA5A4D30024C10F /* UVCCameraControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BE66B81CA5A4D30024C10F /* UVCCameraControl.m */; };
 		85E428D71CCA2AAF00330C72 /* lossyImageEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85E428D51CCA2AAF00330C72 /* lossyImageEffect.cpp */; };
@@ -948,6 +950,9 @@
 		85AC0C2C1CA4604800DD2962 /* liveGrabberEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = liveGrabberEvents.h; sourceTree = "<group>"; };
 		85AC0C2D1CA4604800DD2962 /* liveGrabberOSC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = liveGrabberOSC.cpp; sourceTree = "<group>"; };
 		85AC0C2E1CA4604800DD2962 /* liveGrabberOSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = liveGrabberOSC.h; sourceTree = "<group>"; };
+		85AD75CF1CFCBE320077F59A /* animationParams.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = animationParams.cpp; sourceTree = "<group>"; };
+		85AD75D11CFCCABC0077F59A /* karmaParam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = karmaParam.cpp; sourceTree = "<group>"; };
+		85AD75D21CFCCABC0077F59A /* karmaParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = karmaParam.h; sourceTree = "<group>"; };
 		85BE66B51CA5A4D30024C10F /* ofxUVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxUVC.h; sourceTree = "<group>"; };
 		85BE66B61CA5A4D30024C10F /* ofxUVC.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxUVC.mm; sourceTree = "<group>"; };
 		85BE66B71CA5A4D30024C10F /* UVCCameraControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UVCCameraControl.h; sourceTree = "<group>"; };
@@ -2602,6 +2607,9 @@
 		85884B421C3BC80E004BC99C /* parameters */ = {
 			isa = PBXGroup;
 			children = (
+				85AD75D11CFCCABC0077F59A /* karmaParam.cpp */,
+				85AD75D21CFCCABC0077F59A /* karmaParam.h */,
+				85AD75CF1CFCBE320077F59A /* animationParams.cpp */,
 				85884B431C3BC80E004BC99C /* animationParams.h */,
 				85884B441C3BC80E004BC99C /* animationParamsServer.cpp */,
 				85884B451C3BC80E004BC99C /* animationParamsServer.h */,
@@ -3240,6 +3248,7 @@
 				852389971CD1F1ED009F1153 /* FCheck.cc in Sources */,
 				483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */,
 				8553B48E1CEA0CC2008D6F76 /* b2Collision.cpp in Sources */,
+				85AD75D31CFCCABC0077F59A /* karmaParam.cpp in Sources */,
 				8557F8D71C9C5CC30066BE7D /* EngineGLFW.cpp in Sources */,
 				F285EB3169F1566CA3D93C20 /* ofxPanel.cpp in Sources */,
 				852389DA1CD1F276009F1153 /* Distance.cpp in Sources */,
@@ -3321,6 +3330,7 @@
 				8553B4831CEA0CC2008D6F76 /* ofxBox2dBaseShape.cpp in Sources */,
 				852389DF1CD1F276009F1153 /* RunningBackground.cpp in Sources */,
 				62545D179C94265CA1389D4A /* OscOutboundPacketStream.cpp in Sources */,
+				85AD75D01CFCBE320077F59A /* animationParams.cpp in Sources */,
 				C4782ECC372420ACE0615B74 /* OscPrintReceivedElements.cpp in Sources */,
 				8523899C1CD1F1ED009F1153 /* PDM.cc in Sources */,
 				85BE66BA1CA5A4D30024C10F /* UVCCameraControl.m in Sources */,

@@ -237,7 +237,7 @@ void lossyImageEffect::threadedFunction(){
 			}
 			catch(std::exception& _e){
 				compressOK = false;
-				cout << "BULLSHIT HAPPENS TOO!" << endl;
+				// todo: handle error
 			}
 			
 			if(compressOK){
@@ -249,7 +249,7 @@ void lossyImageEffect::threadedFunction(){
 					ok = tjDecompressHeader2(handleDecompress, (unsigned char*) output, size, &w, &h, &subsamp);
 				}
 				catch(std::exception& _e){
-					cout << "BULLSHIT HAPPENS!" << endl;;
+					// todo: handle error
 				}
 				//cout << subsamp << endl;
 				if (ok != 0)

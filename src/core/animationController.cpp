@@ -825,6 +825,7 @@ void animationController::newConfiguration(){
 	unloadAllLayers();
 	unbindAllShapes();
 	scene.unloadShapes();
+	loadedConfiguration = "";
 	
 	// create first FBO
 	layers.emplace_back(
@@ -837,6 +838,8 @@ void animationController::newConfiguration(){
 		
 	// setup it's effects
 	layers.back().second.clear();
+	
+	
 }
 
 karmaModule* animationController::tryLoadModule(const string &_moduleType){

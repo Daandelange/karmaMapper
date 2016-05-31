@@ -52,6 +52,7 @@
 
 // - - - - - - - -
 // SAVE & LOAD...
+#define KM_DIRECTORY_SEPARATOR "/"
 // Shapes
 #define KM_SCENE_SAVE_FILE "saveFiles/karmaMapperSceneSettings.xml"
 #define KM_SCENE_SAVE_PATH "saveFiles/scenes/"
