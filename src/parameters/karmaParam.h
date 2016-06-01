@@ -23,7 +23,9 @@ public:
 	
 	virtual ~karmaHasUID(){
 		// rm name from available names
-		allUIDs.erase(this);
+		if(allUIDs.find(this)!=allUIDs.end()){
+			allUIDs.erase(this);
+		}
 	}
 	
 	string getUID(){

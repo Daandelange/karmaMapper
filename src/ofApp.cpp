@@ -18,10 +18,9 @@ void ofApp::setup(){
 	
 	// drawing environment
 	ofEnableAlphaBlending();
-	ofSetVerticalSync(true);
+	//ofSetVerticalSync(true);
 	ofEnableAntiAliasing();
 	ofEnableSmoothing();
-	ofSetVerticalSync(true);
 	
 	// setup scene
 	//scene.loadLastUsedScene();

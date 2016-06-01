@@ -45,7 +45,7 @@ public:
 	bool randomizePresets();
 	
 	virtual void tempoEventListener(mirTempoEventArgs &_args);
-	
+    void liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args);
 	
 protected:
 	bool bVariateInSeason;

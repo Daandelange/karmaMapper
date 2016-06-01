@@ -6,6 +6,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>5</groupID>
+        <shapeName>Canvas_1500_1200</shapeName>
         <vectors>
             <vector>
                 <X>-750.000000000</X>
@@ -32,6 +33,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win3_1</shapeName>
         <vectors>
             <vector>
                 <X>54.000000000</X>
@@ -58,6 +60,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win3_2</shapeName>
         <vectors>
             <vector>
                 <X>59.000000000</X>
@@ -84,6 +87,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win3_3</shapeName>
         <vectors>
             <vector>
                 <X>60.000000000</X>
@@ -110,6 +114,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win3_4</shapeName>
         <vectors>
             <vector>
                 <X>60.000000000</X>
@@ -136,6 +141,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win2_4</shapeName>
         <vectors>
             <vector>
                 <X>68.000000000</X>
@@ -162,6 +168,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col3_1</shapeName>
         <vectors>
             <vector>
                 <X>-15.000000000</X>
@@ -193,11 +200,11 @@
             </vector>
             <vector>
                 <X>21.000000000</X>
-                <Y>151.000000000</Y>
+                <Y>156.000000000</Y>
             </vector>
             <vector>
-                <X>-28.000000000</X>
-                <Y>153.000000000</Y>
+                <X>-26.000000000</X>
+                <Y>157.000000000</Y>
             </vector>
             <vector>
                 <X>-28.000000000</X>
@@ -212,10 +219,11 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col3_2</shapeName>
         <vectors>
             <vector>
-                <X>24.000000000</X>
-                <Y>-119.000000000</Y>
+                <X>26.000000000</X>
+                <Y>-117.000000000</Y>
             </vector>
             <vector>
                 <X>18.000000000</X>
@@ -250,8 +258,8 @@
                 <Y>-91.000000000</Y>
             </vector>
             <vector>
-                <X>-28.000000000</X>
-                <Y>-116.000000000</Y>
+                <X>-25.000000000</X>
+                <Y>-115.000000000</Y>
             </vector>
         </vectors>
     </shape>
@@ -262,6 +270,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col3_3</shapeName>
         <vectors>
             <vector>
                 <X>-15.000000000</X>
@@ -312,6 +321,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col2_1</shapeName>
         <vectors>
             <vector>
                 <X>22.000000000</X>
@@ -338,6 +348,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col3_4</shapeName>
         <vectors>
             <vector>
                 <X>25.000000000</X>
@@ -376,8 +387,8 @@
                 <Y>-94.000000000</Y>
             </vector>
             <vector>
-                <X>-22.000000000</X>
-                <Y>-124.000000000</Y>
+                <X>-27.000000000</X>
+                <Y>-122.000000000</Y>
             </vector>
         </vectors>
     </shape>
@@ -388,6 +399,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col2_4</shapeName>
         <vectors>
             <vector>
                 <X>18.000000000</X>
@@ -414,6 +426,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>2</groupID>
+        <shapeName>Niche3_1</shapeName>
         <vectors>
             <vector>
                 <X>19.000000000</X>
@@ -440,6 +453,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>2</groupID>
+        <shapeName>Niche3_2</shapeName>
         <vectors>
             <vector>
                 <X>24.000000000</X>
@@ -466,6 +480,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>1</groupID>
+        <shapeName>Niche2_1</shapeName>
         <vectors>
             <vector>
                 <X>27.000000000</X>
@@ -492,6 +507,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>1</groupID>
+        <shapeName>Niche2_2</shapeName>
         <vectors>
             <vector>
                 <X>24.000000000</X>
@@ -518,6 +534,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col2_2</shapeName>
         <vectors>
             <vector>
                 <X>-19.000000000</X>
@@ -544,6 +561,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col2_3</shapeName>
         <vectors>
             <vector>
                 <X>-21.000000000</X>
@@ -570,6 +588,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win2_1</shapeName>
         <vectors>
             <vector>
                 <X>-65.000000000</X>
@@ -596,6 +615,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win2_2</shapeName>
         <vectors>
             <vector>
                 <X>-60.000000000</X>
@@ -622,6 +642,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win2_3</shapeName>
         <vectors>
             <vector>
                 <X>-59.000000000</X>
@@ -648,6 +669,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win3_5</shapeName>
         <vectors>
             <vector>
                 <X>-59.000000000</X>
@@ -674,6 +696,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win2_5</shapeName>
         <vectors>
             <vector>
                 <X>-60.000000000</X>
@@ -700,6 +723,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col3_5</shapeName>
         <vectors>
             <vector>
                 <X>-16.000000000</X>
@@ -750,6 +774,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col2_5</shapeName>
         <vectors>
             <vector>
                 <X>-21.000000000</X>
@@ -776,6 +801,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col2_6</shapeName>
         <vectors>
             <vector>
                 <X>-24.000000000</X>
@@ -802,6 +828,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win1_1</shapeName>
         <vectors>
             <vector>
                 <X>-66.000000000</X>
@@ -828,6 +855,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win1_2</shapeName>
         <vectors>
             <vector>
                 <X>-60.000000000</X>
@@ -854,6 +882,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win1_3</shapeName>
         <vectors>
             <vector>
                 <X>-59.000000000</X>
@@ -880,6 +909,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>3</groupID>
+        <shapeName>Win1_4</shapeName>
         <vectors>
             <vector>
                 <X>-57.000000000</X>
@@ -906,6 +936,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>4</groupID>
+        <shapeName>Door</shapeName>
         <vectors>
             <vector>
                 <X>-68.000000000</X>
@@ -932,6 +963,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col1_1</shapeName>
         <vectors>
             <vector>
                 <X>-16.000000000</X>
@@ -958,6 +990,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col1_2</shapeName>
         <vectors>
             <vector>
                 <X>-18.000000000</X>
@@ -984,6 +1017,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col3_6</shapeName>
         <vectors>
             <vector>
                 <X>-16.000000000</X>
@@ -1010,6 +1044,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col1_3</shapeName>
         <vectors>
             <vector>
                 <X>-22.000000000</X>
@@ -1036,6 +1071,7 @@
         </position>
         <shapeType>vertexShape</shapeType>
         <groupID>0</groupID>
+        <shapeName>Col1_4</shapeName>
         <vectors>
             <vector>
                 <X>-15.000000000</X>
@@ -1052,6 +1088,153 @@
             <vector>
                 <X>-19.000000000</X>
                 <Y>-124.000000000</Y>
+            </vector>
+        </vectors>
+    </shape>
+    <shape>
+        <position>
+            <X>744.000000000</X>
+            <Y>563.000000000</Y>
+        </position>
+        <shapeType>vertexShape</shapeType>
+        <groupID>5</groupID>
+        <shapeName>VendomeMask</shapeName>
+        <vectors>
+            <vector>
+                <X>-689.000000000</X>
+                <Y>-492.000000000</Y>
+            </vector>
+            <vector>
+                <X>-669.000000000</X>
+                <Y>-478.000000000</Y>
+            </vector>
+            <vector>
+                <X>-672.000000000</X>
+                <Y>-221.000000000</Y>
+            </vector>
+            <vector>
+                <X>-714.000000000</X>
+                <Y>-221.000000000</Y>
+            </vector>
+            <vector>
+                <X>-715.000000000</X>
+                <Y>-204.000000000</Y>
+            </vector>
+            <vector>
+                <X>-683.000000000</X>
+                <Y>-186.000000000</Y>
+            </vector>
+            <vector>
+                <X>-686.000000000</X>
+                <Y>-167.000000000</Y>
+            </vector>
+            <vector>
+                <X>-675.000000000</X>
+                <Y>-137.000000000</Y>
+            </vector>
+            <vector>
+                <X>-678.000000000</X>
+                <Y>121.000000000</Y>
+            </vector>
+            <vector>
+                <X>-680.000000000</X>
+                <Y>200.000000000</Y>
+            </vector>
+            <vector>
+                <X>-730.000000000</X>
+                <Y>206.000000000</Y>
+            </vector>
+            <vector>
+                <X>-726.000000000</X>
+                <Y>224.000000000</Y>
+            </vector>
+            <vector>
+                <X>-698.000000000</X>
+                <Y>225.000000000</Y>
+            </vector>
+            <vector>
+                <X>-698.000000000</X>
+                <Y>259.000000000</Y>
+            </vector>
+            <vector>
+                <X>-687.000000000</X>
+                <Y>284.000000000</Y>
+            </vector>
+            <vector>
+                <X>-689.000000000</X>
+                <Y>516.000000000</Y>
+            </vector>
+            <vector>
+                <X>49.000000000</X>
+                <Y>511.000000000</Y>
+            </vector>
+            <vector>
+                <X>712.000000000</X>
+                <Y>507.000000000</Y>
+            </vector>
+            <vector>
+                <X>708.000000000</X>
+                <Y>289.000000000</Y>
+            </vector>
+            <vector>
+                <X>718.000000000</X>
+                <Y>276.000000000</Y>
+            </vector>
+            <vector>
+                <X>716.000000000</X>
+                <Y>231.000000000</Y>
+            </vector>
+            <vector>
+                <X>743.000000000</X>
+                <Y>202.000000000</Y>
+            </vector>
+            <vector>
+                <X>697.000000000</X>
+                <Y>197.000000000</Y>
+            </vector>
+            <vector>
+                <X>696.000000000</X>
+                <Y>113.000000000</Y>
+            </vector>
+            <vector>
+                <X>694.000000000</X>
+                <Y>-147.000000000</Y>
+            </vector>
+            <vector>
+                <X>703.000000000</X>
+                <Y>-195.000000000</Y>
+            </vector>
+            <vector>
+                <X>728.000000000</X>
+                <Y>-233.000000000</Y>
+            </vector>
+            <vector>
+                <X>691.000000000</X>
+                <Y>-236.000000000</Y>
+            </vector>
+            <vector>
+                <X>690.000000000</X>
+                <Y>-274.000000000</Y>
+            </vector>
+            <vector>
+                <X>685.000000000</X>
+                <Y>-289.000000000</Y>
+            </vector>
+            <vector>
+                <X>682.000000000</X>
+                <Y>-505.000000000</Y>
+            </vector>
+            <vector>
+                <X>702.000000000</X>
+                <Y>-520.000000000</Y>
+            </vector>
+            <vector>
+                <X>707.000000000</X>
+                <Y>-532.000000000</Y>
+            </vector>
+            <vector>
+                <X>-708.000000000</X>
+                <Y>-520.000000000</Y>
             </vector>
         </vectors>
     </shape>

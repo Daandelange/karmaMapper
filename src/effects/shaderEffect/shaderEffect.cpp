@@ -157,11 +157,11 @@ bool shaderEffect::render(karmaFboLayer& renderLayer, const animationParams &par
 		
 		shader.setUniform1i("kmIsPingPongPass", 1);
 		if(bUseCustomFbo){
-			shader.setUniformTexture("pingPongTexture", fbo.getTexture(),5);
+			shader.setUniformTexture("pingPongTexture", fbo.getTexture(),fbo.getTexture().getTextureData().textureID);
 		}
 		else {
 			// note: between begin() and end() SRC is DST
-			shader.setUniformTexture("pingPongTexture", renderLayer.getDstTexture(),5);
+			shader.setUniformTexture("pingPongTexture", renderLayer.getDstTexture(),renderLayer.getDstTexture().getTextureData().textureID );
 		}
 		
 		ofPushStyle();

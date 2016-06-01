@@ -16,19 +16,25 @@
 
 videoShader::videoShader() : bUseThreadedFileDecoding(false, "bUseThreadedFileDecoding"), videoMedia(karmaVideoMediaInformationStruct(), "videoShaderMedia") {
 	videoShader::reset();
+	
+	//threadedPlayer.setPlayer(ofPtr<ofQTKitPlayer>(new ofQTKitPlayer()));
 }
 
 videoShader::~videoShader(){
 	
+	player.stop();
+	player.closeMovie();
+	//player.ofBaseVideo::close();
+	
 	newImagesFromThread.close();
 	
 	//stopThread();
-	waitForThread(true);
+	if(isThreadRunning()){
+		waitForThread(true);
+	}
 	
-	lock();
-	player.stop();
-	player.closeMovie();
-	unlock();
+	//threadedPlayer.stop();
+	//threadedPlayer.closeMovie();
 	
 //	ofRemoveListener(dir.events.serverAnnounced, this, &videoShader::syphonServerAnnounced);
 //	// not yet implemented
@@ -68,21 +74,14 @@ bool videoShader::render(karmaFboLayer& renderLayer, const animationParams &para
 //		textures[0].draw(0,0);
 //	}
 //	renderLayer.end();
-//	if(videoMode==VIDEO_MODE_FILE){
-//		// tmp
-//		if (lock()) {
-//			if ( player.isLoaded() && textures.size()>0 ){
-//				textures[0].draw(0,0);
-//			}
-//			unlock();
-//		}
-//	}
 	
 	return true;
 }
 
 // updates shape data
 void videoShader::update(karmaFboLayer& renderLayer, const animationParams& params){
+	
+	if(!bEnabled) return;
 	
 	// do basic Effect function
 	shaderEffect::update( renderLayer, params );
@@ -93,6 +92,7 @@ void videoShader::update(karmaFboLayer& renderLayer, const animationParams& para
 			// sync threadedVars
 			bUseThreadedFileDecoding.syncFromMainThread();
 			if( videoMedia.syncFromMainThread() ){
+				// received a change from thread
 				
 			}
 			
@@ -208,11 +208,11 @@ void videoShader::reset(){
 	bUseThreadedFileDecoding = true;
 	
 	videoMedia = karmaVideoMediaInformationStruct("");
+	videoMedia.triggerUpdate();
 	
-	if(lock()){
-		player.closeMovie();
-		unlock();
-	}
+	player.stop();
+	player.closeMovie();
+	
 	loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
 	
 	activeCamera = "";
@@ -360,7 +360,7 @@ bool videoShader::printCustomEffectGui(){
 				loadVideoFile( videoMedia );
 			}
 			bool tmpThreading = bUseThreadedFileDecoding;
-			if(ImGui::Checkbox("Use threaded video decoding", &tmpThreading)) {
+			if(ImGui::Checkbox("Use threaded video decoding (experimental)", &tmpThreading)) {
 				setUseThread(tmpThreading);
 			}
 			
@@ -687,7 +687,7 @@ void videoShader::ImguiShowTextureMode(){
 // - - - - - - -
 
 // writes the effect data to XML. xml's cursor is already pushed into the right <effect> tag.
-bool videoShader::saveToXML(ofxXmlSettings& xml) const{
+bool videoShader::saveToXML(ofxXmlSettings& xml) const {
 	bool ret = shaderEffect::saveToXML(xml);
 	
 	xml.addValue("videoMode", static_cast<int>(videoMode) );
@@ -1074,23 +1074,22 @@ bool videoShader::connectToSyphonServer( const ofxSyphonServerDescription& _addr
 #endif
 
 void videoShader::setUseThread(const bool& _useThread){
+	
+	bUseThreadedFileDecoding = _useThread;
+	
 	if (videoMode == VIDEO_MODE_FILE) {
-		if (lock()) {
-			bUseThreadedFileDecoding = _useThread;
-			unlock();
-			if (!_useThread) {
-				if(isThreadRunning()){
-					waitForThread(true);
-				}
+		
+		if (!_useThread) {
+			if(isThreadRunning()){
+				waitForThread(true);
 			}
-			else if (!isThreadRunning()) {
-				startThread();
-				
-			}
+		}
+		else if (!isThreadRunning()) {
+			startThread();
 		}
 	}
 	else {
-		if(!bUseThreadedFileDecoding && isThreadRunning()){
+		if(!_useThread && isThreadRunning()){
 			waitForThread(true);
 			
 			if(videoMedia->playBackSettings.isPlaying){
@@ -1101,15 +1100,14 @@ void videoShader::setUseThread(const bool& _useThread){
 				player.stop();
 			}
 		}
-		else if(bUseThreadedFileDecoding && !isThreadRunning()){
+		else if(_useThread && !isThreadRunning()){
 			player.stop();
-			startThread();
+			//startThread();
 		}
-		bUseThreadedFileDecoding = _useThread;
 	}
 }
 
-void videoShader::setVideoFilePlaybackInformation(ofVideoPlayer &_player, karmaVideoPlaybackSettingsStruct _settings) {
+void videoShader::setVideoFilePlaybackInformation(ofVideoPlayer& _player, karmaVideoPlaybackSettingsStruct _settings) {
 	
 	_player.setVolume(_settings.volume);
 	_player.setSpeed(_settings.playbackSpeed);
@@ -1120,6 +1118,7 @@ void videoShader::setVideoFilePlaybackInformation(ofVideoPlayer &_player, karmaV
 		if(!_player.isPlaying()){
 			_player.play();
 		}
+		
 		if(_settings.isPaused){
 			if(!_player.isPaused()){
 				_player.setPaused(true);
@@ -1135,7 +1134,7 @@ void videoShader::setVideoFilePlaybackInformation(ofVideoPlayer &_player, karmaV
 		if(_player.isPlaying()){
 			_player.stop();
 		}
-		_player.setPaused(false);
+		
 	}
 }
 
@@ -1222,7 +1221,7 @@ void videoShader::threadedFunction(){
 		// sync playback variables
 		if( bUseThreadedFileDecoding.syncFromThread() ){
 			
-			if(!bUseThreadedFileDecoding){
+			if(!bUseThreadedFileDecoding.getFromThread()){
 				threadedPlayer.close();
 				// stop thread execution
 				break;
@@ -1234,10 +1233,11 @@ void videoShader::threadedFunction(){
 		
 		if( videoMedia.syncFromThread() ){
 			// reload movie ?
-			if( threadedPlayer.getMoviePath().compare(videoMedia->getFullPath() )!=0 ){
+			if( threadedPlayer.getMoviePath().compare(videoMedia.getFromThread().getFullPath() )!=0 ){
 				threadedPlayer.setUseTexture(false);
 				
-				if( threadedPlayer.load( videoMedia->getFullPath() ) ){
+				threadedPlayer.closeMovie();
+				if( threadedPlayer.load( videoMedia.getFromThread().getFullPath() ) ){
 					
 					videoMedia->mediaDimensions[0] = threadedPlayer.getWidth();
 					videoMedia->mediaDimensions[1] = threadedPlayer.getHeight();
@@ -1246,13 +1246,23 @@ void videoShader::threadedFunction(){
 			}
 			
 			// resync some other settings
-//			threadedPlayer.setSpeed( videoMedia->playBackSettings.playbackSpeed );
-//			threadedPlayer.setVolume( videoMedia->playBackSettings.volume );
-//			if(videoMedia->playBackSettings.isPlaying && !threadedPlayer.isPlaying()){
-//				threadedPlayer.play();
+			//threadedPlayer.setSpeed( videoMedia->playBackSettings.playbackSpeed );
+			//threadedPlayer.setVolume( videoMedia->playBackSettings.volume );
+			
+//			if(videoMedia->playBackSettings.isPlaying){
+//				threadedPlayer.setPosition( videoMedia->playBackSettings.seekerPosition );
+//				
+//				if(!threadedPlayer.isPlaying()){
+//					threadedPlayer.play();
+//				}
+//				
+//				threadedPlayer.setPaused( videoMedia->playBackSettings.volume );
 //			}
-//			threadedPlayer.setPaused( videoMedia->playBackSettings.volume );
-//			threadedPlayer.setPosition( videoMedia->playBackSettings.seekerPosition );
+//			else if(!videoMedia->playBackSettings.isPlaying) {
+//				threadedPlayer.stop();
+//				//threadedPlayer.setPosition( videoMedia->playBackSettings.seekerPosition );
+//			}
+			
 			
 			// resync playback information
 			setVideoFilePlaybackInformation(threadedPlayer, videoMedia->playBackSettings);
@@ -1261,7 +1271,7 @@ void videoShader::threadedFunction(){
 		
 		if( bUseThreadedFileDecoding ){
 					
-			if (threadedPlayer.isLoaded() ){
+			if (threadedPlayer.isLoaded() && threadedPlayer.isInitialized() ){
 				
 				threadedPlayer.update();
 				videoMedia->playBackSettings.seekerPosition = threadedPlayer.getPosition();
@@ -1276,11 +1286,16 @@ void videoShader::threadedFunction(){
 				}
 			}
 			unlock();
-			sleep(16); // limits CPU usage, todo: could be revised #dirty
+			//sleep(16); // limits CPU usage, todo: could be revised #dirty
+		}
+		
+		else {
+			break;
 		}
 	}
 	//stopThread();
-	threadedPlayer.close();
+	threadedPlayer.stop();
+	threadedPlayer.closeMovie();
 }
 
 // register effect type
