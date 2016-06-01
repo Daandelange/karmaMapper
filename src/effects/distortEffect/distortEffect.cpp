@@ -25,6 +25,7 @@ distortEffect::distortEffect(){
 
 distortEffect::~distortEffect(){
 	ofRemoveListener(mirReceiver::mirTempoEvent, this, &distortEffect::tempoEventListener);
+    ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &distortEffect::liveGrabberNoteEventListener);
 }
 
 // - - - - - - -
@@ -149,6 +150,9 @@ void distortEffect::reset(){
 	
 	ofRemoveListener(mirReceiver::mirTempoEvent, this, &distortEffect::tempoEventListener);
 	ofAddListener(mirReceiver::mirTempoEvent, this, &distortEffect::tempoEventListener);
+    
+    ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &distortEffect::liveGrabberNoteEventListener);
+    ofAddListener(liveGrabberOSC::liveGrabberNoteEvent, this, &distortEffect::liveGrabberNoteEventListener);
 }
 
 // - - - - - - -
@@ -171,7 +175,6 @@ bool distortEffect::printCustomEffectGui(){
 			ImGui::DragInt("BPM time mesure", &BPMMetronom, 1);
 			//BPMCurrentMagnitude
 			ImGui::DragFloat("BPM Magnitude", &BPMMagnitude, 0.05);
-			
 		}
 		
 		ImGui::SliderFloat("BPM Cur Magnitude", &BPMCurrentMagnitude, 0.f, BPMMagnitude);
@@ -229,9 +232,10 @@ bool distortEffect::randomizePresets(){
 // note: threaded function
 void distortEffect::tempoEventListener(mirTempoEventArgs &_args){
 	
-	ofScopedLock( effectMutex );
+	
 	if(!_args.isTempoBis){
-	//if(BPMCurrentMagnitude < BPMMetronom*-1.f){
+        ofScopedLock( effectMutex );
+        //if(BPMCurrentMagnitude < BPMMetronom*-1.f){
 		if(mirReceiver::getInstance().isEnabled()){
 			BPMCurrentMagnitude = BPMMagnitude*mirReceiver::mirCache.zcr;
 		}
@@ -241,6 +245,26 @@ void distortEffect::tempoEventListener(mirTempoEventArgs &_args){
 	}
 	//}
 	//else BPMCurrentMagnitude -= 1.f;
+}
+
+void distortEffect::liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args){
+    
+    if(_args.key.length()<2){
+        return;
+    }
+    
+    ofScopedLock lock(effectMutex);
+    
+    if( bDisableMeSoon) return;
+    
+    // int numericKey = ofToInt(_args.key.substr(1));
+    if(mirReceiver::getInstance().isEnabled()){
+        BPMCurrentMagnitude = BPMMagnitude*mirReceiver::mirCache.zcr;
+    }
+    else {
+        BPMCurrentMagnitude = BPMMagnitude;
+    }
+
 }
 
 // register effect type
