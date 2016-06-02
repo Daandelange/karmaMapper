@@ -919,7 +919,6 @@
 		8557F8CD1C9C5CC30066BE7D /* imgui_demo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_demo.cpp; sourceTree = "<group>"; };
 		8557F8CE1C9C5CC30066BE7D /* imgui_draw.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = imgui_draw.cpp; sourceTree = "<group>"; };
 		8557F8CF1C9C5CC30066BE7D /* imgui_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = imgui_internal.h; sourceTree = "<group>"; };
-		8557F8D01C9C5CC30066BE7D /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		8557F8D21C9C5CC30066BE7D /* stb_rect_pack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_rect_pack.h; sourceTree = "<group>"; };
 		8557F8D31C9C5CC30066BE7D /* stb_textedit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_textedit.h; sourceTree = "<group>"; };
 		8557F8D41C9C5CC30066BE7D /* stb_truetype.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_truetype.h; sourceTree = "<group>"; };
@@ -2576,7 +2575,6 @@
 				8557F8CD1C9C5CC30066BE7D /* imgui_demo.cpp */,
 				8557F8CE1C9C5CC30066BE7D /* imgui_draw.cpp */,
 				8557F8CF1C9C5CC30066BE7D /* imgui_internal.h */,
-				8557F8D01C9C5CC30066BE7D /* LICENSE */,
 				8557F8D21C9C5CC30066BE7D /* stb_rect_pack.h */,
 				8557F8D31C9C5CC30066BE7D /* stb_textedit.h */,
 				8557F8D41C9C5CC30066BE7D /* stb_truetype.h */,

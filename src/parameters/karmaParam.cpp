@@ -8,7 +8,7 @@
 
 #include "karmaParam.h"
 
-std::map<karmaHasUID*, std::string> karmaHasUID::allUIDs = {};
+std::map<karmaHasUID*, std::string> karmaHasUID::allUIDs({});
 
 //template <typename T>
 //std::thread::id karmaThreadedParam<T>::main_thread_id = std::this_thread::get_id();

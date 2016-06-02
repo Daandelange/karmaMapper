@@ -58,6 +58,7 @@ echo "Please read ofxTurboJpeg's installation notes to install libTurboJpeg."
 ${PREFIX}armadillu/ofxTurboJpeg.git
 
 ${PREFIX}kylemcdonald/ofxFaceTracker.git
+${PREFIX}kylemcdonald/ofxCv.git
 
 ${PREFIX}bakercp/ofxSerial.git
 # dependency of ofxSerial
