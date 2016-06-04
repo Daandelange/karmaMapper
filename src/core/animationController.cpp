@@ -1123,7 +1123,7 @@ void animationController::draw(ofEventArgs& event){
                 }
             }
 			
-			static bool useVsync;
+			static bool useVsync = false;
 			if( ImGui::MenuItem("Enable v-sync", NULL, &useVsync) ) {
 				ofSetVerticalSync(useVsync);
 			}
@@ -1182,19 +1182,28 @@ void animationController::draw(ofEventArgs& event){
 			
 			ImGui::MenuItem("", "", false, false);
 			
+			static bool opened = false;
 			if (ImGui::BeginMenu("Load Scene...")){
+				
+				static ofDirectory dir;
+				
+				// reload content ?
+				if(!opened){
+					opened = true;
+					dir.listDir( ofToDataPath( KM_SCENE_SAVE_PATH ) );
+					dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
+				}
+				
 				if (ImGui::MenuItem("File browser...", ofToString(KM_CTRL_KEY_NAME).append( " + O" ).c_str() )){
 					showShapeLoadMenu();
 				}
 				ImGui::Separator();
 				
-				ofDirectory dir;
-				dir.listDir( ofToDataPath( KM_SCENE_SAVE_PATH ) );
-				dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
 				if( dir.size() <= 0 ){
 					ImGui::Text("No files in %s", ofToDataPath( KM_SCENE_SAVE_PATH).c_str());
 					ImGui::Separator();
-				} else {
+				}
+				else {
 					for (int i = 0; i < dir.size(); i++){
 						if( ImGui::MenuItem( dir.getName(i).c_str(), "", (bool)(scene.getLoadedScene() == dir.getPath(i)) ) ){
 							unbindAllShapes();
@@ -1209,6 +1218,9 @@ void animationController::draw(ofEventArgs& event){
 					}
 				}
 				ImGui::EndMenu();
+			}
+			else {
+				opened = false;
 			}
 			ImGui::EndMenu();
 		}

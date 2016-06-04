@@ -227,7 +227,7 @@ bool fboRecorder::startRecording(string _fileName, int _w, int _h){
 				file = "videoRecorder"+ofGetTimestampString()+".mov";
 			}
 			
-			ofxVideoRecorder::setup( ofToDataPath( file ), fbo.getWidth(), fbo.getHeight(), KM_FBOREC_DEFAULT_FPS);
+			ofxVideoRecorder::setup( ofToDataPath( file ), fbo.getWidth(), fbo.getHeight(), KM_FBOREC_DEFAULT_FPS, 0, 0, false, (bool) KARMAMAPPER_DEBUG );
 			ofxVideoRecorder::start();
 			
 			bRecording = ofxVideoRecorder::isRecording();
@@ -372,7 +372,7 @@ bool fboRecorder::endFrame(bool _showBuffer){
 		case VIDEOREC_MODE_FILE_H264 :
 		case VIDEOREC_MODE_FILE_PNG : {
 			ofPixels pix;
-			pix.allocate(fbo.getWidth(),fbo.getHeight(), ofGetImageTypeFromGLType(GL_RGBA));
+			pix.allocate(fbo.getWidth(),fbo.getHeight(), ofGetImageTypeFromGLType(fbo.getTexture().getTextureData().glInternalFormat ));
 			
 			if(useGrabScreen){
 				tmpTex.loadScreenData(0, 0, fbo.getWidth(), fbo.getHeight());
@@ -386,6 +386,8 @@ bool fboRecorder::endFrame(bool _showBuffer){
 				//fbo.readToPixels(pix);
 			}
 			ofxVideoRecorder::addFrame(pix);
+			
+			ofSaveImage(pix, "testImg.png");
 			
 			break;
 		}

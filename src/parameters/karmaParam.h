@@ -9,6 +9,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxImGui.h"
+#include <type_traits> // needed for std::is_same
 
 class karmaHasUID {
 
@@ -145,6 +147,21 @@ public:
 	T* operator->(){
 		return &get();
 	}
+	
+	virtual bool drawToImGui(){
+		
+//		if( std::is_same<T, int>::value ){
+			ostringstream out;
+			out << &value;
+			string tmpStr = out.str();
+			ImGui::LabelText( getUID().c_str() , "%s", tmpStr.c_str() );
+			
+			//ImGui::DragInt( getUID(), &value);
+			return true;
+//		}
+		
+		return false;
+	}
 
 protected:
 	T value;
@@ -160,9 +177,9 @@ template <typename T>
 class karmaThreadedParam : public karmaParam<T> {
 
 public:
-	karmaThreadedParam(T _value) : karmaParam<T>(_value), threadedValue(_value) {
-		
-	}
+//	karmaThreadedParam(T _value) : karmaParam<T>(_value), threadedValue(_value) {
+//		
+//	}
 	
 	karmaThreadedParam(T _value, string _name) : karmaParam<T>(_value, _name), threadedValue(_value) {
 		
@@ -275,6 +292,64 @@ protected:
 	ofThreadChannel<T> paramToThread;
 	ofThreadChannel<T> paramFromThread;
 };
-
 template <typename T>
 std::thread::id karmaThreadedParam<T>::main_thread_id = std::this_thread::get_id();
+
+
+// Int param alias
+//typedef karmaParam<int> karmaIntParam;
+//karmaParam::karmaParam
+
+class karmaIntParam : public karmaParam<int> {
+
+public:
+	
+	//template <typename T>
+	karmaIntParam(int _value, string _name) : karmaParam<int>(_value, _name) {
+		
+	}
+	
+	virtual ~karmaIntParam(){
+		
+	}
+	
+	virtual bool drawToImGui(){
+		ImGui::DragInt( getUID().c_str(), &value);
+	}
+};
+
+// Enum param implementation
+//class karmaEnumeration {
+//public:
+////	enum {
+////	
+////	};
+//	
+//	virtual int getSize() = 0;
+//	static enum  { } enumeration;// = 0;
+//	
+//private:
+//	
+//	
+//};
+
+class karmaEnumParam : public karmaIntParam {
+
+public:
+	
+	//template <typename T>
+	karmaEnumParam(int _value, string _name) : karmaIntParam(_value, _name) {
+		
+	}
+	
+	virtual ~karmaEnumParam(){
+		
+	}
+	
+	// convert int to float
+	//operator float() const { return (float)get(); }
+	
+	virtual bool drawToImGui(){
+		ImGui::DragInt( getUID().c_str(), &value);
+	}
+};

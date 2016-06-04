@@ -284,9 +284,6 @@ void lossyImageEffect::threadedFunction(){
 // - - - - - - -
 void lossyImageEffect::afterDraw(karmaFboLayerDrawEventArgs& _args ){
 	
-	// tmp tmp tmp
-	//return;
-	
 	if(!isReady()){
 		return;
 	}

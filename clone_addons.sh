@@ -54,10 +54,14 @@ ${PREFIX}tobiasebsen/ofxFps.git
 
 ${PREFIX}obviousjim/ofxDelaunay.git
 
-echo "Please read ofxTurboJpeg's installation notes to install libTurboJpeg."
 ${PREFIX}armadillu/ofxTurboJpeg.git
+echo "IMPORTANT WARNING: To link with ofxTurboJpeg, you have to install turboJpeg. See ofxTurboJpeg's readme for more details."
 
 ${PREFIX}kylemcdonald/ofxFaceTracker.git
+# copy needed files to karmaMapper
+echo "IMPORTANT WARNING: Copied ofxFaceTracker model data files. See the addon's license for appropriate usage."
+cp -R ./ofxFaceTracker/libs/FaceTracker/model/ ../apps/karmaApps/karmaMapper/bin/data/model/
+# face tracker dependency
 ${PREFIX}kylemcdonald/ofxCv.git
 
 ${PREFIX}bakercp/ofxSerial.git

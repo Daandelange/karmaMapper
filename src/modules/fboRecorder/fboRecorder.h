@@ -14,6 +14,7 @@
 #include "karmaModule.h"
 #include "animationController.h"
 #include "animationControllerEvents.h"
+#include "karmaParam.h"
 
 #ifdef KM_ENABLE_SYPHON
 	#include "ofxSyphon.h"
