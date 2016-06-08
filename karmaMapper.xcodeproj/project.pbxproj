@@ -244,6 +244,8 @@
 		858D334E1BEBF220003E49C7 /* Syphon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 858D333E1BEBF220003E49C7 /* Syphon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		85999DD41C537F6600786707 /* fullScreenShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85999DD21C537F6600786707 /* fullScreenShape.cpp */; };
 		85999DD51C537F6600786707 /* fullScreenShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85999DD21C537F6600786707 /* fullScreenShape.cpp */; };
+		85A62DA71D03969D0026366F /* chladniRC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85A62DA31D03969D0026366F /* chladniRC.cpp */; };
+		85A62DA81D03969D0026366F /* chladniReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85A62DA51D03969D0026366F /* chladniReceiver.cpp */; };
 		85AC0C2F1CA4604800DD2962 /* liveGrabberOSC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AC0C2D1CA4604800DD2962 /* liveGrabberOSC.cpp */; };
 		85AD75D01CFCBE320077F59A /* animationParams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AD75CF1CFCBE320077F59A /* animationParams.cpp */; };
 		85AD75D31CFCCABC0077F59A /* karmaParam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85AD75D11CFCCABC0077F59A /* karmaParam.cpp */; };
@@ -946,6 +948,11 @@
 		859723401C8220760022625A /* karmaFboLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaFboLayer.h; path = core/karmaFboLayer.h; sourceTree = "<group>"; };
 		85999DD21C537F6600786707 /* fullScreenShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fullScreenShape.cpp; path = shapes/shapes/fullScreenShape.cpp; sourceTree = "<group>"; };
 		85999DD31C537F6600786707 /* fullScreenShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fullScreenShape.h; path = shapes/shapes/fullScreenShape.h; sourceTree = "<group>"; };
+		85A62DA21D03969D0026366F /* chladniEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chladniEvents.h; sourceTree = "<group>"; };
+		85A62DA31D03969D0026366F /* chladniRC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = chladniRC.cpp; sourceTree = "<group>"; };
+		85A62DA41D03969D0026366F /* chladniRC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chladniRC.h; sourceTree = "<group>"; };
+		85A62DA51D03969D0026366F /* chladniReceiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = chladniReceiver.cpp; sourceTree = "<group>"; };
+		85A62DA61D03969D0026366F /* chladniReceiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chladniReceiver.h; sourceTree = "<group>"; };
 		85AC0C2C1CA4604800DD2962 /* liveGrabberEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = liveGrabberEvents.h; sourceTree = "<group>"; };
 		85AC0C2D1CA4604800DD2962 /* liveGrabberOSC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = liveGrabberOSC.cpp; sourceTree = "<group>"; };
 		85AC0C2E1CA4604800DD2962 /* liveGrabberOSC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = liveGrabberOSC.h; sourceTree = "<group>"; };
@@ -2447,6 +2454,7 @@
 				85557B581C650A6C0091052C /* karmaModule.h */,
 				85557B4E1C64FDBB0091052C /* moduleFactory.cpp */,
 				85557B4F1C64FDBB0091052C /* moduleFactory.h */,
+				85A62DA11D03969D0026366F /* chladniOSC */,
 				85557B621C650D0B0091052C /* durationOSC */,
 				85557B681C650D0B0091052C /* mirOSC */,
 				85557B5A1C650BB10091052C /* fboRecorder */,
@@ -2680,6 +2688,18 @@
 				858D33411BEBF220003E49C7 /* SyphonNameboundClient.m */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		85A62DA11D03969D0026366F /* chladniOSC */ = {
+			isa = PBXGroup;
+			children = (
+				85A62DA21D03969D0026366F /* chladniEvents.h */,
+				85A62DA31D03969D0026366F /* chladniRC.cpp */,
+				85A62DA41D03969D0026366F /* chladniRC.h */,
+				85A62DA51D03969D0026366F /* chladniReceiver.cpp */,
+				85A62DA61D03969D0026366F /* chladniReceiver.h */,
+			);
+			path = chladniOSC;
 			sourceTree = "<group>";
 		};
 		85AC0C2B1CA4604800DD2962 /* liveGrabberOSC */ = {
@@ -3348,7 +3368,9 @@
 				85FED3AC1C8F1AD800038AA0 /* fboEraser.cpp in Sources */,
 				85557B6D1C650D0B0091052C /* durationReceiver.cpp in Sources */,
 				8553B4BF1CEA0CC2008D6F76 /* b2Rope.cpp in Sources */,
+				85A62DA81D03969D0026366F /* chladniReceiver.cpp in Sources */,
 				852389DE1CD1F276009F1153 /* ObjectFinder.cpp in Sources */,
+				85A62DA71D03969D0026366F /* chladniRC.cpp in Sources */,
 				8553B4941CEA0CC2008D6F76 /* b2EdgeShape.cpp in Sources */,
 				8574FEB01BC13BC20058E916 /* shapeFactory.cpp in Sources */,
 				8553B4931CEA0CC2008D6F76 /* b2CircleShape.cpp in Sources */,
