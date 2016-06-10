@@ -277,6 +277,13 @@ void videoShader::reset(){
 		// width: 640 - height: 480
 		UVCUsbPresets.push_back(preset);
 		
+		preset.name = "Caméra FaceTime HD (intégrée)"; // frenchies!!!
+		preset.vendorId = 0x5ac;
+		preset.productId = 0x850b;
+		preset.interfaceNum = 0x00;
+		// width: 640 - height: 480
+		UVCUsbPresets.push_back(preset);
+		
 		preset.name = "Logitech c910";
 		preset.vendorId = 0x046d;
 		preset.productId = 0x821;
