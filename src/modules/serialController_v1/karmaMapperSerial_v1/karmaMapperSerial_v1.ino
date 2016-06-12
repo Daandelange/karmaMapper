@@ -34,6 +34,12 @@ volatile byte flowMeter2PulseCount;
 //unsigned long totalMilliLitres;
 //unsigned long oldTime;
 
+// ElectroValves
+int EV1Pin = 4;
+int EV2Pin = 7;
+int EV3Pin = 8;
+int EV4Pin = 12;
+
 void setup(){
   
   // setup LEDs
@@ -70,11 +76,22 @@ void setup(){
   // setup serial communication
   serial.setPacketHandler(&onPacket);
   serial.begin(115200);
+
+  uint8_t tmp[42];
+  memcpy(tmp, "karmaMapper reporting for duty! (Online)\n", 42);
+  serial.send(tmp, 42);
+  // Make an array.
+//uint8_t myPacket[] { 255, 10 };
+
+
   //Serial.begin(115200);
 
-//  while (!serial) {
-//    ; // wait for serial port to connect. Needed for Leonardo only
-//  }
+#if ARDUINO >= 100
+    while(!Serial)
+      ;   // Leonardo bug
+#endif
+
+  //serial.send(myPacket, 2);
 }
 
 
@@ -92,11 +109,37 @@ void loop(){
 
   // LED Strips
   {
+    int ledStrip1IntensityTmp = ledStrip1Intensity;
+    int ledStrip2IntensityTmp = ledStrip2Intensity;
+    
     ledStrip1Intensity = analogRead(ledStrip1PotPin)/1023.0*255;
     ledStrip2Intensity = analogRead(ledStrip2PotPin)/1023.0*255;
 
     analogWrite(ledStrip1Pin, ledStrip1Intensity);
     analogWrite(ledStrip2Pin, ledStrip2Intensity);
+
+    // notify LED strip intensity changes over serial
+    if(ledStrip1Intensity != ledStrip1IntensityTmp){
+      String str=String("ledStripIntensity:");
+      str.concat(0);
+      str.concat('-');
+      str.concat(ledStrip1Intensity);
+      char charReadableSize[str.length()+1];
+      str.toCharArray(charReadableSize, str.length()+1);
+      serial.send( ((uint8_t*)charReadableSize), str.length()+1 );
+    }
+
+    // changed ?
+    //if(ledStrip2Intensity != ledStrip2IntensityTmp){
+      String str=String("ledStripIntensity:");
+      str.concat(1);
+      str.concat('-');
+      str.concat(ledStrip1Intensity);
+      str.concat('-');
+      char charReadableSize[str.length()];
+      str.toCharArray(charReadableSize, str.length());
+      serial.send( ((uint8_t*)charReadableSize), str.length() );
+    //}
   }
 
   // led stuff
@@ -179,8 +222,75 @@ void loop(){
   //delay(10);
 }
 
+#define arr_len( x )  ( sizeof( x ) / sizeof( *x ) )
+
+// Checks if a string matches an address pattern
+// returns -1 if not matching
+// returns position offset to value if matching
+int matchAddress(const uint8_t* buffer, size_t size, const uint8_t matchAddr[], size_t matchAddrSize ){
+
+  static uint8_t separatorChar = ':'; // addr:value
+  //int matchLength = sizeof(matchAddr)/sizeof(uint8_t);
+  //size_t matchLength = arr_len( matchAddr);
+
+//  String str( (char*) buffer );
+//  //str = str.substring(cursorPos+1);
+//  str.concat(" .vs. ");
+//  str.concat( ((char*)matchAddr) );
+//  str.concat(" - lastChar=");
+//  str += (char) buffer[size-1];
+//  str.concat(" - MASize=");
+//  str += matchAddrSize;
+//  str.concat(" - size=");
+//  str += size;
+//  str.concat('-');
+//  char value[str.length()];
+//  str.toCharArray(value, (int)sizeof(value));
+//  serial.send((uint8_t *)value, sizeof(value) );
+  
+  if( size >= matchAddrSize && (buffer[matchAddrSize]) == separatorChar){ // skips quickly if simple condition not met
+    int cursorPos = 0;
+    //serial.send((uint8_t *)"Entering while!", 16);
+    
+    while(cursorPos < matchAddrSize && cursorPos < size){
+      
+//      char myConcatenation[80];
+//      sprintf(myConcatenation,"%i = %c",cursorPos, (char) buffer[cursorPos]);
+//      serial.send((uint8_t *) myConcatenation, 80);
+      
+      // end search ? ?
+      if(cursorPos==matchAddrSize){
+        //serial.send((uint8_t *)"Breaking found!", 15);
+        break;
+      }
+      else if(buffer[cursorPos]==matchAddr[cursorPos]){
+        cursorPos++;
+      }
+      else {
+        // not matching
+        //serial.send((uint8_t *)"Breaking here!", 14);
+        break;
+      }
+      
+    }
+
+    // match address match? (with or without value)
+    if(cursorPos==matchAddrSize && (buffer[cursorPos]==separatorChar || (matchAddrSize-1)==size ) ){
+      //serial.send((uint8_t *)("Result: "), 8);
+      return cursorPos;
+    }
+    else {
+      //serial.send((uint8_t *)("Failed: "), 8);
+      return -1;
+    }
+  }
+
+  return -1;
+}
+
 // Serial packet callback
 void onPacket(const uint8_t* buffer, size_t size){
+  
   if(size==0){
     return;
   }
@@ -192,105 +302,129 @@ void onPacket(const uint8_t* buffer, size_t size){
   // convert to non-const char
   //uint8_t nonConstBuf[size];//f = buffer;// = "-----";
   //memcpy(nonConstBuf, buffer, size);
+  #define ping "ping"
+  int cursorPos = matchAddress(buffer, size, (uint8_t *) ping, sizeof(ping)-1);
+  if( cursorPos > 0 ){
+    // send ping back!
+    serial.send((uint8_t *)"pingback: Arduino Response", 22);
 
-  //String matchAddress = "ping";
-  const uint8_t matchAddr[] = "ping";
-  uint8_t separatorChar = ':'; // addr:value
-  if( (buffer[sizeof(matchAddr)-1]) == separatorChar){ // skips quickly if simple condition not met
-    int cursorPos = 0;
-    //serial.send((uint8_t *)"Entering while!", 16);
-    while(cursorPos < sizeof(matchAddr)-1 && cursorPos < size){
-      
-//      char charReadableSize[20];//5];
-//      String str;
-//
-//      str=String( buffer[cursorPos] );
-//      str.concat('-');
-//      str.concat((int)cursorPos);
-//      str.concat('-');
-//      str.concat(matchAddr[cursorPos]);
-//      str.concat('-');
-//      str.concat( sizeof(matchAddr) );
-//  
-//      str.toCharArray(charReadableSize, 20);
-//      serial.send( ((uint8_t*)charReadableSize), 20 );
-      //serial.send((uint8_t *)"Doing letter"+((char)buffer[cursorPos]), 30);
-      
-      // end search ? ?
-      if(cursorPos==(int)sizeof(matchAddr)){
-        break;
-      }
-      else if(buffer[cursorPos]==matchAddr[cursorPos]){
-        cursorPos++;
-      }
-      else {
-        //serial.send((uint8_t *)"Breaking here!", 14);
-        break;
-      }
-      //serial.send((uint8_t *)"Damn!"+((char)cursorPos), 44);
-    }
-
-    // match address match? (with or without value)
-    if(cursorPos==sizeof(matchAddr)-1 && (buffer[cursorPos]==separatorChar || (sizeof(matchAddr)-1)==size ) ){
-      // send ping back!
-      serial.send((uint8_t *)"Arduino Pings you back!", 23);
-
-      // get value ?
-      if(buffer[cursorPos] == separatorChar && size > cursorPos){
-        String str;
-        str=String( (char*) buffer );
-        str = str.substring(cursorPos+1);
-        char value[str.length()];
-        str.toCharArray(value, (int)sizeof(value));
-        //serial.send((uint8_t *)value, sizeof(value) );
-      }
-      else {
-        //serial.send((uint8_t *)"No Value!", 10);
-        
-//        char charReadableSize[20];
-//        String str;
-//  
-//        str=String( buffer[cursorPos] );
-//        str.concat('-');
-//        str.concat((int)cursorPos);
-//        str.concat('-');
-//        str.concat(matchAddr[cursorPos]);
-//        str.concat('-');
-//        str.concat( size );
-//        str.concat('-');
-//        str.concat(separatorChar);
-//    
-//        str.toCharArray(charReadableSize, 20);
-//        serial.send( ((uint8_t*)charReadableSize), 20 );
-      }
-    }
+    // get value ?
+//    if(size-1 > cursorPos){
+//      String str( (char*) buffer);//, cursorPos+1, (int)size-(cursorPos+1));
+//      str = str.substring(cursorPos+1); // skip separator
+//      char value[str.length()];
+//      str.toCharArray(value, (int)sizeof(value));
+//      //serial.send((uint8_t *)value, sizeof(value) );
+//      
+////      char myConcatenation[80];
+////      sprintf(myConcatenation,"%i = %s - %i",cursorPos+1, value, str.length() );
+////      serial.send((uint8_t *) myConcatenation, 80);
+//    }
+//    else {
+//      // empty message, just the address
+//      //serial.send((uint8_t *)"No Value!", 10);
+//    }
+    return;
   }
   else {
-    //uint8_t * tmp = (buffer[sizeof(matchAddr)]+((uint8_t *)""));
-    //serial.send(tmp, sizeof(tmp));
-    //serial.send(buffer, size);
+    // no match
+    //serial.send((uint8_t *)("Not a Ping! "+cursorPos ), 15);
+  }
+  
+  // check to set water flow ?
+  #define setEV "setEV"
+  cursorPos = matchAddress(buffer, size, (uint8_t *) setEV, sizeof(setEV)-1);
+  if( cursorPos > 0 ) {
+//    char myConcatenation[80];
+//    sprintf(myConcatenation,"setEV: %i / %i (%s) = %i %c %i", cursorPos, size, (char*)buffer, (int) buffer[cursorPos+1], buffer[cursorPos+2], (int) buffer[cursorPos+3] );
+//    serial.send((uint8_t *) myConcatenation, 80);
 
-    //uint8_t tmp = (uint8_t) buffer[sizeof(matchAddr)-1];
-    
-    /*/ convert 
-    int tmpSize = sizeof(matchAddr);
-    char charReadableSize[20];//5];
-    String str;
+    // get value ?
+    if(size >= cursorPos+4){ // value of 3 long + 1 separator char
+//      String str;
+//      str=String( (char*) buffer );
+//      str = str.substring(cursorPos+1);
+//      char value[str.length()];
+//      str.toCharArray(value, (int)sizeof(value));
 
-    str=String( tmpSize);
-    str.concat('-');
-    str.concat(separatorChar);
-    str.concat('-');
-    str.concat(buffer[sizeof(matchAddr)-1]);
-    str.concat('-');
-    str.concat( (int)( (buffer[sizeof(matchAddr)-1]) == separatorChar ) );
+      if(buffer[cursorPos+2]==(uint8_t)'-'){
+        
+        int valveID = buffer[cursorPos+1];
+        int valveValue = buffer[cursorPos+3];
 
-    str.toCharArray(charReadableSize, 20);
-    serial.send( ((uint8_t*)charReadableSize), 20 );
-    // */
+        // todo: allow easier setting of EVs (limited to 4 here)
+        if(valveID>=0 && valveID<3){
 
+          bool tmpValue = LOW;
+          if(valveValue > 0){
+            tmpValue = HIGH;
+          }
+          
+          if(valveID==0){
+            digitalWrite(EV1Pin, tmpValue);
+          }
+          else if(valveID==1){
+            digitalWrite(EV2Pin, tmpValue);
+          }
+          else if(valveID==2){
+            digitalWrite(EV3Pin, tmpValue);
+          }
+          else if(valveID==3){
+            digitalWrite(EV4Pin, tmpValue);
+          }
+  
+          // send response containing new value (optional)
+          String str=String("EVStatus:");
+          str.concat(valveID);
+          str.concat('-');
+          str.concat(valveValue);
+          char charReadableSize[str.length()+1];
+          str.toCharArray(charReadableSize, str.length()+1);
+          serial.send( ((uint8_t*)charReadableSize), str.length()+1 );
 
+        }
+      }
+      else {
+        serial.send((uint8_t *)"failEV:", 6);
+      }
+      
+      //serial.send((uint8_t *)"setEV:", 5);
+    }
+    else {
+      // empty message, just the address
+      serial.send((uint8_t *)"No Value!", 10);
+    }
+    return;
+  }
+  else {
+    // no match
+    serial.send((uint8_t *)("Not a setEV! "), 12);
+  }
 
+  // THERES ONLY UNUSED CODE BELOW THIS POINT
+  
+  //uint8_t * tmp = (buffer[sizeof(matchAddr)]+((uint8_t *)""));
+  //serial.send(tmp, sizeof(tmp));
+  //serial.send(buffer, size);
+
+  //uint8_t tmp = (uint8_t) buffer[sizeof(matchAddr)-1];
+  
+  /*/ convert 
+  int tmpSize = sizeof(matchAddr);
+  char charReadableSize[20];//5];
+  String str;
+
+  str=String( tmpSize);
+  str.concat('-');
+  str.concat(separatorChar);
+  str.concat('-');
+  str.concat(buffer[sizeof(matchAddr)-1]);
+  str.concat('-');
+  str.concat( (int)( (buffer[sizeof(matchAddr)-1]) == separatorChar ) );
+
+  str.toCharArray(charReadableSize, 20);
+  serial.send( ((uint8_t*)charReadableSize), 20 );
+  // */
     
 //    serial.send( (uint8_t*) tmpSize, 2 );
 //    serial.send( (uint8_t*) separatorChar, 2 );
@@ -310,7 +444,7 @@ void onPacket(const uint8_t* buffer, size_t size){
     
     //serial.send((uint8_t*) tmpS, 1);
     //Serial.println( buffer[sizeof(matchAddr)-1] );
-  }
+  //}
 
   //if(curPos == sizeof(matchAddr) && strcmp()==0){
     

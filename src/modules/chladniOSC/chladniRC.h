@@ -11,11 +11,34 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
+#include "ofxSerial.h"
+
+// you might have to adjust these to match your setup
+#define KM_CHLADNI_NUM_ELECTROVALVES 3
+#define KM_CHLADNI_NUM_FLOWMETERS 1
+#define KM_CHLADNI_NUM_LED_STRIPS 2
+#define KM_CHLADNI_PD_OSC_DEFAULT_PORT 12002
+#define KM_CHLADNI_PD_OSC_DEFAULT_HOST "localhost"
 
 // this class sends OSC commands to chladni
 // Thus allowing you to remote control it.
 
+// note:
+// For now I changed ofxOSC/ofxOscSender::shutdown() from private to protected.
+
+struct chladniWaterControlSettingsStruct {
+	
+	chladniWaterControlSettingsStruct(){
+		
+	}
+	
+	float waterFlowRate[KM_CHLADNI_NUM_ELECTROVALVES] = {0.f};
+	float flowMeters[KM_CHLADNI_NUM_FLOWMETERS] = {0.f};
+	float LEDStripsIntensity[KM_CHLADNI_NUM_LED_STRIPS] = {0.f};
+};
+
 class chladniRC : public ofxOscSender {
+	friend class ofxImGui;
 	
 public:
 	chladniRC( );
@@ -32,23 +55,44 @@ public:
 	void operator=(chladniRC const&)  = delete;
 	
 	// basic functions
-	bool setupOSC();
+	bool setupPureDataOSC();
 	
-	// RC commands
+	// Sound Vibration RC commands
+	bool pureDataIsConnected() const;
 	bool sendBang(const string& _name);
 	bool sendPing();
 	bool sendFloat(const string& _name, const float& _float);
 	
+	// Arduino RC Commands (water control)
+	bool setWaterFlow(const int& _solenoidID, const float& _flowRate);
+	float getWaterFlow(const int& _solenoidID) const;
+	float getLEDStripIntensity(const int& _LEDStripID) const;
+	bool arduinoIsConnected() const;
+	bool connectToArduino(const int& _deviceID);
+	bool connectToArduino( const ofx::IO::SerialDeviceInfo& _deviceInfo );
+	void onSerialBuffer(const ofx::IO::SerialBufferEventArgs& args);
+	void onSerialError(const ofx::IO::SerialBufferErrorEventArgs& args);
+	bool setupArduinoSerial();
+	string getArduinoDevicePort() const;
+	void disconnectArduino();
+	void pingArduino();
+	string getLastArduinoPingMessage() const {
+		return arduinoLastPingReturn;
+	}
 	
 	// getters
 	bool isConnected() const;
 	
 protected:
 	
-	bool bConnected;
+	bool bPdIsConnected;
+	
+	// Arduino Control (water + light control)
+	ofx::IO::PacketSerialDevice arduino;
 	
 	// setting variables
-	
+	chladniWaterControlSettingsStruct waterControlSettings;
+	string arduinoLastPingReturn;
 	
 	// analysis variables
 	
