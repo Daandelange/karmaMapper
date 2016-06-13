@@ -83,7 +83,7 @@ bool chladniRC::sendPing(){
 // - - - -
 
 // args: solenoid num, waterflow (0-1);
-bool chladniRC::setWaterFlow(const int& _solenoidID, const float& _flowRate){
+bool chladniRC::setSolenoidFlow(const int& _solenoidID, const float& _flowRate){
 	
 	if( arduinoIsConnected() ){
 	
@@ -129,18 +129,67 @@ bool chladniRC::setWaterFlow(const int& _solenoidID, const float& _flowRate){
 	return false;
 }
 
-float chladniRC::getWaterFlow(const int &_solenoidID) const {
+float chladniRC::getSolenoidFlow(const int& _solenoidID) const {
 	if(_solenoidID<0 || _solenoidID>KM_CHLADNI_NUM_ELECTROVALVES-1){
 		return -1.f;
 	}
 	return waterControlSettings.waterFlowRate[_solenoidID];
 }
 
-float chladniRC::getLEDStripIntensity(const int &_LEDStripID) const {
+float chladniRC::getFlowMeterRate(const int& _flowmeterID) const {
+	if(_flowmeterID<0 || _flowmeterID>KM_CHLADNI_NUM_FLOWMETERS-1){
+		return -1.f;
+	}
+	return waterControlSettings.flowMeters[_flowmeterID];
+}
+
+float chladniRC::getLEDStripIntensityManu(const int& _LEDStripID) const {
 	if(_LEDStripID<0 || _LEDStripID>KM_CHLADNI_NUM_LED_STRIPS-1){
 		return -1.f;
 	}
-	return waterControlSettings.LEDStripsIntensity[_LEDStripID];
+	return waterControlSettings.LEDStripsIntensityManu[_LEDStripID];
+}
+
+float chladniRC::getLEDStripIntensityAuto(const int& _LEDStripID) const {
+	if(_LEDStripID<0 || _LEDStripID>KM_CHLADNI_NUM_LED_STRIPS-1){
+		return -1.f;
+	}
+	return waterControlSettings.LEDStripsIntensityAuto[_LEDStripID];
+}
+
+bool chladniRC::setLEDStripIntensityAuto(const int &_LEDStripID, float _intensity) {
+	if(_LEDStripID<0 || _LEDStripID>KM_CHLADNI_NUM_LED_STRIPS-1){
+		// invalid led strip
+		return false;
+	}
+	
+	// restrict intensity range ?
+	if(_intensity < 0) _intensity = 0.f;
+	else if(_intensity > 1) _intensity = 1.f;
+	
+	if( arduinoIsConnected()){
+		waterControlSettings.LEDStripsIntensityAuto[_LEDStripID] = _intensity;
+		
+		// Create a byte buffer.
+		ofx::IO::ByteBuffer buffer("setLEDstrips:");
+		buffer.writeByte( (uint8_t)(_LEDStripID) );
+		buffer.writeByte( '-' );
+		buffer.writeByte( (uint8_t)(_intensity*255) );
+		
+		// Send the byte buffer.
+		// ofx::IO::PacketSerialDevice will encode the buffer, send it to the
+		// receiver, and send a packet marker.
+		try {
+			arduino.send(buffer);
+		}
+		catch(...){
+			// failed
+		}
+		
+		return true;
+	}
+	
+	return false;
 }
 
 bool chladniRC::arduinoIsConnected() const {
@@ -259,8 +308,8 @@ void chladniRC::onSerialBuffer(const ofx::IO::SerialBufferEventArgs& args){
 		}
 	}
 	
-	//
-	compareString = "ledStripIntensity:";
+	// get the manual LED strip value
+	compareString = "ledStripIntensityManu:";
 	if(message.length()>=compareString.length() ){
 		if( message.compare(0,compareString.length(),compareString,0,compareString.length())==0){
 			
@@ -273,13 +322,16 @@ void chladniRC::onSerialBuffer(const ofx::IO::SerialBufferEventArgs& args){
 				if( lightID>=0 && lightID<KM_CHLADNI_NUM_LED_STRIPS){
 					
 					int lightValue = ofToInt( rawValue.substr(dash+1,rawValue.npos-(dash+1) ) );
-					waterControlSettings.LEDStripsIntensity[lightID] = ((float)lightValue)/255.f;
+					waterControlSettings.LEDStripsIntensityManu[lightID] = ((float)lightValue)/255.f;
 				}
 				
 			}
 			return;
 		}
 	}
+	
+	// still not returned? --> unrecognised message
+	cout << "Unrecognised chladni SERIAL message:\t" << message << endl;
 }
 
 void chladniRC::onSerialError(const ofx::IO::SerialBufferErrorEventArgs& args){

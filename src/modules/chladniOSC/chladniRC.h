@@ -34,7 +34,8 @@ struct chladniWaterControlSettingsStruct {
 	
 	float waterFlowRate[KM_CHLADNI_NUM_ELECTROVALVES] = {0.f};
 	float flowMeters[KM_CHLADNI_NUM_FLOWMETERS] = {0.f};
-	float LEDStripsIntensity[KM_CHLADNI_NUM_LED_STRIPS] = {0.f};
+	float LEDStripsIntensityManu[KM_CHLADNI_NUM_LED_STRIPS] = {0.f};
+	float LEDStripsIntensityAuto[KM_CHLADNI_NUM_LED_STRIPS] = {0.f};
 };
 
 class chladniRC : public ofxOscSender {
@@ -64,9 +65,12 @@ public:
 	bool sendFloat(const string& _name, const float& _float);
 	
 	// Arduino RC Commands (water control)
-	bool setWaterFlow(const int& _solenoidID, const float& _flowRate);
-	float getWaterFlow(const int& _solenoidID) const;
-	float getLEDStripIntensity(const int& _LEDStripID) const;
+	bool setSolenoidFlow(const int& _solenoidID, const float& _flowRate);
+	float getSolenoidFlow(const int& _solenoidID) const;
+	float getFlowMeterRate(const int& _flowmeterID) const;
+	float getLEDStripIntensityManu(const int& _LEDStripID) const;
+	float getLEDStripIntensityAuto(const int& _LEDStripID) const;
+	bool setLEDStripIntensityAuto(const int& _LEDStripID, float _intensity);
 	bool arduinoIsConnected() const;
 	bool connectToArduino(const int& _deviceID);
 	bool connectToArduino( const ofx::IO::SerialDeviceInfo& _deviceInfo );

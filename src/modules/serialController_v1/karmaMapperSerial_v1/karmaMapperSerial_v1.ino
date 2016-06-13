@@ -17,10 +17,12 @@ int ledStrip1Pin = 5;
 int ledStrip2Pin = 6;
 int ledStrip1PotPin = A0;
 int ledStrip2PotPin = A1;
-int ledStrip1Intensity;
-int ledStrip2Intensity;
-bool ledStrip1IsOscControlled;
-bool ledStrip2IsOscControlled;
+int ledStrip1IntensityManu = 0; // 0-255
+int ledStrip2IntensityManu = 0; // 0-255
+int ledStrip1IntensityAuto = 0; // 0-255
+int ledStrip2IntensityAuto = 0; // 0-255
+bool ledStrip1IsSerialControlled = false;
+bool ledStrip2IsSerialControlled = false;
 
 // Flow Meter
 int flowMeter1Pin = 2;
@@ -54,10 +56,12 @@ void setup(){
   digitalWrite(ledStrip2Pin, LOW); // turn it off
   pinMode(ledStrip1PotPin, INPUT);
   pinMode(ledStrip2PotPin, INPUT);
-  ledStrip1Intensity = 0;
-  ledStrip2Intensity = 0;
-  ledStrip1IsOscControlled;
-  ledStrip2IsOscControlled;
+  ledStrip1IntensityManu = 0;
+  ledStrip2IntensityManu = 0;
+  ledStrip1IntensityAuto = 0;
+  ledStrip2IntensityAuto = 0;
+  ledStrip1IsSerialControlled = false;
+  ledStrip2IsSerialControlled = false;
   
   // Flow meters
   pinMode(flowMeter1Pin, INPUT_PULLUP);
@@ -109,32 +113,46 @@ void loop(){
 
   // LED Strips
   {
-    int ledStrip1IntensityTmp = ledStrip1Intensity;
-    int ledStrip2IntensityTmp = ledStrip2Intensity;
-    
-    ledStrip1Intensity = analogRead(ledStrip1PotPin)/1023.0*255;
-    ledStrip2Intensity = analogRead(ledStrip2PotPin)/1023.0*255;
+    // store value for later comparison
+    int ledStrip1IntensityManuTmp = ledStrip1IntensityManu;
+    int ledStrip2IntensityManuTmp = ledStrip2IntensityManu;
 
-    analogWrite(ledStrip1Pin, ledStrip1Intensity);
-    analogWrite(ledStrip2Pin, ledStrip2Intensity);
+    // get latest manu value
+    ledStrip1IntensityManu = analogRead(ledStrip1PotPin)/1023.0*255;
+    ledStrip2IntensityManu = analogRead(ledStrip2PotPin)/1023.0*255;
+
+    // write the right luminosities to the LED strips
+    if(ledStrip1IsSerialControlled){
+      analogWrite(ledStrip1Pin, ledStrip1IntensityAuto*((float)ledStrip1IntensityManu/255.0) );
+    }
+    else {
+      analogWrite(ledStrip1Pin, ledStrip1IntensityManu);
+    }
+    
+    if(ledStrip2IsSerialControlled){
+      analogWrite(ledStrip2Pin, ledStrip2IntensityAuto*((float)ledStrip2IntensityManu/255.0) );
+    }
+    else {
+      analogWrite(ledStrip2Pin, ledStrip2IntensityManu);
+    }
 
     // notify LED strip intensity changes over serial
-    if(ledStrip1Intensity != ledStrip1IntensityTmp){
-      String str=String("ledStripIntensity:");
+    if(ledStrip1IntensityManu != ledStrip1IntensityManuTmp){
+      String str=String("ledStripIntensityManu:");
       str.concat(0);
       str.concat('-');
-      str.concat(ledStrip1Intensity);
+      str.concat(ledStrip1IntensityManu);
       char charReadableSize[str.length()+1];
       str.toCharArray(charReadableSize, str.length()+1);
       serial.send( ((uint8_t*)charReadableSize), str.length()+1 );
     }
 
     // changed ?
-    //if(ledStrip2Intensity != ledStrip2IntensityTmp){
-      String str=String("ledStripIntensity:");
+    //if(ledStrip2IntensityManu != ledStrip2IntensityManuTmp){
+      String str=String("ledStripIntensityManu:");
       str.concat(1);
       str.concat('-');
-      str.concat(ledStrip1Intensity);
+      str.concat(ledStrip1IntensityManu);
       str.concat('-');
       char charReadableSize[str.length()];
       str.toCharArray(charReadableSize, str.length());
@@ -302,6 +320,8 @@ void onPacket(const uint8_t* buffer, size_t size){
   // convert to non-const char
   //uint8_t nonConstBuf[size];//f = buffer;// = "-----";
   //memcpy(nonConstBuf, buffer, size);
+
+  // answer pings
   #define ping "ping"
   int cursorPos = matchAddress(buffer, size, (uint8_t *) ping, sizeof(ping)-1);
   if( cursorPos > 0 ){
@@ -358,20 +378,31 @@ void onPacket(const uint8_t* buffer, size_t size){
           bool tmpValue = LOW;
           if(valveValue > 0){
             tmpValue = HIGH;
+            //serial.send((uint8_t*)"EV_VALUE=HIGH", 13);
           }
+//          else {
+//            serial.send((uint8_t*)"EV_VALUE=LOW", 12);
+//          }
           
           if(valveID==0){
             digitalWrite(EV1Pin, tmpValue);
+            //serial.send((uint8_t*)"EV0=SET", 7);
           }
           else if(valveID==1){
             digitalWrite(EV2Pin, tmpValue);
+            //serial.send((uint8_t*)"EV1=SET", 7);
           }
           else if(valveID==2){
             digitalWrite(EV3Pin, tmpValue);
+            //serial.send((uint8_t*)"EV2=SET", 7);
           }
           else if(valveID==3){
             digitalWrite(EV4Pin, tmpValue);
+            //serial.send((uint8_t*)"EV3=SET", 7);
           }
+//          else {
+//            serial.send((uint8_t*)"EVx=NOT_SET", 11);
+//          }
   
           // send response containing new value (optional)
           String str=String("EVStatus:");
@@ -385,20 +416,52 @@ void onPacket(const uint8_t* buffer, size_t size){
         }
       }
       else {
-        serial.send((uint8_t *)"failEV:", 6);
+        //serial.send((uint8_t *)"failEV:", 6);
       }
       
       //serial.send((uint8_t *)"setEV:", 5);
     }
     else {
       // empty message, just the address
-      serial.send((uint8_t *)"No Value!", 10);
+      //serial.send((uint8_t *)"No Value!", 10);
     }
     return;
   }
   else {
     // no match
-    serial.send((uint8_t *)("Not a setEV! "), 12);
+    //serial.send((uint8_t *)("Not a setEV! "), 12);
+  }
+
+  // check to set LED strips ?
+  #define setLEDstrips "setLEDstrips"
+  cursorPos = matchAddress(buffer, size, (uint8_t *) setLEDstrips, sizeof(setLEDstrips)-1);
+  if( cursorPos > 0 ) {
+    if(size >= cursorPos+4){ // value of 3 long + 1 separator char
+      if(buffer[cursorPos+2]==(uint8_t)'-'){
+        int stripID = buffer[cursorPos+1];
+        int stripValue = buffer[cursorPos+3];
+  
+        // todo: allow easier setting of EVs (limited to 2 here)
+        if(stripID>=0 && stripID<2){
+
+          if(stripID==0){
+            ledStrip1IntensityAuto = stripValue;
+          }
+          else {
+            ledStrip2IntensityAuto = stripValue;
+          }
+
+          String str=String("LEDstripAutoStatus:");
+          str.concat(stripID);
+          str.concat('-');
+          str.concat(stripValue);
+          char charReadableSize[str.length()+1];
+          str.toCharArray(charReadableSize, str.length()+1);
+          serial.send( ((uint8_t*)charReadableSize), str.length()+1 );
+          
+        }
+      }
+    }
   }
 
   // THERES ONLY UNUSED CODE BELOW THIS POINT
