@@ -107,6 +107,7 @@ bool chladniRC::setSolenoidFlow(const int& _solenoidID, const float& _flowRate){
 				}
 				catch(...){
 					// failed
+					cout << "Error sending solenoid flow rate" << endl;
 				}
 				
 				return true;

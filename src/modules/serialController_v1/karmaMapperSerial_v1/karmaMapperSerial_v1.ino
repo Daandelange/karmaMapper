@@ -41,6 +41,10 @@ int EV1Pin = 4;
 int EV2Pin = 7;
 int EV3Pin = 8;
 int EV4Pin = 12;
+bool EV1Value = LOW;
+bool EV2Value = LOW;
+bool EV3Value = LOW;
+bool EV4Value = LOW;
 
 void setup(){
   
@@ -48,7 +52,7 @@ void setup(){
   pinMode(leds1Pin, OUTPUT);
   pinMode(leds2Pin, OUTPUT);
   pinMode(leds3Pin, OUTPUT);
-
+  
   // setup 12v LED strips
   pinMode(ledStrip1Pin, OUTPUT);
   digitalWrite(ledStrip1Pin, LOW); // turn off
@@ -76,6 +80,12 @@ void setup(){
 //  flowMilliLitres   = 0;
 //  totalMilliLitres  = 0;
 //  oldTime           = 0;
+
+  // setup LEDs
+  pinMode(EV1Pin, OUTPUT);
+  pinMode(EV2Pin, OUTPUT);
+  pinMode(EV3Pin, OUTPUT);
+  pinMode(EV4Pin, OUTPUT);
 
   // setup serial communication
   serial.setPacketHandler(&onPacket);
@@ -110,6 +120,12 @@ void loop(){
   //char* myString = "serial Test from Arduino loop()\n";
   //serial.send( (uint8_t *)myString, 40);
   //Serial.println("Arduino Serial\n");
+
+  // EV Control
+  digitalWrite( EV1Pin, EV1Value);
+  digitalWrite( EV2Pin, EV2Value);
+  digitalWrite( EV3Pin, EV3Value);
+  digitalWrite( EV4Pin, EV4Value);
 
   // LED Strips
   {
@@ -148,16 +164,16 @@ void loop(){
     }
 
     // changed ?
-    //if(ledStrip2IntensityManu != ledStrip2IntensityManuTmp){
+    if(ledStrip2IntensityManu != ledStrip2IntensityManuTmp){
       String str=String("ledStripIntensityManu:");
       str.concat(1);
       str.concat('-');
-      str.concat(ledStrip1IntensityManu);
+      str.concat(ledStrip2IntensityManu);
       str.concat('-');
       char charReadableSize[str.length()];
       str.toCharArray(charReadableSize, str.length());
       serial.send( ((uint8_t*)charReadableSize), str.length() );
-    //}
+    }
   }
 
   // led stuff
@@ -385,19 +401,23 @@ void onPacket(const uint8_t* buffer, size_t size){
 //          }
           
           if(valveID==0){
-            digitalWrite(EV1Pin, tmpValue);
+            EV1Value = tmpValue;
+            //digitalWrite(EV1Pin, tmpValue);
             //serial.send((uint8_t*)"EV0=SET", 7);
           }
           else if(valveID==1){
-            digitalWrite(EV2Pin, tmpValue);
+            EV2Value = tmpValue;
+            //digitalWrite(EV2Pin, tmpValue);
             //serial.send((uint8_t*)"EV1=SET", 7);
           }
           else if(valveID==2){
-            digitalWrite(EV3Pin, tmpValue);
+            EV3Value = tmpValue;
+            //digitalWrite(EV3Pin, tmpValue);
             //serial.send((uint8_t*)"EV2=SET", 7);
           }
           else if(valveID==3){
-            digitalWrite(EV4Pin, tmpValue);
+            EV4Value = tmpValue;
+            //digitalWrite(EV4Pin, tmpValue);
             //serial.send((uint8_t*)"EV3=SET", 7);
           }
 //          else {
@@ -445,9 +465,11 @@ void onPacket(const uint8_t* buffer, size_t size){
         if(stripID>=0 && stripID<2){
 
           if(stripID==0){
+            ledStrip1IsSerialControlled = true;
             ledStrip1IntensityAuto = stripValue;
           }
           else {
+            ledStrip2IsSerialControlled = true;
             ledStrip2IntensityAuto = stripValue;
           }
 
