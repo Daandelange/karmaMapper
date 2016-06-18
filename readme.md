@@ -1,14 +1,19 @@
 # karmaMapper
 ________
 
-karmaMapper is a collection of OpenSource 2D mapping software made for real-time interactions and digital image generation. Built upon the amazing [OpenFrameworks](http://www.openframeworks.cc/) framework, it gives an interface between the physical and the virtual and some other useful features for facilitating generative visuals. If you're at ease with code, it's a perfect tool to start coding on physical surfaces using a video projector.
+karmaMapper is a collection of OpenSource 2D mapping software made for real-time interactions and digital image generation. Built upon the amazing [OpenFrameworks](http://www.openframeworks.cc/) framework, it gives an interface between the physical and the digital. It comes with an SDK allowing you to easyly start coding effects and modules then intstanciate and parametrize them within a same virtual space.
+If you're at ease with code, it's a perfect tool to start coding on physical surfaces using a video projector.
 
 Runs on Mac and Linux and Windows (alpha). 
 
 __karmaMapper is a work in progress.__  
-_Curently (25-03-2016), the latest build is stable on Mac & Linux while the Windows version is not stable yet. There's a scene editor allowing you to configure a set of "mappable" shapes, then load them within the animator app and instantiate some effects and modules on them. There's a GUI overlay giving control over the animations and video can be outPut via Syphon for projection. Configurations can be saved and loaded. There's a music analyser that streams MIR data over the network and a module that lets you sync effects with LiveGrabber. In other words, karmaMapper is ready to be used in interactive installations & performances! :)_
+_Curently (18-06-2016), the latest build is stable on Mac while the Windows version is not stable yet. The Linux version should not be hard to get to compile.  
+There's a scene editor allowing you to configure a set of "mappable" shapes, then load them within the animator app which lets you instantiate some effects and modules and bind them with these shapes.
+There's a GUI overlay giving control over the animations and video can be output via Syphon for projection. Configurations can be saved and loaded. There's a music analyser that streams MIR data over a LAN network. There is also a module for doing Serial communication with Arduino and OSC communication with LiveGrabber, PureData and Duration. In other words, karmaMapper is ready to be used in interactive art installations & live performances, or to do simple video mapping! :)_
 
-![Old screenshot](https://raw.githubusercontent.com/Karma-Kusala/karmaMapper/master/karmaMapper.png)
+_In the future, karmaMapper will aim to facilitate the work of creative coders with a bunch of redundant code. It will also provide automatic variable assignment and animation to create a vast interconnected virtual and analog environment. Some of the code might be shared with videoDromm including a distant control interface._
+
+![Screenshot](https://raw.githubusercontent.com/Karma-Kusala/karmaMapper/master/karmaMapper-cover-GIF.gif)
 
 ## SETUP
 #### Required Dependencies:  
@@ -22,10 +27,12 @@ _Curently (25-03-2016), the latest build is stable on Mac & Linux while the Wind
  
 #### Install
 - [Install OpenFrameworks](http://openframeworks.cc/setup/) then:
-- `cd OF/apps/karmaApps/`
+- `cd OF/apps/`
+- `mkdir karmaApps && cd ./karmaApps`
 - `git clone git@github.com:Karma-Kusala/karmaMapper.git`
 - `cd ./karmaMapper`
-- `./clone_addons.sh` _(Mac & Linux only)_
+- `./clone_addons.sh`  
+_Note: on Windows, run the commands in the git command prompt._
 
 #### Compile
 - **Makefiles**:  
