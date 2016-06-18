@@ -896,7 +896,7 @@ bool videoShader::loadVideoFile(const karmaVideoMediaInformationStruct &_media, 
 			else {
 				//player.setUseTexture( true );
 				//player.ofBaseVideoPlayer::loadAsync(string name)
-				if(player.load( videoMedia->getFullPath() ) /*&& player.isInitialized()*/ ){
+				if(player.load( _media.getFullPath() ) /*&& player.isInitialized()*/ ){
                     
                     videoMedia = _media; // also triggers update on thread
 					
