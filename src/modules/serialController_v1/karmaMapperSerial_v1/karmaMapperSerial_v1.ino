@@ -25,16 +25,15 @@ bool ledStrip1IsSerialControlled = false;
 bool ledStrip2IsSerialControlled = false;
 
 // Flow Meter
-int flowMeter1Pin = 2;
-int flowMeter2Pin = 3;
+int flowMeterPin[2] = {2,3};
+//int flowMeterPin[1] = 3;
 // The hall-effect flow sensor outputs approximately 4.5 pulses per second per litre/minute of flow.
 float calibrationFactor = 4.5;
-volatile byte flowMeter1PulseCount;
-volatile byte flowMeter2PulseCount;
-//float flowRate;
-//unsigned int flowMilliLitres;
+volatile byte flowMeterPulseCount[2];
+float flowRate[2];
+unsigned int flowMilliLitres[0];
 //unsigned long totalMilliLitres;
-//unsigned long oldTime;
+unsigned long oldTime[2];
 
 // ElectroValves
 int EV1Pin = 4;
@@ -45,6 +44,22 @@ bool EV1Value = LOW;
 bool EV2Value = LOW;
 bool EV3Value = LOW;
 bool EV4Value = LOW;
+
+/*
+Insterrupt Service Routine (for flow meters)
+ */
+void flowMeter1PulseCounter() {
+  // Increment the pulse counter
+  flowMeterPulseCount[0]++;
+  //Serial.println("Aruino Interrupt!");
+}
+
+void flowMeter2PulseCounter() {
+  flowMeterPulseCount[1]++;
+}
+
+// Forward declaration
+void onPacket(const uint8_t* buffer, size_t size);
 
 void setup(){
   
@@ -68,18 +83,21 @@ void setup(){
   ledStrip2IsSerialControlled = false;
   
   // Flow meters
-  pinMode(flowMeter1Pin, INPUT_PULLUP);
-  pinMode(flowMeter2Pin, INPUT_PULLUP);
-  digitalWrite(flowMeter1Pin, HIGH); // pullup
-  digitalWrite(flowMeter2Pin, HIGH); // pullup
-  attachInterrupt( digitalPinToInterrupt(flowMeter1Pin), flowMeter1PulseCounter, FALLING);
-  attachInterrupt( digitalPinToInterrupt(flowMeter2Pin), flowMeter2PulseCounter, FALLING);
-  flowMeter1PulseCount = 0;
-  flowMeter2PulseCount = 0;
-//  flowRate          = 0.0;
-//  flowMilliLitres   = 0;
+  pinMode(flowMeterPin[0], INPUT_PULLUP);
+  pinMode(flowMeterPin[1], INPUT_PULLUP);
+  digitalWrite(flowMeterPin[0], HIGH); // pullup
+  digitalWrite(flowMeterPin[1], HIGH); // pullup
+  attachInterrupt( flowMeterPin[0], flowMeter1PulseCounter, FALLING);
+  attachInterrupt( flowMeterPin[1], flowMeter2PulseCounter, FALLING);
+  flowMeterPulseCount[0] = 0;
+  flowMeterPulseCount[1] = 0;
+  flowRate[0] = 0.0;
+  flowRate[1] = 0.0;
+  flowMilliLitres[0] = 0;
+  flowMilliLitres[1] = 0;
 //  totalMilliLitres  = 0;
-//  oldTime           = 0;
+  oldTime[0] = 0;
+  oldTime[1] = 0;
 
   // setup LEDs
   pinMode(EV1Pin, OUTPUT);
@@ -190,59 +208,66 @@ void loop(){
 
     // Flow meter
     {
-      /*/ calc flow variables
-      if ((millis() - oldTime) > 1000)   // Only process counters once per second
-      {
+      // calc flow variables
+      for(int pin =0; pin<2; ++pin){
+      if ((millis() - oldTime[pin]) > 500){   // Only process counters twice per second
+        
         // Disable the interrupt while calculating flow rate and sending the value to
         // the host
-        //detachInterrupt(digitalPinToInterrupt(flowMeterPin));
+        detachInterrupt(flowMeterPin[pin]);
 
         // Because this loop may not complete in exactly 1 second intervals we calculate
         // the number of milliseconds that have passed since the last execution and use
         // that to scale the output. We also apply the calibrationFactor to scale the output
         // based on the number of pulses per second per units of measure (litres/minute in
         // this case) coming from the sensor.
-        flowRate = ((1000.0 / (millis() - oldTime)) * pulseCount) / calibrationFactor;
+        flowRate[pin] = ((1000.0 / (millis() - oldTime[pin])) * flowMeterPulseCount[pin]) / calibrationFactor;
 
         // Note the time this processing pass was executed. Note that because we've
         // disabled interrupts the millis() function won't actually be incrementing right
         // at this point, but it will still return the value it was set to just before
         // interrupts went away.
-        oldTime = millis();
+        oldTime[pin] = millis();
 
         // Divide the flow rate in litres/minute by 60 to determine how many litres have
         // passed through the sensor in this 1 second interval, then multiply by 1000 to
         // convert to millilitres.
-        flowMilliLitres = (flowRate / 60) * 1000;
+        flowMilliLitres[pin] = (flowRate[pin] / 60) * 1000;
 
         // Add the millilitres passed in this second to the cumulative total
-        totalMilliLitres += flowMilliLitres;
+        //totalMilliLitres += flowMilliLitres;
 
         unsigned int frac;
 
         // Print the flow rate for this second in litres / minute
         Serial.print("Flow rate: ");
-        Serial.print(int(flowRate));  // Print the integer part of the variable
+        Serial.print(int(flowRate[pin]));  // Print the integer part of the variable
         Serial.print(".");             // Print the decimal point
         // Determine the fractional part. The 10 multiplier gives us 1 decimal place.
-        frac = (flowRate - int(flowRate)) * 10;
+        frac = (flowRate[pin] - int(flowRate[pin])) * 10;
         Serial.print(frac, DEC) ;      // Print the fractional part of the variable
         Serial.print("L/min");
         // Print the number of litres flowed in this second
         Serial.print("  Current Liquid Flowing: ");             // Output separator
-        Serial.print(flowMilliLitres);
+        Serial.print(flowMilliLitres[pin]);
         Serial.print("mL/Sec");
 
         // Print the cumulative total of litres flowed since starting
-        Serial.print("  Output Liquid Quantity: ");             // Output separator
-        Serial.print(totalMilliLitres);
-        Serial.println("mL");
+//        Serial.print("  Output Liquid Quantity: ");             // Output separator
+//        Serial.print(totalMilliLitres);
+//        Serial.println("mL");
 
         // Reset the pulse counter so we can start incrementing again
-        pulseCount = 0;
+        flowMeterPulseCount[pin] = 0;
 
         // Enable the interrupt again now that we've finished sending output
-        //attachInterrupt( digitalPinToInterrupt(flowMeterPin), pulseCounter, FALLING);
+        if(pin==0){
+          attachInterrupt( digitalPinToInterrupt(flowMeterPin[0]), flowMeter1PulseCounter, FALLING);
+        }
+        else {
+          attachInterrupt( digitalPinToInterrupt(flowMeterPin[1]), flowMeter2PulseCounter, FALLING);
+        }
+      }
       } // */
 
 
@@ -572,18 +597,5 @@ void onPacket(const uint8_t* buffer, size_t size){
 //    sprintf(buffer2, "%s", tmp);
 //    Serial.println(buffer2);
 //  }
-}
-
-/*
-Insterrupt Service Routine (for flow meters)
- */
-void flowMeter1PulseCounter() {
-  // Increment the pulse counter
-  flowMeter1PulseCount++;
-  //Serial.println("Aruino Interrupt!");
-}
-
-void flowMeter2PulseCounter() {
-  flowMeter2PulseCount++;
 }
 
