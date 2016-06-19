@@ -87,8 +87,8 @@ void setup(){
   pinMode(flowMeterPin[1], INPUT_PULLUP);
   digitalWrite(flowMeterPin[0], HIGH); // pullup
   digitalWrite(flowMeterPin[1], HIGH); // pullup
-  attachInterrupt( flowMeterPin[0], flowMeter1PulseCounter, FALLING);
-  attachInterrupt( flowMeterPin[1], flowMeter2PulseCounter, FALLING);
+  attachInterrupt( digitalPinToInterrupt(flowMeterPin[0]), flowMeter1PulseCounter, FALLING);
+  attachInterrupt( digitalPinToInterrupt(flowMeterPin[1]), flowMeter2PulseCounter, FALLING);
   flowMeterPulseCount[0] = 0;
   flowMeterPulseCount[1] = 0;
   flowRate[0] = 0.0;
@@ -205,6 +205,7 @@ void loop(){
 //    if (brightness == 0 || brightness == 255) {
 //      fadeAmount = -fadeAmount ;
 //    }
+  }
 
     // Flow meter
     {
@@ -214,7 +215,7 @@ void loop(){
         
         // Disable the interrupt while calculating flow rate and sending the value to
         // the host
-        detachInterrupt(flowMeterPin[pin]);
+        detachInterrupt(digitalPinToInterrupt(flowMeterPin[pin]));
 
         // Because this loop may not complete in exactly 1 second intervals we calculate
         // the number of milliseconds that have passed since the last execution and use
@@ -240,17 +241,31 @@ void loop(){
         unsigned int frac;
 
         // Print the flow rate for this second in litres / minute
-        Serial.print("Flow rate: ");
-        Serial.print(int(flowRate[pin]));  // Print the integer part of the variable
-        Serial.print(".");             // Print the decimal point
+//        Serial.print("Flow rate: ");
+//        Serial.print(int(flowRate[pin]));  // Print the integer part of the variable
+//        Serial.print(".");             // Print the decimal point
         // Determine the fractional part. The 10 multiplier gives us 1 decimal place.
         frac = (flowRate[pin] - int(flowRate[pin])) * 10;
-        Serial.print(frac, DEC) ;      // Print the fractional part of the variable
-        Serial.print("L/min");
+//        Serial.print(frac, DEC) ;      // Print the fractional part of the variable
+//        Serial.print("L/min");
         // Print the number of litres flowed in this second
         Serial.print("  Current Liquid Flowing: ");             // Output separator
         Serial.print(flowMilliLitres[pin]);
         Serial.print("mL/Sec");
+        Serial.print(flowMeterPulseCount[pin]);
+        Serial.println("");
+
+//        char myConcatenation[80];
+//        sprintf(myConcatenation,"%i = %i",pin, round(flowMilliLitres[pin]*10));
+//        serial.send((uint8_t *) myConcatenation, 80);
+          
+//          String str=String("FlowmeterStatus:");
+//          str.concat(pin);
+//          str.concat('-');
+//          str.concat( flowMilliLitres[pin] );
+//          char charReadableSize[str.length()+1];
+//          str.toCharArray(charReadableSize, str.length()+1);
+//          serial.send( ((uint8_t*)charReadableSize), str.length()+1 );
 
         // Print the cumulative total of litres flowed since starting
 //        Serial.print("  Output Liquid Quantity: ");             // Output separator
@@ -268,11 +283,10 @@ void loop(){
           attachInterrupt( digitalPinToInterrupt(flowMeterPin[1]), flowMeter2PulseCounter, FALLING);
         }
       }
-      } // */
+      } // end for flowmeter pins
 
 
-    }
-  }
+    } // end flow meter section
 
   // update serial communication
   serial.update();
