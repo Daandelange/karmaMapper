@@ -306,11 +306,15 @@ void lossyImageEffect::afterDraw(karmaFboLayerDrawEventArgs& _args ){
 		
 		//renderLayer.getFBO().readToPixels(tmpToCompress);
 		toCompress.send(std::move(tmpToCompress));
+		
+		effectMutex.lock();
+		bHasNewFrameThreaded = true;
+		effectMutex.unlock();
+	}
+	else {
+		bHasNewFrameThreaded = false;
 	}
 	
-	effectMutex.lock();
-	bHasNewFrameThreaded = true;
-	effectMutex.unlock();
 }
 
 void lossyImageEffect::beforeDraw(karmaFboLayerDrawEventArgs& _args ){
