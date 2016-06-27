@@ -14,6 +14,7 @@
 #include "OSCRouter.h"
 #include "ofEvents.h"
 #include "chladniEvents.h"
+#include "chladniRC.h"
 #include "singletonModule.h"
 
 // this class handles OSC events comming from a PureData chladni / cymatics wave generator and fires internal ofEvents
@@ -22,6 +23,12 @@
 // problems compiling this? #MSVC_16 --> http://stackoverflow.com/a/5022140/58565
 #define CHLADNI_PREFIX "/chladni/"
 #define CHLADNI_PREFIX_LEN sizeof(CHLADNI_PREFIX)-1
+
+
+struct oscParamsStruct {
+	string host="localhost";
+	int port = 12002;
+};
 
 class chladniReceiver : public OSCNode, public singletonModule<chladniReceiver> {
 	
@@ -55,10 +62,7 @@ public:
 	
 	// OSC sending stuff
 	bool connectOSCSender();
-	struct oscParamsStruct {
-		string host="localhost";
-		int port = 12002;
-	} oscSendParams;
+	oscParamsStruct oscSendParams;
 	bool sendOscMessage(ofxOscMessage& _msg);
 	bool sendOscMessage(const string& _addr, const string& _value);
 	

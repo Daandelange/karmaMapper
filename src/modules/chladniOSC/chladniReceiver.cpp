@@ -8,7 +8,6 @@
 
 #include "chladniReceiver.h"
 #include "basicEffect.h"
-#include "chladniRC.h"
 
 // forward declarations are needed for event listening
 ofEvent<chladniBangEventArgs> chladniReceiver::chladniBangEvent;
@@ -172,10 +171,14 @@ void chladniReceiver::showGuiWindow(){
 	OSCRouter::ImGuiShowOSCRouterConnectionTester();
 	ImGui::Separator();
 	
-	if( ImGui::CollapsingHeader( "Params", "chladniReceiverOSC", true, true ) ){
-        if(ImGui::InputInt("chladni sending port", &oscSendParams.port)){
-             connectOSCSender();
-        }
+	if( ImGui::CollapsingHeader( "OSC Setup / Config (Pd)", "chladniReceiverOSC", true, true ) ){
+		
+		ImGui::TextWrapped("Pd OSC connection");
+		ImGui::Indent();
+		ImGui::TextWrapped("Configure how you connect to PureData patch /utilities/chladni-plate-generator.pd");
+		if(ImGui::InputInt("chladni sending port", &oscSendParams.port)){
+			connectOSCSender();
+		}
 		static char addrBuffer[64];
 		for(int i=0; i<64; ++i){
 			if(i < oscSendParams.host.size()){
@@ -187,8 +190,128 @@ void chladniReceiver::showGuiWindow(){
 		}
 		if(ImGui::InputText("chladni remote host", &addrBuffer[0], 64, ImGuiInputTextFlags_EnterReturnsTrue)){
 			oscSendParams.host = ofToString(addrBuffer);
-            connectOSCSender();
+			connectOSCSender();
 		}
+		
+		if( chladniRC::getInstance().pureDataIsConnected()){
+			ImGui::TextWrapped("Status: Connected");
+		}
+		else {
+			ImGui::TextWrapped("Status: Not Connected");
+		}
+		
+		if(ImGui::Button("Reconnect")){
+			connectOSCSender();
+		}
+		
+		// todo: launch pd from OF
+		// see: https://forum.openframeworks.cc/t/using-shell-script-to-launch-external-apps-from-of/3853
+		// see: http://stackoverflow.com/questions/646217/how-to-run-a-bash-script-from-c-program
+		
+		ImGui::Unindent();
+	}
+	ImGui::Separator();
+	
+	static bool wasOpen = false;
+	if( ImGui::CollapsingHeader( "Arduino Setup (water control)", "chladniReceiverArduino", true, true ) ){
+		
+		static std::vector<ofx::IO::SerialDeviceInfo> devicesInfo = ofx::IO::SerialDeviceUtils::listDevices();
+			
+		// refresh list ?
+		if(!wasOpen){
+			devicesInfo = ofx::IO::SerialDeviceUtils::listDevices();
+			
+			wasOpen = true;
+		}
+		
+		ImGui::Indent();
+		
+		ImGui::TextWrapped("Communicates with a USB Arduino device. Needs patch: /src/modules/serialController_v1/karmaMapperSerial_v1/karmaMapperSerial_v1.ino");
+		
+		if(ImGui::Button("Connect to first Arduino device")){
+			chladniRC::getInstance().setupArduinoSerial();
+		}
+		
+		if(ImGui::ListBoxHeader("Connect to device...")){
+			
+			if (!devicesInfo.empty()){
+				for (std::size_t i = 0; i < devicesInfo.size(); ++i) {
+					if(ImGui::Selectable( ( devicesInfo[i].getDescription() + " (" + devicesInfo[i].getPort() + ")" +"###"+devicesInfo[i].getDescription()).c_str(), devicesInfo[i].getPort().compare( chladniRC::getInstance().getArduinoDevicePort() )==0 )){
+						
+						if( chladniRC::getInstance().connectToArduino(devicesInfo[i]) ){
+							// todo: remember device ?
+						}
+						else {
+							// todo: notify failure
+							
+						}
+					}
+				}
+			}
+			else {
+				ImGui::TextWrapped("[None Available]");
+			}
+			ImGui::ListBoxFooter();
+		}
+		
+		if( chladniRC::getInstance().arduinoIsConnected()){
+			ImGui::TextWrapped("Status: Connected to: %s", chladniRC::getInstance().getArduinoDevicePort().c_str() );
+		}
+		else {
+			ImGui::TextWrapped("Status: Not Connected");
+		}
+		
+		ImGui::Separator();
+		
+		// ping
+		if(chladniRC::getInstance().arduinoIsConnected()){
+			if(ImGui::Button("Ping Device")){
+				chladniRC::getInstance().pingArduino();
+			}
+			ImGui::TextWrapped("Last ping return: %s", chladniRC::getInstance().getLastArduinoPingMessage().c_str() );
+			
+			ImGui::Separator();
+			
+			// Water flow
+			ImGui::TextWrapped("Water Flow Control:");
+			ImGui::Indent();
+			for(int ev=0; ev<KM_CHLADNI_NUM_ELECTROVALVES; ++ev){
+				float flow = chladniRC::getInstance().getSolenoidFlow(ev);
+				if( ImGui::SliderFloat((ofToString("EV")+ofToString(ev)).c_str(), &flow, 0.f, 1.f) ){
+					chladniRC::getInstance().setSolenoidFlow(ev, flow);
+				}
+			}
+			ImGui::Unindent();
+			
+			ImGui::Separator();
+			
+			// Led strips
+			ImGui::TextWrapped("LED strips:");
+			ImGui::Indent();
+			for(int ls=0; ls<KM_CHLADNI_NUM_LED_STRIPS; ++ls){
+				ImGui::TextWrapped("LED strip #%d", ls);
+				ImGui::Indent();
+				float intensityManu = chladniRC::getInstance().getLEDStripIntensityManu(ls);
+				ImGui::SliderFloat((ofToString("LED strip ")+ofToString(ls)+" manu value").c_str(), &intensityManu, 0.f, 1.f);
+				float intensityAuto = chladniRC::getInstance().getLEDStripIntensityAuto(ls);
+				if(ImGui::SliderFloat((ofToString("LED strip ")+ofToString(ls)+" auto value").c_str(), &intensityAuto, 0.f, 1.f)){
+					chladniRC::getInstance().setLEDStripIntensityAuto(ls, intensityAuto);
+				}
+				ImGui::Unindent();
+			}
+			ImGui::Unindent();
+			
+			// Flowmeters
+			ImGui::TextWrapped("Flow meters:");
+			ImGui::Indent();
+			for(int fm=0; fm<KM_CHLADNI_NUM_LED_STRIPS; ++fm){
+				ImGui::TextWrapped("Flow Meter %d", fm);
+				float value = chladniRC::getInstance().getFlowMeterRate(fm);
+				ImGui::SliderFloat("Flow rate", &value, 0.f, 1.f);
+			}
+		}
+		
+		ImGui::Unindent();
 	}
 	
 	ImGui::End();

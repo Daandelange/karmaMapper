@@ -31,6 +31,7 @@ box2dEffect::~box2dEffect(){
 	ofRemoveListener( ofEvents().mousePressed, this, &box2dEffect::_mousePressed);
 	ofRemoveListener(liveGrabberOSC::liveGrabberNoteEvent, this, &box2dEffect::liveGrabberNoteEventListener);
     ofRemoveListener(liveGrabberOSC::liveGrabberBangEvent, this, &box2dEffect::liveGrabberBangEventListener);
+	ofRemoveListener(mirReceiver::mirTempoEvent, this, &box2dEffect::tempoEventListener);
 	
 //	if(isThreadRunning()){
 //		waitForThread(true);
@@ -125,7 +126,15 @@ void box2dEffect::update(karmaFboLayer& renderLayer, const animationParams& para
     basicEffect::update(renderLayer, params);
 	
 	// got particles to remove ?
+	int prevCount = box2dShapeItems.size();
 	ofRemove(box2dShapeItems, ofxBox2dBaseShape::shouldRemoveOffScreen);
+	int removedParticles = abs((int) (prevCount-box2dShapeItems.size()) );
+	
+	// chladni music when particles vanish ?
+	if(removedParticles > 0){
+		//chladniRC::getInstance().sendBang("bang");
+		//cout << "bang!" << endl;
+	}
 	
 	// get new particles to add ?
 	static box2dItemProperties newItem;
@@ -361,6 +370,9 @@ void box2dEffect::reset(){
 	
     ofAddListener(liveGrabberOSC::liveGrabberBangEvent, this, &box2dEffect::liveGrabberBangEventListener);
     ofAddListener(liveGrabberOSC::liveGrabberBangEvent, this, &box2dEffect::liveGrabberBangEventListener);
+	
+	ofRemoveListener(mirReceiver::mirTempoEvent, this, &box2dEffect::tempoEventListener);
+	ofAddListener(mirReceiver::mirTempoEvent, this, &box2dEffect::tempoEventListener);
     
 //	if(!isThreadRunning()){
 //		startThread();
@@ -756,6 +768,47 @@ void box2dEffect::liveGrabberBangEventListener(liveGrabberBangEventArgs &_args){
         
         return;
     }
+}
+
+// note:: threaded function!!!
+void box2dEffect::tempoEventListener(mirTempoEventArgs &_args){
+	//ofScopedLock lock(effectMutex);
+	
+	//if(!bReactToMusic) return;
+	
+	if(shapes.size()<=0) return;
+	
+	if(_args.isTempoBis) for(auto s=shapes.begin(); s!=shapes.end(); ++s){
+		if( (*s)->isType("vertexShape") ){
+			int spawnAmount = mirReceiver::mirCache.bpm;
+			
+			vertexShape* shape = (vertexShape*)*s;
+			for(int i=0; i<spawnAmount; i++){
+				
+				ofVec2f tmpPos(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
+				
+				for(int i=0; i<20; i++){
+					box2dParticleProperties settings;
+					ofColor color;
+					int hue = int(ofGetFrameNum() / 4.0) % 255;
+					color.setHsb(hue, 180, 200);
+					settings.color = color;
+					settings.position = ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
+					settings.velocity = ofVec2f(ofRandom(-20, 20), ofRandom(-20, 20));
+					
+					newBox2dParticlesFromThread.send(std::move(settings));
+				}
+			}
+		}
+	}
+	else{
+		if(mirReceiver::mirCache.zcr > 3.0f){
+			chladniRC::getInstance().setSolenoidFlow(1, 2);
+		}
+		else {
+			chladniRC::getInstance().setSolenoidFlow(1, 0);
+		}
+	}
 }
 
 // register effect type

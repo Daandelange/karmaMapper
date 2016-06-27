@@ -119,7 +119,9 @@ void videoShader::update(karmaFboLayer& renderLayer, const animationParams& para
 						
 						videoMedia->playBackSettings.seekerPosition = newFrame.position;
 						shaderToyArgs.iChannelTime[0]=newFrame.position;
-						textures[0].loadData(newFrame.newPixels.getData(), newFrame.newPixels.getWidth(), newFrame.newPixels.getHeight(), ofGetGLFormatFromPixelFormat(newFrame.newPixels.getPixelFormat()) );
+						textures[0].loadData(newFrame.newPixels);
+						//textures[0].loadData(newFrame.newPixels.getData(), newFrame.newPixels.getWidth(), newFrame.newPixels.getHeight(), ofGetGLFormatFromPixelFormat(newFrame.newPixels.getPixelFormat()) );
+						//ofSaveImage(newFrame.newPixels, "myTmpImage.png");
 					}
 				}
 			}
@@ -212,6 +214,7 @@ void videoShader::reset(){
 	
 	player.stop();
 	player.closeMovie();
+	//player.load(""); // starts player object
 	
 	loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
 	
@@ -746,37 +749,14 @@ bool videoShader::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 	bUseShadertoyVariables = true;
 	bUseTextures = true;
 	
-	setUseThread( xml.getValue("bUseThreadedFileDecoding", true) );
-	
-	videoMedia = karmaVideoMediaInformationStruct( xml.getValue("videoFile", videoMedia->getFullPath() ) );
-	videoMedia->playBackSettings.volume = xml.getValue("videoVolume", videoMedia->playBackSettings.volume);
-	videoMedia->playBackSettings.playbackSpeed = xml.getValue("playBackSpeed", videoMedia->playBackSettings.playbackSpeed);
-	videoMedia->playBackSettings.seekerPosition = xml.getValue("videoPosition", videoMedia->playBackSettings.seekerPosition);
-	setVideoMode( static_cast<enum videoMode>(xml.getValue("videoMode", VIDEO_MODE_FILE )) );
-	
-	videoMedia->playBackSettings.isPlaying = xml.getValue("videoIsPlaying", videoMedia->playBackSettings.isPlaying);
-	
-	loadVideoFile( videoMedia, true );
-	
-	if( videoMedia->playBackSettings.isPlaying ){
-		
-		if(!bUseThreadedFileDecoding ){
-			
-			if( player.isLoaded() ){
-				player.play();
-				
-				if(xml.getValue("videoIsPaused", false)){
-					player.setPaused(true);
-				}
-			}
-		}
-		else {
-			bUseThreadedFileDecoding.triggerUpdate();
-		}
-	}
-	else {
-		player.stop();
-	}
+    setVideoMode( static_cast<enum videoMode>(xml.getValue("videoMode", VIDEO_MODE_FILE )) );
+    
+//    if(!bUseThreadedFileDecoding){
+//        setVideoFilePlaybackInformation(player, videoMedia->playBackSettings );
+//    }
+//    else {
+//        videoMedia.triggerUpdate();
+//    }
 	
 	webcamSettings.targetFPS = xml.getValue("activeCameraTargetFPS", webcamSettings.targetFPS);
 	webcamSettings.width = xml.getValue("activeCameraWidth", webcamSettings.width);
@@ -825,6 +805,17 @@ bool videoShader::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 		xml.getValue("syphonApp", syphonAddr.appName)
 	));
 #endif
+	
+	setUseThread( xml.getValue("bUseThreadedFileDecoding", true) );
+	videoMedia = karmaVideoMediaInformationStruct( xml.getValue("videoFile", videoMedia->getFullPath() ) );
+	videoMedia->playBackSettings.volume = xml.getValue("videoVolume", videoMedia->playBackSettings.volume);
+	videoMedia->playBackSettings.playbackSpeed = xml.getValue("playBackSpeed", videoMedia->playBackSettings.playbackSpeed);
+	videoMedia->playBackSettings.seekerPosition = xml.getValue("videoPosition", videoMedia->playBackSettings.seekerPosition);
+	
+	videoMedia->playBackSettings.isPlaying = xml.getValue("videoIsPlaying", videoMedia->playBackSettings.isPlaying);
+	videoMedia->playBackSettings.isPaused = xml.getValue("videoIsPaused", videoMedia->playBackSettings.isPlaying);
+	
+	loadVideoFile( videoMedia, true );
 	
 	bIsLoading = false;
 	
@@ -882,13 +873,12 @@ bool videoShader::loadVideoFile(const karmaVideoMediaInformationStruct &_media, 
 	if( forceRemember ){
 		videoMedia = _media;
 	}
-		
+    
 	if (videoMode==VIDEO_MODE_FILE) {
 		
 		ofFile file( _media.getFullPath() );
 		if( file && file.exists() ){
 			
-			videoMedia = _media;
 			//videoMedia->playBackSettings.volume = fVideoVolume;
 			//videoMedia->playBackSettings.loopState = OF_LOOP_NORMAL;
 			//videoMedia->playBackSettings.playbackSpeed = playBackSpeed;
@@ -904,9 +894,11 @@ bool videoShader::loadVideoFile(const karmaVideoMediaInformationStruct &_media, 
 			
 			// no threaded file decoding
 			else {
-				player.setUseTexture( true );
-				
-				if(player.load( videoMedia->getFullPath() ) ){
+				//player.setUseTexture( true );
+				//player.ofBaseVideoPlayer::loadAsync(string name)
+				if(player.load( _media.getFullPath() ) /*&& player.isInitialized()*/ ){
+                    
+                    videoMedia = _media; // also triggers update on thread
 					
 					videoMedia->mediaDimensions[0] = player.getWidth();
 					videoMedia->mediaDimensions[1] = player.getHeight();
@@ -919,9 +911,10 @@ bool videoShader::loadVideoFile(const karmaVideoMediaInformationStruct &_media, 
 					shaderToyArgs.iChannelResolution[0] = videoMedia->mediaDimensions[0];
 					shaderToyArgs.iChannelResolution[1] = videoMedia->mediaDimensions[1];
 					shaderToyArgs.iChannelResolution[2] = shaderToyArgs.iChannelResolution[0] / shaderToyArgs.iChannelResolution[1];
-					player.play();
-					
-					player.setPosition(videoMedia->playBackSettings.seekerPosition);
+                    
+                    //player.setPosition(videoMedia->playBackSettings.seekerPosition);
+					//player.play();
+                    setVideoFilePlaybackInformation(player, videoMedia->playBackSettings);
 					
 					// sync video Media (makes sure to stop threaded playback)
 					videoMedia.triggerUpdate();
@@ -931,9 +924,8 @@ bool videoShader::loadVideoFile(const karmaVideoMediaInformationStruct &_media, 
 			
 			textures.clear();
 			textures.push_back( ofTexture() );
-			textures.back().allocate(player.getWidth(), player.getHeight(), GL_RGB);
+			textures.back().allocate(videoMedia->mediaDimensions[0], videoMedia->mediaDimensions[1], GL_RGB);
 			shaderToyArgs.iChannelTime[0]=0.f;
-			//texturesTime.push_back(0.f);
 			
 			// tmp, this could possibly reset another error then the video file error... // todo
 			if(bHasError){
@@ -1116,6 +1108,10 @@ void videoShader::setUseThread(const bool& _useThread){
 
 void videoShader::setVideoFilePlaybackInformation(ofVideoPlayer& _player, karmaVideoPlaybackSettingsStruct _settings) {
 	
+	if( !_player.isInitialized() ){
+		return;
+	}
+	
 	_player.setVolume(_settings.volume);
 	_player.setSpeed(_settings.playbackSpeed);
 	_player.setLoopState(_settings.loopState);
@@ -1284,11 +1280,11 @@ void videoShader::threadedFunction(){
 				videoMedia->playBackSettings.seekerPosition = threadedPlayer.getPosition();
 	
 				if( (threadedPlayer.isFrameNew() /*|| player.getPosition()<0*/) && newImagesFromThread.empty() ){
-					static kmNewVideoFrameStruct newFrame(threadedPlayer.getPixels());
+					kmNewVideoFrameStruct newFrame(threadedPlayer.getPixels());
 					
 					if(newFrame.newPixels.isAllocated()){
 						newFrame.position = videoMedia->playBackSettings.seekerPosition;
-						newImagesFromThread.send (newFrame);
+						newImagesFromThread.send( std::move(newFrame) );
 					}
 				}
 			}
