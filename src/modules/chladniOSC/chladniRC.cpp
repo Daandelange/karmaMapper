@@ -349,7 +349,7 @@ bool chladniRC::setupArduinoSerial(){
 	
 	if (!devicesInfo.empty()){
 		for (std::size_t i = 0; i < devicesInfo.size(); ++i) {
-		if( devicesInfo[i].getDescription().find("Arduino") != devicesInfo[i].getDescription().npos ){
+			if( devicesInfo[i].getDescription().find("Arduino") != devicesInfo[i].getDescription().npos ){
 				
 				// try connect
 				if(connectToArduino(devicesInfo[i])){

@@ -87,8 +87,8 @@ void setup(){
   pinMode(flowMeterPin[1], INPUT_PULLUP);
   digitalWrite(flowMeterPin[0], HIGH); // pullup
   digitalWrite(flowMeterPin[1], HIGH); // pullup
-  attachInterrupt( digitalPinToInterrupt(flowMeterPin[0]), flowMeter1PulseCounter, FALLING);
-  attachInterrupt( digitalPinToInterrupt(flowMeterPin[1]), flowMeter2PulseCounter, FALLING);
+  //attachInterrupt( digitalPinToInterrupt(flowMeterPin[0]), flowMeter1PulseCounter, FALLING);
+  //attachInterrupt( digitalPinToInterrupt(flowMeterPin[1]), flowMeter2PulseCounter, FALLING);
   flowMeterPulseCount[0] = 0;
   flowMeterPulseCount[1] = 0;
   flowRate[0] = 0.0;
@@ -196,7 +196,7 @@ void loop(){
 
   // led stuff
   {
-    analogWrite(leds1Pin, leds1Brightness);
+    //analogWrite(leds1Pin, leds1Brightness);
 
     // change the brightness for next time through the loop:
     //brightness = brightness + fadeAmount;
@@ -208,7 +208,7 @@ void loop(){
   }
 
     // Flow meter
-    {
+    /*{
       // calc flow variables
       for(int pin =0; pin<2; ++pin){
       if ((millis() - oldTime[pin]) > 500){   // Only process counters twice per second
@@ -284,9 +284,9 @@ void loop(){
         }
       }
       } // end for flowmeter pins
-
-
+      
     } // end flow meter section
+    // */
 
   // update serial communication
   serial.update();

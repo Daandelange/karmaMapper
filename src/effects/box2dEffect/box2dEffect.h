@@ -17,6 +17,7 @@
 #include "liveGrabberOSC.h" // todo: use liveGrabberEvents.h
 //#include "ofxBox2d.h"
 #include "ofxLiquidFun.h"
+#include "chladniRC.h"
 
 struct animationParams;
 
@@ -70,6 +71,7 @@ public:
 	void _mousePressed( ofMouseEventArgs& args );
 	void liveGrabberNoteEventListener(liveGrabberNoteEventArgs &_args);
     void liveGrabberBangEventListener(liveGrabberBangEventArgs &_args);
+	void tempoEventListener(mirTempoEventArgs &_args);
 
 	
 protected:
