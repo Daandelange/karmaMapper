@@ -5,6 +5,9 @@
 
 #define KM_VERSION "0.2+ alpha (master)"
 
+// since of 0.9.4, we'll jump to glm later
+//#define OF_USE_LEGACY_MESH 1
+
 // - - - - - -
 // ENABLE / DISABLE some features on compilation time ?
 // - - - - - -

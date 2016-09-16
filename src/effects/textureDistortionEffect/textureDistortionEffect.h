@@ -27,8 +27,8 @@ struct animationParams;
 
 struct distortionPoint {
 	int texCoordIndex = -1;
-	ofPoint texCoordOffset = ofPoint(0,0);  // relative
-	ofPoint texCoordOffsetChanging = ofPoint(0,0); // relative
+	ofDefaultVec2 texCoordOffset = ofDefaultVec2(0,0);  // relative
+	ofDefaultVec2 texCoordOffsetChanging = ofDefaultVec2(0,0); // relative
 	basicPoint* shapeCenter = nullptr;
 	int shapeVertIndex = -1;
 	string shapeName = "";

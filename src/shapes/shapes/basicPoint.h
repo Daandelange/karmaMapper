@@ -46,8 +46,13 @@ public:
 	// conversion
 	basicPoint operator =( const ofVec2f& p ) const;
 	basicPoint operator =( const ofPoint& p ) const;
+	basicPoint operator =( const glm::vec2& p ) const;
+	basicPoint operator =( const glm::vec3& p ) const;
 	operator ofVec2f() const { return ofVec2f(x,y); }
 	operator ofPoint() const { return ofPoint(x,y,0); }
+	operator glm::vec2() const { return glm::vec2(x,y); }
+	operator glm::vec3() const { return glm::vec3(x,y,0); }
+	
 	
 	basicPoint operator + ( const basicPoint& p ) const;
 	basicPoint operator - ( const basicPoint& p ) const;
@@ -133,11 +138,16 @@ inline bool basicPoint::operator!=( const basicPoint& p ) const {
 
 // conversion
 inline basicPoint basicPoint::operator =( const ofVec2f& p ) const{
-	
-	return basicPoint(x-p.x, y-p.y);
+	return basicPoint(x-p.x, y-p.y); // todo: is the minus correct???
 }
 inline basicPoint basicPoint::operator =( const ofPoint& p ) const {
-	return basicPoint(x-p.x, y-p.y);
+	return basicPoint(x-p.x, y-p.y); // todo: is the minus correct???
+}
+inline basicPoint basicPoint::operator =( const glm::vec2& p ) const{
+	return basicPoint(p.x, p.y);
+}
+inline basicPoint basicPoint::operator =( const glm::vec3& p ) const{
+	return basicPoint(p.x, p.y);
 }
 
 // operations

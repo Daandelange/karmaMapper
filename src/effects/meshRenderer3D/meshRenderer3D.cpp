@@ -240,7 +240,7 @@ bool meshRenderer3D::loadModel(string file){
 		min.set(0,0,0);
 		max.set(0,0,0);
 		for(int i=0; i<mesh.getNumVertices(); i++){
-			ofVec3f* v = &mesh.getVerticesPointer()[i];
+			ofDefaultVec3* v = &mesh.getVerticesPointer()[i];
 			if(min.x > v->x) min.x = v->x;
 			else if (max.x < v->x) max.x = v->x;
 			if(min.y > v->y) min.y = v->y;

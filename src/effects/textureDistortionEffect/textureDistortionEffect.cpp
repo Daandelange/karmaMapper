@@ -135,7 +135,7 @@ void textureDistortionEffect::update(karmaFboLayer& renderLayer, const animation
 	if(bIsInEditMode && clicked!=nullptr){
 		if(distortedPoints.find(clicked) != distortedPoints.end()){
 			//distortedPoints[clicked].texCoordOffset.set(ofGetMouseX(),ofGetMouseY());
-			distortedPoints[clicked].texCoordOffset.set(ofVec2f(ofGetMouseX(),ofGetMouseY())- *(distortedPoints[clicked].shapeCenter) - *clicked );
+			distortedPoints[clicked].texCoordOffset = ofDefaultVec2(ofDefaultVec2(ofGetMouseX(),ofGetMouseY())- *(distortedPoints[clicked].shapeCenter) - *clicked );
 		}
 	}
 	
@@ -147,7 +147,7 @@ void textureDistortionEffect::update(karmaFboLayer& renderLayer, const animation
 		for(auto dp=distortedPoints.begin(); dp!=distortedPoints.end(); ++dp){
 			//dp->second.
 			
-			dp->second.texCoordOffsetChanging = ofPoint( (cos((ofGetElapsedTimef()+dp->second.texCoordIndex/5.f)))*50.f*mirReceiver::mirCache.zcr, sin(ofGetElapsedTimef()/10.f+(dp->second.texCoordIndex+dp->second.shapeVertIndex))*50.f*mirReceiver::mirCache.zcr);
+			dp->second.texCoordOffsetChanging = ofDefaultVec2( (cos((ofGetElapsedTimef()+dp->second.texCoordIndex/5.f)))*50.f*mirReceiver::mirCache.zcr, sin(ofGetElapsedTimef()/10.f+(dp->second.texCoordIndex+dp->second.shapeVertIndex))*50.f*mirReceiver::mirCache.zcr);
 			//dp->second.texCoordOffsetChanging = ofPoint( sin(ofGetElapsedTimef()), cos(ofGetElapsedTimef()/3.4f));
 			//triangulation.triangleMesh.setTexCoord(dp->second.texCoordIndex, args);
 			//dp->second.texCoordOffsetChanging *= mirReceiver::mirCache.zcr*10.f+5.f;
@@ -269,8 +269,8 @@ bool textureDistortionEffect::generateGridFromShapes(){
 				int ptOffset = 0;
 				for( auto pt=points.begin(); pt!=points.end(); ++pt ){
 					distortionPoint point;
-					point.texCoordOffsetChanging = ofPoint(0,0);
-					point.texCoordOffset = ofPoint(0,0);
+					point.texCoordOffsetChanging = ofDefaultVec2(0,0);
+					point.texCoordOffset = ofDefaultVec2(0,0);
 					point.texCoordIndex = 0;
 					point.shapeName = tmpShape->getName();
 					point.shapeVertIndex = ptOffset;
@@ -303,7 +303,7 @@ void textureDistortionEffect::reTriangulateFromPoints(){
 	
 	triangulation.reset();
 	
-	vector<ofVec2f> textureCoords;
+	vector<ofDefaultVec2> textureCoords;
 	textureCoords.clear();
 	
 	// add screen coordinates
@@ -314,25 +314,25 @@ void textureDistortionEffect::reTriangulateFromPoints(){
 	unsigned int numScreenPoints = 0;
 	
 	for(int i=0; i<res; i++){
-		ofVec2f pt((w/res)*i ,0);
+		ofDefaultVec2 pt((w/res)*i ,0);
 		triangulation.addPoint(pt);
 		textureCoords.push_back(pt);
 		numScreenPoints++;
 	}
 	for(int i=0; i<res; i++){
-		ofVec2f pt(w,(h/res)*i);
+		ofDefaultVec2 pt(w,(h/res)*i);
 		triangulation.addPoint(pt);
 		textureCoords.push_back(pt);
 		numScreenPoints++;
 	}
 	for(int i=0; i<res; i++){
-		ofVec2f pt((w/res)*(res-i), h);
+		ofDefaultVec2 pt((w/res)*(res-i), h);
 		triangulation.addPoint(pt);
 		textureCoords.push_back(pt);
 		numScreenPoints++;
 	}
 	for(int i=0; i<res; i++){
-		ofVec2f pt(0, (h/res)*(res-i));
+		ofDefaultVec2 pt(0, (h/res)*(res-i));
 		triangulation.addPoint(pt);
 		textureCoords.push_back(pt);
 		numScreenPoints++;
@@ -341,7 +341,7 @@ void textureDistortionEffect::reTriangulateFromPoints(){
 	int i=0;
 	for(auto pt=distortedPoints.begin();pt!=distortedPoints.end();++pt){
 		triangulation.addPoint( *pt->first + *pt->second.shapeCenter );
-		textureCoords.push_back(basicPoint(pt->second.texCoordOffset) + *(pt->second.shapeCenter) + *(pt->first) + pt->second.texCoordOffsetChanging);
+		textureCoords.push_back(ofDefaultVec2(pt->second.texCoordOffset) + *(pt->second.shapeCenter) + *(pt->first) + pt->second.texCoordOffsetChanging);
 		pt->second.texCoordIndex = i+numScreenPoints;
 		i++;
 	}
@@ -370,7 +370,11 @@ void textureDistortionEffect::mouseClicked(ofMouseEventArgs &args){
 	
 	if(distortedPoints.size()>0){
 		for(auto pt=distortedPoints.begin(); pt!=distortedPoints.end(); ++pt){
+#ifndef OF_USE_LEGACY_MESH
+			if( glm::distance( args , pt->second.texCoordOffset + *pt->second.shapeCenter + *pt->first ) < KM_TDE_HANDLE_RADIUS){
+#else
 			if( args.distance( pt->second.texCoordOffset + *pt->second.shapeCenter + *pt->first ) < KM_TDE_HANDLE_RADIUS){
+#endif
 				clicked = pt->first;
 				return;
 			}
