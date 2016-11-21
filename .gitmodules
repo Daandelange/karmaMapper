@@ -1,0 +1,3 @@
+[submodule "distantNodes"]
+	path = distantNodes
+	url = git://github.com/daandelange/distantNodes.git
