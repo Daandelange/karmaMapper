@@ -6,6 +6,10 @@ If you're at ease with code, it's a perfect tool to start coding on physical sur
 
 Runs on Mac and Linux and Windows (alpha). 
 
+__Update 11-12-2016__  
+I have broken some parts intensely developing it for my exams. There have also been some openFrameworks updates leading to compilation issues and have had no time to maintain the Linux and Windows compilation.  
+Over the next months I'm planing to restructure some code, and integrate a "shared variables ecosystem" with [VideoDromm](https://github.com/videodromm/). I'll also do some documentation and publish a binary to try it quickly.
+
 __karmaMapper is a work in progress.__  
 _Curently (18-06-2016), the latest build is stable on Mac while the Windows version is not stable yet. The Linux version should not be hard to get to compile.  
 There's a scene editor allowing you to configure a set of "mappable" shapes, then load them within the animator app which lets you instantiate some effects and modules and bind them with these shapes.
@@ -16,59 +20,60 @@ _In the future, karmaMapper will aim to facilitate the work of creative coders w
 ![Screenshot](https://raw.githubusercontent.com/Karma-Kusala/karmaMapper/master/karmaMapper-cover-GIF.gif)
 
 ## SETUP
-#### Required Dependencies:  
-- [OpenFrameworks 9.0](http://www.openframeworks.cc/) with the following addons:  
-	- [ofxImUI](https://github.com/jvcleave/ofxImGui)
-	- [ofxAbletonLiveSet](https://github.com/satoruhiga/ofxAbletonLiveSet)	 
-	- ofxUVC  
-	_Note: Mac only. You may have to rename the `.mm`/`.m` file extensions in the addons' `/src/` to `.cpp` if you compile with makefiles_)
-	- Etc. _(see `clone_addons.sh`_
-	- __Note__: _Some effects may have other dependencies._
- 
 #### Install
-- [Install OpenFrameworks](http://openframeworks.cc/setup/) then:
-- `cd OF/apps/`
-- `mkdir karmaApps && cd ./karmaApps`
-- `git clone git@github.com:Karma-Kusala/karmaMapper.git`
-- `cd ./karmaMapper`
-- `./clone_addons.sh`  
-_Note: on Windows, run the commands in the git command prompt._
+- [Install OpenFrameworks](http://openframeworks.cc/setup/)  
+- Clone the karmaMapper project:  
+
+	```bash
+	cd OF/apps/  
+	mkdir karmaApps && cd ./karmaApps  
+	git clone git@github.com:Karma-Kusala/karmaMapper.git --recursive   
+	```
+- Install dependencies: `cd ./karmaMapper && ./clone_addons.sh`  
+_Note: On Windows, run the commands in the git command prompt._
 
 #### Compile
-- **Makefiles**:  
+_(Choose one)_  
+
+- **Makefiles**: ( _/!\ Not tested with current build_ )  
 `cd OF/apps/karmaApps/karmaMapper`  
 `make Release`  
 `make RunRelease`   
 Select the animator or the editor in `config.make`  
 	- `PROJECT_DEFINES = KM_EDITOR_APP`
-	- `PROJECT_DEFINES = KM_ANIMATOR_APP`
+	- `PROJECT_DEFINES = KM_ANIMATOR_APP`  
+	
+ _Note: Mac only. You may have to rename the `.mm`/`.m` file extensions in the addons' `ofxUVC/src/` to `.cpp`_
   
-- **Qt Creator**:  
+- **Qt Creator**: ( _/!\ Not tested with current build_ )  
 Open `karmaMapper.qbs` and compile.  
 See also the [OF Qt setup guide](http://openframeworks.cc/setup/qtcreator/).  
 On Linux I also had to [update gcc to version 4.9](http://askubuntu.com/questions/428198/getting-installing-gcc-g-4-9-on-ubuntu).  
 To select a **target**, edit `karmaMapper.qbs` and look for `of.defines: ['KM_ANIMATOR_APP']`  
 
 - **Xcode**:  
-Open `karmaMapper.xcodeproj` and select either the `karmaMapper Editor` or `karmaMapper Animator` target.
+Open `karmaMapper.xcodeproj` and select either the `karmaMapper Editor` or `karmaMapper Animator` target.  
 
-- **Visual Studio**:  
+	[__osx 10.12+ only__] : [Apple has kicked out the QTKit framework from 10.12+](https://forum.openframeworks.cc/t/macos-10-12-sierra-xcode-8-quicktime-deprecation-workaround/24179), needed by karmaMapper. For now, use `MacOSX10.9.sdk` (or 10.11).  
+	- [Download an SDK](https://github.com/phracker/MacOSX-SDKs/releases/tag/MacOSX10.11.sdk)  
+	- Install via symlink: (you can also copy the file into Xcode)  
+`sudo ln -s /path/to/MacOSX10.11.sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs`  
+	- Relaunch Xcode then select the right SDKs to use to build and link karmaMapper and OF on each target in your project settings.
+
+- **Visual Studio**: ( _/!\ Not tested with current build_ )  
 Open `karmaMapper.vcxproj` and compile. If not compiling, it may help to re-generate the project using OpenFramework's Project Generator.
 
 #### Optional:
-- a RaspberryPi + Raspbian _(for real-time sound analysis with Pd Vanilla)_
-Note: I successfully compiled and ran the karmaMapper animator on a RaspberryPi2.
+Some [extra standalone apps](https://github.com/Karma-Kusala/karmaMapper/tree/master/utilities/) are available on rpi and other platforms, they can connect to and interact with karmaMapper.
 
-## Details
-It lets you configure a series of virtual 2D shapes on a 3D environment. This simplifies the whole image output generation process not needing complex transform matrices and so on. These shapes are then passed to an animator class which applies effects on them. The idea is to build a big animator app for creative coders that works together with a bunch of side-apps and tools.  
+- **RaspberryPi + Raspbian**: ( _/!\ Not tested with current build_ )  
+Various scripts will be available, so an Rpi will be useful to have around.
+[Pd sound analyser](https://github.com/Karma-Kusala/karmaMapper/tree/master/utilities/karmaSoundAnalyser) - [Pd Chladni plate generator](https://github.com/Karma-Kusala/karmaMapper/tree/master/utilities/chladni-plate-generator)
+Note: I also got the karmaMapper (renderer) to compile and run on a RaspberryPi2 using Raspbian. Not sure the current version still compiles.
+- **Arduino**  
+A [serial control interface](https://github.com/Karma-Kusala/karmaMapper/tree/master/src/modules/serialController_v1) is available to communicate with Arduinos over USB / Serial.
 
-## Architecture
-It's made for extensibility and there are several components:
-
-- Vectorial shapes provide a virtual interface with a physial space. A shapes server serves them; there's also an editor to configure a space.
-- An animator lets you control most settings manually or automatically.
-- Effects are applied to shapes by the animator component which can be controlled manually or automatically.
-
+____
 
 ## People
 #### Contributors
