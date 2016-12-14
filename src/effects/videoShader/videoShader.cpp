@@ -151,6 +151,7 @@ void videoShader::update(karmaFboLayer& renderLayer, const animationParams& para
 		else if(videoMode==VIDEO_MODE_UVC_WEBCAM ){
 			//shaderToyArgs.iChannelTime[0]=player.getPosition();
 			
+#if defined( OF_VIDEO_CAPTURE_QTKIT )
 			if( UVCWebcam.isReady() ){
 				
 				UVCWebcam.update();
@@ -169,7 +170,8 @@ void videoShader::update(karmaFboLayer& renderLayer, const animationParams& para
 				}
 				webcamFPSHistory[WEBCAM_FPS_HISTORY_SIZE-1] = webcamFPSCounter.getFps();
 				
-			}
+            }
+#endif
 		}
 		
 #ifdef KM_ENABLE_SYPHON
@@ -219,8 +221,10 @@ void videoShader::reset(){
 	loadShader( effectFolder("videoShader.vert"), effectFolder("videoShader.frag") );
 	
 	activeCamera = "";
+ #if defined( OF_VIDEO_CAPTURE_QTKIT )
 	UVCWebcam.close();
 	UVCWebcam.setUseAudio(false);
+ #endif
 	webcamSettings.targetFPS = 30;
 	webcamSettings.width = 1280;
 	webcamSettings.height = 720;
@@ -231,7 +235,9 @@ void videoShader::reset(){
 	}
 
 #ifdef KARMAMAPPER_DEBUG
-	UVCWebcam.setVerbose(false);
+#if defined( OF_VIDEO_CAPTURE_QTKIT )
+    UVCWebcam.setVerbose(false);
+#endif
 #endif
 
 #ifdef TARGET_OSX
@@ -354,9 +360,9 @@ bool videoShader::printCustomEffectGui(){
 		ImGui::Separator();
 		
 		if(videoMode==VIDEO_MODE_FILE){
-			ImGui::TextWrapped("This mode reads a video from a given file.");
-			ImGui::LabelText("Video File Directory", "%s", videoMedia.get().path.c_str() );
-			ImGui::LabelText("Video File Name", "%s", videoMedia.get().fileName.c_str() );
+            ImGui::TextWrapped("This mode reads a video from a given file.");
+            ImGui::LabelText("Video File Directory", "%s", videoMedia.get().path.c_str() );
+            ImGui::LabelText("Video File Name", "%s", videoMedia.get().fileName.c_str() );
 			
 			if( ImGui::Button("Choose File...") ){
 				ofFileDialogResult d = ofSystemLoadDialog("Choose a video file...");
@@ -408,6 +414,7 @@ bool videoShader::printCustomEffectGui(){
 			ImGui::Text("Webcam source : %s", activeCamera.c_str());
 			
 			if(ImGui::TreeNode("Webcam Selection")){
+                #if defined( OF_VIDEO_CAPTURE_QTKIT )
 				vector<string> availableCams = UVCWebcam.listVideoDevices();
 				if(availableCams.size()==0){
 					ImGui::TextWrapped("[None available...]");
@@ -418,11 +425,16 @@ bool videoShader::printCustomEffectGui(){
 							selectUVCWebcam(*it);
 						}
 					}
-				}
+                }
+#else
+                // No qtkit...
+                ImGui::TextWrapped("[Not available, no Qtkit in this build]");
+#endif
 				ImGui::TreePop();
 			}
 			
-			if(ImGui::TreeNode("Webcam Setup")){
+#if defined( OF_VIDEO_CAPTURE_QTKIT )
+            if(ImGui::TreeNode("Webcam Setup"))
 				//UVCWebcam.setDesiredFrameRate();
 				ImGui::TextWrapped("Device ID: %d", UVCWebcam.getDeviceID() );
 				
@@ -500,6 +512,9 @@ bool videoShader::printCustomEffectGui(){
 				
 				ImGui::TreePop();
 			}
+// endif QT KIT
+#endif
+
 #ifdef TARGET_OSX
 			if(ImGui::TreeNode("Webcam UVC Setup")){
 				
@@ -947,6 +962,11 @@ bool videoShader::loadVideoFile(const karmaVideoMediaInformationStruct &_media, 
 }
 
 bool videoShader::selectUVCWebcam(string _cam){
+
+#if !defined( OF_VIDEO_CAPTURE_QTKIT )
+    return false;
+#else
+
 	int camNum = -1;
 	vector<string> cams = UVCWebcam.listVideoDevices();
 	
@@ -1038,6 +1058,9 @@ bool videoShader::selectUVCWebcam(string _cam){
 	}
 	
 	return true;
+// endif QT KIT
+#endif
+
 }
 
 #ifdef KM_ENABLE_SYPHON

@@ -181,17 +181,26 @@ protected:
 	ofVideoPlayer threadedPlayer;
 	ofxFps videoPlayerFPSCounter;
 	float videoPlayerFPSHistory[WEBCAM_FPS_HISTORY_SIZE];
-	karmaThreadedParam<struct karmaVideoMediaInformationStruct> videoMedia;
-	karmaThreadedParam<bool> bUseThreadedFileDecoding;
+    // tmp disabled for qt creator
+    karmaThreadedParam<struct karmaVideoMediaInformationStruct> videoMedia;
+    karmaThreadedParam<bool> bUseThreadedFileDecoding;
 	ofThreadChannel<kmNewVideoFrameStruct> newImagesFromThread;
 	virtual void threadedFunction();
 	
-	// UVC webcam
-	ofQTKitGrabber UVCWebcam;
-	webcamSettingsStruct webcamSettings;
-	ofxFps webcamFPSCounter;
-	string activeCamera;
-	float webcamFPSHistory[WEBCAM_FPS_HISTORY_SIZE];
+    // UVC webcam
+    webcamSettingsStruct webcamSettings;
+    ofxFps webcamFPSCounter;
+    string activeCamera;
+    float webcamFPSHistory[WEBCAM_FPS_HISTORY_SIZE];
+
+    // qtkit
+#if defined( OF_VIDEO_CAPTURE_QTKIT )
+ //   #pragma message "Using QTKIT..."
+    ofQTKitGrabber UVCWebcam;
+#else
+    #pragma message "videoShader effect compiling without playback features."
+#endif
+
 	
 #ifdef TARGET_OSX
 	

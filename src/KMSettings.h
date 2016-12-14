@@ -20,8 +20,20 @@
 	//#define KM_ENABLE_SYPHON
 
 	#ifdef KM_QT_CREATOR
-                #define KM_ENABLE_SYPHON
-		//#pragma message "Enabling Syphon. On Qt Creator you'll need to copy Syphon.framework to /Library/Frameworks. Also verify your git branch depending on your window type and OF version."
+        #define KM_ENABLE_SYPHON
+        #pragma message "Enabling Syphon. On Qt Creator you'll need to copy Syphon.framework to /Library/Frameworks. Also verify your git branch depending on your window type and OF version."
+
+        #ifdef TARGET_OSX
+            #pragma message "Syphon + Qt Creator + osx DETECTED! [IMPORTANT] Use https://github.com/asus4/ofxSyphon/tree/of_v0.9.0_OpenGL3 and edit /addons/ofxSyphon/addon_config.make to only match settings below. (see KMSettings.h)"
+            // QT 4.1 + OSX, put in following file : /addons/ofxSyphon/addon_config.make (trip any other settings)
+            // ADDON_INCLUDES += addons/ofxSyphon/libs/Syhpon/src/
+            // ADDON_LDFLAGS = -F/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx
+            // #ADDON_FRAMEWORKS = Syphon (line commented out)
+            // ADDON_SOURCES = src/ofxSyphonClient.mm
+            // ADDON_SOURCES += src/ofxSyphonServer.mm
+            // ADDON_SOURCES += src/ofxSyphonServerDirectory.mm
+            // ADDON_SOURCES += src/libs/Syphon/src/SyphonNameboundClient.m
+        #endif
 	#else
 		#define KM_ENABLE_SYPHON
 		#pragma message "Enabling Syphon. Make sure you use OSX + XCode to compile. Also verify your git branch depending on your window type and OF version."

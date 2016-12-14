@@ -12,6 +12,7 @@ Project{
     ofApp {
         name: { return FileInfo.baseName(path) }
 
+        cpp.minimumMacosVersion: "10.9"
         //cpp.includePaths: of.cpp.includePaths.concat(Helpers.listDirsRecursive(project.sourceDirectory + '/src'))
 
         files: [
@@ -60,9 +61,12 @@ Project{
             'src/modules/liveGrabberOSC/liveGrabberOSC.h',
 
             // PARAMS
+            'src/parameters/animationParams.cpp',
             'src/parameters/animationParams.h',
             'src/parameters/animationParamsServer.cpp',
             'src/parameters/animationParamsServer.h',
+            'src/parameters/karmaParam.cpp',
+            'src/parameters/karmaParam.h',
 
             // EFFECTS
             'src/effects/effects.h',
@@ -141,6 +145,7 @@ Project{
             'ofxFPS',
             'ofxUVC',
             'ofxDelaunay',
+            //'ofxPoco'
         ];
 
         // additional flags for the project. the of module sets some
@@ -148,7 +153,7 @@ Project{
         // this flags can be augmented through the following properties:
         of.pkgConfigs: []       // list of additional system pkgs to include
 
-        // unfortunately you have to enter all these manually... :'(
+        // For now, please enter these manually, later on they will be scanned automatically.
         of.includePaths: [
             'src/shapes/shapes/',
             'src/shapes/',
@@ -171,28 +176,37 @@ Project{
                 'src/modules/durationOSC',
         ] // include search paths
         of.cFlags: [
-            '-fpermissive',
+            //'-fpermissive',
         ]  // flags passed to the c compiler
         //of.cxxFlags: []         // flags passed to the c++ compiler
         of.linkerFlags: [
-
+            '-v', // shows more detailed linker errors
         ]      // flags passed to the linker
         //of.defines: ['KM_EDITOR_APP', 'KM_QT_CREATOR'] // defines are passed as -D to the compiler
-        of.defines: ['KM_ANIMATOR_APP', 'KM_QT_CREATOR']
-        // and can be checked with #ifdef or #if in the code
+        of.defines: ['KM_ANIMATOR_APP', 'KM_QT_CREATOR'] // and can be checked with #ifdef or #if in the code
+        of.frameworks: ['Syphon'] // note: osx only
+
+        // general compilation fixes for OF0.9 + OSX 10.12
+        Properties {
+            condition: qbs.targetOS.contains("osx")
+            of.linkerFlags: outer.concat([
+                '-L'+Helpers.normalize(FileInfo.joinPaths(sourceDirectory,"../../../libs/curl/lib/osx/")),
+                '-lcurl'
+            ]);
+            of.frameworks: outer.concat(['Qtkit']);
+        }
 
         // add Syphon Support on OSX
-//        Properties {
-
-//            // osx only, additional frameworks to link with the project
-//            condition: qbs.targetOS.contains("osx")
-//            of.addons: ['ofxSyphon'].concat(outer)
-
-//            of.frameworks: outer.concat(['Syphon', 'Qtkit'])
+        Properties {
+            // osx only, additional frameworks to link with the project
+            condition: qbs.targetOS.contains("osx")
+            of.addons: ['ofxSyphon'].concat(outer)
+            //of.frameworks: outer.concat(['Syphon'])
 //            of.linkerFlags: outer.concat([
-//                '-F/Developer/openFrameworks/addons/ofxSyphon/libs/Syphon/lib/osx',
-//                //'-lSyphon'
+//                 '-F../../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon',
+//                '-lSyphon',
 //            ])
+            of.includePaths: outer.concat(['../../../addons/ofxSyphon/libs/Syhpon/src/']);
 //            of.includePaths: outer.concat([
 //                '../../../addons/ofxSyphon/libs',
 //                '../../../addons/ofxSyphon/libs/Syphon',
@@ -200,20 +214,33 @@ Project{
 //                '../../../addons/ofxSyphon/libs/Syphon/lib/osx',
 //                '../../../addons/ofxSyphon/libs/Syphon/src',
 //                '../../../addons/ofxSyphon/src',
+//                //'../../../libs/openssl/include',
 //            ]);
-//        }
-//        Group {
-//            name: 'Syphon Files DirtyFix'
-//            // osx only, additional frameworks to link with the project
-//            condition: qbs.targetOS.contains("osx")
-//            // dirty fix for .mm files
-//            files: base.concat([
-//                '../../../addons/ofxSyphon/src/ofxSyphonClient.mm',
-//                '../../../addons/ofxSyphon/src/ofxSyphonServer.mm',
-//                '../../../addons/ofxSyphon/src/ofxSyphonServerDirectory.mm',
-//                '../../../addons/ofxSyphon/libs/Syphon/src/SyphonNameboundClient.m',
-//            ])
-//        }
+        }
+
+        // Syphon missing file
+        Group {
+            name: 'Missing Syphon Files'
+            // osx only, additional frameworks to link with the project
+            condition: qbs.targetOS.contains("osx")
+            // dirty fix for .mm files
+            files: base.concat([
+                '../../../addons/ofxSyphon/src/ofxSyphonClient.h',
+                '../../../addons/ofxSyphon/src/ofxSyphonServer.h',
+                '../../../addons/ofxSyphon/src/ofxSyphonServerDirectory.h',
+                '../../../addons/ofxSyphon/libs/Syphon/src/SyphonNameboundClient.m',
+            ])
+        }
+
+        Properties {
+                // osx only, tmp ofxVideoRecorder
+                condition: qbs.targetOS.contains("osx")
+                //of.addons: ['ofxPoco'].concat(outer)
+                of.linkerFlags: Helpers.listDirsRecursive(project.sourceDirectory + "../../../addons/ofxPoco/libs/poco/lib/osx/*.a").concat(outer);
+            //-L
+            //'-l/addons/ofxPoco/libs/poco/lib/osx/*.a'
+         }
+
         Group {
             name: 'ofxUVC Files DirtyFix'
             // osx only, additional frameworks to link with the project
@@ -223,6 +250,29 @@ Project{
                 '../../../addons/ofxUVC/src/ofxUVC.mm',
                 '../../../addons/ofxUVC/src/UVCCameraControl.m',
             ])
+        }
+
+        Properties {
+
+            // osx only, tmp poco mess
+            condition: qbs.targetOS.contains("osx")
+            of.addons: ['ofxPoco'].concat(outer)
+
+            //of.staticLibraries: outer.concat('Poco');
+
+            //of.frameworks: outer.concat(['Poco'])
+            //                '-L/addons/ofxPoco/libs/poco/lib/',
+            //                '-lPoco',
+            //                ADDON_INCLUDES += libs/openssl/include
+            //                '-L/addons/ofxPoco/libs/poco/lib/PocoNetSSL.a',
+            //                '-L/addons/ofxPoco/libs/poco/lib/PocoNet.a',
+            //                '-L/addons/ofxPoco/libs/poco/lib/PocoCrypto.a',
+            //                '-L/addons/ofxPoco/libs/poco/lib/PocoUtil.a',
+            //                '-L/addons/ofxPoco/libs/poco/lib/PocoJSON.a',
+            //                '-L/addons/ofxPoco/libs/poco/lib/PocoXML.a',
+            //                '-L/addons/ofxPoco/libs/poco/lib/PocoFoundation.a',
+            //                '-F/libs/openssl/lib/osx/crypto.a',
+            //                '-F/libs/openssl/lib/osx/ssl.a',
         }
 
         // other flags can be set through the cpp module: http://doc.qt.io/qbs/cpp-module.html
