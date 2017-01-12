@@ -1,3 +1,6 @@
 [submodule "distantNodes"]
 	path = distantNodes
 	url = git://github.com/daandelange/distantNodes.git
+[submodule "utilities/karmaSoundAnalyser"]
+	path = utilities/karmaSoundAnalyser
+	url = git@github.com:Karma-Kusala/karmaSoundAnalyser.git

@@ -25,9 +25,9 @@ _In the future, karmaMapper will aim to facilitate the work of creative coders w
 - Clone the karmaMapper project:  
 
 	```bash
-	cd OF/apps/  
+	cd /path/to/openFrmeworks/apps/  
 	mkdir karmaApps && cd ./karmaApps  
-	git clone git@github.com:Karma-Kusala/karmaMapper.git --recursive   
+	git clone https://github.com/Karma-Kusala/karmaMapper.git --recursive   
 	```
 - Install dependencies: `cd ./karmaMapper && ./clone_addons.sh`  
 _Note: On Windows, run the commands in the git command prompt._
@@ -86,10 +86,8 @@ ____
  - Douglas Edric Stanley ([Abstractmachine](http://www.abstractmachine.net/))
  - Gregory Pignot ([Servovalve](http://www.servovalve.org/))
  - [Guillaume Stagnaro](http://stagnaro.net/)
- - Julien Rancoeur / [Fx23](https://soundcloud.com/fx23) ([ADN](http://artdistorsionsnumeriques.com/))
  - [Tetalab](http://tetalab.org/)
  - [Esaaix](http://ecole-art-aix.fr/)
- - [François Parra](http://www.autotune.eu/)
  - Locust
 
 ##  
