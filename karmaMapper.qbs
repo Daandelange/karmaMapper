@@ -184,7 +184,7 @@ Project{
         ]      // flags passed to the linker
         //of.defines: ['KM_EDITOR_APP', 'KM_QT_CREATOR'] // defines are passed as -D to the compiler
         of.defines: ['KM_ANIMATOR_APP', 'KM_QT_CREATOR'] // and can be checked with #ifdef or #if in the code
-        of.frameworks: [''] // note: osx only
+        of.frameworks: [] // note: osx only
 
         // general compilation fixes for OF0.9 + OSX 10.12
         Properties {
@@ -193,7 +193,6 @@ Project{
                 '-L'+Helpers.normalize(FileInfo.joinPaths(sourceDirectory,"../../../libs/curl/lib/osx/")),
                 '-lcurl'
             ]);
-            of.frameworks: outer.concat(['Qtkit']);
         }
 
         // add Syphon Support on OSX
@@ -201,14 +200,12 @@ Project{
             // osx only, additional frameworks to link with the project
             condition: qbs.targetOS.contains("osx")
             of.addons: ['ofxSyphon'].concat(outer)
-            //of.frameworks: outer.concat(['Syphon'])
+            of.frameworks: outer.concat(['Syphon'])
 //            of.linkerFlags: outer.concat([
-//                 '-F../../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon',
+//                '-F../../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon',
 //                '-lSyphon',
 //            ])
             of.includePaths: outer.concat(['../../../addons/ofxSyphon/libs/Syhpon/src/']);
-            of.frameworks: outer.concat(['Syphon']);
-
 //            of.includePaths: outer.concat([
 //                '../../../addons/ofxSyphon/libs',
 //                '../../../addons/ofxSyphon/libs/Syphon',
@@ -232,6 +229,12 @@ Project{
                 '../../../addons/ofxSyphon/src/ofxSyphonServerDirectory.h',
                 '../../../addons/ofxSyphon/libs/Syphon/src/SyphonNameboundClient.m',
             ])
+        }
+
+        // add QTKit support on osx
+        Properties {
+            condition: qbs.targetOS.contains("osx")
+            of.frameworks: outer.concat(['Qtkit']);
         }
 
         Properties {
