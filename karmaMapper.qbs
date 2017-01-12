@@ -178,13 +178,13 @@ Project{
         of.cFlags: [
             //'-fpermissive',
         ]  // flags passed to the c compiler
-        //of.cxxFlags: []         // flags passed to the c++ compiler
+        of.cxxFlags: []         // flags passed to the c++ compiler
         of.linkerFlags: [
             '-v', // shows more detailed linker errors
         ]      // flags passed to the linker
         //of.defines: ['KM_EDITOR_APP', 'KM_QT_CREATOR'] // defines are passed as -D to the compiler
         of.defines: ['KM_ANIMATOR_APP', 'KM_QT_CREATOR'] // and can be checked with #ifdef or #if in the code
-        of.frameworks: ['Syphon'] // note: osx only
+        of.frameworks: [''] // note: osx only
 
         // general compilation fixes for OF0.9 + OSX 10.12
         Properties {
@@ -207,6 +207,8 @@ Project{
 //                '-lSyphon',
 //            ])
             of.includePaths: outer.concat(['../../../addons/ofxSyphon/libs/Syhpon/src/']);
+            of.frameworks: outer.concat(['Syphon']);
+
 //            of.includePaths: outer.concat([
 //                '../../../addons/ofxSyphon/libs',
 //                '../../../addons/ofxSyphon/libs/Syphon',
