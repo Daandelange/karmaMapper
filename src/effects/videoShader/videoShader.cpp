@@ -414,7 +414,7 @@ bool videoShader::printCustomEffectGui(){
 			ImGui::Text("Webcam source : %s", activeCamera.c_str());
 			
 			if(ImGui::TreeNode("Webcam Selection")){
-                #if defined( OF_VIDEO_CAPTURE_QTKIT )
+#ifdef OF_VIDEO_CAPTURE_QTKIT
 				vector<string> availableCams = UVCWebcam.listVideoDevices();
 				if(availableCams.size()==0){
 					ImGui::TextWrapped("[None available...]");
@@ -431,9 +431,9 @@ bool videoShader::printCustomEffectGui(){
                 ImGui::TextWrapped("[Not available, no Qtkit in this build]");
 #endif
 				ImGui::TreePop();
-			}
+            } // end ImGui::TreeNode("Webcam Selection")
 			
-#if defined( OF_VIDEO_CAPTURE_QTKIT )
+#ifdef OF_VIDEO_CAPTURE_QTKIT
             if(ImGui::TreeNode("Webcam Setup"))
 				//UVCWebcam.setDesiredFrameRate();
 				ImGui::TextWrapped("Device ID: %d", UVCWebcam.getDeviceID() );
@@ -650,10 +650,11 @@ bool videoShader::printCustomEffectGui(){
 			}
 // endif OSX UVC
 #endif
-		}
+
+        } // endif VIDEO_MODE_UVC_WEBCAM
 		
 #ifdef KM_ENABLE_SYPHON
-		else if(videoMode==VIDEO_MODE_SYPHON){
+        else if(videoMode==VIDEO_MODE_SYPHON){
 			ImGui::TextWrapped("This mode reads a video from a syphon server.");
 			ImGui::LabelText("Syphon Running & Connected:", "%i", syphonSource.isSetup());
 			ImGui::LabelText("Syphon Source: ", "%s - %s", syphonSource.getServerName().c_str(), syphonSource.getApplicationName().c_str() );
@@ -677,9 +678,8 @@ bool videoShader::printCustomEffectGui(){
 			
 		}
 #endif
-		
-		ImGui::Separator();
-	}
+    } // endif imgui videoshader panel
+	ImGui::Separator();
 	
 	shaderEffect::printCustomEffectGui();
 	
