@@ -434,7 +434,7 @@ bool videoShader::printCustomEffectGui(){
             } // end ImGui::TreeNode("Webcam Selection")
 			
 #ifdef OF_VIDEO_CAPTURE_QTKIT
-            if(ImGui::TreeNode("Webcam Setup"))
+			if(ImGui::TreeNode("Webcam Setup")){
 				//UVCWebcam.setDesiredFrameRate();
 				ImGui::TextWrapped("Device ID: %d", UVCWebcam.getDeviceID() );
 				
@@ -648,7 +648,7 @@ bool videoShader::printCustomEffectGui(){
 				
 				ImGui::TreePop(); // pop UVC controls
 			}
-// endif OSX UVC
+// endif TARGET_OSX
 #endif
 
         } // endif VIDEO_MODE_UVC_WEBCAM
