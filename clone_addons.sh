@@ -31,7 +31,6 @@ else
 	${PREFIX}Flightphase/ofxTextInputField.git
 fi
 
-
 echo "Cloning ofxGuiExtended..."
 ${PREFIX}frauzufall/ofxGuiExtended.git
 
@@ -46,7 +45,6 @@ ${PREFIX}jvcleave/ofxImGui.git
 
 echo "Cloning ofxMSATimer..."
 ${PREFIX}runemadsen/ofxVLCRemote.git
-
 
 if [[ $OSTYPE == darwin* ]] || [[ "$unamestr" == 'Linux' ]]; then
 	echo "Installing ofxVideoRecorder for mac or linux"
@@ -82,8 +80,9 @@ echo "IMPORTANT WARNING: To link with ofxTurboJpeg, you have to install turboJpe
 echo "Cloning ofxFaceTracker..."
 ${PREFIX}kylemcdonald/ofxFaceTracker.git
 # copy needed files to karmaMapper
-echo "IMPORTANT WARNING: Copied ofxFaceTracker model data files. See the addon's license for appropriate usage."
 cp -R ./ofxFaceTracker/libs/FaceTracker/model/ ../apps/karmaApps/karmaMapper/bin/data/model/
+echo "IMPORTANT WARNING: Copied ofxFaceTracker model data files. See the addon's license for appropriate usage."
+
 # face tracker dependency
 echo "Cloning ofxCv... (ofxFaceTracker dependency)"
 ${PREFIX}kylemcdonald/ofxCv.git

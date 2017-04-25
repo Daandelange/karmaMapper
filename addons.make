@@ -22,3 +22,7 @@ ofxLiquidFun
 # MAC ONLY Addons (comment them out on other platforms and edit karmaSettings.h apropriately)
 ofxSyphon
 ofxUVC
+
+# to be tested on other platforms
+ofxAbletonLink
+ofxPoco
