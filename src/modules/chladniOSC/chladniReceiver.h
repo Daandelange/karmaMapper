@@ -21,6 +21,7 @@
 // handles OSC adresses prefixed with /chladni (name them like that in pd)
 
 // problems compiling this? #MSVC_16 --> http://stackoverflow.com/a/5022140/58565
+
 #define CHLADNI_PREFIX "/chladni/"
 #define CHLADNI_PREFIX_LEN sizeof(CHLADNI_PREFIX)-1
 
@@ -65,6 +66,7 @@ public:
 	oscParamsStruct oscSendParams;
 	bool sendOscMessage(ofxOscMessage& _msg);
 	bool sendOscMessage(const string& _addr, const string& _value);
+	bool sendOscMessage(const string& _addr, const float& _value);
 	
 	// listeners
 	//void oscIn();

@@ -228,6 +228,19 @@ void mirReceiver::drawMenuEntry() {
 	karmaModule::drawMenuEntry();
 }
 
+bool mirReceiver::sendPing(){
+//	if(!bPdIsConnected){
+//		return false;
+//	}
+	
+//	ofxOscMessage m;
+//	m.setAddress("/ping");
+//	m.addImpulseArg();
+//	sendMessage(m);
+//	return true;
+	return false; // todo
+}
+
 
 mirData mirReceiver::mirCache;// = mirData();
 

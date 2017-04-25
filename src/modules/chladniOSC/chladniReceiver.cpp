@@ -59,16 +59,23 @@ bool chladniReceiver::handle(const ofxOscMessage &_msg) {
 		string track=_msg.getAddress().substr(CHLADNI_PREFIX_LEN,_msg.getAddress().npos);
 		
 		ofxOscArgType type = OFXOSC_TYPE_NONE;
+		
 		if( _msg.getNumArgs() > 0 ) type = _msg.getArgType(0);
 		
 		if( type == OFXOSC_TYPE_FLOAT){
-            float value = 0;
-            if(_msg.getNumArgs()>0) value=_msg.getArgAsFloat(0);
-            chladniFloatEventArgs args;
-            args.name=track;
-            //args.type="curve";
-            args.value=value;
-            ofNotifyEvent(chladniFloatEvent, args);
+			
+			if(_msg.getNumArgs()==1){
+				float value = 0;
+				value=_msg.getArgAsFloat(0);
+				chladniFloatEventArgs args;
+				args.name=track;
+				//args.type="curve";
+				args.value=value;
+				ofNotifyEvent(chladniFloatEvent, args);
+			}
+			else if ( _msg.getNumArgs() == 2 ){
+				// todo
+			}
         }
         else if(type == OFXOSC_TYPE_INT32){
             
@@ -209,6 +216,37 @@ void chladniReceiver::showGuiWindow(){
 		// see: http://stackoverflow.com/questions/646217/how-to-run-a-bash-script-from-c-program
 		
 		ImGui::Unindent();
+		
+		ImGui::Separator();
+		
+		if( chladniRC::getInstance().pureDataIsConnected() && ImGui::CollapsingHeader( "Chladni-plate Pd Controls", "chladniReceiverPdCommands", true, true ) ){
+			
+			ImGui::TextWrapped("Pd OSC Controls");
+			ImGui::Indent();
+			ImGui::TextWrapped("Control the chladni Pd-patch !");
+			
+			
+			if(ImGui::Button("Trigger change")){
+				sendOscMessage("/km/chladni/randomChange", "1");
+			}
+			
+			static float frequency = 64.05f;
+			if( ImGui::SliderFloat("Frequency", &frequency, 30.f, 140.f) ){
+				sendOscMessage( "/km/chladni/setFreq", frequency );
+			}
+			
+			static int delay = 600;
+			if( ImGui::SliderInt("Delay (ms)", &delay, 0, 1000) ){
+				sendOscMessage( "/km/chladni/setDelay", delay );
+			}
+			
+//			static broadcast
+//			if(ImGui::Checkbox("react to notes")){
+//				
+//			}
+			
+			ImGui::Unindent();
+		}
 	}
 	ImGui::Separator();
 	
@@ -393,8 +431,21 @@ bool chladniReceiver::sendOscMessage(const string& _addr, const string& _value){
 			m.addTriggerArg();
 		}
 		else {
-			m.addSymbolArg(_addr);
+			m.addSymbolArg(_value);
 		}
+		
+		return sendOscMessage(m);
+	}
+	
+	return false;
+}
+
+bool chladniReceiver::sendOscMessage(const string& _addr, const float& _value){
+	
+	if( bSenderIsConnected && !_addr.empty() ){
+		ofxOscMessage m;
+		m.setAddress(_addr);
+		m.addFloatArg(_value);
 		
 		return sendOscMessage(m);
 	}

@@ -53,7 +53,8 @@ public:
 	// basic functions
 	//bool startListening();
 	//bool stopListening();
-	bool connectToOSCRouter(){return false;};
+	bool connectToOSCRouter(){ return false;};
+	bool sendPing();
 	
 	// listeners
 	//void oscIn();

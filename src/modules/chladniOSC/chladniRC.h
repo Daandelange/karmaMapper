@@ -20,8 +20,9 @@
 #define KM_CHLADNI_PD_OSC_DEFAULT_PORT 12002
 #define KM_CHLADNI_PD_OSC_DEFAULT_HOST "localhost"
 
-// this class sends OSC commands to chladni
+// this class sends OSC commands to chladni-plate-generator.pd
 // Thus allowing you to remote control it.
+// Also communicates over Serial to an Arduino patch
 
 // note:
 // For now I changed ofxOSC/ofxOscSender::shutdown() from private to protected.
