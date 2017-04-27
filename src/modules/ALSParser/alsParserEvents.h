@@ -1,5 +1,5 @@
 //
-//  mirEvents.h
+//  alsParserEvents.h
 //  karmaMapper
 //
 //  Created by Daan on 07/05/15.
@@ -8,10 +8,19 @@
 
 #pragma once
 
+#include "ofxAbletonLiveSet/Model.h"
 
-struct liveGrabberBangEventArgs {
+typedef ofx::AbletonLiveSet::LSTrackEvent alsTrackEventArgs;
+typedef ofx::AbletonLiveSet::LSNoteEvent alsNoteEventArgs;
+//ofx::AbletonLiveSet::LSNoteEvent
+
+struct alsBangEventArgs {
 	string what = "unknown";
 };
+
+//struct alsTrackEventArgs {
+//	string trackname = "";
+//};
 
 struct liveGrabberTempoEventArgs {
 	float bpm = 0;
@@ -19,28 +28,9 @@ struct liveGrabberTempoEventArgs {
 	int trackID = -1;
 };
 
-struct liveGrabberNoteEventArgs {
-	//string track = "unknown";
-	string key = "";
-	bool isMajor = false;
-	
-};
-
-struct liveGrabberFloatEventArgs {
-	string what = "";
-	float value = 0.f;
-	
-};
-
-struct liveGrabberAnalysisData {
-	
-public:
-//	liveGrabberAnalysisData(){
-//		
-//	}
-	
-	float lowFollower = 0.f;
-	float midFollower = 0.f;
-	float highFollower = 0.f;
-	
-};
+//struct alsNoteEventArgs {
+//	//string track = "unknown";
+//	string key = "";
+//	bool isMajor = false;
+//	
+//};

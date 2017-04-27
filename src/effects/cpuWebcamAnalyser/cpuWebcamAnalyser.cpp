@@ -217,11 +217,11 @@ void cpuWebcamAnalyser::update(karmaFboLayer& renderLayer, const animationParams
 					if(ofGetFrameNum()%4==0) webcamFPSCounter.tick("newframe");
 					webcamFPSCounter.end();
 					
-					faceTracker.update(ofxCv::toCv(UVCWebcam));
+					faceTracker.update( ofxCv::toCv(UVCWebcam) );
 					
 					//tex.loadData(vidGrabber.getPixels());
 					//UVCWebcam.getPixels();
-					textures[0].loadData( UVCWebcam.getPixels());
+					textures[0].loadData( UVCWebcam.getPixels() );
 				}
 				for(int i=0; i<WEBCAM_FPS_HISTORY_SIZE-1; ++i){
 					webcamFPSHistory[i]=webcamFPSHistory[i+1];

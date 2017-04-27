@@ -26,6 +26,7 @@ alsParser::alsParser() {
 	moduleType = "alsParser";
 	
 	alsFilePath = "";
+	bEnableAbletonLinkSyncing = true;
 	bEnableNoteEvents = false;
 	bEnableTrackEvents = false;
 }
@@ -43,6 +44,13 @@ bool alsParser::enable(){
 	
 	bHasError = ret;
 	
+	if(bEnableAbletonLinkSyncing){
+		eventHandler.enableSyncWithLive();
+	}
+	else {
+		eventHandler.disableSyncWithLive();
+	}
+	
 	if(bEnableTrackEvents){
 		eventHandler.enableTrackEvents(LS);
 	}
@@ -58,6 +66,12 @@ bool alsParser::disable(){
 
 void alsParser::update(const animationParams &params){
 	karmaModule::update(params);
+	
+	if(isEnabled()){
+		if(bEnableNoteEvents || bEnableTrackEvents){
+			eventHandler.timerTick( eventHandler.getAbletonElapsedTime() );
+		}
+	}
 }
 
 void alsParser::draw(const animationParams &params){
@@ -112,11 +126,19 @@ void alsParser::showGuiWindow(){
 			parseALSFile();
 		}
 		
+		ImGui::SameLine();
+		ImGui::TextWrapped((LS.isLoaded())?"(loaded)":"(not loaded)");
+		
 		ImGui::Separator();
 		
 		if(LS.isLoaded()){
 			if( ImGui::CollapsingHeader( "Show track information", "alsParserTrackInfo", true, false ) ){
 				// todo: list track info
+				ImGui::TextWrapped("Name: %s", LS.name.c_str());
+				ImGui::TextWrapped("Creator: %s", LS.userName.c_str());
+				ImGui::TextWrapped("Locators: %lu", LS.locators.size());
+				ImGui::TextWrapped("Midi Tracks: %lu", LS.miditracks.size());
+				ImGui::TextWrapped("Audio Tracks: %lu", LS.audiotracks.size());
 			}
 		}
 	}
@@ -125,8 +147,24 @@ void alsParser::showGuiWindow(){
 	
 	if( ImGui::CollapsingHeader( "Event Params", "alsParserEventParams", true, true ) ){
 		
+		float phase = abletonLink::getInstance().ALStatus.phase;
+		ImGui::SliderFloat("Link Phase", &phase, 0, abletonLink::getInstance().getQuantum());
+		ImGui::TextWrapped("Link Timeline Seconds: %f", abletonLink::getInstance().getAbletonElapsedTime());
+		ImGui::TextWrapped("Link Timeline Beats: %f", abletonLink::getInstance().getAbletonElapsedBeats());
+		
+		if(ImGui::Checkbox("Sync with Live Timeline (using midi clock)", &bEnableAbletonLinkSyncing)){
+			// apply
+			if(bEnableAbletonLinkSyncing) eventHandler.enableSyncWithLive();
+			else eventHandler.disableSyncWithLive();
+		}
+		
 		if(ImGui::Checkbox("Enable Audio Track Events", &bEnableTrackEvents)){
-			
+			if(bEnableTrackEvents){
+				eventHandler.enableTrackEvents();
+			}
+			else {
+				//eventHandler.disableTrackEvents();
+			}
 		}
 		if(ImGui::Checkbox("Enable Note Events", &bEnableNoteEvents)){
 			
@@ -147,7 +185,8 @@ bool alsParser::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("alsParserALSFilePath", alsFilePath);
     xml.addValue("alsParserbEnableNoteEvents", bEnableNoteEvents);
     xml.addValue("alsParserbEnableTrackEvents", bEnableTrackEvents);
-    
+	xml.addValue("alsbEnableAbletonLinkSyncing", bEnableAbletonLinkSyncing);
+	
     return ret;
 }
 
@@ -160,8 +199,14 @@ bool alsParser::loadFromXML(ofxXmlSettings& xml){
 	alsFilePath = xml.getValue("alsParserALSFilePath", "");
 	bEnableNoteEvents = xml.getValue("alsParserbEnableNoteEvents", bEnableNoteEvents );
 	bEnableTrackEvents = xml.getValue("alsParserbEnableTrackEvents", bEnableTrackEvents );
+	bEnableAbletonLinkSyncing = xml.getValue("alsbEnableAbletonLinkSyncing", bEnableAbletonLinkSyncing);
 	parseALSFile();
-    
+	
+	if(bEnableTrackEvents) eventHandler.enableTrackEvents();
+	
+	if(bEnableAbletonLinkSyncing) eventHandler.enableSyncWithLive();
+	else eventHandler.disableSyncWithLive();
+	
     return ret;
 }
 
@@ -180,8 +225,7 @@ bool alsParser::parseALSFile(){
 	}
 }
 
-
 //alsParserAnalysisData alsParser::alsParserAnalysis;// = mirData();
 
-const static ::module::factory::moduleDependencies  alsParserDependencies({});
+const static ::module::factory::moduleDependencies  alsParserDependencies({"abletonLink"});
 MODULE_REGISTER( alsParser , "alsParser", alsParserDependencies );

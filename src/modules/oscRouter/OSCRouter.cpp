@@ -22,6 +22,7 @@ OSCRouter::OSCRouter() : singletonModule<OSCRouter>() {
 	nodes.clear();
 	bIsListening = false;
 	
+	OSCListeningPort = KM_OSC_PORT_IN;
 }
 
 OSCRouter::~OSCRouter() {
@@ -41,7 +42,7 @@ bool OSCRouter::enable(){
 	bool ret = karmaModule::enable();
 	
 	// OSC
-	ret *= startOSC();
+	ret *= startOSC(OSCListeningPort);
 	
 	return ret;
 }
@@ -294,16 +295,15 @@ bool OSCRouter::stopOSC(){
 	
 	// OSC
 	try {
+		// disconnect sender
 		ofxOscReceiver::setup( -1 );
+		//sender.setup(-1);
 		bIsListening = false;
 	} catch(const std::exception& e) {
 		ofLogNotice("OSCRouter::stopOSC") << "Disconnect failed somehow... : " << e.what() << endl;
 		bIsListening = false;
 		return true;
 	}
-	
-	// disconnect sender
-	sender.setup(0, -1);
 	
 	// todo: tell kmsa KM stopped ?
 	

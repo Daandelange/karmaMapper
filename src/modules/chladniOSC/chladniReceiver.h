@@ -16,6 +16,7 @@
 #include "chladniEvents.h"
 #include "chladniRC.h"
 #include "singletonModule.h"
+#include "alsLinkEventHandler.h"
 
 // this class handles OSC events comming from a PureData chladni / cymatics wave generator and fires internal ofEvents
 // handles OSC adresses prefixed with /chladni (name them like that in pd)
@@ -24,7 +25,6 @@
 
 #define CHLADNI_PREFIX "/chladni/"
 #define CHLADNI_PREFIX_LEN sizeof(CHLADNI_PREFIX)-1
-
 
 struct oscParamsStruct {
 	string host="localhost";
@@ -73,12 +73,16 @@ public:
 	static ofEvent<chladniBangEventArgs> chladniBangEvent;
 	static ofEvent<chladniFloatEventArgs> chladniFloatEvent;
 	
+	// alsParser link
+	void onAlsTrackEvent( alsTrackEventArgs &args );
+	void onAlsNoteEvent( alsNoteEventArgs &args );
+	
 	// getters
-	bool isEnabled() const;
+	//bool isEnabled() const;
 	
 protected:
 	
-	bool bEnabled;
+	//bool bEnabled;
 	
 	// communicate back with chladni
 	ofxOscSender sender;

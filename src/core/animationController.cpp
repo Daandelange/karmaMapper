@@ -1957,7 +1957,7 @@ void animationController::_keyPressed(ofKeyEventArgs &e){
 	if( ofGetKeyPressed( KM_CTRL_KEY_CODE ) ) {
 		
 		// ignore case for shortcuts
-		int keyToLower = ofToChar( ofToLower( ofToString((char) e.key )));
+		int keyToLower = ofToChar( ofToLower( ofToString((char) e.keycode )));
 		
 		// toggle gui ?
 		if ( 'g' == keyToLower ){

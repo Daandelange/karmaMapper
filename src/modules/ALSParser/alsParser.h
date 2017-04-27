@@ -12,8 +12,11 @@
 #include "ofMain.h"
 #include "ofEvents.h"
 #include "alsParserEvents.h"
+#include "alsLinkEventHandler.h"
 #include "singletonModule.h"
 #include "ofxAbletonLiveSet.h"
+#include "ofxAbletonLink.h"
+#include "abletonLink.h"
 
 // this class handles OSC events comming from alsParser.pd, caches the data and calculate some more with it.
 // also fires MIR events
@@ -61,18 +64,21 @@ public:
 //	static ofEvent<alsParserTempoEventArgs> alsParserTempoEvent;
 //	static ofEvent<alsParserNoteEventArgs> alsParserNoteEvent;
 //	static ofEvent<alsParserFloatEventArgs> alsParserFloatEvent;
-	
+	void resetTimeLine(abletonLinkSyncEventArgs &args);
 	
 protected:
 	
 	
 	ofxAbletonLiveSet::LiveSet LS;
 	string alsFilePath;
+	bool bEnableAbletonLinkSyncing;
 	bool bEnableNoteEvents;
 	bool bEnableTrackEvents;
 	
 	// keep an instance of this alive to be notified of events
-	ofxAbletonLiveSet::EventHandler eventHandler;
+	ofxAbletonLiveSet::alsLinkEventHandler eventHandler;
+	
+	
 private:
 	
 	

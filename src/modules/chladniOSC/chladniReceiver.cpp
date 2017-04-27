@@ -134,6 +134,8 @@ bool chladniReceiver::enable(){
 	ret *= OSCRouter::getInstance().addNode(this);
 	connectOSCSender();
 	
+	start();
+	
 	bHasError = ret;
 	bEnabled = true;
 	
@@ -146,6 +148,8 @@ bool chladniReceiver::disable(){
 	// disconnect
 	ret *= OSCRouter::getInstance().removeNode(this);
 	bEnabled = false;
+	
+	stop();
 	
 	return ret;
 }
@@ -392,6 +396,8 @@ bool chladniReceiver::start(){
 	
 	// bind events
 	//ofAddListener(, chladniReceiver:: *listener, )
+	ofAddListener(ofx::AbletonLiveSet::alsLinkEventHandler::alsTrackEvent, this, &chladniReceiver::onAlsTrackEvent );
+	ofAddListener(ofx::AbletonLiveSet::alsLinkEventHandler::alsNoteEvent, this, &chladniReceiver::onAlsNoteEvent );
 	
 	return isEnabled()==true;
 }
@@ -400,6 +406,8 @@ bool chladniReceiver::stop(){
 	bEnabled = false;
 	
 	// unbind events
+	ofRemoveListener(ofx::AbletonLiveSet::alsLinkEventHandler::alsTrackEvent, this, &chladniReceiver::onAlsTrackEvent );
+	ofRemoveListener(ofx::AbletonLiveSet::alsLinkEventHandler::alsNoteEvent, this, &chladniReceiver::onAlsNoteEvent );
 	
 	return isEnabled()==false;
 }
@@ -431,7 +439,7 @@ bool chladniReceiver::sendOscMessage(const string& _addr, const string& _value){
 			m.addTriggerArg();
 		}
 		else {
-			m.addSymbolArg(_value);
+			m.addStringArg(_value);
 		}
 		
 		return sendOscMessage(m);
@@ -461,10 +469,31 @@ void chladniReceiver::oscIn(){
 	// todo
 }//*/
 
-// GETTERS
-bool chladniReceiver::isEnabled() const {
-	return bEnabled;
+// ALS Parser
+void chladniReceiver::onAlsTrackEvent( alsTrackEventArgs &args ){
+	//sendOscMessage("/km/chladni/trackChange", args.trackName );
+	ofxOscMessage m;
+	m.setAddress("/km/chladni/trackChange");
+	m.addStringArg(args.trackName);
+	m.addFloatArg(args.audioClip.duration);
+	
+	sendOscMessage(m);
 }
+
+void chladniReceiver::onAlsNoteEvent( alsNoteEventArgs &args ){
+	
+	ofxOscMessage m;
+	m.setAddress("/km/chladni/noteChange");
+	m.addIntArg(args.note.key);
+	m.addStringArg(args.clipName);
+	
+	sendOscMessage(m);
+}
+
+// GETTERS
+//bool chladniReceiver::isEnabled() const {
+//	return bEnabled;
+//}
 
 
 const static ::module::factory::moduleDependencies  chladniReceiverDependencies({"OSCRouter"});

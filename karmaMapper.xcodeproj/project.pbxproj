@@ -161,6 +161,7 @@
 		846526908DD0BAEA0684CD1A /* b2Settings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8CD810734AC617189BB36CF /* b2Settings.cpp */; };
 		84FED53B4CEB4C25C00E172B /* DirectoryFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E362E12547978AB05ABA9C57 /* DirectoryFilter.cpp */; };
 		856AA354D08AB4B323081444 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9604B925D32EE39065747725 /* ofxBaseGui.cpp */; };
+		85A5D7061EB0FD290034BC84 /* alsLinkEventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85A5D7041EB0FD290034BC84 /* alsLinkEventHandler.cpp */; };
 		85BB08A21EAF5BB900E6000F /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BB08A11EAF5BB900E6000F /* SyphonNameboundClient.m */; };
 		85BB08A71EAF5CBC00E6000F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		85BB08A81EAF5CBC00E6000F /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
@@ -1122,6 +1123,8 @@
 		85025E2A7A6FAB0C5A8E9937 /* b2Stat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = b2Stat.cpp; path = ../../../addons/ofxLiquidFun/libs/Box2D/Common/b2Stat.cpp; sourceTree = SOURCE_ROOT; };
 		853178B90C539B8D13AF3A3B /* shape.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = shape.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/shape/shape.hpp; sourceTree = SOURCE_ROOT; };
 		857A942126908B1806B67CE6 /* list_ports_osx.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = list_ports_osx.cc; path = ../../../addons/ofxSerial/libs/serial/src/impl/list_ports/list_ports_osx.cc; sourceTree = SOURCE_ROOT; };
+		85A5D7041EB0FD290034BC84 /* alsLinkEventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = alsLinkEventHandler.cpp; path = modules/ALSParser/alsLinkEventHandler.cpp; sourceTree = "<group>"; };
+		85A5D7051EB0FD290034BC84 /* alsLinkEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = alsLinkEventHandler.h; path = modules/ALSParser/alsLinkEventHandler.h; sourceTree = "<group>"; };
 		85B399C99F9879F6C78EDE1B /* snappy-stubs-public.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = "snappy-stubs-public.h"; path = "../../../addons/ofxIO/libs/snappy/src/snappy-stubs-public.h"; sourceTree = SOURCE_ROOT; };
 		85BB089B1EAF575D00E6000F /* ofxSyphon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxSyphon.h; path = ../../../addons/ofxSyphon/src/ofxSyphon.h; sourceTree = "<group>"; };
 		85BB089C1EAF575D00E6000F /* ofxSyphonClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxSyphonClient.h; path = ../../../addons/ofxSyphon/src/ofxSyphonClient.h; sourceTree = "<group>"; };
@@ -3635,6 +3638,8 @@
 				587073B8F1CCD61FACCD2EC2 /* alsParser.cpp */,
 				244E557456313FADE00E34DE /* alsParser.h */,
 				652C487A0C9C658B0C42BD22 /* alsParserEvents.h */,
+				85A5D7041EB0FD290034BC84 /* alsLinkEventHandler.cpp */,
+				85A5D7051EB0FD290034BC84 /* alsLinkEventHandler.h */,
 			);
 			name = ALSParser;
 			sourceTree = "<group>";
@@ -4733,6 +4738,7 @@
 				ADA8E3B8BAC342B3F14CDEF9 /* serialController_v1.cpp in Sources */,
 				4DDB21BB48BF2E77641FA87C /* singletonModule.cpp in Sources */,
 				D5CB763D293F1D0F425F6E89 /* karmaSoundAnalyser.cpp in Sources */,
+				85A5D7061EB0FD290034BC84 /* alsLinkEventHandler.cpp in Sources */,
 				B37B8FC5C3AAF2DBBD7C22EC /* ofAppEditor.cpp in Sources */,
 				1EC62F962EC1A948317BFA7E /* animationParams.cpp in Sources */,
 				F8A5948A4639B504052CCE72 /* animationParamsServer.cpp in Sources */,
