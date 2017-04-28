@@ -154,7 +154,7 @@ void vertexShape::onShapeEdited(){
 	
 #ifdef KM_EDITOR_APP
 	// update GUI Toggle ?
-	guiToggle.setPosition( boundingBox.getTopRight()+5 );
+	guiToggle.setPosition( boundingBox.getTopRight()+glm::vec3(5,5,0) );
 		
 		// update displayed information with real-time data
 		// todo
@@ -391,7 +391,8 @@ void vertexShape::render(){
 		ofDrawRectangle(guiToggle);
 		
 		// draw additional shape gui.
-		if( drawShapeGui ) shapeGui.draw();
+		// todo: check to uncomment this ?
+		//if( drawShapeGui ) shapeGui.draw();
 		
 		// draw instructions
 //		ofSetColor(bgColor);
@@ -408,18 +409,21 @@ void vertexShape::render(){
 
 void vertexShape::buildVertexMenu(){
 	
-	vertexMenu.clear();
-	vertexMenu.setup( getShapeType() );
-	basicShapeGui.setShowHeader(true);
+	basicShapeGui->setShowHeader(true);
 	
-	vertexMenu.add( new ofxLabel(menuNumVertexes) );
+	//vertexMenu.clear();
+	vertexMenu = shapeGui.addGroup( getShapeType() );
+	vertexMenu->setName( getShapeType() );
+	
+	vertexMenu->addLabel(menuNumVertexes);
 	 
 	 /*/gui->addSpacer();
 	 gui->addLabel("Keyboard Shortcuts", OFX_UI_FONT_MEDIUM);
 	 gui->addTextArea("addPoint", "Right click on an edge to insert an additional point", OFX_UI_FONT_SMALL );
 	 gui->addTextArea("addPoint", "R + click on point to remove");*/
 	
-	shapeGui.add( &vertexMenu );
+	//shapeGui.add<ofxGuiGroup>( &vertexMenu );
+	
 }
 
 bool vertexShape::enableEditMode(){
@@ -521,7 +525,7 @@ bool vertexShape::interceptMouseClick( ofMouseEventArgs& args ){
 	// restrict to shape area
 	// (upsizes rect so point handles are inside)
 	ofRectangle biggerRect(boundingBox);
-	biggerRect.growToInclude( boundingBox.getTopLeft()-basicPoint::pointSize, boundingBox.getBottomRight()+basicPoint::pointSize );
+	biggerRect.growToInclude( boundingBox.getTopLeft()-glm::vec3(basicPoint::pointSize, basicPoint::pointSize,0), boundingBox.getBottomRight()+glm::vec3(basicPoint::pointSize, basicPoint::pointSize, 0) );
 	if( !biggerRect.inside(args.x, args.y) ) return false;
 	
 	// check if a point is hovered

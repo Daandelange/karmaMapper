@@ -231,9 +231,9 @@ void shapesEditor::draw() {
 		if( activeShape ) activeShape->render();
 	}
 	
-	if(shapeCreationGuiVisible) shapeCreationGui.draw();
-	
-	editorGui.draw();
+	// todo: check if needed
+	//if(shapeCreationGuiVisible) shapeCreationGui.draw();
+	//editorGui.draw();
 }
 
 // - - - - - - - -
@@ -643,6 +643,7 @@ void shapesEditor::_mousePressed(ofMouseEventArgs &e){
 		
 		for(auto it = shapeCreationGuiElements.rbegin(); it!=shapeCreationGuiElements.rend(); ++it){
 			if( (*it)->getShape().inside(e.x, e.y) ){
+				
 				shapeCreationGuiVisible = false;
 				basicShape* newShape = shape::create( (*it)->getName(), lastRightClickPosition );
 				
@@ -764,52 +765,57 @@ void shapesEditor::enableShapeEditing(bool &_on){
 
 void shapesEditor::buildMenus(){
 	// New GUI setup
-	editorGui.setup("SHAPES EDITOR");
+	editorGui.setName("SHAPES EDITOR");
 	//editorGui.setShowHeader(false);
 	//editorGui.add( (new ofxLabelExtended())->setup("", "Welcome to the scene editor :)")->setShowLabelName(false) );
 	
-	editorGui.add( (new ofxGuiSpacer()) );
+	editorGui.addSpacer();
 	
+	editorMenu = editorGui.addGroup("Scene Editor Menu");
 	
 	// Load & save
-	editorMenu.setup("Scene Editor Menu");
-	loadButton.setup( GUILoadConfig );
+	//editorMenu->setName("Scene Editor Menu");
+	editorMenu->add( loadButton.set( GUILoadConfig ) );
 	loadButton.addListener(this, &shapesEditor::showLoadMenu);
-	editorMenu.add(&loadButton);
+	//editorMenu->add<ofxGuiButton>(&loadButton);
 	
-	saveButton.setup( GUISaveConfig );
+	
+	editorMenu->add( saveButton.set( GUISaveConfig ) );
 	saveButton.addListener(this, &shapesEditor::showSaveDialog);
-	editorMenu.add( &saveButton );
+	//editorMenu->add<ofxGuiButton>( &saveButton );
 	
-	editorMenu.add( (new ofxGuiSpacer()) );
+	editorMenu->addSpacer();
 	
-	fullScreenToggle.setup( GUIToggleFullScreen, fullScreenToggle );
+	editorMenu->add( fullScreenToggle.set( GUIToggleFullScreen ) );
+	fullScreenToggle = (bool) fullScreenToggle;
 	fullScreenToggle.addListener(this, &shapesEditor::setFullScreen);
-	editorMenu.add( &fullScreenToggle );
-	editorMenu.add( (new ofxGuiSpacer()) );
+	//editorMenu->add<ofxGuiToggle>( &fullScreenToggle );
+	editorMenu->addSpacer();
 	
-	editorGui.add( &editorMenu );
+	shapesMenu = editorGui.addGroup("Shape Editing");
+	//shapesMenu.setName("Shape Editing");
 	
+	shapesMenu->add( menuNumSelectedShapes.set( GUINbSelectedShapes, "0") );
 	
-	shapesMenu.setup("Shape Editing");
-	
-	menuNumSelectedShapes.set( GUINbSelectedShapes, "0");
-	shapesMenu.add( (new ofxLabel(menuNumSelectedShapes)) );
-	
-	enableEditingToggle.setup( GUIEnableEditing );
+	//enableEditingToggle = GUIEnableEditing;
+	shapesMenu->add( enableEditingToggle.set(GUIEnableEditing) );
 	enableEditingToggle.addListener(this, &shapesEditor::enableShapeEditing );
 	
-	shapesMenu.add( &enableEditingToggle );
+	batchModeSelect = shapesMenu->addGroup( "Batch Editing" );
+	batchModeSelect->setName("Batch Editing");
+	//batchModeSelect.setSize(null, 30);
+
+	batchModeSelect->add( ofParameter<bool>().set("Disabled",false) );
 	
-	batchModeSelect.setup("Batch Editing",2);
-	batchModeSelect.add(new ofxMinimalToggle(ofParameter<bool>("Disabled",false)));
-	batchModeSelect.add(new ofxMinimalToggle(ofParameter<bool>("MultiSelect Mode",false)));
-	batchModeSelect.add(new ofxMinimalToggle(ofParameter<bool>("Scale",false)));
-	batchModeSelect.add(new ofxMinimalToggle(ofParameter<bool>("Move",false)));
-	batchModeSelect.allowMultipleActiveToggles(false);
-	shapesMenu.add( &batchModeSelect );
+	batchModeSelect->add( ofParameter<bool>().set("MultiSelect Mode",false));
+	batchModeSelect->add( ofParameter<bool>().set("Scale",false));
+	batchModeSelect->add( ofParameter<bool>().set("Move",false));
 	
-	editorGui.add( &shapesMenu );
+	//batchModeSelect.allowMultipleActiveToggles(false);
+	
+	
+	
+	//editorGui.add<ofxGuiGroup>( &shapesMenu );
 	
 	/*
 	
@@ -862,18 +868,25 @@ void shapesEditor::buildMenus(){
 	// Build shape creation menu (right-click)
 	shapeCreationGuiVisible = false;
 	lastRightClickPosition.setPos(0,0);
-	shapeCreationGui.setup("Select the shape to add");
+	shapeCreationGui.setName("Select the shape to add");
 	shapeCreationGui.setShowHeader(false);
 	shapeCreationGui.unregisterMouseEvents(); // dont listen to mouse events (done manually in void _mousePressed() )
 	// populate
 	auto types = shape::getAllShapeTypes();
-	shapeCreationGuiElements .clear();
+	shapeCreationGuiElements.clear();
+	
+	shapeCreationGuiElementsGroup = shapeCreationGui.addGroup("shapeCreationGuiElementsGroup");
+	shapeCreationGuiElementsGroup->setExclusiveToggles(false);
+	shapeCreationGuiElementsGroup->setConfig(ofJson({{"type", "radio"}}));
+	
 	for(auto it=types.begin(); it!=types.end(); ++it){
-		ofxMinimalButton* btn = new ofxMinimalButton( *it );
-		shapeCreationGuiElements.push_back( btn );
+		//ofParameter<bool>* btn = new ofParameter<bool>( (*it).c_str() );
+		
 		//btn->setup( , btn );
 		//btn->addListener(this, &shapesEditor::spawnShape);
-		shapeCreationGui.add( shapeCreationGuiElements.back() );
+		ofxGuiToggle* btn =shapeCreationGuiElementsGroup->add<ofxGuiToggle>( (*it).c_str(), ofJson({{"type", "radio"}}) );
+		shapeCreationGuiElements.push_back( btn );
+		
 	}
 	//shapeCreationGui.
 	//shapeCreationGui.disable();

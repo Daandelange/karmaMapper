@@ -87,7 +87,7 @@ public:
 	virtual bool interceptMouseClick(ofMouseEventArgs &e);
 	
 protected:
-	ofxGuiGroup vertexMenu;
+	ofxGuiGroup* vertexMenu = nullptr;
 	ofParameter<string> menuNumVertexes;
 
 	// instructions stuff

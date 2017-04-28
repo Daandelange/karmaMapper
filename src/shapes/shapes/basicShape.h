@@ -148,7 +148,7 @@ protected:
 	// custom HUD GUI elements
 	ofRectangle guiToggle;
 	ofxGuiPanel shapeGui;
-	ofxGuiGroup basicShapeGui;
+	ofxGuiGroup* basicShapeGui = nullptr;
 	bool drawShapeGui = false;
 	
 	void setColorFromGroupID();

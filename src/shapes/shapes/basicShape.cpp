@@ -372,7 +372,7 @@ void basicShape::render(){
 		ofDrawRectangle(guiToggle);
 		
 		// draw additional shape gui.
-		if( drawShapeGui ) shapeGui.draw();
+		//if( drawShapeGui ) shapeGui.draw();
 	}
 	
 	// reset
@@ -381,17 +381,17 @@ void basicShape::render(){
 
 void basicShape::buildBasicMenu(){
 	// build custom UI
-	
-	basicShapeGui.clear();
-	basicShapeGui.setup( getShapeType() );
-	basicShapeGui.setShowHeader(true);
-	
-	basicShapeGui.add( (new ofxIntSlider( groupID )) );
-	
-	basicShapeGui.add( (new ofxLabel( shapeName )) );
-	
 	shapeGui.setup();
-	shapeGui.add( &basicShapeGui );
+	
+	//basicShapeGui.clear();
+	basicShapeGui = shapeGui.addGroup( getShapeType() );
+	//basicShapeGui.ofxGuiElement::setName( getShapeType() );
+	basicShapeGui->setShowHeader(true);
+	
+	basicShapeGui->add<ofxGuiIntSlider>( groupID );
+	basicShapeGui->addLabel("shapeName");
+	
+	//shapeGui.add<ofxGuiGroup>( basicShapeGui );
 	//shapeGui->setShowHeader(false);
 }
 
@@ -408,7 +408,7 @@ bool basicShape::enableEditMode(){
 	position.setEditable( true );
 	
 	// enable GUI
-	guiToggle = ofRectangle( boundingBox.getTopRight()+5, 10, 10 );
+	guiToggle = ofRectangle( boundingBox.getTopRight()+glm::vec3(5,5,0), 10, 10 );
 	// restrict to visible space
 	if( guiToggle.getPosition().x+guiToggle.getWidth() >= ofGetWidth() ){
 		guiToggle.x = guiToggle.getPosition().x-shapeGui.getWidth();
@@ -537,7 +537,7 @@ bool basicShape::interceptMouseClick(ofMouseEventArgs &e){
 		// over shapeGui ?
 		else if(drawShapeGui && shapeGui.getShape().inside(e.x,e.y)){
 			// if click on name, then ask for new name... #hacky
-			ofxBaseGui* nameLabel = basicShapeGui.getControl(GUIinfo_ShapeName);
+			ofxGuiElement* nameLabel = basicShapeGui->getControl(GUIinfo_ShapeName);
 			if(nameLabel && nameLabel->getShape().inside(e.x, e.y) ){
 				shapeName = ofSystemTextBoxDialog("Enter the shape name...", shapeName);
 				ofLogNotice("basicShape::interceptMouseClick") << "New shape name: " << shapeName;

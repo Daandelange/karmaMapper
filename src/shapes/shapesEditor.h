@@ -17,6 +17,7 @@
 #include "shapesScene.h"
 #include "shapesTransformator.h"
 //#include "ofxGui.h"
+#include "ofxGuiExtended.h"
 
 enum shapesEditMode {
 	EDIT_MODE_OFF,			// Everything disabled
@@ -86,14 +87,19 @@ private:
 	
 	// GUI (new)
 	ofxGuiPanel editorGui;
-	ofxGuiGroup editorMenu, shapesMenu;
-	ofxMinimalButton loadButton, saveButton;
-	ofxGuiToggle fullScreenToggle, enableEditingToggle;
-	ofxGuiMatrix batchModeSelect, simpleMode;
+	ofxGuiGroup *editorMenu, *shapesMenu;
+	ofParameter<void> loadButton, saveButton;
+	ofParameter<bool> fullScreenToggle, enableEditingToggle;
+	//ofxGuiMatrix batchModeSelect, simpleMode;
+	ofxGuiGroup *batchModeSelect, *simpleMode;
+	
 	ofParameter<string> menuNumSelectedShapes;
 	ofxGuiPanel shapeCreationGui;
 	bool shapeCreationGuiVisible;
-	list<ofxMinimalButton*> shapeCreationGuiElements;
+	
+	ofxGuiGroup* shapeCreationGuiElementsGroup;
+	
+	list<ofxGuiToggle*> shapeCreationGuiElements;
 	basicPoint lastRightClickPosition;
 	void buildMenus();
 	
