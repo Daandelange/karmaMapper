@@ -19,9 +19,11 @@
 // based upon this model to register an OSC router
 // http://gamedev.stackexchange.com/a/17759
 
+using namespace ofxImGui;
+
 class OSCRouter : public singletonModule<OSCRouter>, public ofxOscReceiver {
-	friend class ofxImGui;
-	
+	//friend class Gui;
+
 public:
 	OSCRouter();
 	~OSCRouter();

@@ -321,7 +321,7 @@ void abletonLink::showGuiWindow(){
 		ImGui::TextWrapped("To enable Ableton Link, click think button top left in Live 9.6+. It should automatically connect with this module.");
 		
 		//ImGui::TextWrapped("OSC Listening : %s", ((OSCNode::)?"On":"Off"));
-		ImGui::TextWrapped("OSC listens on port 9001 for syncing information coming from liveOSC. Install plugin and anable in Ableton Live preferences. Announcing is not done yet, so please notify Ableton that we're listening on port 9001 with any other standard OSC app.");
+		ImGui::TextWrapped("OSC listens on port 9001 for syncing information coming from liveOSC. Install plugin and enable in Ableton Live preferences. Announcing is not done yet, so please notify Ableton that we're listening on port 9001 with any other standard OSC app.");
 		
 		OSCRouter::ImGuiShowOSCRouterConnectionTester();
 		

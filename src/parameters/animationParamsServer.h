@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxGui.h"
+//#include "ofxGui.h"
 #include "ofxGuiExtended.h"
 #include "animationParams.h"
 //#include "animationControllerEvents.h"
@@ -46,7 +46,7 @@ public:
 private:
 	bool bShowParams;
 	ofFbo paramsGuiFbo;
-	ofxPanelExtended paramsGui;
+	ofxGuiPanel paramsGui;
 	
 	ofRectangle varyingColorsRect;
 	ofRectangle varyingColorsRectSec;

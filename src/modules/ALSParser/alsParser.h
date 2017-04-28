@@ -74,6 +74,7 @@ protected:
 	bool bEnableAbletonLinkSyncing;
 	bool bEnableNoteEvents;
 	bool bEnableTrackEvents;
+	bool bEnableMetronomEvents;
 	
 	// keep an instance of this alive to be notified of events
 	ofxAbletonLiveSet::alsLinkEventHandler eventHandler;

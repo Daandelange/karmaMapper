@@ -19,7 +19,8 @@ chladniRC::chladniRC( ){
 chladniRC::~chladniRC(){
 	
 	// close Pd OSC
-	ofxOscSender::disableBroadcast();
+	//ofxOscSender::disableBroadcast();
+	ofxOscSender::clear();
 	//ofxOscSender::shutdown();
 	
 	// close Arduino Serial

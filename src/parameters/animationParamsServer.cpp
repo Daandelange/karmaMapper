@@ -14,16 +14,18 @@
 // CONSTRUCTORS
 // - - - - - - - -
 
-animationParamsServer::animationParamsServer(){
+animationParamsServer::animationParamsServer() : paramsGui("Animation Parameters"){
 	bShowParams = false;
 	randomize();
-	paramsGui.setup("Animation Parameters");
+	paramsGui.setup();
 	//paramsGui.add( new ofxGuiSpacer() );
 	paramsGuiFbo.allocate(KM_AP_guiTextureWidth, KM_AP_guiTextureHeight, GL_RGBA);
 	paramsGuiFbo.begin();
 	ofClear(255);
 	paramsGuiFbo.end();
-	paramsGui.add( new ofxGuiBaseDraws( &paramsGuiFbo.getTexture() ) );
+	
+	// todo: (randomly commented)
+	//paramsGui.add( new ofBaseDraws( &paramsGuiFbo.getTexture() ) );
 	paramsGui.unregisterMouseEvents();
 	
 	// bind
@@ -206,7 +208,8 @@ void animationParamsServer::_draw(ofEventArgs &e){
 		ofNoFill();
 		paramsGuiFbo.end();
 		
-		paramsGui.draw();
+		// todo: (randomly commented)
+		//paramsGui.draw();
 	}
 }
 

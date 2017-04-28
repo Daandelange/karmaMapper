@@ -58,7 +58,6 @@ bool gpuGlitchEffect::render(karmaFboLayer& renderLayer, const animationParams &
 		
 		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
 		
-		
 		// bind the glitched fbo
 		//fbo.getTexture().bind();
 		//fbo.getTexture().bind(); // todo, doesn't work... need to use a shader here ?

@@ -15,7 +15,7 @@
 #include "KMSettings.h"
 #include "basicPoint.h"
 #include "ofxXmlSettings.h"
-#include "ofxGui.h"
+//#include "ofxGui.h"
 #include "ofxGuiExtended.h"
 
 // todo: move vertexShape stuff to it's own class and keep the bare minimum (points, etc)
@@ -147,8 +147,8 @@ protected:
 	
 	// custom HUD GUI elements
 	ofRectangle guiToggle;
-	ofxPanelExtended shapeGui;
-	ofxGuiGroupExtended basicShapeGui;
+	ofxGuiPanel shapeGui;
+	ofxGuiGroup basicShapeGui;
 	bool drawShapeGui = false;
 	
 	void setColorFromGroupID();

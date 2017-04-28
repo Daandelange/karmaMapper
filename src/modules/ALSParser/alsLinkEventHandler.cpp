@@ -1,3 +1,6 @@
+//
+// This class is a mixup of the ofxAbletonLiveSet::EventHandler, using Ableton Link instead of std::chrono as a timer. Relies on ofxAbletonLink and ofxOSC for syncing midi clocks.
+
 #include "alsLinkEventHandler.h"
 
 // prototype seems to be needed for static ofEvents
@@ -15,12 +18,11 @@ alsLinkEventHandler::alsLinkEventHandler(){
 	//timer = new Timer(0, 10);
 	LSNoteEvents.clear();
 	LSTrackEvents.clear();
+	LSMetronomEvents.clear();
 	
 	abletonTimeOffset = abletonLink::getInstance().getClock().micros();
 }
 
-
-//template <class ListenerClass>
 bool alsLinkEventHandler::enableNoteEvents(  ){
 	
 	if( LSNoteEvents.size() < 1 ) return false;
@@ -29,7 +31,6 @@ bool alsLinkEventHandler::enableNoteEvents(  ){
 	//abletonLink::getInstance() .micros();
 	
 	currentNoteEventIndex = 0;
-	bSyncingWithLive = false;
 	
 	bNoteEvents = true;
 	
@@ -38,7 +39,7 @@ bool alsLinkEventHandler::enableNoteEvents(  ){
 
 bool alsLinkEventHandler::enableNoteEvents(ofx::AbletonLiveSet::LiveSet &LS){
 	parseNoteEvents(LS);
-	enableNoteEvents();
+	return enableNoteEvents();
 }
 
 
@@ -111,7 +112,8 @@ bool alsLinkEventHandler::enableTrackEvents(  ){
 
 bool alsLinkEventHandler::enableTrackEvents(ofx::AbletonLiveSet::LiveSet &LS){
 	parseTrackEvents(LS);
-	enableTrackEvents();
+	
+	return enableTrackEvents();
 }
 
 
@@ -228,11 +230,12 @@ void alsLinkEventHandler::timerTick(alsLinkEventHandler::duration curTime ){
 		// no more notes ?
 		if(LSNoteEvents.size()<=currentNoteEventIndex){
 			bNoteEvents = false;
-			return;
 		}
-		
-		if( getAbletonElapsedTimeSec().count() >= LSNoteEvents[currentNoteEventIndex].note.time ){
-			fireNextNoteEvents( getAbletonElapsedTimeSec() );
+		else {
+			if( getAbletonElapsedTimeSec().count() >= LSNoteEvents[currentNoteEventIndex].note.time ){
+				fireNextNoteEvents( getAbletonElapsedTimeSec() );
+			}
+			//else cout << currentNoteEventIndex << "=" << LSNoteEvents[currentNoteEventIndex].note.time << endl;
 		}
 	}
 	if(bMetronomEvents){
@@ -274,7 +277,9 @@ void alsLinkEventHandler::disableSyncWithLive(){
 }
 
 void alsLinkEventHandler::resetTimeline(abletonLinkSyncEventArgs &args){
-	abletonTimeOffset = abletonLink::getInstance().getTimeline().timeAtBeat(args.currentBeats, abletonLink::getInstance().getQuantum() );
+	if(args.what=="start" || args.what=="continue"){
+		abletonTimeOffset = abletonLink::getInstance().getTimeline().timeAtBeat(args.currentBeats, abletonLink::getInstance().getQuantum() );
+	}
 	//cout << abletonTimeOffset << endl;
 }
 

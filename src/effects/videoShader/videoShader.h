@@ -17,6 +17,7 @@
 #include "ofxFPS.h"
 
 #ifdef TARGET_OSX
+	#include "ofQTKitGrabber.h"
 	#include "ofxUVC.h"
 #endif
 

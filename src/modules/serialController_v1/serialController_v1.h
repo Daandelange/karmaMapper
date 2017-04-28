@@ -16,7 +16,7 @@
 // todo: (var) device should have a mutex ?
 
 class serialControllerV1 : public singletonModule<serialControllerV1>, public ofThread {
-	friend class ofxImGui;
+	//friend class ofxImGui;
 	
 public:
 	serialControllerV1();

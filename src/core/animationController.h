@@ -36,7 +36,7 @@
 
 class animationController {
 	// let ImGui control app variables
-	friend class ofxImGui;
+	//friend class ofxImGui;
 	
 public:
 	animationController( shapesDB& _scene );
@@ -102,7 +102,7 @@ protected:
 	int displayFullSizeOffset[2];
 	
 	// gui
-	ofxImGui gui;
+	ofxImGui::Gui gui;
 	
 	// effects stuff
 	bool isEffectsIndex(int i);

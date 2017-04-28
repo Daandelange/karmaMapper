@@ -40,7 +40,7 @@ struct chladniWaterControlSettingsStruct {
 };
 
 class chladniRC : public ofxOscSender {
-	friend class ofxImGui;
+	//friend class ofxImGui::Gui;
 	
 public:
 	chladniRC( );

@@ -29,6 +29,7 @@ alsParser::alsParser() {
 	bEnableAbletonLinkSyncing = true;
 	bEnableNoteEvents = false;
 	bEnableTrackEvents = false;
+	bEnableMetronomEvents = false;
 }
 
 alsParser::~alsParser(){
@@ -53,6 +54,12 @@ bool alsParser::enable(){
 	
 	if(bEnableTrackEvents){
 		eventHandler.enableTrackEvents(LS);
+	}
+	if(bEnableMetronomEvents){
+		eventHandler.enableMetronomEvents(LS);
+	}
+	if(bEnableNoteEvents){
+		eventHandler.enableNoteEvents(LS);
 	}
 	
 	return ret;
@@ -140,6 +147,38 @@ void alsParser::showGuiWindow(){
 				ImGui::TextWrapped("Midi Tracks: %lu", LS.miditracks.size());
 				ImGui::TextWrapped("Audio Tracks: %lu", LS.audiotracks.size());
 			}
+			
+			ImGui::Separator();
+			
+			if (ImGui::ListBoxHeader("Notes", 20)){
+				
+				for(auto t=LS.miditracks.begin(); t!=LS.miditracks.end(); ++t){
+					
+					if (ImGui::TreeNode(t->name.c_str())){
+						//ImGui::Selectable(t->name.c_str(), false);
+						//ImGui::Indent();
+						
+						for(auto c=t->clips.begin(); c!=t->clips.end(); ++c){
+							
+							if(ImGui::TreeNode(c->name.c_str())){
+								//ImGui::Indent();
+							
+								for(auto n=c->notes.begin(); n!=c->notes.end(); ++n){
+									ImGui::Selectable(ofToString(n->key).append(" @ ").append(ofToString(n->time)).c_str(), false);
+								}
+								
+								//ImGui::Unindent();
+								ImGui::TreePop();
+							}
+						}
+					
+						ImGui::TreePop();
+						//ImGui::Unindent();
+					}
+				}
+				
+				ImGui::ListBoxFooter();
+			}
 		}
 	}
 	
@@ -167,7 +206,20 @@ void alsParser::showGuiWindow(){
 			}
 		}
 		if(ImGui::Checkbox("Enable Note Events", &bEnableNoteEvents)){
-			
+			if(bEnableNoteEvents){
+				eventHandler.enableNoteEvents();
+			}
+			else {
+				//eventHandler.disableTrackEvents();
+			}
+		}
+		if(ImGui::Checkbox("Enable Metronom Events", &bEnableMetronomEvents)){
+			if(bEnableMetronomEvents){
+				eventHandler.enableMetronomEvents();
+			}
+			else {
+				//eventHandler.disableTrackEvents();
+			}
 		}
 	}
 	
@@ -185,6 +237,7 @@ bool alsParser::saveToXML(ofxXmlSettings& xml) const{
 	xml.addValue("alsParserALSFilePath", alsFilePath);
     xml.addValue("alsParserbEnableNoteEvents", bEnableNoteEvents);
     xml.addValue("alsParserbEnableTrackEvents", bEnableTrackEvents);
+	xml.addValue("alsParserbEnableMetronomEvents", bEnableMetronomEvents);
 	xml.addValue("alsbEnableAbletonLinkSyncing", bEnableAbletonLinkSyncing);
 	
     return ret;
@@ -197,13 +250,17 @@ bool alsParser::loadFromXML(ofxXmlSettings& xml){
     bool ret=karmaModule::loadFromXML(xml);
 	
 	alsFilePath = xml.getValue("alsParserALSFilePath", "");
-	bEnableNoteEvents = xml.getValue("alsParserbEnableNoteEvents", bEnableNoteEvents );
-	bEnableTrackEvents = xml.getValue("alsParserbEnableTrackEvents", bEnableTrackEvents );
-	bEnableAbletonLinkSyncing = xml.getValue("alsbEnableAbletonLinkSyncing", bEnableAbletonLinkSyncing);
 	parseALSFile();
 	
-	if(bEnableTrackEvents) eventHandler.enableTrackEvents();
+	bEnableNoteEvents = xml.getValue("alsParserbEnableNoteEvents", bEnableNoteEvents );
+	bEnableTrackEvents = xml.getValue("alsParserbEnableTrackEvents", bEnableTrackEvents );
+	bEnableMetronomEvents = xml.getValue("alsParserbEnableMetronomEvents", bEnableMetronomEvents );
 	
+	if(bEnableTrackEvents) eventHandler.enableTrackEvents();
+	if(bEnableNoteEvents) eventHandler.enableNoteEvents();
+	if(bEnableMetronomEvents) eventHandler.enableMetronomEvents();
+	
+	bEnableAbletonLinkSyncing = xml.getValue("alsbEnableAbletonLinkSyncing", bEnableAbletonLinkSyncing);
 	if(bEnableAbletonLinkSyncing) eventHandler.enableSyncWithLive();
 	else eventHandler.disableSyncWithLive();
 	

@@ -1431,7 +1431,7 @@ void animationController::draw(ofEventArgs& event){
 					list<basicEffect*>& layerEffects = layer->second;
 					karmaFboLayer& fboLayer = layer->first;
 					
-					ImGui::SetNextTreeNodeOpened(true, ImGuiSetCond_Once );
+					ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Once );
 					if (ImGui::TreeNode( (ofToString(fboLayer.getIndex())+" - "+fboLayer.getName()+"###layer"+ofToString(&fboLayer)).c_str() )){
 						
 						// layer information
