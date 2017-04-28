@@ -181,6 +181,76 @@
 		859404A71EB33C2000F7A62D /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 859404A61EB33C2000F7A62D /* CoreVideo.framework */; };
 		859404B41EB34F9E00F7A62D /* Gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859404B01EB34F9E00F7A62D /* Gui.cpp */; };
 		859404B51EB34F9E00F7A62D /* Helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 859404B21EB34F9E00F7A62D /* Helpers.cpp */; };
+		859404B61EB3860100F7A62D /* ofxGuiContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255C71EB2AA5A00E94662 /* ofxGuiContainer.cpp */; };
+		859404B71EB3860100F7A62D /* ofxGuiContainer.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255C81EB2AA5A00E94662 /* ofxGuiContainer.h */; };
+		859404B81EB3860100F7A62D /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255C91EB2AA5A00E94662 /* ofxGuiGroup.cpp */; };
+		859404B91EB3860100F7A62D /* ofxGuiGroup.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255CA1EB2AA5A00E94662 /* ofxGuiGroup.h */; };
+		859404BA1EB3860100F7A62D /* ofxGuiPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255CB1EB2AA5A00E94662 /* ofxGuiPanel.cpp */; };
+		859404BB1EB3860100F7A62D /* ofxGuiPanel.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255CC1EB2AA5A00E94662 /* ofxGuiPanel.h */; };
+		859404BC1EB3860100F7A62D /* ofxGuiSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255CD1EB2AA5A00E94662 /* ofxGuiSliderGroup.cpp */; };
+		859404BD1EB3860100F7A62D /* ofxGuiSliderGroup.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255CE1EB2AA5A00E94662 /* ofxGuiSliderGroup.h */; };
+		859404BE1EB3860100F7A62D /* ofxGuiTabs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255CF1EB2AA5A00E94662 /* ofxGuiTabs.cpp */; };
+		859404BF1EB3860100F7A62D /* ofxGuiTabs.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255D01EB2AA5A00E94662 /* ofxGuiTabs.h */; };
+		859404C01EB3860100F7A62D /* ofxGuiButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255D21EB2AA5A00E94662 /* ofxGuiButton.cpp */; };
+		859404C11EB3860100F7A62D /* ofxGuiButton.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255D31EB2AA5A00E94662 /* ofxGuiButton.h */; };
+		859404C21EB3860100F7A62D /* ofxGuiFpsPlotter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255D41EB2AA5A00E94662 /* ofxGuiFpsPlotter.cpp */; };
+		859404C31EB3860100F7A62D /* ofxGuiFpsPlotter.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255D51EB2AA5A00E94662 /* ofxGuiFpsPlotter.h */; };
+		859404C41EB3860100F7A62D /* ofxGuiFunctionPlotter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255D61EB2AA5A00E94662 /* ofxGuiFunctionPlotter.cpp */; };
+		859404C51EB3860100F7A62D /* ofxGuiFunctionPlotter.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255D71EB2AA5A00E94662 /* ofxGuiFunctionPlotter.h */; };
+		859404C61EB3860100F7A62D /* ofxGuiGraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255D81EB2AA5A00E94662 /* ofxGuiGraphics.cpp */; };
+		859404C71EB3860100F7A62D /* ofxGuiGraphics.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255D91EB2AA5A00E94662 /* ofxGuiGraphics.h */; };
+		859404C81EB3860100F7A62D /* ofxGuiInputField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255DA1EB2AA5A00E94662 /* ofxGuiInputField.cpp */; };
+		859404C91EB3860100F7A62D /* ofxGuiInputField.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255DB1EB2AA5A00E94662 /* ofxGuiInputField.h */; };
+		859404CA1EB3860100F7A62D /* ofxGuiLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255DC1EB2AA5A00E94662 /* ofxGuiLabel.cpp */; };
+		859404CB1EB3860100F7A62D /* ofxGuiLabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255DD1EB2AA5A00E94662 /* ofxGuiLabel.h */; };
+		859404CC1EB3860100F7A62D /* ofxGuiSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255DE1EB2AA5A00E94662 /* ofxGuiSlider.cpp */; };
+		859404CD1EB3860100F7A62D /* ofxGuiSlider.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255DF1EB2AA5A00E94662 /* ofxGuiSlider.h */; };
+		859404CE1EB3860100F7A62D /* ofxGuiToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255E01EB2AA5A00E94662 /* ofxGuiToggle.cpp */; };
+		859404CF1EB3860100F7A62D /* ofxGuiToggle.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255E11EB2AA5A00E94662 /* ofxGuiToggle.h */; };
+		859404D01EB3860100F7A62D /* ofxGuiValuePlotter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255E21EB2AA5A00E94662 /* ofxGuiValuePlotter.cpp */; };
+		859404D11EB3860100F7A62D /* ofxGuiValuePlotter.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255E31EB2AA5A00E94662 /* ofxGuiValuePlotter.h */; };
+		859404D21EB3860100F7A62D /* ofxGuiZoomableGraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255E41EB2AA5A00E94662 /* ofxGuiZoomableGraphics.cpp */; };
+		859404D31EB3860100F7A62D /* ofxGuiZoomableGraphics.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255E51EB2AA5A00E94662 /* ofxGuiZoomableGraphics.h */; };
+		859404D41EB3860100F7A62D /* Document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255E71EB2AA5A00E94662 /* Document.cpp */; };
+		859404D51EB3860100F7A62D /* Document.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255E81EB2AA5A00E94662 /* Document.h */; };
+		859404D61EB3860100F7A62D /* Element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255E91EB2AA5A00E94662 /* Element.cpp */; };
+		859404D71EB3860100F7A62D /* Element.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255EA1EB2AA5A00E94662 /* Element.h */; };
+		859404D81EB3860100F7A62D /* Events.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255EB1EB2AA5A00E94662 /* Events.cpp */; };
+		859404D91EB3860100F7A62D /* Events.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255EC1EB2AA5A00E94662 /* Events.h */; };
+		859404DA1EB3860100F7A62D /* EventTarget.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255ED1EB2AA5A00E94662 /* EventTarget.h */; };
+		859404DB1EB3860100F7A62D /* Exceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255EE1EB2AA5A00E94662 /* Exceptions.cpp */; };
+		859404DC1EB3860100F7A62D /* Exceptions.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255EF1EB2AA5A00E94662 /* Exceptions.h */; };
+		859404DD1EB3860100F7A62D /* Layout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255F01EB2AA5A00E94662 /* Layout.cpp */; };
+		859404DE1EB3860100F7A62D /* Layout.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255F11EB2AA5A00E94662 /* Layout.h */; };
+		859404DF1EB3860100F7A62D /* ofxDOM.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255F21EB2AA5A00E94662 /* ofxDOM.h */; };
+		859404E01EB3860100F7A62D /* Types.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255F31EB2AA5A00E94662 /* Types.h */; };
+		859404E11EB3860100F7A62D /* ofxGuiElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255F41EB2AA5A00E94662 /* ofxGuiElement.cpp */; };
+		859404E21EB3860100F7A62D /* ofxGuiElement.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255F51EB2AA5A00E94662 /* ofxGuiElement.h */; };
+		859404E31EB3860100F7A62D /* ofxGuiExtended.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255F61EB2AA5A00E94662 /* ofxGuiExtended.cpp */; };
+		859404E41EB3860100F7A62D /* ofxGuiExtended.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255F71EB2AA5A00E94662 /* ofxGuiExtended.h */; };
+		859404E51EB3860100F7A62D /* IDGenerator.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255F91EB2AA5A00E94662 /* IDGenerator.h */; };
+		859404E61EB3860100F7A62D /* JsonConfigParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255FB1EB2AA5A00E94662 /* JsonConfigParser.cpp */; };
+		859404E71EB3860100F7A62D /* JsonConfigParser.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255FC1EB2AA5A00E94662 /* JsonConfigParser.h */; };
+		859404E81EB3860100F7A62D /* ofxDOMBoxLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255FD1EB2AA5A00E94662 /* ofxDOMBoxLayout.cpp */; };
+		859404E91EB3860100F7A62D /* ofxDOMBoxLayout.h in Sources */ = {isa = PBXBuildFile; fileRef = 853255FE1EB2AA5A00E94662 /* ofxDOMBoxLayout.h */; };
+		859404EA1EB3860100F7A62D /* ofxDOMFlexBoxLayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853255FF1EB2AA5A00E94662 /* ofxDOMFlexBoxLayout.cpp */; };
+		859404EB1EB3860100F7A62D /* ofxDOMFlexBoxLayout.h in Sources */ = {isa = PBXBuildFile; fileRef = 853256001EB2AA5A00E94662 /* ofxDOMFlexBoxLayout.h */; };
+		859404EC1EB3860100F7A62D /* ofxDOMLayoutHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 853256011EB2AA5A00E94662 /* ofxDOMLayoutHelper.cpp */; };
+		859404ED1EB3860100F7A62D /* ofxDOMLayoutHelper.h in Sources */ = {isa = PBXBuildFile; fileRef = 853256021EB2AA5A00E94662 /* ofxDOMLayoutHelper.h */; };
+		859404EE1EB3860100F7A62D /* ofxGuiDefaultConfig.h in Sources */ = {isa = PBXBuildFile; fileRef = 853256031EB2AA5A00E94662 /* ofxGuiDefaultConfig.h */; };
+		859404EF1EB3866A00F7A62D /* Constants.h in Sources */ = {isa = PBXBuildFile; fileRef = 165730C80AD336D48D2C41E1 /* Constants.h */; };
+		859404F01EB3866A00F7A62D /* EventHandler.h in Sources */ = {isa = PBXBuildFile; fileRef = 20EDF42E71DF38888E799018 /* EventHandler.h */; };
+		859404F11EB3866A00F7A62D /* Model.h in Sources */ = {isa = PBXBuildFile; fileRef = 4281062F4356F80A520DE26F /* Model.h */; };
+		859404F21EB3866A00F7A62D /* Parser.h in Sources */ = {isa = PBXBuildFile; fileRef = DF22DA53BF40048ECD5578D4 /* Parser.h */; };
+		859404F31EB3866A00F7A62D /* Tempo.h in Sources */ = {isa = PBXBuildFile; fileRef = 57FA9BB16804B3A4B28E0B11 /* Tempo.h */; };
+		859404F41EB3866A00F7A62D /* ofxAbletonLiveSet.h in Sources */ = {isa = PBXBuildFile; fileRef = 34F81953CBA04A3BB59DB48C /* ofxAbletonLiveSet.h */; };
+		859404F51EB3866A00F7A62D /* pugiconfig.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C25C05446D88836232AC7A8 /* pugiconfig.hpp */; };
+		859404F61EB3866A00F7A62D /* pugixml.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 456F6C8B2EEA9851E1C5EA1A /* pugixml.hpp */; };
+		859404F71EB3868F00F7A62D /* ofxAbletonLink.h in Sources */ = {isa = PBXBuildFile; fileRef = 0B3F55C3B1770A3F48090C5E /* ofxAbletonLink.h */; };
+		859404F81EB3875E00F7A62D /* alsParser.h in Sources */ = {isa = PBXBuildFile; fileRef = 244E557456313FADE00E34DE /* alsParser.h */; };
+		859404F91EB3875E00F7A62D /* alsParserEvents.h in Sources */ = {isa = PBXBuildFile; fileRef = 652C487A0C9C658B0C42BD22 /* alsParserEvents.h */; };
+		859404FA1EB3875E00F7A62D /* alsLinkEventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85A5D7041EB0FD290034BC84 /* alsLinkEventHandler.cpp */; };
+		859404FB1EB3875E00F7A62D /* alsLinkEventHandler.h in Sources */ = {isa = PBXBuildFile; fileRef = 85A5D7051EB0FD290034BC84 /* alsLinkEventHandler.h */; };
 		85A5D7061EB0FD290034BC84 /* alsLinkEventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85A5D7041EB0FD290034BC84 /* alsLinkEventHandler.cpp */; };
 		85BB08A21EAF5BB900E6000F /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BB08A11EAF5BB900E6000F /* SyphonNameboundClient.m */; };
 		85BB08A71EAF5CBC00E6000F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
@@ -229,7 +299,6 @@
 		85BB08D21EAF5CBC00E6000F /* moduleFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AC6ABE3B9428815EAF93A0E /* moduleFactory.cpp */; };
 		85BB08D31EAF5CBC00E6000F /* OSCNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ABFD99586964E0482AB6EE6B /* OSCNode.cpp */; };
 		85BB08D41EAF5CBC00E6000F /* OSCRouter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2239F6C7C3499851516F8C7C /* OSCRouter.cpp */; };
-		85BB08D61EAF5CBC00E6000F /* karmaMapperSerial_v1.ino in Sources */ = {isa = PBXBuildFile; fileRef = F595B5159C458EACB2C90E67 /* karmaMapperSerial_v1.ino */; };
 		85BB08D71EAF5CBC00E6000F /* karmaSerialMsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC0109E66724606392F80853 /* karmaSerialMsg.cpp */; };
 		85BB08D81EAF5CBC00E6000F /* serialController_v1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2213ACF484A7CB8A875AEF6 /* serialController_v1.cpp */; };
 		85BB08D91EAF5CBC00E6000F /* singletonModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67BE3F161AF1DD861576DEEF /* singletonModule.cpp */; };
@@ -4428,6 +4497,70 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				859404F81EB3875E00F7A62D /* alsParser.h in Sources */,
+				859404F91EB3875E00F7A62D /* alsParserEvents.h in Sources */,
+				859404FA1EB3875E00F7A62D /* alsLinkEventHandler.cpp in Sources */,
+				859404FB1EB3875E00F7A62D /* alsLinkEventHandler.h in Sources */,
+				859404F71EB3868F00F7A62D /* ofxAbletonLink.h in Sources */,
+				859404F51EB3866A00F7A62D /* pugiconfig.hpp in Sources */,
+				859404F61EB3866A00F7A62D /* pugixml.hpp in Sources */,
+				859404B61EB3860100F7A62D /* ofxGuiContainer.cpp in Sources */,
+				859404B71EB3860100F7A62D /* ofxGuiContainer.h in Sources */,
+				859404B81EB3860100F7A62D /* ofxGuiGroup.cpp in Sources */,
+				859404B91EB3860100F7A62D /* ofxGuiGroup.h in Sources */,
+				859404BA1EB3860100F7A62D /* ofxGuiPanel.cpp in Sources */,
+				859404BB1EB3860100F7A62D /* ofxGuiPanel.h in Sources */,
+				859404BC1EB3860100F7A62D /* ofxGuiSliderGroup.cpp in Sources */,
+				859404BD1EB3860100F7A62D /* ofxGuiSliderGroup.h in Sources */,
+				859404BE1EB3860100F7A62D /* ofxGuiTabs.cpp in Sources */,
+				859404BF1EB3860100F7A62D /* ofxGuiTabs.h in Sources */,
+				859404C01EB3860100F7A62D /* ofxGuiButton.cpp in Sources */,
+				859404C11EB3860100F7A62D /* ofxGuiButton.h in Sources */,
+				859404C21EB3860100F7A62D /* ofxGuiFpsPlotter.cpp in Sources */,
+				859404C31EB3860100F7A62D /* ofxGuiFpsPlotter.h in Sources */,
+				859404C41EB3860100F7A62D /* ofxGuiFunctionPlotter.cpp in Sources */,
+				859404C51EB3860100F7A62D /* ofxGuiFunctionPlotter.h in Sources */,
+				859404C61EB3860100F7A62D /* ofxGuiGraphics.cpp in Sources */,
+				859404C71EB3860100F7A62D /* ofxGuiGraphics.h in Sources */,
+				859404C81EB3860100F7A62D /* ofxGuiInputField.cpp in Sources */,
+				859404C91EB3860100F7A62D /* ofxGuiInputField.h in Sources */,
+				859404CA1EB3860100F7A62D /* ofxGuiLabel.cpp in Sources */,
+				859404CB1EB3860100F7A62D /* ofxGuiLabel.h in Sources */,
+				859404CC1EB3860100F7A62D /* ofxGuiSlider.cpp in Sources */,
+				859404CD1EB3860100F7A62D /* ofxGuiSlider.h in Sources */,
+				859404CE1EB3860100F7A62D /* ofxGuiToggle.cpp in Sources */,
+				859404CF1EB3860100F7A62D /* ofxGuiToggle.h in Sources */,
+				859404D01EB3860100F7A62D /* ofxGuiValuePlotter.cpp in Sources */,
+				859404D11EB3860100F7A62D /* ofxGuiValuePlotter.h in Sources */,
+				859404D21EB3860100F7A62D /* ofxGuiZoomableGraphics.cpp in Sources */,
+				859404D31EB3860100F7A62D /* ofxGuiZoomableGraphics.h in Sources */,
+				859404D41EB3860100F7A62D /* Document.cpp in Sources */,
+				859404D51EB3860100F7A62D /* Document.h in Sources */,
+				859404D61EB3860100F7A62D /* Element.cpp in Sources */,
+				859404D71EB3860100F7A62D /* Element.h in Sources */,
+				859404D81EB3860100F7A62D /* Events.cpp in Sources */,
+				859404D91EB3860100F7A62D /* Events.h in Sources */,
+				859404DA1EB3860100F7A62D /* EventTarget.h in Sources */,
+				859404DB1EB3860100F7A62D /* Exceptions.cpp in Sources */,
+				859404DC1EB3860100F7A62D /* Exceptions.h in Sources */,
+				859404DD1EB3860100F7A62D /* Layout.cpp in Sources */,
+				859404DE1EB3860100F7A62D /* Layout.h in Sources */,
+				859404DF1EB3860100F7A62D /* ofxDOM.h in Sources */,
+				859404E01EB3860100F7A62D /* Types.h in Sources */,
+				859404E11EB3860100F7A62D /* ofxGuiElement.cpp in Sources */,
+				859404E21EB3860100F7A62D /* ofxGuiElement.h in Sources */,
+				859404E31EB3860100F7A62D /* ofxGuiExtended.cpp in Sources */,
+				859404E41EB3860100F7A62D /* ofxGuiExtended.h in Sources */,
+				859404E51EB3860100F7A62D /* IDGenerator.h in Sources */,
+				859404E61EB3860100F7A62D /* JsonConfigParser.cpp in Sources */,
+				859404E71EB3860100F7A62D /* JsonConfigParser.h in Sources */,
+				859404E81EB3860100F7A62D /* ofxDOMBoxLayout.cpp in Sources */,
+				859404E91EB3860100F7A62D /* ofxDOMBoxLayout.h in Sources */,
+				859404EA1EB3860100F7A62D /* ofxDOMFlexBoxLayout.cpp in Sources */,
+				859404EB1EB3860100F7A62D /* ofxDOMFlexBoxLayout.h in Sources */,
+				859404EC1EB3860100F7A62D /* ofxDOMLayoutHelper.cpp in Sources */,
+				859404ED1EB3860100F7A62D /* ofxDOMLayoutHelper.h in Sources */,
+				859404EE1EB3860100F7A62D /* ofxGuiDefaultConfig.h in Sources */,
 				85BB08A71EAF5CBC00E6000F /* main.cpp in Sources */,
 				85BB08A81EAF5CBC00E6000F /* ofApp.cpp in Sources */,
 				85BB08A91EAF5CBC00E6000F /* animationController.cpp in Sources */,
@@ -4474,7 +4607,6 @@
 				85BB08D21EAF5CBC00E6000F /* moduleFactory.cpp in Sources */,
 				85BB08D31EAF5CBC00E6000F /* OSCNode.cpp in Sources */,
 				85BB08D41EAF5CBC00E6000F /* OSCRouter.cpp in Sources */,
-				85BB08D61EAF5CBC00E6000F /* karmaMapperSerial_v1.ino in Sources */,
 				85BB08D71EAF5CBC00E6000F /* karmaSerialMsg.cpp in Sources */,
 				85BB08D81EAF5CBC00E6000F /* serialController_v1.cpp in Sources */,
 				85BB08D91EAF5CBC00E6000F /* singletonModule.cpp in Sources */,
@@ -4493,10 +4625,6 @@
 				85BB08E61EAF5CBC00E6000F /* shapesScene.cpp in Sources */,
 				85BB08E71EAF5CBC00E6000F /* shapesTransformator.cpp in Sources */,
 				85BB08E81EAF5CBC00E6000F /* ofxAbletonLink.cpp in Sources */,
-				85BB08E91EAF5CBC00E6000F /* EventHandler.cpp in Sources */,
-				85BB08EA1EAF5CBC00E6000F /* Model.cpp in Sources */,
-				85BB08EB1EAF5CBC00E6000F /* Parser.cpp in Sources */,
-				85BB08EC1EAF5CBC00E6000F /* Tempo.cpp in Sources */,
 				85BB08ED1EAF5CBC00E6000F /* pugixml.cpp in Sources */,
 				85BB08EE1EAF5CBC00E6000F /* ofxAssimpAnimation.cpp in Sources */,
 				85BB08EF1EAF5CBC00E6000F /* ofxAssimpMeshHelper.cpp in Sources */,
@@ -4696,6 +4824,16 @@
 				85BB09CA1EAF5CBC00E6000F /* tinyxml.cpp in Sources */,
 				85BB09CB1EAF5CBC00E6000F /* tinyxmlerror.cpp in Sources */,
 				85BB09CC1EAF5CBC00E6000F /* tinyxmlparser.cpp in Sources */,
+				859404F41EB3866A00F7A62D /* ofxAbletonLiveSet.h in Sources */,
+				859404EF1EB3866A00F7A62D /* Constants.h in Sources */,
+				85BB08E91EAF5CBC00E6000F /* EventHandler.cpp in Sources */,
+				859404F01EB3866A00F7A62D /* EventHandler.h in Sources */,
+				85BB08EA1EAF5CBC00E6000F /* Model.cpp in Sources */,
+				859404F11EB3866A00F7A62D /* Model.h in Sources */,
+				85BB08EB1EAF5CBC00E6000F /* Parser.cpp in Sources */,
+				859404F21EB3866A00F7A62D /* Parser.h in Sources */,
+				85BB08EC1EAF5CBC00E6000F /* Tempo.cpp in Sources */,
+				859404F31EB3866A00F7A62D /* Tempo.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
