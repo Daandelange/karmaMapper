@@ -12,6 +12,7 @@
 
 // addons
 #include "ofxImGui.h"
+#include "karmaImGuiTheme.h"
 
 #include "ofMain.h"
 #include "ofEvents.h"

@@ -30,6 +30,7 @@ alsParser::alsParser() {
 	bEnableNoteEvents = false;
 	bEnableTrackEvents = false;
 	bEnableMetronomEvents = false;
+	eventTimeDelay = 0;
 }
 
 alsParser::~alsParser(){
@@ -45,22 +46,9 @@ bool alsParser::enable(){
 	
 	bHasError = ret;
 	
-	if(bEnableAbletonLinkSyncing){
-		eventHandler.enableSyncWithLive();
-	}
-	else {
-		eventHandler.disableSyncWithLive();
-	}
+	parseEventsFromLS();
 	
-	if(bEnableTrackEvents){
-		eventHandler.enableTrackEvents(LS);
-	}
-	if(bEnableMetronomEvents){
-		eventHandler.enableMetronomEvents(LS);
-	}
-	if(bEnableNoteEvents){
-		eventHandler.enableNoteEvents(LS);
-	}
+	eventHandler.setEventFireDelay(eventTimeDelay);
 	
 	return ret;
 }
@@ -118,6 +106,8 @@ void alsParser::showGuiWindow(){
 					alsFilePath = ofToDataPath( openFileResult.getPath() );
 					if( parseALSFile() ){
 						// OK
+						parseEventsFromLS();
+						
 					}
 					else {
 						// failed loading
@@ -146,38 +136,62 @@ void alsParser::showGuiWindow(){
 				ImGui::TextWrapped("Locators: %lu", LS.locators.size());
 				ImGui::TextWrapped("Midi Tracks: %lu", LS.miditracks.size());
 				ImGui::TextWrapped("Audio Tracks: %lu", LS.audiotracks.size());
-			}
 			
-			ImGui::Separator();
-			
-			if (ImGui::ListBoxHeader("Notes", 20)){
+				ImGui::Separator();
 				
-				for(auto t=LS.miditracks.begin(); t!=LS.miditracks.end(); ++t){
+				if (ImGui::ListBoxHeader("Notes", 15)){
 					
-					if (ImGui::TreeNode(t->name.c_str())){
-						//ImGui::Selectable(t->name.c_str(), false);
-						//ImGui::Indent();
+					for(auto t=LS.miditracks.begin(); t!=LS.miditracks.end(); ++t){
 						
-						for(auto c=t->clips.begin(); c!=t->clips.end(); ++c){
+						if (ImGui::TreeNode(t->name.c_str())){
+							//ImGui::Selectable(t->name.c_str(), false);
+							//ImGui::Indent();
 							
-							if(ImGui::TreeNode(c->name.c_str())){
-								//ImGui::Indent();
-							
-								for(auto n=c->notes.begin(); n!=c->notes.end(); ++n){
-									ImGui::Selectable(ofToString(n->key).append(" @ ").append(ofToString(n->time)).c_str(), false);
-								}
+							for(auto c=t->clips.begin(); c!=t->clips.end(); ++c){
 								
-								//ImGui::Unindent();
-								ImGui::TreePop();
+								if(ImGui::TreeNode(c->name.c_str())){
+									//ImGui::Indent();
+								
+									for(auto n=c->notes.begin(); n!=c->notes.end(); ++n){
+										ImGui::Selectable(ofToString(n->key).append(" @ ").append(ofToString(n->time)).c_str(), false);
+									}
+									
+									//ImGui::Unindent();
+									ImGui::TreePop();
+								}
 							}
+						
+							ImGui::TreePop();
+							//ImGui::Unindent();
 						}
-					
-						ImGui::TreePop();
-						//ImGui::Unindent();
 					}
+					
+					ImGui::ListBoxFooter();
 				}
 				
-				ImGui::ListBoxFooter();
+				ImGui::Separator();
+				
+				if (ImGui::ListBoxHeader("Tracks", 15)){
+					
+					for(auto t=LS.audiotracks.begin(); t!=LS.audiotracks.end(); ++t){
+						
+						if (ImGui::TreeNode(ofToString(t->name).append(" (").append(ofToString(t->clips.size())).append("clips)").c_str())){
+							
+							int id = 0;
+							for(auto c=t->clips.begin(); c!=t->clips.end(); ++c, ++id){
+								ImGui::PushID(ofToString(id).c_str());
+								ImGui::Selectable( ofToString(c->name).append(" @ ").append(ofToString(c->time)).append("sec [").append(ofToString(c->duration)).append("]").c_str(), false);
+								ImGui::PopID();
+							}
+							
+							ImGui::TreePop();
+						}
+					}
+					
+					ImGui::ListBoxFooter();
+				}
+				
+				ImGui::Separator();
 			}
 		}
 	}
@@ -188,13 +202,17 @@ void alsParser::showGuiWindow(){
 		
 		float phase = abletonLink::getInstance().ALStatus.phase;
 		ImGui::SliderFloat("Link Phase", &phase, 0, abletonLink::getInstance().getQuantum());
-		ImGui::TextWrapped("Link Timeline Seconds: %f", abletonLink::getInstance().getAbletonElapsedTime());
+		ImGui::TextWrapped("Link Timeline Seconds: %f", abletonLink::getInstance().getAbletonElapsedTimeSec());
 		ImGui::TextWrapped("Link Timeline Beats: %f", abletonLink::getInstance().getAbletonElapsedBeats());
+		ImGui::TextWrapped("Link Timeline tempo: %f", abletonLink::getInstance().getTempo());
 		
 		if(ImGui::Checkbox("Sync with Live Timeline (using midi clock)", &bEnableAbletonLinkSyncing)){
 			// apply
 			if(bEnableAbletonLinkSyncing) eventHandler.enableSyncWithLive();
 			else eventHandler.disableSyncWithLive();
+		}
+		if(ImGui::SliderInt("Event time delay compensation", &eventTimeDelay, 0, 2000)){
+			eventHandler.setEventFireDelay(eventTimeDelay);
 		}
 		
 		if(ImGui::Checkbox("Enable Audio Track Events", &bEnableTrackEvents)){
@@ -239,6 +257,7 @@ bool alsParser::saveToXML(ofxXmlSettings& xml) const{
     xml.addValue("alsParserbEnableTrackEvents", bEnableTrackEvents);
 	xml.addValue("alsParserbEnableMetronomEvents", bEnableMetronomEvents);
 	xml.addValue("alsbEnableAbletonLinkSyncing", bEnableAbletonLinkSyncing);
+	xml.addValue("alsEventTimeDelay", eventTimeDelay );
 	
     return ret;
 }
@@ -251,6 +270,9 @@ bool alsParser::loadFromXML(ofxXmlSettings& xml){
 	
 	alsFilePath = xml.getValue("alsParserALSFilePath", "");
 	parseALSFile();
+	
+	eventTimeDelay = xml.getValue("alsEventTimeDelay", eventTimeDelay);
+	eventHandler.setEventFireDelay(eventTimeDelay);
 	
 	bEnableNoteEvents = xml.getValue("alsParserbEnableNoteEvents", bEnableNoteEvents );
 	bEnableTrackEvents = xml.getValue("alsParserbEnableTrackEvents", bEnableTrackEvents );
@@ -279,6 +301,25 @@ bool alsParser::parseALSFile(){
 	}
 	else {
 		return true;
+	}
+}
+
+void alsParser::parseEventsFromLS(){
+	if(bEnableAbletonLinkSyncing){
+		eventHandler.enableSyncWithLive();
+	}
+	else {
+		eventHandler.disableSyncWithLive();
+	}
+	
+	if(bEnableTrackEvents){
+		eventHandler.enableTrackEvents(LS);
+	}
+	if(bEnableMetronomEvents){
+		eventHandler.enableMetronomEvents(LS);
+	}
+	if(bEnableNoteEvents){
+		eventHandler.enableNoteEvents(LS);
 	}
 }
 

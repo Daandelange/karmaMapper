@@ -85,7 +85,7 @@ bool abletonLink::handle(const ofxOscMessage &_msg) {
 			if(type == OFXOSC_TYPE_INT32){
 				int time1 = _msg.getArgAsInt32(0);
 				int time2 = _msg.getArgAsInt32(1);
-				cout << time1 << " - " << time2 << endl;
+				//cout << time1 << " - " << time2 << endl;
 			}
 		}
 		
@@ -199,7 +199,7 @@ void abletonLink::updateLink(){
 	auto timeline = link->captureAppTimeline();
 	ALStatus.beat  = timeline.beatAtTime(time, quantum_);
 	ALStatus.phase = timeline.phaseAtTime(time, quantum_);
-	ALStatus.time = time;
+	ALStatus.time = time - abletonTimeOffset;
 }
 
 bool abletonLink::enableLink(bool _enable){
@@ -273,26 +273,31 @@ void abletonLink::update(const animationParams &params){
 	updateLink();
 	
 	// timeline reset ?
-	ofScopedLock myLock(oscMutex);
-	if(bRequestTimeReset){
-		abletonBeatOffset = ALStatus.beat;
-		abletonTimeOffset = ALStatus.time;
-		
-		if(bEnableSyncEvents){
-			//getAbletonElapsedTime();
-			// fire event
-			abletonLinkSyncEventArgs args;
-			args.bpm = getTempo();
-			args.currentBeats = getAbletonElapsedBeats();
-			args.currentPhase = ALStatus.phase;
-			args.currentTime = getAbletonElapsedTime();
-			args.isPlaying = true;
-			args.what = "start";
-			abletonLinkSyncEvent.notify(args);
+	{
+		ofScopedLock myLock(oscMutex);
+		if(bRequestTimeReset){
+			//abletonBeatOffset = ALStatus.beat;
+			//abletonTimeOffset = ALStatus.time;
+			resetAbletonTimeLine();
+			
+			if(bEnableSyncEvents){
+				//getAbletonElapsedTime();
+				// fire event
+				abletonLinkSyncEventArgs args;
+				args.bpm = getTempo();
+				args.currentBeats = getAbletonElapsedBeats();
+				args.currentPhase = ALStatus.phase;
+				args.currentTime = getAbletonElapsedTimeSec();
+				args.isPlaying = true;
+				args.what = "start";
+				abletonLinkSyncEvent.notify(args);
+			}
+			
+			bRequestTimeReset = false;
 		}
-		
-		bRequestTimeReset = false;
-	} 
+	}
+	
+	
 }
 
 void abletonLink::draw(const animationParams &params){
@@ -393,14 +398,38 @@ bool abletonLink::loadFromXML(ofxXmlSettings& xml){
 double abletonLink::getAbletonElapsedBeats() const{
 	if(link == nullptr) return 0.f;
 	
+	// todo: could be real time value ?
 	return ALStatus.beat - abletonBeatOffset;
 }
 
-float abletonLink::getAbletonElapsedTime() const{
+float abletonLink::getAbletonElapsedTimeSec() const{
 	if(link == nullptr) return 0.f;
 	
-	std::chrono::duration<float> secTime = std::chrono::duration_cast< std::chrono::milliseconds >( link->clock().micros() - abletonTimeOffset );
+	//std::chrono::duration<float> secTime = std::chrono::duration_cast< std::chrono::microseconds >( link->clock().micros() - abletonTimeOffset );
+	std::chrono::duration<float> secTime = ( link->clock().micros() - abletonTimeOffset );
+	//std::chrono::duration<float> secTime = (link->clock().micros() - abletonTimeOffset).count();
 	return secTime.count();
+}
+
+std::chrono::microseconds abletonLink::getAbletonElapsedTime() const{
+	if(link == nullptr) return std::chrono::microseconds(0);
+	
+	//std::chrono::duration<float> secTime = std::chrono::duration_cast< std::chrono::milliseconds >( link->clock().micros() - abletonTimeOffset );
+	return  link->clock().micros() - abletonTimeOffset;
+}
+
+void abletonLink::resetAbletonTimeLine(double _beatsOrigin){
+	if(link == nullptr){
+		
+	}
+	else {
+		const auto time = link->clock().micros();
+		auto timeline = link->captureAppTimeline();
+		
+		abletonBeatOffset = floor( timeline.beatAtTime(time, quantum_) );
+		abletonTimeOffset = link->captureAppTimeline().timeAtBeat( abletonBeatOffset, quantum_);
+		//updateLink();
+	}
 }
 
 

@@ -87,7 +87,9 @@ public:
 
 	// getters
 	double getAbletonElapsedBeats() const;
-	float  getAbletonElapsedTime() const;
+	float  getAbletonElapsedTimeSec() const;
+	std::chrono::microseconds  getAbletonElapsedTime() const;
+	void resetAbletonTimeLine(double _beatsOrigin = 0.f);
 	
 	// listeners
 	//static ofEvent<abletonLinkSyncEventArgs> abletonLinkSyncEvent;

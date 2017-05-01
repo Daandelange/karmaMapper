@@ -64,10 +64,11 @@ public:
 //	static ofEvent<alsParserTempoEventArgs> alsParserTempoEvent;
 //	static ofEvent<alsParserNoteEventArgs> alsParserNoteEvent;
 //	static ofEvent<alsParserFloatEventArgs> alsParserFloatEvent;
-	void resetTimeLine(abletonLinkSyncEventArgs &args);
+	//void resetTimeLine(abletonLinkSyncEventArgs &args);
+	
 	
 protected:
-	
+	void parseEventsFromLS();
 	
 	ofxAbletonLiveSet::LiveSet LS;
 	string alsFilePath;
@@ -75,6 +76,7 @@ protected:
 	bool bEnableNoteEvents;
 	bool bEnableTrackEvents;
 	bool bEnableMetronomEvents;
+	int eventTimeDelay; // ms
 	
 	// keep an instance of this alive to be notified of events
 	ofxAbletonLiveSet::alsLinkEventHandler eventHandler;

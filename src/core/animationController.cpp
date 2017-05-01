@@ -50,6 +50,7 @@ animationController::animationController( shapesDB& _scene ): scene(_scene){
 	
 	// build GUI
 	gui.setup();
+	gui.setTheme(new karmaImGuiTheme() );
 	ImGui::GetIO().MouseDrawCursor = false;
 }
 

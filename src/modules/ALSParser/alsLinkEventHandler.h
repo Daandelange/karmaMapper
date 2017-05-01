@@ -27,6 +27,9 @@ public:
 	~alsLinkEventHandler();
 	alsLinkEventHandler();
 	
+	void setEventFireDelay(int delay_ms);
+	int getEventFireDelay() const;
+	
 	bool enableNoteEvents( );
 	bool enableNoteEvents( LiveSet& LS );
 	bool parseNoteEvents( LiveSet& LS );
@@ -55,11 +58,12 @@ public:
 	
 private:
 	
-	duration abletonTimeOffset;
+	//duration abletonTimeOffset;
 	bool bNoteEvents = false;
 	bool bTrackEvents = false;
 	bool bMetronomEvents = false;
 	bool bSyncingWithLive = false;
+	durationSecs eventFireDelay;
 	
 	int currentNoteEventIndex = 0;
 	int currentTrackEventIndex = 0;

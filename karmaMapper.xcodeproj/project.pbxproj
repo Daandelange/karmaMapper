@@ -1208,6 +1208,7 @@
 		859404B11EB34F9E00F7A62D /* Gui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Gui.h; path = ../../../addons/ofxImGui/src/Gui.h; sourceTree = "<group>"; };
 		859404B21EB34F9E00F7A62D /* Helpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Helpers.cpp; path = ../../../addons/ofxImGui/src/Helpers.cpp; sourceTree = "<group>"; };
 		859404B31EB34F9E00F7A62D /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Helpers.h; path = ../../../addons/ofxImGui/src/Helpers.h; sourceTree = "<group>"; };
+		859404FC1EB38A1900F7A62D /* karmaImGuiTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = karmaImGuiTheme.h; path = core/karmaImGuiTheme.h; sourceTree = "<group>"; };
 		85A5D7041EB0FD290034BC84 /* alsLinkEventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = alsLinkEventHandler.cpp; path = modules/ALSParser/alsLinkEventHandler.cpp; sourceTree = "<group>"; };
 		85A5D7051EB0FD290034BC84 /* alsLinkEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = alsLinkEventHandler.h; path = modules/ALSParser/alsLinkEventHandler.h; sourceTree = "<group>"; };
 		85B399C99F9879F6C78EDE1B /* snappy-stubs-public.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = "snappy-stubs-public.h"; path = "../../../addons/ofxIO/libs/snappy/src/snappy-stubs-public.h"; sourceTree = SOURCE_ROOT; };
@@ -3707,6 +3708,7 @@
 		BC405D98CD8417CE9E222B0C /* core */ = {
 			isa = PBXGroup;
 			children = (
+				859404FC1EB38A1900F7A62D /* karmaImGuiTheme.h */,
 				EB15C2F981CCE54007D5DE40 /* animationController.cpp */,
 				34D803D358752130FC44817F /* animationController.h */,
 				28B0BD3AE041469174B75529 /* animationControllerEvents.h */,

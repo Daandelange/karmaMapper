@@ -20,7 +20,16 @@ alsLinkEventHandler::alsLinkEventHandler(){
 	LSTrackEvents.clear();
 	LSMetronomEvents.clear();
 	
-	abletonTimeOffset = abletonLink::getInstance().getClock().micros();
+	//abletonTimeOffset = abletonLink::getInstance().getClock().micros();
+}
+
+void alsLinkEventHandler::setEventFireDelay(int delay_ms=0){
+	
+	eventFireDelay = std::chrono::milliseconds(delay_ms);
+}
+
+int alsLinkEventHandler::getEventFireDelay() const {
+	return eventFireDelay.count();
 }
 
 bool alsLinkEventHandler::enableNoteEvents(  ){
@@ -104,6 +113,10 @@ bool alsLinkEventHandler::enableTrackEvents(  ){
 	if( LSTrackEvents.size() < 1 ) return false;
 	
 	currentTrackEventIndex = 0;
+	while(abletonLink::getInstance().getAbletonElapsedTimeSec() < LSTrackEvents[currentTrackEventIndex].audioClip.time && currentTrackEventIndex < LSTrackEvents.size()){
+		currentTrackEventIndex++;
+	}
+	//cout << "New index: " << currentTrackEventIndex << " @ " << abletonLink::getInstance().getAbletonElapsedTimeSec() << endl;
 	
 	bTrackEvents = true;
 	
@@ -125,9 +138,10 @@ void alsLinkEventHandler::fireNextTrackEvents(alsLinkEventHandler::durationSecs 
 		if(curTime.count() >= LSTrackEvents[i].audioClip.time){
 			// fire the event!
 			ofNotifyEvent( alsTrackEvent, LSTrackEvents[i] );
-			
+			//cout << i << " • " << LSTrackEvents[i].audioClip.time << " • " << LSTrackEvents[i].trackName << " • " << currentTrackEventIndex << endl;
 			// remember
 			currentTrackEventIndex=i+1;
+			continue;
 		}
 		// interrupt for loop ?
 		if(LSTrackEvents[i].audioClip.time > curTime.count()){
@@ -156,8 +170,6 @@ bool alsLinkEventHandler::parseTrackEvents( LiveSet& LS ){
 			LSTrackEvent trackEvent( LS.audiotracks[trackNb].name, LS.audiotracks[trackNb].clips[clipNb], trackNb, clipNb );
 			
 			LSTrackEvents.push_back(trackEvent);
-			
-			clipNb ++;
 		}
 	}
 	std:sort(LSTrackEvents.begin(), LSTrackEvents.end(), sort_by_audio_clip_time<LSTrackEvent>);
@@ -223,7 +235,13 @@ void alsLinkEventHandler::fireNextMetronomEvents(alsLinkEventHandler::durationSe
 
 // the callback remains in the timer thread. Maybe need to lock mutex ?
 void alsLinkEventHandler::timerTick(alsLinkEventHandler::duration curTime ){
-
+	
+	//std::chrono::duration_cast< alsLinkEventHandler::durationSecs >( abletonLink::getInstance().getClock().seconds() - abletonTimeOffset );
+	//alsLinkEventHandler::durationSecs offsetSec = std::chrono::duration_cast< alsLinkEventHandler::durationSecs >(abletonTimeOffset);
+	//float clockTimeSecs = abletonLink::getInstance().getClock().micros().count();
+	alsLinkEventHandler::durationSecs curTimeSec = getAbletonElapsedTimeSec() + eventFireDelay;
+	//cout << "Firing events...\ttime=" << curTimeSec.count() << " • \toffset=" << offsetSec.count() << "\tclockTimeSecs="<< clockTimeSecs << endl;
+	
 	// filter out unneccesary calls
 	if(bNoteEvents){
 		
@@ -232,32 +250,35 @@ void alsLinkEventHandler::timerTick(alsLinkEventHandler::duration curTime ){
 			bNoteEvents = false;
 		}
 		else {
-			if( getAbletonElapsedTimeSec().count() >= LSNoteEvents[currentNoteEventIndex].note.time ){
-				fireNextNoteEvents( getAbletonElapsedTimeSec() );
+			if( curTimeSec.count() >= LSNoteEvents[currentNoteEventIndex].note.time ){
+				fireNextNoteEvents( curTimeSec );
 			}
-			//else cout << currentNoteEventIndex << "=" << LSNoteEvents[currentNoteEventIndex].note.time << endl;
 		}
 	}
 	if(bMetronomEvents){
 		//if( getAbletonElapsedTimeSec() >= nextMetronomEvent )
-		fireNextMetronomEvents( getAbletonElapsedTimeSec() );
+		fireNextMetronomEvents( curTimeSec );
 	}
 	if(bTrackEvents){
 		//if( stopWatch.elapsed() >= nextMetronomEvent )
-		fireNextTrackEvents( getAbletonElapsedTimeSec() );
+		fireNextTrackEvents( curTimeSec );
 	}
 	
 	return;
 }
 
 alsLinkEventHandler::duration alsLinkEventHandler::getAbletonElapsedTime() {
-	alsLinkEventHandler::duration time = abletonLink::getInstance().getClock().micros() - abletonTimeOffset;
+	//alsLinkEventHandler::duration time = abletonLink::getInstance().getClock().micros() - abletonTimeOffset;
+	alsLinkEventHandler::duration time = std::chrono::duration_cast< std::chrono::milliseconds >( abletonLink::getInstance().getAbletonElapsedTime() );
+	
+	
 	return time;
 }
 
 alsLinkEventHandler::durationSecs alsLinkEventHandler::getAbletonElapsedTimeSec() {
-	alsLinkEventHandler::duration secTime = std::chrono::duration_cast< alsLinkEventHandler::duration >( abletonLink::getInstance().getClock().micros() - abletonTimeOffset );
-	return secTime;
+	
+	return alsLinkEventHandler::durationSecs(
+		std::chrono::duration_cast< alsLinkEventHandler::durationSecs >( abletonLink::getInstance().getAbletonElapsedTime() ) );
 }
 
 void alsLinkEventHandler::enableSyncWithLive(){
@@ -277,10 +298,26 @@ void alsLinkEventHandler::disableSyncWithLive(){
 }
 
 void alsLinkEventHandler::resetTimeline(abletonLinkSyncEventArgs &args){
-	if(args.what=="start" || args.what=="continue"){
-		abletonTimeOffset = abletonLink::getInstance().getTimeline().timeAtBeat(args.currentBeats, abletonLink::getInstance().getQuantum() );
+	if(args.what=="start"){
+		
+		//abletonLink::getInstance().resetAbletonTimeLine();
+
+		
+		if(bTrackEvents){
+			enableTrackEvents();
+		}
+		if(bMetronomEvents){
+			enableMetronomEvents();
+		}
+		if(bNoteEvents){
+			enableNoteEvents();
+		}
+		
 	}
-	//cout << abletonTimeOffset << endl;
+	else if(args.what=="continue"){
+		//cout << abletonTimeOffset << endl;
+		//abletonTimeOffset = abletonLink::getInstance().getTimeline().timeAtBeat(args.currentBeats, abletonLink::getInstance().getQuantum() );
+	}
 }
 
 OFX_ALS_END_NAMESPACE

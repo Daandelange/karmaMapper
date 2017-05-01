@@ -215,7 +215,7 @@ void chladniReceiver::showGuiWindow(){
 			connectOSCSender();
 		}
 		
-		// todo: launch pd from OF
+		// todo: launch pd from OF ?
 		// see: https://forum.openframeworks.cc/t/using-shell-script-to-launch-external-apps-from-of/3853
 		// see: http://stackoverflow.com/questions/646217/how-to-run-a-bash-script-from-c-program
 		
@@ -476,16 +476,16 @@ void chladniReceiver::onAlsTrackEvent( alsTrackEventArgs &args ){
 	m.setAddress("/km/chladni/trackChange");
 	m.addStringArg(args.trackName);
 	m.addFloatArg(args.audioClip.duration);
-	
+	//cout << args.audioClip.time << " - " << args.trackName << endl;
 	sendOscMessage(m);
 }
 
 void chladniReceiver::onAlsNoteEvent( alsNoteEventArgs &args ){
 	
 	ofxOscMessage m;
-	m.setAddress("/km/chladni/noteChange");
-	m.addIntArg(args.note.key);
+	m.setAddress("/km/chladni/noteEvent");
 	m.addStringArg(args.clipName);
+	m.addIntArg(args.note.key);
 	
 	sendOscMessage(m);
 }
