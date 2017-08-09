@@ -371,7 +371,8 @@ void textureDistortionEffect::mouseClicked(ofMouseEventArgs &args){
 	if(distortedPoints.size()>0){
 		for(auto pt=distortedPoints.begin(); pt!=distortedPoints.end(); ++pt){
 #ifndef OF_USE_LEGACY_MESH
-			if( glm::distance( args , pt->second.texCoordOffset + *pt->second.shapeCenter + *pt->first ) < KM_TDE_HANDLE_RADIUS){
+            glm::vec2 tmpArg( args.x, args.y );
+            if( glm::distance( tmpArg , pt->second.texCoordOffset + *pt->second.shapeCenter + *pt->first ) < KM_TDE_HANDLE_RADIUS){
 #else
 			if( args.distance( pt->second.texCoordOffset + *pt->second.shapeCenter + *pt->first ) < KM_TDE_HANDLE_RADIUS){
 #endif

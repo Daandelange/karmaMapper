@@ -14,7 +14,7 @@
 #include "shaderEffect.h"
 #include "karmaParam.h"
 #include "mirReceiver.h"
-#include "ofxFPS.h"
+#include "ofxFps.h"
 
 #ifdef TARGET_OSX
 	#include "ofQTKitGrabber.h"

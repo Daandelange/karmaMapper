@@ -314,6 +314,8 @@ bool durationReceiver::reset(){
 	
 	
 	connectOSCSender();
+
+    return true; // tmp
 }
 
 void durationReceiver::showGuiWindow(){

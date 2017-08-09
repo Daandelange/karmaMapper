@@ -259,6 +259,8 @@ bool liveGrabberOSC::reset(){
 	lastReceivedParamName="";
 	
 	connectOSCSender();
+
+    return true; // tmp
 }
 
 void liveGrabberOSC::showGuiWindow(){

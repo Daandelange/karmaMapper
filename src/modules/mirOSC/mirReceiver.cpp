@@ -204,6 +204,8 @@ void mirReceiver::draw(const animationParams &params){
 
 bool mirReceiver::reset(){
 	lastReceivedParamName="";
+
+    return true; // tmp
 }
 
 void mirReceiver::showGuiWindow(){

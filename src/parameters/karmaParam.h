@@ -213,6 +213,8 @@ public:
 		else {
 			setFromThread(_value);
 		}
+
+        return true; // tmp
 	}
 	
 	// use to change the value from thread
@@ -221,6 +223,8 @@ public:
 		paramFromThread.send(_value);
 		
 		// todo: notify
+
+        return true; // tmp
 	}
 	
 	virtual T& get(){
@@ -315,6 +319,8 @@ public:
 	
 	virtual bool drawToImGui(){
 		ImGui::DragInt( getUID().c_str(), &value);
+
+        return true; // tmp
 	}
 };
 
@@ -351,5 +357,6 @@ public:
 	
 	virtual bool drawToImGui(){
 		ImGui::DragInt( getUID().c_str(), &value);
+        return true; // tmp
 	}
 };

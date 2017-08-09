@@ -111,6 +111,8 @@ bool lineEffect::render(karmaFboLayer& renderLayer, const animationParams& param
 		renderer.end();
 		renderer.draw(0,0);
 	}
+
+    return true;
 }
 
 void lineEffect::update(karmaFboLayer& renderLayer, const animationParams& params){
