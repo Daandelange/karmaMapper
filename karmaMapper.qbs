@@ -128,8 +128,9 @@ Project{
         // the list of used addons in array format. eg:
         //
 
+
         of.addons: [
-            'ofxGui',
+            //'ofxGui',
             //'ofxOpenCv',
             //'ofxAbletonLiveSet',
             //'ofxAssimpModelLoader',
