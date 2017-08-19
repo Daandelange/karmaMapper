@@ -32,7 +32,7 @@ struct animationParams;
 // todo: make video decoding threaded
 // todo:
 
-enum videoMode {
+enum videoModeEnum {
 	// note: each mode must have a unique key, never replace the one of another
 	VIDEO_MODE_FILE = 0, // read image from file
 	VIDEO_MODE_SYPHON = 1, // read movie from file
@@ -158,7 +158,7 @@ public:
 	
 	// #########
 	// videoEffect FUNCTIONS
-	void setVideoMode( const enum videoMode& mode );
+    void setVideoMode( const enum videoModeEnum& mode );
 	bool loadVideoFile( const karmaVideoMediaInformationStruct &_media, bool forceRemember=false );
 	bool selectUVCWebcam( string _cam="" );
 #ifdef KM_ENABLE_SYPHON
@@ -174,7 +174,7 @@ public:
 	void setVideoMediaSpeed(const float& _speed);
 	
 protected:
-	videoMode videoMode;
+    videoModeEnum videoMode;
 	
 	// VIDEO FILES
 	//float playBackSpeed;
@@ -199,7 +199,7 @@ protected:
  //   #pragma message "Using QTKIT..."
     ofQTKitGrabber UVCWebcam;
 #else
-    #pragma message "videoShader effect compiling without playback features."
+    #pragma message "videoShader effect compiling without video capture features."
 #endif
 
 	

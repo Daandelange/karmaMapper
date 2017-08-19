@@ -130,7 +130,6 @@ Project{
 
 
         of.addons: [
-            //'ofxGui',
             //'ofxOpenCv',
             //'ofxAbletonLiveSet',
             //'ofxAssimpModelLoader',
@@ -143,10 +142,9 @@ Project{
             'ofxXmlSettings',
             'ofxImGui',
             'ofxMSATimer',
-            'ofxFPS',
-            'ofxUVC',
+            'ofxFps',
+            //'ofxUVC',
             'ofxDelaunay',
-            //'ofxPoco'
         ];
 
         // additional flags for the project. the of module sets some
@@ -279,6 +277,12 @@ Project{
             //                '-L/addons/ofxPoco/libs/poco/lib/PocoFoundation.a',
             //                '-F/libs/openssl/lib/osx/crypto.a',
             //                '-F/libs/openssl/lib/osx/ssl.a',
+        }
+
+        // add UVC support on osx
+        Properties {
+            condition: qbs.targetOS.contains("osx")
+            of.addons: outer.concat(['ofxUVC']);
         }
 
         // other flags can be set through the cpp module: http://doc.qt.io/qbs/cpp-module.html

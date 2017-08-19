@@ -38,8 +38,8 @@ int main( ){
 #else
 	ofGLWindowSettings s;
 	//s.setGLVersion(2,1); // needed for box2d//liquidfun textured particles
-	//s.setGLVersion(3,2);
-	s.setGLVersion(4,1);
+    s.setGLVersion(3,2);
+    //s.setGLVersion(4,1);
 	ofCreateWindow(s);
 #endif
 	

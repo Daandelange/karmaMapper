@@ -764,7 +764,7 @@ bool videoShader::loadFromXML(ofxXmlSettings& xml, const shapesDB& _scene){
 	bUseShadertoyVariables = true;
 	bUseTextures = true;
 	
-    setVideoMode( static_cast<enum videoMode>(xml.getValue("videoMode", VIDEO_MODE_FILE )) );
+    setVideoMode( static_cast<enum videoModeEnum>(xml.getValue("videoMode", VIDEO_MODE_FILE )) );
     
 //    if(!bUseThreadedFileDecoding){
 //        setVideoFilePlaybackInformation(player, videoMedia->playBackSettings );
@@ -852,22 +852,22 @@ bool videoShader::randomizePresets(){
 // - - - - - - -
 // videoEffect FUNCTIONS
 // - - - - - - -
-void videoShader::setVideoMode(const enum videoMode& mode){
+void videoShader::setVideoMode(const enum videoModeEnum& mode){
 	
-	if (videoMode == VIDEO_MODE_FILE) {
+    if (mode == VIDEO_MODE_FILE) {
 		videoMode = mode;
 		
 		if( !player.isLoaded() ) setError(true, "Please select a source video.");
 	}
 	
-	else if (videoMode == VIDEO_MODE_UVC_WEBCAM ) {
+    else if (mode == VIDEO_MODE_UVC_WEBCAM ) {
 		videoMode = mode;
 		
 		if( !selectUVCWebcam() ) setError(true, "Please select a source video.");
 	}
 	
 #ifdef KM_ENABLE_SYPHON
-	else if (videoMode == VIDEO_MODE_SYPHON) {
+    else if (mode == VIDEO_MODE_SYPHON) {
 		videoMode = mode;
 		
 		// start Syphon server tracker
