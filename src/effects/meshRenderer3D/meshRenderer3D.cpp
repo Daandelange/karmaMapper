@@ -112,6 +112,8 @@ bool meshRenderer3D::render(karmaFboLayer& renderLayer, const animationParams &p
 	//ofDisableBlendMode();
 	//ofDisableAntiAliasing();
 	renderLayer.end();
+
+        return true;
 }
 
 void meshRenderer3D::update(karmaFboLayer& renderLayer, const animationParams& params){

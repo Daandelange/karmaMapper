@@ -1,4 +1,4 @@
-# MAKEFILE_DEBUG=true
+#MAKEFILE_DEBUG=true
 
 ################################################################################
 # CONFIGURE PROJECT MAKEFILE (optional)

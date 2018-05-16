@@ -168,6 +168,7 @@ bool chladniReceiver::reset(){
 	
 	
 	connectOSCSender();
+        return true;
 }
 
 void chladniReceiver::showGuiWindow(){

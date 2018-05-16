@@ -23,6 +23,9 @@ echo "Cloning ofxAbletonLiveSet..."
 #${PREFIX}satoruhiga/ofxAbletonLiveSet.git
 ${PREFIX}daandelange/ofxAbletonLiveSet.git
 
+echo "Cloning ofxAbletonLink..."
+${PREFIX}comoc/ofxAbletonLink.git --recursive
+
 if [[ "$unamestr" == 'Linux' ]]; then
 	echo "Cloning ofxTextInputField for Linux..."
 	echo "IMPORTANT WARNING: Please make sure you checkout the develop branch of ofxTextInputField"

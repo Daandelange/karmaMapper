@@ -219,10 +219,8 @@ bool chladniRC::connectToArduino(const int &_deviceID){
 		
 		return connectToArduino(deviceInfo);
 	}
-	else {
-		// device unavailable
-	}
-	
+        // Device unavailable
+	return false;
 }
 
 bool chladniRC::connectToArduino( const ofx::IO::SerialDeviceInfo& _deviceInfo ){

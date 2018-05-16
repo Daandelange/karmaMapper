@@ -7,7 +7,7 @@
 #include "ofApp.h"
 #endif
 
-#if (OF_VERSION_MINOR != 9) && defined(TARGET_OPENGLES)
+#if (OF_VERSION_MINOR < 9) && defined(TARGET_OPENGLES)
 #include "ofGLProgrammableRenderer.h"
 #endif
 
@@ -23,10 +23,9 @@ int main( ){
 	
 #ifdef TARGET_OPENGLES
 	
-#if (OF_VERSION_MINOR == 9)
+#if (OF_VERSION_MINOR >= 9)
 	ofGLESWindowSettings s;
-	s.width = 700;
-	s.height = 700;
+	s.setSize(700, 700);
 	s.setGLESVersion(2);
 	ofCreateWindow(s);
 #else

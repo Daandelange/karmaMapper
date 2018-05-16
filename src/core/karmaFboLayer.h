@@ -15,6 +15,7 @@
 #include "basicEffect.h"
 #include "animationControllerEvents.h"
 
+
 class karmaFboLayer;
 struct karmaFboLayerDrawEventArgs {
 	
@@ -86,10 +87,10 @@ public:
 	void begin(bool _bUseBufferFbo=false) {
 		
 		fbo.begin();
-        glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + ((switched?(0+_bUseBufferFbo):(1-_bUseBufferFbo))));	// write to this texture
-        
+        // glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + ((switched?(0+_bUseBufferFbo):(1-_bUseBufferFbo))));	// write to this texture
+
         // alternatve method, but doesnt work on all GPUs
-		//fbo.setActiveDrawBuffer(switched?0:1);
+        fbo.setActiveDrawBuffer(switched?0:1);
 		
 		// tmp disabled
 		if(false && getMSAA()>0){
@@ -109,7 +110,7 @@ public:
 	}
 	
 	void draw(){
-		glColor3f(1, 1, 1);
+		//glColor3f(1, 1, 1);
 		fbo.draw(0,0);
 	}
 	
@@ -191,10 +192,12 @@ public:
 //		}
 		fbo.begin();
 		
-		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + 1);	// write to this texture
-		ofClear(0,_alpha);
+                // glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + 1);	// write to this texture
+                fbo.setActiveDrawBuffer(1);
+                ofClear(0,_alpha);
 		//ofClearAlpha();
-		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + 0);	// write to this texture
+		// glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + 0);	// write to this texture
+                fbo.setActiveDrawBuffer(0);
 		ofClear(0,_alpha);
 		//ofClearAlpha();
 		

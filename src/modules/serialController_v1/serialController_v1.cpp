@@ -329,6 +329,7 @@ bool serialControllerV1::disconnectDevice(){
 	//if(isThreadRunning()) waitForThread(true);
 	
 	bIsConnected = false;
+        return bIsConnected;
 }
 
 void serialControllerV1::threadedFunction(){

@@ -1,6 +1,6 @@
 ofxAbletonLiveSet
 ofxAssimpModelLoader
-ofxGui
+#ofxGui
 ofxGuiExtended
 ofxImGui
 ofxMSATimer
@@ -17,10 +17,10 @@ ofxFaceTracker
 ofxSerial
 # Note: Dependency of ofxSerial
 ofxIO
-ofxLiquidFun
+# ofxLiquidFun
 
 # MAC ONLY Addons (comment them out on other platforms and edit karmaSettings.h apropriately)
-ofxSyphon
+#ofxSyphon
 ofxUVC
 
 # to be tested on other platforms

@@ -307,6 +307,7 @@ void abletonLink::draw(const animationParams &params){
 bool abletonLink::reset(){
 	
 	//return parseALSFile();
+        return false;
 }
 
 void abletonLink::showGuiWindow(){
