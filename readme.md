@@ -1,3 +1,7 @@
+**Update 10-10-2020**
+It's been fun and I've learned a lot. This project has become bigger than expected and needs refactoring.
+As of 2020, I've archived karmaMapper, and started merging parts of it with [Mosaic](https://github.com/d3cod3/Mosaic). Mosaic is very close to the initial karmaMapper ideology and I'll continue to research & put efforts into that project. Another alternative, if you're more interested in the mapping aspect of karmaMapper, could be [Splash](https://sat-metalab.gitlab.io/splash/).
+
 # karmaMapper
 ________
 
@@ -5,15 +9,6 @@ karmaMapper is a collection of OpenSource 2D mapping software made for real-time
 If you're at ease with code, it's a perfect tool to start coding on physical surfaces using a video projector.
 
 Runs on Mac and Linux and Windows (alpha). 
-
-__Update 11-12-2016__  
-I have broken some parts intensely developing it for my exams. There have also been some openFrameworks updates leading to compilation issues and have had no time to maintain the Linux and Windows compilation.  
-Over the next months I'm planing to restructure some code, and integrate a "shared variables ecosystem" with [VideoDromm](https://github.com/videodromm/). I'll also do some documentation and publish a binary to try it quickly.
-
-__karmaMapper is a work in progress.__  
-_Curently (18-06-2016), the latest build is stable on Mac while the Windows version is not stable yet. The Linux version should not be hard to get to compile.  
-There's a scene editor allowing you to configure a set of "mappable" shapes, then load them within the animator app which lets you instantiate some effects and modules and bind them with these shapes.
-There's a GUI overlay giving control over the animations and video can be output via Syphon for projection. Configurations can be saved and loaded. There's a music analyser that streams MIR data over a LAN network. There is also a module for doing Serial communication with Arduino and OSC communication with LiveGrabber, PureData and Duration. In other words, karmaMapper is ready to be used in interactive art installations & live performances, or to do simple video mapping! :)_
 
 _In the future, karmaMapper will aim to facilitate the work of creative coders with a bunch of redundant code. It will also provide automatic variable assignment and animation to create a vast interconnected virtual and analog environment. Some of the code might be shared with videoDromm including a distant control interface._
 
