@@ -330,7 +330,7 @@ void videoShader::reset(){
 // Just draw your gui items
 bool videoShader::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIvideoShaderPanel, "GUIvideoShaderPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUIvideoShaderPanel, ImGuiTreeNodeFlags_NoTreePushOnOpen ) ){
 		
 		ImGui::TextWrapped("Draws video streams on shapes.");
 		

@@ -152,7 +152,7 @@ void meshRenderer3D::reset(){
 // Just draw your gui items
 bool meshRenderer3D::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUImeshRenderer3DEffectPanel, "GUImeshRenderer3DEffectPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUImeshRenderer3DEffectPanel ) ){
 		
 		ImGui::TextWrapped("Adds floating 3D models on shapes.");
 		ImGui::TextWrapped("Bla bla bla...");

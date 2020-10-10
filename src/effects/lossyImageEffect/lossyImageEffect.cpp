@@ -21,7 +21,7 @@ lossyImageEffect::lossyImageEffect(){
 lossyImageEffect::~lossyImageEffect(){
 	ofRemoveListener( karmaFboLayer::karmaFboLayerBeforeDraw, this, &lossyImageEffect::beforeDraw );
 	ofRemoveListener( karmaFboLayer::karmaFboLayerAfterDraw, this, &lossyImageEffect::afterDraw );
-	
+
 	toCompress.close();
 	receiveCompressed.close();
 	waitForThread(true, 1000);
@@ -151,7 +151,7 @@ void lossyImageEffect::reset(){
 // Just draw your gui items
 bool lossyImageEffect::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIlossyImageEffectPanel, "GUIlossyImageEffectPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUIlossyImageEffectPanel ) ){
 		
 		ImGui::TextWrapped("Sends the last output frame to CPU which encodes it using lossy images compression then sends it back to the GPU to use for the next frame.");
 		
@@ -256,7 +256,7 @@ void lossyImageEffect::threadedFunction(){
 				{
 					printf("Error in tjDecompressHeader2():\n%s\n", tjGetErrorStr());
 					//cout << jpegQuality << "\t" << jpegsubsamp << "\t" << flags << "\t" << " " << endl;
-					return;
+					continue;
 				}
 				
 				tjDecompress(handleDecompress, (unsigned char*)buffer.getData(), buffer.size(), pixels.getData(), w, 0, h, bpp, 0);

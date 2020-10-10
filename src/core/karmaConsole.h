@@ -31,7 +31,7 @@ struct karmaConsole {
 	
 	void    ClearLog();
 	
-	void    AddLog(const char* fmt, ...) IM_PRINTFARGS(2);
+	void    AddLog(const char* fmt, ...);// IM_PRINTFARGS(2);
 	
 	void    Draw(const char* title, bool& opened);
 	

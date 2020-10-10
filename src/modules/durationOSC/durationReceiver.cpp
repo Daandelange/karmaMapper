@@ -330,7 +330,7 @@ void durationReceiver::showGuiWindow(){
 	OSCRouter::ImGuiShowOSCRouterConnectionTester();
 	ImGui::Separator();
 	
-	if( ImGui::CollapsingHeader( "Params", "liveGrabberOSC", true, true ) ){
+	if( ImGui::CollapsingHeader( "liveGrabberOSC",  ImGuiTreeNodeFlags_NoTreePushOnOpen ) ){
         if(ImGui::InputInt("Duration sending port", &oscSendParams.port)){
              connectOSCSender();
         }

@@ -320,7 +320,7 @@ void OSCRouter::reconnectKMSA(){
 }
 
 void OSCRouter::ImGuiShowOSCRouterConnectionTester() {
-	if( ImGui::CollapsingHeader( "OSC Router Module", "ImGuiShowOSCRouterConnectionTester", true, false ) ){
+	if( ImGui::CollapsingHeader( "ImGuiShowOSCRouterConnectionTester" ) ){
 		static bool oscRouterConnection = false;
 		if( ImGui::Button("Test connection with OSC Router" )){
 			oscRouterConnection = OSCRouter::getInstance().isEnabled();

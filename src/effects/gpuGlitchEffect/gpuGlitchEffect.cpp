@@ -139,7 +139,7 @@ void gpuGlitchEffect::refreshGlitches(){
 // Just draw your gui items
 bool gpuGlitchEffect::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIGpuGlitchPanel, "GUIGpuGlitchPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUIGpuGlitchPanel )){
 		ImGui::TextWrapped("Gets some textures directly from your previously allocated GPU memory. (computer dreams!)");
 		
 		ImGui::Separator();

@@ -162,7 +162,7 @@ void distortEffect::reset(){
 // Just draw your gui items
 bool distortEffect::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIDistortPanel, "GUIDistortPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUIDistortPanel ) ){
 		
 		ImGui::TextWrapped("This effect alters the points of a vertex shape.");
 		

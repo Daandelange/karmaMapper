@@ -12,7 +12,8 @@ Project{
     ofApp {
         name: { return FileInfo.baseName(path) }
 
-        cpp.minimumMacosVersion: "10.9"
+        //cpp.minimumMacosVersion: "10.9"
+        cpp.minimumOsxVersion: "10.9"
         //cpp.includePaths: of.cpp.includePaths.concat(Helpers.listDirsRecursive(project.sourceDirectory + '/src'))
 
         files: [
@@ -145,6 +146,7 @@ Project{
             'ofxFps',
             //'ofxUVC',
             'ofxDelaunay',
+            //'ofxSyphon',
         ];
 
         // additional flags for the project. the of module sets some
@@ -177,34 +179,39 @@ Project{
         of.cFlags: [
             //'-fpermissive',
         ]  // flags passed to the c compiler
-        of.cxxFlags: []         // flags passed to the c++ compiler
+        //of.cxxFlags: ['-x objective-c++']         // flags passed to the c++ compiler
+        //of.cxxFlags: ['-ObjC++']
         of.linkerFlags: [
             '-v', // shows more detailed linker errors
         ]      // flags passed to the linker
         //of.defines: ['KM_EDITOR_APP', 'KM_QT_CREATOR'] // defines are passed as -D to the compiler
         of.defines: ['KM_ANIMATOR_APP', 'KM_QT_CREATOR'] // and can be checked with #ifdef or #if in the code
-        of.frameworks: [] // note: osx only
+        //of.frameworks: ['Syphon'] // note: osx only
 
         // general compilation fixes for OF0.9 + OSX 10.12
         Properties {
-            condition: qbs.targetOS.contains("osx")
+            condition: qbs.targetOS.contains("osx") || qbs.targetOS.contains("macos")
             of.linkerFlags: outer.concat([
                 '-L'+Helpers.normalize(FileInfo.joinPaths(sourceDirectory,"../../../libs/curl/lib/osx/")),
                 '-lcurl'
             ]);
         }
 
-        // add Syphon Support on OSX
+
+
         Properties {
             // osx only, additional frameworks to link with the project
-            condition: qbs.targetOS.contains("osx")
-            of.addons: ['ofxSyphon'].concat(outer)
-            of.frameworks: outer.concat(['Syphon'])
-//            of.linkerFlags: outer.concat([
-//                '-F../../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon',
-//                '-lSyphon',
-//            ])
-            of.includePaths: outer.concat(['../../../addons/ofxSyphon/libs/Syhpon/src/']);
+            condition: qbs.targetOS.contains("osx") || qbs.targetOS.contains("macos")
+
+            // Add Syphon support
+            //of.addons: outer.concat(['ofxSyphon'])
+            //of.frameworks: outer.concat(['Syphon'])
+            of.linkerFlags: outer.concat([
+                '-F../../../addons/ofxSyphon/libs/Syphon/lib/osx/Syphon',
+                '-framework Syphon',
+            //    '-lSyphon',
+            ])
+            //of.includePaths: outer.concat(['../../../addons/ofxSyphon/libs/Syhpon/src/']);
 //            of.includePaths: outer.concat([
 //                '../../../addons/ofxSyphon/libs',
 //                '../../../addons/ofxSyphon/libs/Syphon',
@@ -214,56 +221,22 @@ Project{
 //                '../../../addons/ofxSyphon/src',
 //                //'../../../libs/openssl/include',
 //            ]);
-        }
 
-        // Syphon missing file
-        Group {
-            name: 'Missing Syphon Files'
-            // osx only, additional frameworks to link with the project
-            condition: qbs.targetOS.contains("osx")
-            // dirty fix for .mm files
-            files: base.concat([
-                '../../../addons/ofxSyphon/src/ofxSyphonClient.h',
-                '../../../addons/ofxSyphon/src/ofxSyphonServer.h',
-                '../../../addons/ofxSyphon/src/ofxSyphonServerDirectory.h',
-                '../../../addons/ofxSyphon/libs/Syphon/src/SyphonNameboundClient.m',
-            ])
-        }
+            // add UVC support on osx
+            of.addons: outer.concat(['ofxUVC','ofxSyphon'])
 
-        // add QTKit support on osx
-        Properties {
-            condition: qbs.targetOS.contains("osx")
-            of.frameworks: outer.concat(['Qtkit']);
-        }
+            // add QTKit support on osx
+            of.frameworks: outer.concat(['Qtkit'/*,'Syphon'*/]);
 
-        Properties {
-                // osx only, tmp ofxVideoRecorder
-                condition: qbs.targetOS.contains("osx")
-                //of.addons: ['ofxPoco'].concat(outer)
-                of.linkerFlags: Helpers.listDirsRecursive(project.sourceDirectory + "../../../addons/ofxPoco/libs/poco/lib/osx/*.a").concat(outer);
+            // osx only, tmp ofxVideoRecorder
+            //of.addons: ['ofxPoco'].concat(outer)
+            //of.linkerFlags: Helpers.listDirsRecursive(project.sourceDirectory + "../../../addons/ofxPoco/libs/poco/lib/osx/*.a").concat(outer);
             //-L
             //'-l/addons/ofxPoco/libs/poco/lib/osx/*.a'
-         }
-
-        Group {
-            name: 'ofxUVC Files DirtyFix'
-            // osx only, additional frameworks to link with the project
-            condition: qbs.targetOS.contains("osx")
-            // dirty fix for .mm files
-            files: base.concat([
-                '../../../addons/ofxUVC/src/ofxUVC.mm',
-                '../../../addons/ofxUVC/src/UVCCameraControl.m',
-            ])
-        }
-
-        Properties {
 
             // osx only, tmp poco mess
-            condition: qbs.targetOS.contains("osx")
-            of.addons: ['ofxPoco'].concat(outer)
-
+            //of.addons: ['ofxPoco'].concat(outer)
             //of.staticLibraries: outer.concat('Poco');
-
             //of.frameworks: outer.concat(['Poco'])
             //                '-L/addons/ofxPoco/libs/poco/lib/',
             //                '-lPoco',
@@ -279,11 +252,36 @@ Project{
             //                '-F/libs/openssl/lib/osx/ssl.a',
         }
 
-        // add UVC support on osx
-        Properties {
-            condition: qbs.targetOS.contains("osx")
-            of.addons: outer.concat(['ofxUVC']);
-        }
+//        // Syphon missing file
+//        Group {
+//            name: 'Missing Syphon Files'
+//            // osx only, additional frameworks to link with the project
+//            condition: qbs.targetOS.contains("osx") || qbs.targetOS.contains("macos")
+//            // dirty fix for .mm files
+//            files: base.concat([
+////                  '../../../addons/ofxSyphon/src/ofxSyphonClient.mm',
+////                  '../../../addons/ofxSyphon/src/ofxSyphonServer.mm',
+////                  '../../../addons/ofxSyphon/src/ofxSyphonServerDirectory.mm',
+////                  '../../../addons/ofxSyphon/libs/Syphon/src/SyphonNameboundClient.m'
+////                '../../../addons/ofxSyphon/src/ofxSyphon.h',
+////                '../../../addons/ofxSyphon/src/ofxSyphonClient.cpp',
+////                '../../../addons/ofxSyphon/src/ofxSyphonServer.cpp',
+////                '../../../addons/ofxSyphon/src/ofxSyphonServerDirectory.cpp',
+////                '../../../addons/ofxSyphon/libs/Syphon/src/SyphonNameboundClient.m',
+//            ])
+//        }
+
+//        Group {
+//            name: 'ofxUVC Files DirtyFix'
+//            // osx only, additional frameworks to link with the project
+//            condition: qbs.targetOS.contains("osx") || qbs.targetOS.contains("macos")
+//            // dirty fix for .mm files
+//            files: base.concat([
+//                //'../../../addons/ofxUVC/src/ofxUVC.mm',
+//                //'../../../addons/ofxUVC/src/UVCCameraControl.m',
+//                //'../../../addons/ofxUVC/src/UVCCameraControl.h',
+//            ])
+//        }
 
         // other flags can be set through the cpp module: http://doc.qt.io/qbs/cpp-module.html
         // eg: this will enable ccache when compiling
@@ -308,4 +306,3 @@ Project{
 
     references: [FileInfo.joinPaths(of_root, "/libs/openFrameworksCompiled/project/qtcreator/openFrameworks.qbs")]
 }
-

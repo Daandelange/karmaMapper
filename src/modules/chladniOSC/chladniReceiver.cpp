@@ -182,7 +182,7 @@ void chladniReceiver::showGuiWindow(){
 	OSCRouter::ImGuiShowOSCRouterConnectionTester();
 	ImGui::Separator();
 	
-	if( ImGui::CollapsingHeader( "OSC Setup / Config (Pd)", "chladniReceiverOSC", true, true ) ){
+	if( ImGui::CollapsingHeader( "OSC Setup / Config (Pd)", ImGuiTreeNodeFlags_NoTreePushOnOpen  ) ){
 		
 		ImGui::TextWrapped("Pd OSC connection");
 		ImGui::Indent();
@@ -223,7 +223,7 @@ void chladniReceiver::showGuiWindow(){
 		
 		ImGui::Separator();
 		
-		if( chladniRC::getInstance().pureDataIsConnected() && ImGui::CollapsingHeader( "Chladni-plate Pd Controls", "chladniReceiverPdCommands", true, true ) ){
+		if( chladniRC::getInstance().pureDataIsConnected() && ImGui::CollapsingHeader( "Chladni-plate Pd Controls", ImGuiTreeNodeFlags_NoTreePushOnOpen ) ){
 			
 			ImGui::TextWrapped("Pd OSC Controls");
 			ImGui::Indent();
@@ -255,7 +255,7 @@ void chladniReceiver::showGuiWindow(){
 	ImGui::Separator();
 	
 	static bool wasOpen = false;
-	if( ImGui::CollapsingHeader( "Arduino Setup (water control)", "chladniReceiverArduino", true, true ) ){
+	if( ImGui::CollapsingHeader( "Arduino Setup (water control)", ImGuiTreeNodeFlags_NoTreePushOnOpen ) ){
 		
 		static std::vector<ofx::IO::SerialDeviceInfo> devicesInfo = ofx::IO::SerialDeviceUtils::listDevices();
 			

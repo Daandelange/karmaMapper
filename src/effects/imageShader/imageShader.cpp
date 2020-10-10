@@ -128,7 +128,7 @@ void imageShader::reset(){
 // Just draw your gui items
 bool imageShader::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIimageShaderPanel, "GUIimageShaderPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUIimageShaderPanel ) ){
 		
 		ImGui::TextWrapped("Loads an image and renders it.");
 		

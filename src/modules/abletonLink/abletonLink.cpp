@@ -318,7 +318,7 @@ void abletonLink::showGuiWindow(){
 	
 	ImGui::Separator();
 	
-	if( ImGui::CollapsingHeader( "Link Status", "abletonLinkStatus", true, true ) ){
+	if( ImGui::CollapsingHeader( "Link Status" ) ){
 		
 		
 		ImGui::TextWrapped("Ableton Link status: %s", ((linkIsEnabled())?"On":"Off"));
@@ -338,7 +338,7 @@ void abletonLink::showGuiWindow(){
 		ImGui::Separator();
 		
 		if(linkIsEnabled()){
-			if( ImGui::CollapsingHeader( "Link Quantum", "abletonLinkQuantum", true, true ) ){
+			if( ImGui::CollapsingHeader( "Link Quantum" ) ){
 				
 				int quantum = (int) ceil( getQuantum() );
 				float phase = ALStatus.phase;
@@ -357,7 +357,7 @@ void abletonLink::showGuiWindow(){
 	
 	ImGui::Separator();
 	
-	if( ImGui::CollapsingHeader( "Event Params", "abletonLinkEventParams", true, true ) ){
+	if( ImGui::CollapsingHeader( "Event Params" ) ){
 
 		if(ImGui::Checkbox("Enable Sync Events", &bEnableSyncEvents)){
 			// todo: apply setting

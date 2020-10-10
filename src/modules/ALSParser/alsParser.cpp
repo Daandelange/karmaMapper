@@ -87,7 +87,7 @@ void alsParser::showGuiWindow(){
 	
 	ImGui::Separator();
 	
-	if( ImGui::CollapsingHeader( ".als Params", "alsParserParams", true, true ) ){
+	if( ImGui::CollapsingHeader( ".als Params" ) ){
 
 		ImGui::TextWrapped(".als file: %s", alsFilePath.c_str());
 		
@@ -129,7 +129,7 @@ void alsParser::showGuiWindow(){
 		ImGui::Separator();
 		
 		if(LS.isLoaded()){
-			if( ImGui::CollapsingHeader( "Show track information", "alsParserTrackInfo", true, false ) ){
+			if( ImGui::CollapsingHeader( "Show track information",ImGuiTreeNodeFlags_NoTreePushOnOpen ) ){
 				// todo: list track info
 				ImGui::TextWrapped("Name: %s", LS.name.c_str());
 				ImGui::TextWrapped("Creator: %s", LS.userName.c_str());
@@ -198,7 +198,7 @@ void alsParser::showGuiWindow(){
 	
 	ImGui::Separator();
 	
-	if( ImGui::CollapsingHeader( "Event Params", "alsParserEventParams", true, true ) ){
+	if( ImGui::CollapsingHeader( "Event Params" ) ){
 		
 		float phase = abletonLink::getInstance().ALStatus.phase;
 		ImGui::SliderFloat("Link Phase", &phase, 0, abletonLink::getInstance().getQuantum());

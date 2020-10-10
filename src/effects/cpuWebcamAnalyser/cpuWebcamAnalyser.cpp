@@ -266,7 +266,7 @@ void cpuWebcamAnalyser::reset(){
 // Just draw your gui items
 bool cpuWebcamAnalyser::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIcpuWebcamAnalyserPanel, "GUIcpuWebcamAnalyserPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUIcpuWebcamAnalyserPanel, ImGuiTreeNodeFlags_CollapsingHeader ) ){
 		
 		ImGui::TextWrapped("Analyses webcam video.");
 		

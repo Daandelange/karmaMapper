@@ -92,7 +92,7 @@ class karmaParam : public karmaHasUID {
 
 public:
 	
-	karmaParam(T _value, string _paramName) : value(_value), karmaHasUID(_paramName) {
+    karmaParam(T _value, string _paramName) : karmaHasUID(_paramName), value(_value) {
 		
 		registerUniqueIdentifier(_paramName, this);
 	}

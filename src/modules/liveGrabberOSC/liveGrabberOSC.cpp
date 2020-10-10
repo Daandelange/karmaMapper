@@ -300,7 +300,7 @@ void liveGrabberOSC::showGuiWindow(){
 	ImGui::TextWrapped("Last Received Param: %s", lastReceivedParamName.c_str());
 	oscMutex.unlock();
 	
-	if( ImGui::CollapsingHeader( "Params", "liveGrabberOSC", true, true ) ){
+	if( ImGui::CollapsingHeader( "liveGrabberOSC", ImGuiTreeNodeFlags_NoTreePushOnOpen ) ){
 		ImGui::SliderFloat("noise", &noise, 0.0, 1.0);
 		ImGui::SliderFloat("random", &random, 0.0, 1.0);
 		if(ImGui::SliderFloat("manualFloat", &manualFloat, 0.0, 1.0)){

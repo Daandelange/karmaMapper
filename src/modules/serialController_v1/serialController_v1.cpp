@@ -87,7 +87,7 @@ void serialControllerV1::showGuiWindow(){
 	
 	ImGui::TextWrapped("This module enables effects to easily do threaded serial communication with the karmaMapper Arduino Leonardo / Olimex hardware controller.");
 	
-	if (ImGui::CollapsingHeader( "Devices", "Devices", true, true)){
+	if (ImGui::CollapsingHeader( "Devices", ImGuiTreeNodeFlags_NoTreePushOnOpen )){
 		
 		if( ImGui::Checkbox("Connected to a device", &bIsConnected)){
 			// click refreshes status
@@ -138,7 +138,7 @@ void serialControllerV1::showGuiWindow(){
 	ImGui::Separator();
 	ImGui::Separator();
 	
-	if (ImGui::CollapsingHeader( "Messages", "Messages", true, true)){
+	if (ImGui::CollapsingHeader( "Messages", ImGuiTreeNodeFlags_NoTreePushOnOpen )){
 		
 		if(ImGui::Button("Send Ping")){
 			karmaSerialMsg<string> msg("ping", "From ImGui");

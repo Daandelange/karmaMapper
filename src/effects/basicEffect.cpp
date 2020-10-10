@@ -206,7 +206,7 @@ bool basicEffect::showGuiWindow( const shapesDB& _scene ) {
 	ImGui::Spacing();
 	ImGui::Spacing();
 	
-	if (ImGui::CollapsingHeader( GUIBoundShapesTitle, "GUIBoundShapesTitle", true, true)){
+	if (ImGui::CollapsingHeader( GUIBoundShapesTitle )){
 		
 		ImGui::PushID("shapeBindings");
 		
@@ -599,7 +599,7 @@ bool basicEffect::detachFromShape(basicShape* _shape){
 	return true;
 }
 
-int basicEffect::getNumShapes() const{
+int basicEffect::getNumShapes() const {
 	return shapes.size();
 }
 

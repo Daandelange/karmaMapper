@@ -1265,7 +1265,7 @@ void animationController::draw(ofEventArgs& event){
 			
 			ImGui::TextWrapped("karmaMapper hard-codes all its plugins on compilation time while they remain dynamically instantiable.\nThis window shows all plugins that have been compiled in this release.\n\n");
 			
-			if( ImGui::CollapsingHeader( GUIShapeTypesInfo, "GUIShapeTypesInfo", true, true ) ){
+			if( ImGui::CollapsingHeader( GUIShapeTypesInfo ) ){
 				for(auto it = shape::factory::getShapeRegistry().begin(); it!= shape::factory::getShapeRegistry().end(); ++it){
 					
 					ImGui::Text( "%s", it->first.c_str() );
@@ -1276,7 +1276,7 @@ void animationController::draw(ofEventArgs& event){
 			ImGui::Spacing();
 			ImGui::Spacing();
 			
-			if( ImGui::CollapsingHeader( GUIEffectTypesInfo, "GUIEffectTypesInfo", true, true ) ){
+			if( ImGui::CollapsingHeader( GUIEffectTypesInfo ) ){
 				for(auto it = effect::factory::getEffectRegistry().begin(); it!= effect::factory::getEffectRegistry().end(); ++it){
 					
 					ImGui::Text( "%s", it->first.c_str() );
@@ -1295,7 +1295,7 @@ void animationController::draw(ofEventArgs& event){
 	//		}
 			
 			ImGui::Spacing();
-			if( ImGui::CollapsingHeader( GUIShapesInfo, "GUIShapesInfo", true, true ) ){
+			if( ImGui::CollapsingHeader( GUIShapesInfo ) ){
 				ImGui::Separator();
 				
 				ImGui::Text( "Loaded scene: %s", scene.getLoadedScene().c_str() );
@@ -1390,7 +1390,7 @@ void animationController::draw(ofEventArgs& event){
 			} // end shapes section
 			
 			ImGui::Separator();
-			if( ImGui::CollapsingHeader( GUIEffectsTitle, "GUIEffectsPanel", true, true ) ){
+			if( ImGui::CollapsingHeader( GUIEffectsTitle ) ){
 				
 				ImGui::Text( "Loaded configuration: %s", loadedConfiguration.c_str() );
 				
@@ -1737,12 +1737,12 @@ void animationController::draw(ofEventArgs& event){
 		if(bGuiShowModules){
 			ImGui::Begin( GUIModulesPanel, &bGuiShowModules, ImVec2(400, ofGetHeight()*.8f) );
 			
-			if (ImGui::CollapsingHeader( GUIModuleInfoTitle, "GUIModuleInfoTitle", true, true)){
+			if (ImGui::CollapsingHeader( GUIModuleInfoTitle )){
 				ImGui::TextWrapped("Here's some information about currently running modules.");
 				ImGui::Text("Loaded modules: %lu", modules.size() );
 			}
 			
-			if (ImGui::CollapsingHeader( GUIModulesList, "GUIModulesList", true, true)){
+			if (ImGui::CollapsingHeader( GUIModulesList )){
 				
 				if( ImGui::Button("Add new...") ){
 					ImGui::OpenPopup("Add new module...");
@@ -1790,7 +1790,7 @@ void animationController::draw(ofEventArgs& event){
 					}
 					ImGui::SameLine();
 					
-					if (ImGui::CollapsingHeader( (*m)->getName().c_str(), ofToString(*m).c_str(), true, true)){
+					if (ImGui::CollapsingHeader( (*m)->getName().c_str())){
 						
 						ImGui::Indent();ImGui::Indent();
 						(*m)->drawMenuEntry();

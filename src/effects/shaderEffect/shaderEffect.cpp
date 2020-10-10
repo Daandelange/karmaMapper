@@ -296,7 +296,7 @@ void shaderEffect::reset(){
 // Just draw your gui items
 bool shaderEffect::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIShaderPanel, "GUIShaderPanel", true, false ) ){
+	if( ImGui::CollapsingHeader( GUIShaderPanel ) ){
 		
 		ImGui::TextWrapped("This effect loads shader files and animates them by feeding it parameters.");
 		ImGui::TextWrapped("You can enable some default variables or create your own."); // todo
@@ -372,7 +372,7 @@ bool shaderEffect::printCustomEffectGui(){
 		
 		ImGui::Separator();
 		
-		if( ImGui::CollapsingHeader( GUIShaderVariablesPanel, "GUIShaderVariablesPanel", true, false ) ){
+		if( ImGui::CollapsingHeader( GUIShaderVariablesPanel ) ){
 			
 			ImGui::TextWrapped("Here, you can enable/disable some standard shader variables, and (soon) create your own ones.");
 			

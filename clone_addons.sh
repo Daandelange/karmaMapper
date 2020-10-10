@@ -65,7 +65,8 @@ ${PREFIX}obviousjim/ofxMSATimer.git
 
 # note: Only required on Mac
 echo "Cloning ofxUVC... (osx only)"
-${PREFIX}atduskgreg/ofxUVC.git
+# OF0.9 ${PREFIX}atduskgreg/ofxUVC.git
+${PREFIX}stephanschulz/ofxUVC.git
 
 echo "Cloning ofxFps..."
 ${PREFIX}tobiasebsen/ofxFps.git
@@ -95,5 +96,12 @@ ${PREFIX}bakercp/ofxIO.git
 
 echo "Cloning ofxLiquidFun..."
 ${PREFIX}tado/ofxLiquidFun.git
+
+echo "Cloning ofxAbletonLink..."
+${PREFIX}comoc/ofxAbletonLink.git
+echo "Cloning ofxAbletonLink's submodules..."
+cd ./ofxAbletonLink
+git submodule update --init --recursive
+cd ../
 
 echo "Done cloning addons! :)"

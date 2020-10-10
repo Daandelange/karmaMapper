@@ -391,7 +391,7 @@ void box2dEffect::reset(){
 // Just draw your gui items
 bool box2dEffect::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIbox2dEffectPanel, "GUIbox2dEffectPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUIbox2dEffectPanel ) ){
 		
 		ImGui::TextWrapped("Box2d physics simulation on shapes! :D");
 		

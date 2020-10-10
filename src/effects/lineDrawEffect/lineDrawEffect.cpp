@@ -154,7 +154,7 @@ void lineDrawEffect::reset(){
 // Just draw your gui items
 bool lineDrawEffect::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUILineDrawEffectPanel, "GUILineDrawEffectPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUILineDrawEffectPanel ) ){
 		
 		ImGui::TextWrapped("Draws lines on shapes in various ways.");
 		ImGui::Separator();

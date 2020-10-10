@@ -18,7 +18,7 @@
 
 #ifdef TARGET_OSX
 	#include "ofQTKitGrabber.h"
-	#include "ofxUVC.h"
+    #include "ofxUVC.h"
 #endif
 
 #ifdef KM_ENABLE_SYPHON

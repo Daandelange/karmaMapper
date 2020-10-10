@@ -194,7 +194,7 @@ void fboEraser::reset(){
 // Just draw your gui items
 bool fboEraser::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUIfboEraserPanel, "GUIfboEraserPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUIfboEraserPanel ) ){
 		
 		ImGui::TextWrapped("Erases the background of the FBO (bottom layer). Can also be used as mask (top layer).");
 		ImGui::TextWrapped("Uses shapes if bound to any shape, otherwise it will erase everything.");

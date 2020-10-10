@@ -190,7 +190,7 @@ void textureDistortionEffect::reset(){
 // Just draw your gui items
 bool textureDistortionEffect::printCustomEffectGui(){
 	
-	if( ImGui::CollapsingHeader( GUItextureDistortionEffectPanel, "GUItextureDistortionEffectPanel", true, true ) ){
+	if( ImGui::CollapsingHeader( GUItextureDistortionEffectPanel ) ){
 		
 		ImGui::TextWrapped("Lets you match specific regions of a texture by creating a mesh distortion grid on its bound shapes.");
 		ImGui::TextWrapped("Use your mouse to edit the mesh.");
